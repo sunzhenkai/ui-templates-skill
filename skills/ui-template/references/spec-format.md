@@ -85,6 +85,11 @@ source:
 captured_at: <YYYY-MM-DD>
 tags: [<风格关键词,如 dark, minimal, dashboard>]
 confidence: high | medium | low   # repo/web 精确提取为 high;image 反推一般为 medium/low
+platforms: [web, mobile]   # 可选:模板覆盖多平台外壳时列出,各平台差异细节放 platforms/<platform>.md
 ```
 
 `confidence` 是模板复用时的重要参考:`low` 意味着消费者应把 spec.md 当风格方向而非精确数值。
+
+## 大型规范的拆分
+
+`spec.md` 始终是共享核心与入口。当规范体量过大、或存在平台/场景维度的大量差异细节时,允许拆出子文件(如 `platforms/web.md`),并在 `spec.md` 中以相对链接指向;拆分出的细节文件不重复 spec.md 已有的通用规则。

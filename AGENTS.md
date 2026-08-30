@@ -10,22 +10,18 @@
 
 ## 项目概述
 
-`ui-templates-skill` 是一个刚初始化的仓库。截至初始提交，它**不包含任何源代码、构建系统和测试**，仅有：
-
-- `README.md` — 只有一行项目名称，无其他文档。
-- `LICENSE` — MIT 许可证，copyright (c) 2026 Wii。
-
-根据仓库名称推测，其预期用途是一个 **skill**（Agent Skills 意义上的：一个包含 `SKILL.md` 及配套文件的目录），用于提供 UI 模板。目前这些内容尚不存在——上述两个文件之外的任何结构都应视为进行中的工作，遵循实际新增文件所确立的约定。
+`ui-templates-skill` 是可共享 skill **`ui-template`** 的源码仓：从 Web 站点、代码仓库、图片中提取 UI 设计风格，沉淀为可复用的设计规范文档。仓库同时维护一个 `templates/` 模板库（既是非平凡示例，也是实际可用的模板集合）。
 
 ## 仓库现状
 
 - 单一 git 分支历史，起始于 `001fb8c Initial commit`。
 - 无任何配置文件：没有 `package.json`、`pyproject.toml`、`Cargo.toml`、`Makefile`、CI 配置或任何锁文件。
-- `.agents/skills/ui-template/` — 本仓库的核心 skill：从 Web 站点、代码仓库、图片提取 UI 风格，创建/导入为设计规范文档，存入 `templates/` 目录。其结构：
+- `skills/ui-template/` — **通用 skill 的单一源码**，可安装/共享到其他项目（安装方式：把该目录拷贝到目标项目的 `.agents/skills/` 或等效 skill 目录）。其结构：
   - `SKILL.md` — 触发条件与工作流程（定位来源 → 按来源提取 → 生成规范 → 更新索引）。
-  - `references/spec-format.md` — `spec.md` 章节骨架与 `meta.yaml` 字段定义。
+  - `references/spec-format.md` — `spec.md` 章节骨架、`meta.yaml` 字段定义、大型规范拆分约定。
   - `references/source-web.md` / `source-repo.md` / `source-image.md` — 三类来源的提取指南。
-- `templates/` — 模板存放目录，由 skill 按 `references/spec-format.md` 的约定维护（含 `templates/INDEX.md` 索引）。现有模板：
+- `.agents/skills/ui-template-manager/` — 本仓库的项目级 skill（薄封装）：指向 `skills/ui-template/` 的通用流程，只补充本仓库约定。**改流程/格式时改 `skills/ui-template/`，不要只改 manager。**
+- `templates/` — 模板存放目录，按 `skills/ui-template/references/spec-format.md` 的约定维护（含 `templates/INDEX.md` 索引）。现有模板：
   - `workbench-shell/` — 工作台/后台型 App Shell 布局规范（用户提供的设计文档导入，业务实体已泛化）；`spec.md` 为共享核心，平台外壳差异在 `platforms/{web,mobile,desktop}.md`。
 
 ## 构建与测试命令
@@ -37,7 +33,7 @@
 目前还没有代码，因此没有既定风格约定。添加第一批代码时：
 
 - 保持最小化、自包含；skill 类仓库通常只需要一个带 YAML frontmatter 的 `SKILL.md`，加上其引用的模板/资源文件。
-- 文档与注释使用简体中文（README 目前为英文，仅一行项目名）。
+- 文档与注释使用简体中文（README 亦为简体中文）。
 - 遵守仓库 MIT 许可证的版权声明要求（见 `LICENSE`）。
 
 ## 测试说明
