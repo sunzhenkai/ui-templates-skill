@@ -1,0 +1,9 @@
+name: workbench-shell
+description: 工作台/后台型 Web 应用 App Shell 布局规范:整页不滚动面板滚动、chrome 常量统一、1px 分割线分区、五种页面布局模式
+source:
+  type: repo
+  ref: 用户提供的 Markdown 布局设计文档(原始项目出处已按要求抹除,业务实体已泛化)
+captured_at: 2026-08-30
+platforms: [web, mobile, desktop]   # 各平台外壳详细规格见 platforms/<platform>.md
+tags: [layout, app-shell, workbench, dashboard, responsive, dual-theme, web, mobile, desktop]
+confidence: high
