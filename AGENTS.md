@@ -10,19 +10,22 @@
 
 ## 项目概述
 
-`ui-templates-skill` 是可共享 skill **`ui-template`** 的源码仓：从 Web 站点、代码仓库、图片中提取 UI 设计风格，沉淀为可复用的设计规范文档。仓库同时维护一个 `templates/` 模板库（既是非平凡示例，也是实际可用的模板集合）。
+`ui-templates-skill` 是可共享 skill **`ui-template`** 的源码仓：从 Web 站点、代码仓库、图片中提取 UI 设计风格，沉淀为可复用的设计规范文档；同时定义使用已有模板分阶段落地页面的 Template Apply 工作流。仓库还维护一个 `templates/` 模板库（既是非平凡示例，也是实际可用的模板集合）。
 
 ## 仓库现状
 
 - 单一 git 分支历史，起始于 `001fb8c Initial commit`。
 - 无任何配置文件：没有 `package.json`、`pyproject.toml`、`Cargo.toml`、`Makefile`、CI 配置或任何锁文件。
 - `skills/ui-template/` — **通用 skill 的单一源码**，可安装/共享到其他项目（安装方式：把该目录拷贝到目标项目的 `.agents/skills/` 或等效 skill 目录）。其结构：
-  - `SKILL.md` — 触发条件与工作流程（定位来源 → 按来源提取 → 生成规范 → 更新索引）。
+  - `SKILL.md` — 触发条件与双工作流入口（Template Authoring / Template Apply）。
   - `references/spec-format.md` — `spec.md` 章节骨架、`meta.yaml` 字段定义、大型规范拆分约定。
   - `references/source-web.md` / `source-repo.md` / `source-image.md` — 三类来源的提取指南。
+  - `references/apply-workflow.md` — 使用已有模板实现 UI 的阶段、产物、gate、中断恢复和反馈闭环。
+  - `references/toolchain.md` — Template Apply 的默认工具链（`ui-ux-pro-max`、`frontend-design`、shadcn、浏览器工具、design review）与缺失回退。
+  - `references/quality-gates.md` — 路由语义、可访问性、响应式、URL 状态、computed style 和浏览器验收门禁。
 - `.agents/skills/ui-template-manager/` — 本仓库的项目级 skill（薄封装）：指向 `skills/ui-template/` 的通用流程，只补充本仓库约定。**改流程/格式时改 `skills/ui-template/`，不要只改 manager。**
 - `templates/` — 模板存放目录，按 `skills/ui-template/references/spec-format.md` 的约定维护（含 `templates/INDEX.md` 索引）。现有模板：
-  - `workbench-shell/` — 工作台/后台型 App Shell 布局规范（用户提供的设计文档导入，业务实体已泛化）；`spec.md` 为共享核心，平台外壳差异在 `platforms/{web,mobile,desktop}.md`。
+  - `workbench-shell/` — 工作台/后台型 App Shell 布局规范（用户提供的设计文档导入，业务实体已泛化）；`spec.md` 为共享核心，平台外壳差异在 `platforms/{web,mobile,desktop}.md`，消费端完整实施顺序、页面模式、组件 inventory、React/Tailwind/shadcn adapter 和验收矩阵在 `implementation/`。
 
 ## 构建与测试命令
 

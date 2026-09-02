@@ -1,0 +1,13 @@
+@layer utilities {
+  .font-micro { font-size: 11px; line-height: 15px; }
+  .font-caption { font-size: 12px; line-height: 16px; }
+  .font-label { font-size: 13px; line-height: 18px; }
+  .font-body { font-size: 14px; line-height: 20px; }
+  .font-body-lg { font-size: 15px; line-height: 22px; }
+  .font-title-sm { font-size: 16px; line-height: 24px; }
+  .font-title { font-size: 18px; line-height: 28px; }
+  .font-title-lg { font-size: 20px; line-height: 28px; }
+  .font-display-sm { font-size: 24px; line-height: 32px; }
+  .numeric { font-variant-numeric: tabular-nums; }
+  .scroll-stable { scrollbar-gutter: stable; }
+}

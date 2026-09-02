@@ -5,5 +5,9 @@ source:
   ref: 用户提供的 Markdown 布局设计文档(原始项目出处已按要求抹除,业务实体已泛化)
 captured_at: 2026-08-30
 platforms: [web, mobile, desktop]   # 各平台外壳详细规格见 platforms/<platform>.md
+implementation:                     # 消费端实施 playbook;设计规则仍以 spec.md 为准
+  playbook: implementation/playbook.md
+  stacks:
+    - react-vite-tailwind-shadcn
 tags: [layout, app-shell, workbench, dashboard, responsive, dual-theme, web, mobile, desktop]
 confidence: high

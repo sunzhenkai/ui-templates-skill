@@ -1,6 +1,6 @@
-# 设计规范文档格式(spec.md 与 meta.yaml)
+# 设计规范文档格式(spec.md、meta.yaml 与 implementation/)
 
-本文档定义 `templates/<name>/spec.md` 的章节骨架和 `meta.yaml` 的字段。写规范时按此结构组织;来源缺某项信息时,写"来源未体现"或给出标注 `(估算)` 的值,不要留空章节。
+本文档定义 `templates/<name>/spec.md` 的章节骨架、`meta.yaml` 的字段和 optional `implementation/` playbook 约定。写规范时按此结构组织;来源缺某项信息时,写"来源未体现"或给出标注 `(估算)` 的值,不要留空章节。
 
 ## spec.md 骨架
 
@@ -86,9 +86,47 @@ captured_at: <YYYY-MM-DD>
 tags: [<风格关键词,如 dark, minimal, dashboard>]
 confidence: high | medium | low   # repo/web 精确提取为 high;image 反推一般为 medium/low
 platforms: [web, mobile]   # 可选:模板覆盖多平台外壳时列出,各平台差异细节放 platforms/<platform>.md
+implementation:             # 可选:只有模板包含消费端落地 playbook 时填写
+  playbook: implementation/playbook.md
+  stacks:
+    - <stack-adapter-name>  # 如 react-vite-tailwind-shadcn;stack adapter 放 implementation/ 下
 ```
 
 `confidence` 是模板复用时的重要参考:`low` 意味着消费者应把 spec.md 当风格方向而非精确数值。
+
+## optional implementation playbook
+
+当模板足够复杂、需要约定消费顺序、组件映射、代码目录或默认技术栈时,可以增加:
+
+```text
+templates/<name>/
+└── implementation/
+    ├── playbook.md                        # 必有:实施总入口与阶段 gate
+    ├── routes-and-layouts.md              # 推荐用于 layout-heavy 模板
+    ├── components.md                      # 推荐用于组件密集模板
+    ├── code-structure.md                  # 推荐用于目标项目落地模板
+    ├── stack-<framework>.md               # 可选:技术栈 adapter
+    └── quality.md                         # 推荐:模板专属验收矩阵
+```
+
+职责边界:
+
+- `spec.md` 是设计规则唯一入口,定义“结果必须长什么样、如何交互”。
+- `implementation/playbook.md` 定义“按什么顺序做、每步交付什么、如何验收”。
+- stack adapter 定义某个技术栈下的目录、组件来源和工程检查;不得改变通用设计规则。
+
+写作要求:
+
+- implementation 文档必须引用 `spec.md` 的规则,不复制色值、字号、间距或布局细节。
+- implementation 文档使用简体中文;路径、组件名、命令、CSS 属性和框架术语保留原文。
+- 不把 runnable starter、依赖清单或完整业务代码放入模板;模板仍以可共享规范为主。
+- 若某个规则既需要出现在 `spec.md` 又影响实施验收,在 `spec.md` 定义规则,在 implementation 文档中只写“检查该规则”的方式。
+
+冲突处理:
+
+1. `spec.md` 与 `implementation/` 冲突时,以 `spec.md` 为准。
+2. stack adapter 与通用 implementation playbook 冲突时,若只是技术栈差异,以 stack adapter 为准;若影响通用设计结果,必须先修正 `spec.md` 或通用 playbook。
+3. 更新模板时,先判断发现属于通用规则、模板实施顺序、stack adapter 还是业务实现,再写入对应文件。
 
 ## 大型规范的拆分
 

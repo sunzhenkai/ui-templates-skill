@@ -11,6 +11,9 @@ description: 管理本仓库(ui-templates-skill)templates/ 目录下的 UI 设�
 - `skills/ui-template/SKILL.md` — 工作流程(定位来源 → 按来源提取 → 生成规范 → 更新索引)
 - `skills/ui-template/references/spec-format.md` — spec.md / meta.yaml 格式
 - `skills/ui-template/references/source-{web,repo,image}.md` — 三类来源的提取指南
+- `skills/ui-template/references/apply-workflow.md` — 使用已有模板分阶段实现页面的阶段与 gate
+- `skills/ui-template/references/toolchain.md` — Template Apply 的默认工具链与缺失回退
+- `skills/ui-template/references/quality-gates.md` — Template Apply 的最低质量门禁
 
 本文件只补充本仓库的特有约定,不重复通用流程。
 
@@ -18,6 +21,7 @@ description: 管理本仓库(ui-templates-skill)templates/ 目录下的 UI 设�
 
 - 模板统一存放于 `templates/<name>/`;每次新增/更新模板必须同步 `templates/INDEX.md` 索引行。
 - 大型规范允许拆分(如 `workbench-shell` 的 `platforms/` 子规格),`spec.md` 为共享核心与入口。
+- 复杂模板可携带 optional `implementation/` playbook 与 stack adapter;`spec.md` 仍是设计规则唯一入口,implementation 文档只写实施顺序、映射和验收。
 - 语言:文档与注释一律简体中文,色值、字体名、CSS 属性等技术内容保留原文。
 - **改动通用流程或格式时,改 `skills/ui-template/`(单一源码),不要只改本文件**;保持 manager 为薄封装。
 - 模板自包含、不含密钥与特定环境路径;skill 文件会被 AI 助手直接消费,不写入不希望被逐字执行的内容。
