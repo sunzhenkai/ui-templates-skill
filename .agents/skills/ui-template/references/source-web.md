@@ -7,7 +7,8 @@
 1. **打开页面并截图**
    - 使用可用的浏览器工具(如 Playwright MCP、browser-use)导航到目标 URL。
    - 截取首屏整页截图(及关键区域截图),保存到 `templates/<name>/assets/`。
-   - 若有明显的深色/浅色切换、登录后页面,用户提到则一并采集;否则只处理用户给的页面。
+   - 至少采集首页与一个代表性内页;只处理用户给的页面时,在 `meta.yaml` coverage 中记录未覆盖页面。
+   - 若有明显的深色/浅色切换,两套都采集并成对记录;只采到一套时在 coverage 标注。
 
 2. **提取 CSS 变量与设计 token**
    - 在页面执行 JS,读取 `:root` / `html` 上的自定义属性:
@@ -28,8 +29,12 @@
      `color`、`background-color`、`font-family`、`font-size`、`font-weight`、`line-height`、`padding`、`border`、`border-radius`、`box-shadow`。
    - 按钮注意区分 primary / secondary;有条件可看 hover 态。
 
-4. **归纳,而非罗列**
-   - 把采样到的字号归纳成阶梯,间距归纳成体系(常见为 4px 或 8px 基数)。
+4. **采集交互状态**
+   - 对主按钮、链接、输入框、导航项强制采集 hover 与 focus-visible(可用伪类强制或状态注入);有条件补 disabled、selected。
+   - 状态值写入 `tokens.yaml`,origin 标注 `computed`。
+
+5. **归纳,而非罗列**
+   - 把采样到的字号归纳成阶梯,间距归纳成体系(常见为 4px 或 8px 基数);视觉不可区分的近义色合并为一个 token,结果写入 `tokens.yaml`。
    - 出现频次最高的背景色/文字色才是"页面背景/主文字",别被个别组件带偏。
 
 ## 注意事项

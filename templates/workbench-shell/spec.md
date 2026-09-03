@@ -2,10 +2,33 @@
 
 > 工作台/后台型 Web 应用的完整 App Shell 布局规范:整页不滚动、面板内部滚动,chrome 常量全局统一,1px 分割线分区,五种页面布局模式覆盖列表/主从/详情/设置/聚合网格。只约定布局与交互规则,不绑定技术栈;文中尺寸均为像素规格,实现方式自选。
 
-- 来源:repo(用户提供的 Markdown 布局设计文档,原始项目出处已按要求抹除,业务实体已全部泛化)
+- 来源:doc(用户提供的 Markdown 布局设计文档,原始项目出处已按要求抹除,业务实体已全部泛化)
 - 采集日期:2026-08-30
-- 佐证截图:无
-- 消费端实施:见 [implementation/playbook.md](implementation/playbook.md);`implementation/` 只定义实施顺序、映射与验收,设计规则冲突时以本文件为准。
+- 佐证截图:无(`coverage.visual_reference: false`;视觉值为模板默认值)
+- 精确值:见 [tokens.yaml](tokens.yaml)——颜色/字体为 `origin: default`,字号/间距/圆角来自来源
+- 布局模式与组件契约:见 [routes-and-layouts.md](routes-and-layouts.md) 与 [components.md](components.md)
+- 实施顺序与验收:见 [apply/playbook.md](apply/playbook.md);设计规则冲突时以本文件为准
+
+## 0. 不可协商规则(Non-negotiables)
+
+1. 根容器锁定 `100svh` 且 `overflow: hidden`,整页永不滚动;滚动只发生在内容列、列表、详情或看板列内部。
+2. PageHeader 与 Toolbar 高度固定 48px,全应用一致;切换页面时标题位置不动。
+3. 页左边距 GUTTER = 16px,页头、工具栏、正文行三条左线对齐。
+4. 文档流内分隔只用 1px border,禁止阴影;阴影仅限 menu/dialog/popover/drawer/toast 浮层。
+5. 字号只允许 `tokens.yaml` 的九档;禁止第十档或散落自定义。
+6. 文字灰度只允许三级(`foreground` / `muted-foreground` / `faint-foreground`);禁止第四级。
+7. 颜色、字体、间距、圆角、阴影必须映射自 `tokens.yaml`;新增值须在 Implementation Brief 显式批准。
+8. `brand` 只用于未读点、激活态、主按钮、进行中状态;保持面积克制。
+9. 双主题 token 名不变,暗色弱化方向反转,`light` / `dark` 角色键一致。
+10. 跨页面导航使用真实 `<a href>`;当前项 `aria-current="page"`;可恢复状态进入 URL。
+11. 平台路径(web/mobile/desktop)与窗口宽度解耦;web `<1024` 只从常驻浮岛切到覆盖抽屉,不变平台。
+12. 覆盖抽屉内的路由跳转完成后必须自动关闭。
+13. 每个页面映射到五种模式 A–E 之一,并按 [routes-and-layouts.md](routes-and-layouts.md) 的矩阵验收。
+14. 主从双栏 compact 降级为单栏时,选中保留在 URL,返回列表后原选中仍高亮。
+15. 骨架屏形状 = 最终布局形状;禁止无结构 spinner。
+16. icon-only 控件 accessible name 非空;焦点可见;交互控件不得嵌套。
+17. FAB 常驻;底部横栏、滚动内容与居中浮层为其让位。
+18. 可拖宽面板内部样式用容器查询,不用窗口断点。
 
 ## 1. 整体风格
 
@@ -16,7 +39,7 @@
 
 ## 2. 配色
 
-来源**未体现具体色值**,只定义了角色语义与使用规则——命名表意图,不命名色值。消费方需自行取色,但必须遵守以下角色划分:
+来源未体现具体色值;当前色值见 [`tokens.yaml`](tokens.yaml),全部为 `origin: default` 的模板默认值(双主题角色键一致,已做对比度预检)。角色语义与使用规则如下:
 
 | 角色 | token | 说明 |
 | --- | --- | --- |
@@ -29,13 +52,13 @@
 | 主色(primary/brand) | `brand`(+fg) | 品牌强调,**只用于**:未读点、激活态、主按钮、进行中状态 |
 | 状态色 | 状态色 tint | 看板列底等大面积低饱和着色(取状态色 5–8% 透明度) |
 
-成功/警告/错误:来源未体现具体值;空态/错误态图标的语气色分弱化/警示/危险三档(见 4.2)。
+成功/警告/错误:具体值见 [`tokens.yaml`](tokens.yaml)(`origin: default`);空态/错误态图标的语气色分弱化/警示/危险三档(见 4.2)。
 
 分区规则:文档流内一律只用 1px 边框,不用阴影;阴影只留给浮层(菜单/弹窗/悬浮卡,中等投影 + 1px 边框)。
 
 ## 3. 字体
 
-- 字体族:来源未体现(消费方自选;编号、计数等数字用等宽数字)。
+- 字体族与数字变体:见 [`tokens.yaml`](tokens.yaml)(`origin: default`,Inter + system fallback,数字用 tabular figures);字号阶梯与行高同样以 `tokens.yaml` 为准。
 - 字号阶梯:**唯一允许的九档**,禁止散落自定义:
 
 | token | px/行高 | 用途 |
@@ -446,3 +469,4 @@
 - [ ] 字号只出现九档 token;文字灰度只有三级 + 品牌/状态色
 - [ ] 右下角 FAB 常驻,任何贴近元素让位;可拖宽面板内部用容器查询
 - [ ] 亮暗主题切换无硬编码色;分割线是 1px border 不是阴影
+- [ ] 颜色、字体、间距、圆角、阴影逐项映射自 tokens.yaml,无第二套数值

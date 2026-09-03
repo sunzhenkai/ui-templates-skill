@@ -4,6 +4,9 @@
 
 ## 步骤
 
+0. **确认来源形态**
+   - 来源必须是含可提取代码/token 的仓库;若实际是 Markdown/PDF 设计文档,改走 `source-doc.md`,不要按 repo 流程空转后把缺口留白。
+
 1. **定位 token 来源**(按优先级)
    - `tailwind.config.*`:`theme.colors`、`fontFamily`、`fontSize`、`spacing`、`borderRadius`、`boxShadow`。
    - CSS 变量:`:root`、`[data-theme]` 下的自定义属性(全局 CSS、`variables.css`、`theme.css` 等)。
@@ -11,7 +14,7 @@
    - 组件库的变体定义:如 `button.tsx` 里的 variant 样式、`cva` 配置。
 
 2. **通读 token,直接转写为规范**
-   - 色板、字号阶梯、间距体系、圆角、阴影通常能在这里拿全,属于精确值。
+   - 色板、字号阶梯、间距体系、圆角、阴影通常能在这里拿全,属于精确值,写入 `tokens.yaml` 时 origin 标注 `source`。
    - 明暗双主题都定义了的话,两个都记录,在 spec.md 注明是双主题。
 
 3. **读代表性组件,归纳"用法规则"**

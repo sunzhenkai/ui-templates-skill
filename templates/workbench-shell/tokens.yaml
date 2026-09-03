@@ -1,0 +1,79 @@
+schema: 1
+template: workbench-shell
+
+# 视觉值为模板默认回填(origin: default);字号/间距/圆角来自来源设计文档(origin: source)。
+themes:
+  light:
+    background:                   { value: "#ffffff", origin: default }
+    foreground:                   { value: "#18181b", origin: default }
+    sidebar:                      { value: "#f4f4f5", origin: default }
+    sidebar-accent:               { value: "#ebebeb", origin: default }
+    sidebar-accent-foreground:    { value: "#18181b", origin: default }
+    muted:                        { value: "#f4f4f5", origin: default }
+    muted-foreground:             { value: "#52525b", origin: default }
+    faint-foreground:             { value: "#a1a1aa", origin: default }
+    surface:                      { value: "#fafafa", origin: default }
+    surface-hover:                { value: "#f4f4f5", origin: default }
+    surface-selected:             { value: "#ececee", origin: default }
+    border:                       { value: "#e4e4e7", origin: default }
+    surface-border:               { value: "#ebebeb", origin: default }
+    brand:                        { value: "#4f46e5", origin: default }
+    brand-foreground:             { value: "#ffffff", origin: default }
+    success:                      { value: "#16a34a", origin: default }
+    warning:                      { value: "#d97706", origin: default }
+    error:                        { value: "#dc2626", origin: default }
+    overlay-shadow:               { value: "0 8px 24px rgba(9,9,11,0.12)", origin: default }
+  dark:
+    background:                   { value: "#17171b", origin: default }
+    foreground:                   { value: "#ececee", origin: default }
+    sidebar:                      { value: "#121215", origin: default }
+    sidebar-accent:               { value: "#1d1d22", origin: default }
+    sidebar-accent-foreground:    { value: "#ececee", origin: default }
+    muted:                        { value: "#1c1c21", origin: default }
+    muted-foreground:             { value: "#a1a1aa", origin: default }
+    faint-foreground:             { value: "#63636b", origin: default }
+    surface:                      { value: "#1c1c21", origin: default }
+    surface-hover:                { value: "#24242a", origin: default }
+    surface-selected:             { value: "#2c2c34", origin: default }
+    border:                       { value: "#2a2a31", origin: default }
+    surface-border:               { value: "#26262d", origin: default }
+    brand:                        { value: "#818cf8", origin: default }
+    brand-foreground:             { value: "#1e1b4b", origin: default }
+    success:                      { value: "#4ade80", origin: default }
+    warning:                      { value: "#fbbf24", origin: default }
+    error:                        { value: "#f87171", origin: default }
+    overlay-shadow:               { value: "0 8px 24px rgba(0,0,0,0.45)", origin: default }
+
+typography:
+  family:
+    body: { value: "Inter, system-ui, -apple-system, 'Segoe UI', sans-serif", origin: default }
+    mono: { value: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", origin: default }
+  numeric: { value: "tabular-nums", origin: source }
+  scale:                       # 唯一允许的九档
+    micro:      { size: 11, lineHeight: 15, origin: source }
+    caption:    { size: 12, lineHeight: 16, origin: source }
+    label:      { size: 13, lineHeight: 18, origin: source }
+    body:       { size: 14, lineHeight: 20, origin: source }
+    body-lg:    { size: 15, lineHeight: 22, origin: source }
+    title-sm:   { size: 16, lineHeight: 24, origin: source }
+    title:      { size: 18, lineHeight: 28, origin: source }
+    title-lg:   { size: 20, lineHeight: 28, origin: source }
+    display-sm: { size: 24, lineHeight: 32, origin: source }
+
+spacing:
+  base:    { value: 4,  unit: px, origin: source }
+  allowed: { value: [4, 8, 12, 16, 24, 32], origin: source }
+  gutter:  { value: 16, unit: px, origin: source }
+
+radius:
+  canvas:  { value: 14, unit: px, origin: source }
+  control: { value: 10, unit: px, origin: source }
+  card:    { value: 8,  unit: px, origin: source }
+
+# chrome 常量;来源给区间的字段在归一化时收敛为单一值(origin: default)。
+chrome:
+  page-header:       { value: 48, unit: px, origin: source }
+  toolbar:           { value: 48, unit: px, origin: source }
+  nav-row-height:    { value: 30, unit: px, origin: default }  # 来源区间 28–32
+  list-row-padding-y: { value: 8,  unit: px, origin: default }  # 来源区间 8–10
+  icon-standard:     { value: 16, unit: px, origin: source }
