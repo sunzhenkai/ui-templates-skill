@@ -1,66 +1,66 @@
 ---
 name: ui-template
-description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 地址)或图片(截图/设计稿)中提取 UI 设计风格,创建/导入为可复用的设计规范文档,统一存入仓库 templates/ 目录。当用户想把某个网站、页面、截图或项目的视觉风格"做成模板"、"导入 UI 模板"、"提取设计规范"、"以后照这个风格做页面"时使用;即使用户没有明说"模板",只要意图是沉淀/复用某种 UI 风格,就应使用本 skill。
+description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 地址)、图片(截图/设计稿)或设计文档(Markdown/PDF)中提取 UI 设计风格，创建/导入/更新为可复用的设计规范文档，并维护 templates/ 模板库。当用户想把某个网站、页面、截图或项目的视觉风格"做成模板"、"导入 UI 模板"、"提取设计规范"，或浏览/更新已有模板时使用；不用于按模板实现页面（那属于 ui-template-apply）。
 ---
 
-# ui-template — UI 模板创建/导入
+# ui-template — 模板创建、导入与库管理
 
-把外部来源(Web 站点、代码仓库、图片)的 UI 风格提炼成**设计规范文档**,作为可复用模板沉淀到仓库的 `templates/` 目录。产物是文档,不是可运行代码。
+本 skill 只负责 Template Authoring 与 `templates/` 库管理：把外部来源提炼成规范文档，并保证产物可被独立的 `ui-template-apply` skill 消费。用已有模板实现页面不是本 skill 的职责。
 
-## 何时使用
+## 触发边界
 
-- 用户给了一个 URL、仓库路径/地址、或图片,希望"提取风格 / 做成模板 / 以后复用"。
-- 用户想浏览、复用或更新 `templates/` 里已有的模板。
+进入本工作流：
 
-不适用于:直接生成页面代码(那是模板的**消费方**做的事)、与 UI 风格无关的任务。
+- 用户给定 URL、仓库、图片或设计文档，希望"提取风格 / 做成模板 / 导入模板"。
+- 用户想浏览、复用、更新或拆分 `templates/` 里已有的模板。
+
+移交或拒绝：
+
+- "用某个模板实现页面 / 按模板做 UI / 基于模板搭后台" → 提示移交 `ui-template-apply`，不在本 skill 内展开 Apply 阶段。
+- 用户想按某种风格做页面但尚无模板 → 先完成 Authoring，再提示用 `ui-template-apply` 继续。
+- 与 UI 模板库维护无关的任务 → 不套用本流程。
 
 ## 核心原则
 
-- **产物是规范,不是代码的堆砌**:规范文档要能让一个没看过原站点的人(或 AI)据此还原出风格。记录"规则"(配色角色、字号阶梯、间距体系),而不是罗列某几个元素的具体样式。
-- **注明来源与置信度**:从图片反推的值是估算,要标注;从代码/ computed style 提取的值是精确的。混用会让模板失去可信度。
-- **模板自包含**:每个模板目录独立,引用外部来源只放 URL/路径和采集时间,不依赖来源持续可用。
+- **产物是规范，不是代码堆砌**：记录配色角色、字号阶梯、间距体系、组件状态和布局规则，而不是罗列零散样式。
+- **注明来源与置信度**：图片反推值标注 `(估算)`；来自代码或 computed style 的值标明出处。
+- **模板自包含**：引用外部来源只保留 URL/路径和采集时间，不依赖来源持续可用。
+- **Token 确定且可机读**：每个模板必须提供 `tokens.yaml` 作为精确值唯一载体；来源未体现的字段回填模板默认值并标注 `origin: default`，禁止留空交给消费方即兴发挥。
+- **模板只承载设计规则**：目录契约、API/data 分层、状态库选型和具体技术栈 adapter 属于消费项目实施决策，不进入模板。
+- **格式契约唯一归属**：`spec.md`、`tokens.yaml`、`meta.yaml` 与 `apply/` 的格式定义以本 skill 的 [references/spec-format.md](references/spec-format.md) 为唯一权威来源。
 
-## 工作流程
+## 来源路由
 
-### 1. 确定来源类型与模板名
+| 来源 | 指南 |
+| --- | --- |
+| `web` 运行中的站点 | [references/source-web.md](references/source-web.md) |
+| `repo` 代码仓库 | [references/source-repo.md](references/source-repo.md) |
+| `image` 图片/截图 | [references/source-image.md](references/source-image.md) |
+| `doc` 设计文档 | [references/source-doc.md](references/source-doc.md) |
 
-- 来源三选一:`web`(运行中的站点)、`repo`(代码仓库)、`image`(图片/截图)。
-- 与用户确认模板名(英文小写连字符,如 `linear-dark`),作为 `templates/<name>/` 目录名。
-- 若 `templates/<name>/` 已存在,询问是**更新**还是**另建**。
+骨架、字段、`origin` 语义、coverage 与大型规范拆分 → [references/spec-format.md](references/spec-format.md)。按来源条件加载，不要求通读全部指南。
 
-### 2. 按来源提取设计信息
+## Authoring 流程
 
-按来源类型阅读对应的提取指南,照着执行:
+1. 确定来源类型与模板名；`templates/<name>/` 已存在时询问是更新还是另建。
+2. 按来源路由读取对应指南并提取设计信息。
+3. 归一与决策：合并近义色、间距归基数、字号收敛；缺口回填默认值并标注 `origin: default`；补齐交互状态；做对比度预检；在 `meta.yaml` coverage 区分 observed 与 defaulted。
+4. 生成模板：`spec.md`（开篇 Non-negotiables）+ `tokens.yaml` + `meta.yaml`，可选 `assets/` 与 `apply/`。写作细节见 [references/spec-format.md](references/spec-format.md)。
+5. 更新 `templates/INDEX.md` 并汇报模板路径、关键 token、默认值与估算值、coverage 和决策记录。
 
-- `web` → 阅读 [references/source-web.md](references/source-web.md)
-- `repo` → 阅读 [references/source-repo.md](references/source-repo.md)
-- `image` → 阅读 [references/source-image.md](references/source-image.md)
+## 模板反馈消费
 
-提取的目标信息(规范文档的骨架)见 [references/spec-format.md](references/spec-format.md)。
+更新模板前检查 `ui-template-apply` 产出的结构化反馈记录（场景、证据、建议、影响范围）：
 
-### 3. 生成模板
+- 可复用规则缺口 → 回写对应模板文档，必要时更新索引与元数据。
+- 仅属消费项目的工程问题 → 驳回，不污染模板。
 
-在 `templates/<name>/` 下创建:
+## 汇报要求
 
-```
-templates/<name>/
-├── spec.md        # 设计规范文档(主体),格式见 references/spec-format.md
-├── meta.yaml      # 元数据,格式见 references/spec-format.md 末尾
-└── assets/        # 佐证材料:截图、色板等(可选,但 web/image 来源建议至少留一张截图)
-```
+汇报模板路径、关键 token 摘要、默认值与估算值说明、coverage、决策记录和索引更新；发现 Apply 意图时说明移交 `ui-template-apply`。
 
-写作要求:
+## Self-evolution
 
-- 全部使用简体中文;色值、字体名、CSS 属性等技术内容保留原文。
-- 每个估算值标注 `(估算)`,精确值可注明出处(如"来自 `:root` CSS 变量")。
-- 配色必须给出**角色语义**(背景/前景/主色/强调/边框/成功/警告等),不能只列色卡。
-- 有佐证截图时放入 `assets/` 并在 spec.md 中引用。
+本 Skill 具备经验积累、评估与持续进化能力。目录（均相对本 Skill 根目录）：`examples/`、`evals/`、`experience/`、`patches/`。执行复杂任务前检查 `examples/` 与相关 `evals/`；任务完成后仅在有失败、纠正、明显成功或新方法时写入 `experience/`；不要为了自进化破坏上文已规定的目标、流程、输出与约束。
 
-### 4. 更新索引与收尾
-
-- 更新仓库根目录的 `templates/INDEX.md`(不存在则创建):追加一行 `| <name> | <一句话风格描述> | <来源类型> | <采集日期> |`。
-- 向用户汇报:模板路径、提取到的关键 token 摘要(主色、字体、间距基调)、哪些是估算值。
-
-## 复用已有模板
-
-当用户说"用某个模板做页面"时:阅读 `templates/<name>/spec.md`,把其中的 token 与规则作为设计约束交给后续实现。本 skill 只负责模板的创建/导入/维护,不负责页面实现。
+Evolution 遵循：Experience → Repeated Pattern → Improvement Proposal → Eval → Pass → Update Skill。单次失败只留 Experience，不改生产稿。实际更新生产 `SKILL.md` 时不要直接覆盖原文；有 Git 则优先靠 Git diff 留历史；来自真实执行经验优先委托 `skill-evolver`；结构/规则显式修订走 `skill-upgrader` 的 update 模式。未展示 Proposal 并获得用户确认前，不改生产 Skill。

@@ -1,9 +1,57 @@
 name: workbench-shell
-description: 工作台/后台型 Web 应用 App Shell 布局规范:整页不滚动面板滚动、chrome 常量统一、1px 分割线分区、五种页面布局模式
+description: 中性浅暗双主题的工作台 App Shell：外壳安静、画布承载内容、紧凑 14px 界面、1px 分区分隔、蓝色品牌色克制出现。
 source:
   type: repo
-  ref: 用户提供的 Markdown 布局设计文档(原始项目出处已按要求抹除,业务实体已泛化)
-captured_at: 2026-08-30
-platforms: [web, mobile, desktop]   # 各平台外壳详细规格见 platforms/<platform>.md
-tags: [layout, app-shell, workbench, dashboard, responsive, dual-theme, web, mobile, desktop]
+  ref: "https://github.com/multica-ai/multica @ 879d0de9166261c26ec35b69f5cec9382191eda1"
+captured_at: 2026-09-03
+tokens: tokens.yaml
+platforms: [web, mobile, desktop]
+tags: [workbench, dashboard, app-shell, compact, dual-theme, neutral, blue, responsive]
 confidence: high
+coverage:
+  visual_reference: false
+  viewports: [desktop, tablet, mobile]
+  themes: [light, dark]
+  components:
+    observed:
+      - app-shell
+      - sidebar
+      - page-header
+      - toolbar
+      - breadcrumb
+      - collection-header
+      - empty-state
+      - skeleton
+      - list-grid
+      - native-table
+      - board
+      - swimlane
+      - card
+      - button
+      - icon-button
+      - input
+      - badge
+      - tabs
+      - dialog
+      - sheet
+      - popover
+      - tooltip
+      - navigation-progress
+      - floating-chat-fab
+    defaulted:
+      - checkbox
+      - switch
+      - select
+      - combobox
+      - command-palette
+      - date-picker
+      - pagination
+      - progress
+      - slider
+      - calendar
+      - toast
+      - avatar
+      - metric-card
+  states:
+    observed: [default, hover, active, focus-visible, disabled, selected, loading, error, empty]
+    defaulted: [read-only, invalid, dragging, resized]

@@ -1,0 +1,310 @@
+diff --git a/.agents/skills/ui-template/SKILL.md b/.agents/skills/ui-template/SKILL.md
+index 09419a0..c93753c 100644
+--- a/.agents/skills/ui-template/SKILL.md
++++ b/.agents/skills/ui-template/SKILL.md
+@@ -130,3 +130,89 @@
+ - Authoring:汇报模板路径、关键 token、估算值和索引更新。
+ - Apply:汇报已实现页面、未实现范围、目录结构、组件来源、浏览器验证证据、review 结论和模板反馈建议。
+ - 任何工具不可用时,说明所采用的回退方案;任何模板规则冲突时,说明以 `spec.md` 为准的处理结果。
++
++## Self-evolution
++
++本 Skill 具备经验积累、评估与持续进化能力。目录（均相对本 Skill 根目录）：
++
++```text
++.agents/skills/ui-template/
++├── SKILL.md
++├── examples/      # 经过验证的优秀执行案例
++├── evals/         # 可验证成功标准
++└── experience/    # 真实失败 / 成功 / 规律
++```
++
++不要为了自进化而破坏上文已规定的目标、流程、工具用法、输出与约束。
++
++### Examples
++
++执行复杂任务前：
++
++1. 检查 `examples/`
++2. 找到与当前任务相关的成功案例
++3. 优先复用已经验证的方法
++
++没有相关案例时按上文正常执行，不要编造案例。
++
++### Evaluation
++
++任务完成前：
++
++1. 检查相关 `evals/`
++2. 验证关键输出
++3. 检查是否违反 Skill 约束
++4. 尽可能运行相关 Eval Cases（见 `evals/cases.yaml`）
++
++优先确定性 Eval；无法确定性判断时再用 LLM Judge。Eval 失败则先修输出，不要带着失败交卷。
++
++### Experience
++
++任务完成后，出现以下情况才写入 `experience/`：
++
++- 失败
++- 用户纠正
++- 明显成功
++- 新的有效执行方法
++- 可复用的经验
++
++不要记录 trivial information。不要伪造条目。密钥、内部 URL、凭据不得写入。
++
++单次失败 → `experience/failures/`。重复出现的规律 → `experience/patterns/`（至少两次同类证据）。
++
++### Evolution
++
++只有当 Experience 暴露出**可复用、稳定的问题或模式**时，才考虑修改本 Skill。
++
++遵循：
++
++```text
++Experience
++    ↓
++Repeated Pattern
++    ↓
++Improvement Proposal
++    ↓
++Eval
++    ↓
++Pass
++    ↓
++Update Skill
++```
++
++禁止：
++
++```text
++Single Failure
++    ↓
++Directly modify SKILL.md
++```
++
++进入 Skill 正文的 Experience 必须同时满足：可复用于多个类似任务、有足够证据、能明确改善结果、不破坏已有能力、可通过 Eval 验证。一次性特殊情况只留 Experience，不改 Skill。
++
++实际更新生产 `SKILL.md` 时：
++
++1. 不要直接覆盖原文；记录 version / change / reason / evidence / evaluation。有 Git 则优先靠 Git diff 留历史。
++2. 若改动来自**真实执行经验**：优先委托 `skill-evolver`（`evolutions/` → 验证 → 晋升），不要本 Skill 自己改生产稿。
++3. 若只是结构/规则的显式修订且环境有 `skill-upgrader`：走其 `update` 模式（`.agents/skills/ui-template/patches/`），仍须先提案再应用。
++4. 未展示 Proposal 并获得用户确认前，不改生产 Skill。
+diff --git a/.agents/skills/ui-template/examples/README.md b/.agents/skills/ui-template/examples/README.md
+new file mode 100644
+index 0000000..a2f4eaf
+--- /dev/null
++++ b/.agents/skills/ui-template/examples/README.md
+@@ -0,0 +1,25 @@
++# Examples
++
++经过验证的优秀执行案例。执行复杂任务前先读这里，优先复用已验证方法。
++
++## 何时写入
++
++- 用户明确认可，或一次完成且明显优于以往
++- 路径可复用，不是一次性特例
++- 不含密钥、内部 URL、机器专属路径
++
++没有真实成功案例时保持本目录为空，只保留本 README。禁止编造。
++
++## 案例文件
++
++每个案例一个 markdown：`examples/<YYYYMMDD>-<slug>.md`
++
++必填：
++
++- Date
++- Skill
++- Task
++- Approach
++- Result
++- Why it was good
++- Reusable lessons
+diff --git a/.agents/skills/ui-template/evals/README.md b/.agents/skills/ui-template/evals/README.md
+new file mode 100644
+index 0000000..0d09642
+--- /dev/null
++++ b/.agents/skills/ui-template/evals/README.md
+@@ -0,0 +1,12 @@
++# Evals
++
++本 Skill 的可验证成功标准。任务完成前对照 `cases.yaml` 检查关键输出与约束。
++
++## 怎么跑
++
++1. 选出与当前任务相关的 cases（`kind` + 描述匹配）
++2. `judge: deterministic`：按 `expect.must` / `expect.must_not` 逐条核对，只报 pass/fail
++3. `judge: llm`：仅当无法确定性判断时使用；给出简短判定与依据，不编分数
++4. 任一条失败 → 先修输出再交卷，不要带着 fail 声称完成
++
++新增 case 必须能从 Skill 原文或真实回归事故找到依据。禁止虚构。
+diff --git a/.agents/skills/ui-template/evals/cases.yaml b/.agents/skills/ui-template/evals/cases.yaml
+new file mode 100644
+index 0000000..bde3f2d
+--- /dev/null
++++ b/.agents/skills/ui-template/evals/cases.yaml
+@@ -0,0 +1,113 @@
++version: 1
++skill: ui-template
++cases:
++  - id: apply-requires-reference-reading
++    kind: basic
++    judge: deterministic
++    description: Template Apply 执行前必须完整阅读工作流、工具链、质量门禁与模板 spec。
++    given: 用户要求使用已有模板实现页面
++    expect:
++      must:
++        - 执行前已读取 references/apply-workflow.md
++        - 执行前已读取 references/toolchain.md
++        - 执行前已读取 references/quality-gates.md
++        - 执行前已读取 templates/<name>/spec.md
++      must_not:
++        - 未读上述文件即开始实现页面
++  - id: authoring-updates-index
++    kind: core
++    judge: deterministic
++    description: Authoring 完成后必须更新 templates/INDEX.md 并汇报模板路径、关键 token 与估算值。
++    given: 完成一个模板的 Authoring
++    expect:
++      must:
++        - templates/INDEX.md 包含新模板行（名称/风格描述/来源类型/采集日期）
++        - 汇报包含模板路径、关键 token 摘要、估算值说明
++      must_not: []
++  - id: no-apply-without-template
++    kind: failure
++    judge: deterministic
++    description: 没有可用模板时必须先进入 Authoring，不得直接生成页面。
++    given: 用户要求照某风格做页面但 templates/ 中无对应模板
++    expect:
++      must:
++        - 先执行 Template Authoring 创建或扩展模板
++        - 创建完成后向用户确认是否继续 Apply
++      must_not:
++        - 在无模板时直接生成页面
++  - id: no-phase-skipping
++    kind: core
++    judge: deterministic
++    description: Apply 的 0-9 阶段不得跳过或提前。
++    given: Template Apply 进行中且前一阶段产物未确认
++    expect:
++      must:
++        - 每阶段先产出核心产物再进入下一阶段
++      must_not:
++        - token 与 layout 未确认时生成页面
++        - 跳过 Browser verification 宣称完成
++  - id: browser-verification-evidence
++    kind: core
++    judge: deterministic
++    description: 完成宣称必须附带真实浏览器验证证据。
++    given: 一次 Template Apply 即将收尾
++    expect:
++      must:
++        - 提供桌面、compact、mobile 多视口检查
++        - console 无未处理错误
++        - 可访问性树与 computed style 匹配模板 token
++      must_not:
++        - 仅以代码审查宣称完成
++  - id: estimated-values-labeled
++    kind: failure
++    judge: deterministic
++    description: 反推或估算值必须标注 (估算)，不得冒充精确值。
++    given: 从图片反推色值或字号
++    expect:
++      must:
++        - 估算值后标注 (估算)
++      must_not:
++        - 将估算值表述为精确值而不注明出处
++  - id: existing-template-ask-update-or-new
++    kind: boundary
++    judge: deterministic
++    description: 目标模板目录已存在时必须询问更新还是另建。
++    given: 用户要求创建 templates/<name>/ 且该目录已存在
++    expect:
++      must:
++        - 询问用户是更新现有模板还是另建新模板
++      must_not:
++        - 未经确认直接覆盖已有模板内容
++  - id: spec-wins-over-implementation
++    kind: boundary
++    judge: deterministic
++    description: spec.md 与 implementation/ 冲突时以 spec.md 为准。
++    given: 模板 implementation/ 说明与 spec.md 规则冲突
++    expect:
++      must:
++        - 按 spec.md 规则执行
++        - 向用户说明冲突与裁决依据
++      must_not:
++        - 按 implementation/ 覆盖 spec.md 规则
++  - id: routing-semantics-enforced
++    kind: core
++    judge: deterministic
++    description: 路由入口使用真实链接，当前项使用 aria-current，可恢复状态进入 URL。
++    given: 实现跨页面导航与可恢复状态
++    expect:
++      must:
++        - 跨页面目的地使用真实 <a href>
++        - 当前导航项含 aria-current="page"
++        - 可恢复状态进入 URL
++      must_not:
++        - 用脚本模拟导航替代真实链接
++  - id: out-of-scope-rejected
++    kind: boundary
++    judge: deterministic
++    description: 与 UI 风格、布局模板或模板消费无关的任务不使用本 skill。
++    given: 请求与 UI 模板无关
++    expect:
++      must:
++        - 判定不适用本 skill 并说明原因
++      must_not:
++        - 强行套用模板工作流
+diff --git a/.agents/skills/ui-template/experience/README.md b/.agents/skills/ui-template/experience/README.md
+new file mode 100644
+index 0000000..4433378
+--- /dev/null
++++ b/.agents/skills/ui-template/experience/README.md
+@@ -0,0 +1,33 @@
++# Experience
++
++真实执行中的失败、成功与可复用规律。不要记录 trivial information。
++
++```text
++failures/  → 失败案例
++successes/ → 成功案例
++patterns/  → 从多个案例中提炼出的可复用规律
++```
++
++## 何时写入
++
++- 失败、用户纠正、明显成功
++- 新的有效执行方法
++- 可复用的经验
++
++## 何时不写入
++
++- 一次性环境问题（网络闪断、用户打错字）
++- 与 Skill 无关的闲聊
++- 尚未发生的「预期失败」
++
++## 条目格式
++
++`experience/<bucket>/<YYYYMMDD>-<slug>.md`
++
++必填：Date / Kind（failure | success | pattern）/ Skill / Context / What happened / Lesson。
++
++一次性特例在 Lesson 写明 `Experience only`，不要建议改 Skill。
++
++`patterns/` 至少要有 **两次以上** 同类 evidence 才建立。单次失败只进 `failures/`。
++
++空的 `failures/` `successes/` `patterns/` 各放一个 `.gitkeep`。
+diff --git a/.agents/skills/ui-template/experience/failures/.gitkeep b/.agents/skills/ui-template/experience/failures/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+diff --git a/.agents/skills/ui-template/experience/successes/.gitkeep b/.agents/skills/ui-template/experience/successes/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+diff --git a/.agents/skills/ui-template/experience/patterns/.gitkeep b/.agents/skills/ui-template/experience/patterns/.gitkeep
+new file mode 100644
+index 0000000..e69de29

@@ -1,0 +1,94 @@
+diff --git a/.agents/skills/ui-template-manager/SKILL.md b/.agents/skills/ui-template-manager/SKILL.md
+--- a/.agents/skills/ui-template-manager/SKILL.md
++++ b/.agents/skills/ui-template-manager/SKILL.md
+@@ -8,9 +8,9 @@
+ 本仓库是可共享 skill `ui-template` 的源码仓,通用流程与格式定义在 `skills/ui-template/` 下。
+ 执行模板的创建/导入/更新时,**先阅读并遵循**:
+ 
+-- `skills/ui-template/SKILL.md` — 工作流程(定位来源 → 按来源提取 → 生成规范 → 更新索引)
+-- `skills/ui-template/references/spec-format.md` — spec.md / meta.yaml 格式
+-- `skills/ui-template/references/source-{web,repo,image}.md` — 三类来源的提取指南
++- `skills/ui-template/SKILL.md` — 工作流程(定位来源 → 按来源提取 → 归一与决策 → 生成规范 → 更新索引)
++- `skills/ui-template/references/spec-format.md` — spec.md / tokens.yaml / meta.yaml 格式
++- `skills/ui-template/references/source-{web,repo,image,doc}.md` — 四类来源的提取指南
+ - `skills/ui-template/references/apply-workflow.md` — 使用已有模板分阶段实现页面的阶段与 gate
+ - `skills/ui-template/references/toolchain.md` — Template Apply 的默认工具链与缺失回退
+ - `skills/ui-template/references/quality-gates.md` — Template Apply 的最低质量门禁
+@@ -20,15 +20,16 @@
+ ## 本仓库约定
+ 
+ - 模板统一存放于 `templates/<name>/`;每次新增/更新模板必须同步 `templates/INDEX.md` 索引行。
+-- 大型规范允许拆分(如 `workbench-shell` 的 `platforms/` 子规格),`spec.md` 为共享核心与入口。
+-- 复杂模板可携带 optional `implementation/` playbook 与 stack adapter;`spec.md` 仍是设计规则唯一入口,implementation 文档只写实施顺序、映射和验收。
++- 模板必备 `spec.md`、`tokens.yaml`、`meta.yaml`:`spec.md` 是设计规则唯一入口(开篇列 Non-negotiables),`tokens.yaml` 是颜色、字号、间距、圆角等精确值的唯一载体,缺口必须回填 `origin: default` 默认值。
++- 大型规范允许拆分(如 `platforms/<platform>.md` 子规格),`spec.md` 为共享核心与入口;组件设计契约可放模板根目录 `components.md`。
++- `apply/` 只允许写实施顺序、阶段 gate 与验收引用;目录契约、API/data 分层、状态库选型、stack adapter 与具体业务域名不得进入模板,由消费项目实施时决策。
+ - 语言:文档与注释一律简体中文,色值、字体名、CSS 属性等技术内容保留原文。
+ - **改动通用流程或格式时,改 `skills/ui-template/`(单一源码),不要只改本文件**;保持 manager 为薄封装。
+ - 模板自包含、不含密钥与特定环境路径;skill 文件会被 AI 助手直接消费,不写入不希望被逐字执行的内容。
+ 
+ ## 复用已有模板
+ 
+-用户说"用某个模板做页面"时:阅读 `templates/<name>/spec.md`(及其拆分子文件),把 token 与规则作为设计约束交给实现方。本 skill 不负责页面实现。
++用户说"用某个模板做页面"时:阅读 `templates/<name>/spec.md` 的 Non-negotiables、`tokens.yaml` 及拆分子文件,把 token 与规则作为设计约束交给实现方。本 skill 不负责页面实现。
+ 
+ ---
+ 
+diff --git a/.agents/skills/ui-template-manager/evals/cases.yaml b/.agents/skills/ui-template-manager/evals/cases.yaml
+--- a/.agents/skills/ui-template-manager/evals/cases.yaml
++++ b/.agents/skills/ui-template-manager/evals/cases.yaml
+@@ -19,7 +19,7 @@
+     kind: basic
+     judge: deterministic
+     description: 新写模板文档与注释使用简体中文，技术内容保留原文。
+-    given: 生成或修改模板的 spec.md、platforms 或 implementation 文档。
++    given: 生成或修改模板的 spec.md、tokens.yaml、platforms 或 apply 文档。
+     expect:
+       must:
+         - 说明文字与注释为简体中文
+@@ -35,10 +35,12 @@
+     expect:
+       must:
+         - templates/<name>/spec.md 存在并作为共享核心与入口
++        - templates/<name>/tokens.yaml 存在且关键维度无空值
+         - 平台差异写入 platforms/ 子规格（如存在）
+-        - implementation/ 只写实施顺序、映射和验收
++        - apply/ 只写实施顺序与验收引用
+       must_not:
+-        - 让 implementation 文档定义与 spec.md 冲突的第二套设计规则
++        - 让 apply 文档定义与 spec.md 冲突的第二套设计规则
++        - 在模板内放置目录契约、API/data 分层或 stack adapter
+ 
+   - id: template-reuse-boundary
+     kind: core
+@@ -100,3 +102,30 @@
+         - SKILL.md 含 Self-evolution 段落
+       must_not:
+         - 删除或绕过既有仓库约定与安全门禁
++
++  - id: tokens-required-in-repo-templates
++    kind: core
++    judge: deterministic
++    description: 本仓库模板必备 tokens.yaml 且缺口已回填默认值。
++    given: 在 templates/ 下创建或更新任意模板。
++    expect:
++      must:
++        - templates/<name>/tokens.yaml 存在
++        - 精确值带 origin，缺口字段为 origin: default 的具体值
++        - spec.md 开篇包含 Non-negotiables
++      must_not:
++        - 只在 spec.md 里用 prose 描述数值
++        - 把"来源未体现"作为字段最终状态
++
++  - id: no-stack-adapter-in-repo-templates
++    kind: failure
++    judge: deterministic
++    description: 模板不得携带工程结构与栈适配内容。
++    given: 检查 templates/<name>/ 的结构与文档。
++    expect:
++      must:
++        - apply/（如存在）只含实施顺序与验收引用
++        - components.md（如存在）只含设计契约
++      must_not:
++        - 出现 code-structure、stack-<framework>.md 或 src/ 目录契约
++        - 把具体消费项目的业务域名写入模板

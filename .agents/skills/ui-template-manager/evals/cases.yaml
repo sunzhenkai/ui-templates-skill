@@ -1,0 +1,131 @@
+version: 1
+skill: ui-template-manager
+cases:
+  - id: read-generic-source-and-update-index
+    kind: basic
+    judge: deterministic
+    description: 管理模板时先读通用 skill 源码，并把模板落到约定目录与索引。
+    given: 在本仓库创建、导入或更新一个 UI 设计规范模板。
+    expect:
+      must:
+        - 执行前已读取 skills/ui-template/SKILL.md 及其引用的 references
+        - 模板位于 templates/<name>/ 目录
+        - templates/INDEX.md 包含对应的索引行且与实际模板一致
+      must_not:
+        - 跳过 templates/INDEX.md 更新
+        - 把模板主体放到 templates/ 约定之外
+
+  - id: docs-language-convention
+    kind: basic
+    judge: deterministic
+    description: 新写模板文档与注释使用简体中文，技术内容保留原文。
+    given: 生成或修改模板的 spec.md、tokens.yaml、platforms 或 apply 文档。
+    expect:
+      must:
+        - 说明文字与注释为简体中文
+        - 色值、字体名、CSS 属性、路径等技术内容保留原文
+      must_not:
+        - 将技术标识符逐词硬翻
+
+  - id: spec-is-single-design-entry
+    kind: core
+    judge: deterministic
+    description: spec.md 是设计规则唯一入口，拆分文档只承担各自职责。
+    given: 新建或更新大型/复杂模板。
+    expect:
+      must:
+        - templates/<name>/spec.md 存在并作为共享核心与入口
+        - templates/<name>/tokens.yaml 存在且关键维度无空值
+        - 平台差异写入 platforms/ 子规格（如存在）
+        - apply/ 只写实施顺序与验收引用
+      must_not:
+        - 让 apply 文档定义与 spec.md 冲突的第二套设计规则
+        - 在模板内放置目录契约、API/data 分层或 stack adapter
+
+  - id: template-reuse-boundary
+    kind: core
+    judge: deterministic
+    description: 复用模板时传递设计约束，不越界实现页面。
+    given: 用户要求用某个已有模板做页面。
+    expect:
+      must:
+        - 阅读 templates/<name>/spec.md 及其拆分子文件
+        - 将 token 与规则作为设计约束交给实现方
+      must_not:
+        - 声称本 skill 直接负责页面实现
+
+  - id: generic-flow-change-goes-to-source
+    kind: failure
+    judge: deterministic
+    description: 改通用流程或格式时必须改单一源码，而不是只改 manager。
+    given: 需要修改通用工作流、spec 格式或质量门禁。
+    expect:
+      must:
+        - 修改 skills/ui-template/ 下的对应文件
+      must_not:
+        - 只修改 .agents/skills/ui-template-manager/SKILL.md 来改变通用流程
+
+  - id: template-safety
+    kind: failure
+    judge: deterministic
+    description: 模板与 skill 文件保持自包含且不包含敏感内容。
+    given: 写入任何模板或 skill 文件。
+    expect:
+      must:
+        - 内容自包含、可随仓库分发
+      must_not:
+        - 包含密钥或特定环境路径
+        - 写入不希望被 AI 助手逐字执行的指令
+
+  - id: experience-recording-boundary
+    kind: boundary
+    judge: deterministic
+    description: Experience 只记录真实且有复用价值的事件，单次失败不改 Skill。
+    given: 任务完成时出现失败、用户纠正、明显成功或新的有效方法。
+    expect:
+      must:
+        - 按类型写入 experience/failures/、experience/successes/ 或 experience/patterns/
+        - patterns/ 仅在至少两次同类证据后建立
+      must_not:
+        - 伪造示例或经验条目
+        - 因单次失败直接修改 SKILL.md
+
+  - id: self-evolution-structure-preserved
+    kind: regression
+    judge: deterministic
+    description: 自进化结构存在且不破坏 manager 薄封装定位。
+    given: 检查升级后的 .agents/skills/ui-template-manager/。
+    expect:
+      must:
+        - examples/、evals/、experience/ 目录存在
+        - SKILL.md 保留 name: ui-template-manager 的 frontmatter
+        - SKILL.md 含 Self-evolution 段落
+      must_not:
+        - 删除或绕过既有仓库约定与安全门禁
+
+  - id: tokens-required-in-repo-templates
+    kind: core
+    judge: deterministic
+    description: 本仓库模板必备 tokens.yaml 且缺口已回填默认值。
+    given: 在 templates/ 下创建或更新任意模板。
+    expect:
+      must:
+        - templates/<name>/tokens.yaml 存在
+        - 精确值带 origin，缺口字段为 origin: default 的具体值
+        - spec.md 开篇包含 Non-negotiables
+      must_not:
+        - 只在 spec.md 里用 prose 描述数值
+        - 把"来源未体现"作为字段最终状态
+
+  - id: no-stack-adapter-in-repo-templates
+    kind: failure
+    judge: deterministic
+    description: 模板不得携带工程结构与栈适配内容。
+    given: 检查 templates/<name>/ 的结构与文档。
+    expect:
+      must:
+        - apply/（如存在）只含实施顺序与验收引用
+        - components.md（如存在）只含设计契约
+      must_not:
+        - 出现 code-structure、stack-<framework>.md 或 src/ 目录契约
+        - 把具体消费项目的业务域名写入模板

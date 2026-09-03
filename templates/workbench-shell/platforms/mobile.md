@@ -1,28 +1,32 @@
-# workbench-shell · mobile 平台路径
+# mobile 平台壳
 
-> 运行形态:移动浏览器 / 移动壳。共享规则(原则、token、chrome 常量、五种页面模式)
-> 见 [../spec.md](../spec.md),本文件只写 mobile 外壳的特有规格。
+移动端遵守 [`../spec.md`](../spec.md) 的字号、表面、状态与可访问性规则；本文件只记录移动外壳差异。
 
-## 外壳
+## 主题差异
 
-- 无顶行 chrome,无浮岛侧栏。
-- 画布卡片全幅铺到屏幕边缘(呼吸边与浮岛在 mobile 路径不适用;来源未明确,推算)。
+- 移动端源码使用 HSL 基础 token：light 背景为白色、前景接近黑；dark 背景接近黑、前景接近白；`brand` 为 `hsl(225 71% 58%)`。
+- 移动 elevation 采用 `surface-1`（light L 98%，dark L 8%）与 `surface-2`（light L 90%，dark L 19%）；嵌套表面用更高一级。
+- 基准圆角与 Web / Desktop 一致为 10px；平台原生 Sheet 圆角为 20px。
+- 该平台未完全复用 Web/Desktop 的 `oklch()` 中性阶梯；消费时按主题角色映射，不得把两套未换算值直接混用。
 
-## 侧栏 = 覆盖式抽屉
+## 布局
 
-- 侧栏整体变为覆盖式抽屉(从左侧滑入,盖住内容)。
-- **路由跳转后必须自动关闭**,否则用户会以为"点了没反应"。
+```text
+safe area root（flex 1）
+└─ workspace stack
+   ├─ bottom tab shell（Inbox / My Issues / Chat / More）
+   └─ detail / modal stack
+```
 
-## 导航入口
+- 底部页签背景与页面背景同色；激活 tint 为 foreground，未激活为 muted foreground；标签 11px。
+- Inbox 与 Chat 未读使用 brand 徽章，上限显示 `99+`；零计数不渲染徽章。
+- “More”页签不落地普通路由，而是打开 popover / formSheet；空间切换、设置和次要集合从这里进入。
+- 详情页从页签下钻时返回到页签；深层 filter / picker 关闭后恢复原列表状态。
 
-- 页头最左渲染导航触发器(唤出抽屉);外层已有常驻触发器时不重复渲染。
-- 钻取型页面(列表 → 详情)用"返回"按钮替换触发器——返回优先级高于唤出导航。
+## Sheet 与触控
 
-## 画布内降级(mobile 路径通常落在 <768)
-
-- 主从双栏(模式 B):单栏二选一;列表态 = 页头 + 滚动列表,详情态 = 48px 返回条 +
-  全屏详情;选中项保留在 URL,返回列表后原选中仍高亮。
-- 详情页(模式 C):属性栏整栏隐藏,属性改从内容区操作。
-- 设置页(模式 D):垂直页签变顶部横向可滚动页签条(下边框),内容单列。
-- 页头:动作仅图标(aria-label 兜底),描述隐藏。
-- FAB 常驻,底部横栏与滚动内容仍需为其让位(原则 7)。
+- 通用 picker / filter 使用原生 formSheet：60% 和 95% 两个 detent、显示 grabber、圆角 20px、内容满高；孤立表单可用 fit-to-content。
+- 新建、搜索等 modal 自绘 header 与关闭动作；每个 sheet body 有标题与主动作。
+- 所有可点目标符合平台最小触控尺寸；可编辑文本聚焦时渲染 16px，避免 iOS 聚焦缩放。
+- 键盘出现时 composer / 输入区贴键盘；列表滚动位置不得跳离用户正在查看的行。
+- 手势必须与无障碍动作等价：swipe、long press、drag 均提供按钮或菜单路径。

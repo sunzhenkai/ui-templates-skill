@@ -1,27 +1,38 @@
-# workbench-shell · desktop 平台路径
+# desktop 平台壳
 
-> 运行形态:桌面客户端(Electron/Tauri 类)。共享规则(原则、token、chrome 常量、
-> 五种页面模式)见 [../spec.md](../spec.md),本文件只写 desktop 外壳的特有规格。
+Desktop 与 Web 共享 [`../spec.md`](../spec.md) 与 [`../tokens.yaml`](../tokens.yaml)；只覆盖窗口 chrome、页签和画布差异。
 
-## 外壳:48px 顶行 chrome
+## 结构
 
-窗口最顶一行 48px 全宽 chrome,由两段拼成:
+```text
+window（h-screen / overflow hidden / app-shell）
+├─ WindowToolbar（48px，traffic lights + sidebar/back/forward）
+├─ Sidebar（可拖拽；顶部为 48px spacer）
+├─ MainTopBar（48px 页签条）
+└─ MainCanvas（page-canvas；mr 8px / mb 8px；radius 14px）
+   ├─ NavigationProgress
+   ├─ 当前页签内容
+   └─ FloatingChat
+```
 
-- **侧栏段**:侧栏顶部留 48px 空白(spacer);窗口控制(系统窗按钮)+ 侧栏开关 +
-  前进/后退做成**固定浮层**压在这段留白上(宽约 184px);整行可拖拽移动窗口。
-- **内容列段**:内容列顶部是自己的 48px 顶栏,装**浏览器式页签条**:
-  - 每个页签 = 一个打开的实体/页面;单个页签约 36px 高 × 160px 宽,最小 128px,
-    底边对齐画布顶;末尾 `+` 新建。
-  - 页签图标/标题与路由同源派生(原则 8:图标即语义,一处定义),保证页签、侧栏、
-    面包屑引用同一目的地时图标永远一致。
+## 窗口工具栏
 
-## 侧栏
+- 顶行高 48px；左侧窗口控件区宽 184px。
+- 窗口控件后依次是 sidebar 触发器、back / forward；按钮 28px、图标 16px、hover 用 sidebar accent。
+- 窗口控件区允许拖动，内部按钮禁止拖动。
+- 外层触发器常驻时，页头不得再渲染第二个 sidebar 触发器。
 
-- 贴左缘,**不内缩**(与 web 浮岛变体的区别);常驻、可拖拽调宽 200–360px 并持久化。
-- 导航入口在顶行内:侧栏开关 + 前进/后退。
+## 页签
 
-## 其他
+- MainTopBar 高 48px；页签文字 12px；标签区水平 padding 10px、图标 / 文本间距 6px。
+- 激活页签与下方画布共享 surface 色，并延续到画布顶边；未激活文本 muted，hover 提升为 sidebar accent foreground。
+- 支持拖拽排序、固定、关闭、中键关闭和右键菜单；固定区与普通区之间用 4px 间距 + 1px 竖线分隔。
+- 唯一页签和固定页签不显示关闭；关闭前必须保证至少一个页签或恢复工作区首页。
 
-- 全局 overlay(模态、搜索面板、FAB、进度条、快捷键)仍挂在画布卡片内,不盖侧栏。
-- 窗口缩到 <1024 时外壳(顶行、贴缘侧栏)不变,只有画布内按断点降级
-  (spec.md 第 13 节)——不要用窗口宽度反推平台。
+## 画布与导航
+
+- 侧栏展开时画布左缘 2px hairline；侧栏折叠 / compact 时左缘扩大到 8px；右侧与底缘保持 8px。
+- 画布圆角 14px，1px surface ring，极轻 surface shadow；内部 `overflow: hidden`。
+- 页签、路由与工作区切换支持 back / forward、键盘快捷键和原生手势；目标未解析前显示结构化 loading。
+- 跨工作区通知和链接必须切换到正确工作区，不得把目标挂到当前工作区页签组。
+- Modal registry、全局搜索与 WindowOverlay 在页签系统之外；pre-workspace overlay 仍保留 traffic lights 与自己的 drag strip。
