@@ -31,6 +31,48 @@
 - `templates/` — 模板存放目录，按 `skills/ui-template/references/spec-format.md` 的约定维护（含 `templates/INDEX.md` 索引）。现有模板：
   - `workbench-shell/` — 工作台/后台型 App Shell 布局规范（用户提供的设计文档导入，业务实体已泛化）；`spec.md` 为共享核心（开篇 Non-negotiables），精确值在 `tokens.yaml`（颜色/字体为 `origin: default` 默认值，字号/间距/圆角来自来源），平台外壳差异在 `platforms/{web,mobile,desktop}.md`，页面模式在 `routes-and-layouts.md`，组件契约在 `components.md`，实施顺序与验收在 `apply/`。模板不携带目录契约、API/data 分层或 stack adapter。
 
+
+
+## web-v2 实现（workbench-shell apply 样例）
+
+`example/workbench-shell/web-v2/` 是按 [`workbench-shell`](../templates/workbench-shell/) 模板用 `ui-template-apply` 工作流实现的真实项目，承载 `example/workbench-shell/prompts/README.md` 描述的全部业务。**不参考 `web-v1/` 业务代码**。
+
+技术栈：Vite + React 19 + TypeScript + Tailwind v4 + shadcn/ui（radix-nova）+ React Router v7 + TanStack Query + Zustand + Zod + @dnd-kit + cmdk + sonner + recharts + Vitest + Playwright + oxlint。
+
+结构与命令：
+
+```bash
+example/workbench-shell/web-v2/
+  docs/brief.md              # Implementation Brief / Design Direction / Token map
+  docs/feedback.md           # 模板反馈（4 条 apply 期间观察）
+  README.md                  # 入门、目录约定、命令、模板契约对照
+  src/
+    index.css                # Tailwind v4 + 完整 tokens（来自 workbench-shell/tokens.yaml）
+    lib/{api,mock,stores,hooks,types,utils}.ts
+    components/{ui,app-shell,shared}/
+    pages/{inbox,events,services,oncall,analytics,settings}/
+  e2e/smoke.spec.ts          # 8 用例 × 3 视口 = 24 个 E2E
+  src/test/smoke.test.ts     # 14 个单测
+```
+
+```bash
+cd example/workbench-shell/web-v2
+pnpm install
+pnpm dev              # 开发
+pnpm test             # vitest
+pnpm test:e2e:install && pnpm test:e2e   # playwright（需先下载 chromium）
+pnpm build && pnpm preview
+```
+
+验证门禁：tsc 通过、oxlint 无 error、单测 14/14、E2E 24/24、`python3 scripts/validate_templates.py` 通过。
+
+不沉淀到模板的"web-v2 独有决定"：
+- `api` mock 用本地 Promise + `forceFail: true` 注入失败；不引入 MSW / Mirage。
+- 字体使用 Geist Variable（与 multica 一致）；CJK fallback 用 PingFang / Microsoft YaHei。
+- 工作区切换、侧栏宽度、主题等 UI 状态用 Zustand `persist` 写到 localStorage。
+- mock 数据不持久化；刷新后回到 seed。
+- 业务实体名（事件 = incidents、变更 = changes、班次 = shifts、服务 = services、集成 = integrations、通知规则 = notificationRules）由 prompts/README.md 决定，与模板契约的"service / change / shift / integration / rule"对应。
+
 ## 构建与测试命令
 
 - 模板契约校验：`python3 scripts/validate_templates.py`（需要 Python 3 与 PyYAML）。新增/修改 `templates/` 后必须运行并通过。

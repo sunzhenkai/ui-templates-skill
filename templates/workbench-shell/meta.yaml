@@ -1,0 +1,57 @@
+name: workbench-shell
+description: 中性浅暗双主题的工作台 App Shell：外壳安静、画布承载内容、紧凑 14px 界面、1px 分区分隔、蓝色品牌色克制出现。
+source:
+  type: repo
+  ref: "https://github.com/multica-ai/multica @ 879d0de9166261c26ec35b69f5cec9382191eda1"
+captured_at: 2026-09-03
+tokens: tokens.yaml
+platforms: [web, mobile, desktop]
+tags: [workbench, dashboard, app-shell, compact, dual-theme, neutral, blue, responsive]
+confidence: high
+coverage:
+  visual_reference: false
+  viewports: [desktop, tablet, mobile]
+  themes: [light, dark]
+  components:
+    observed:
+      - app-shell
+      - sidebar
+      - page-header
+      - toolbar
+      - breadcrumb
+      - collection-header
+      - empty-state
+      - skeleton
+      - list-grid
+      - native-table
+      - board
+      - swimlane
+      - card
+      - button
+      - icon-button
+      - input
+      - badge
+      - tabs
+      - dialog
+      - sheet
+      - popover
+      - tooltip
+      - navigation-progress
+      - floating-chat-fab
+    defaulted:
+      - checkbox
+      - switch
+      - select
+      - combobox
+      - command-palette
+      - date-picker
+      - pagination
+      - progress
+      - slider
+      - calendar
+      - toast
+      - avatar
+      - metric-card
+  states:
+    observed: [default, hover, active, focus-visible, disabled, selected, loading, error, empty]
+    defaulted: [read-only, invalid, dragging, resized]
