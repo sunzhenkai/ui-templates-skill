@@ -1,0 +1,50 @@
+[
+  {
+    "tag": "button",
+    "role": "combobox",
+    "name": "工作区",
+    "current": null
+  },
+  {
+    "tag": "button",
+    "role": null,
+    "name": "全局搜索",
+    "current": null
+  },
+  {
+    "tag": "button",
+    "role": null,
+    "name": "创建事件",
+    "current": null
+  },
+  {
+    "tag": "a",
+    "role": null,
+    "name": "工作区设置",
+    "current": "page"
+  },
+  {
+    "tag": "button",
+    "role": null,
+    "name": "置顶事件",
+    "current": null
+  },
+  {
+    "tag": "button",
+    "role": null,
+    "name": "帮助与快捷键",
+    "current": null
+  },
+  {
+    "tag": "button",
+    "role": null,
+    "name": "切换深色主题",
+    "current": null
+  },
+  {
+    "tag": "button",
+    "role": null,
+    "name": "打开帮助",
+    "current": null
+  }
+]

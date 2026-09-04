@@ -1,0 +1,14 @@
+{
+  "browserName": "chromium",
+  "viewport": "1440x900",
+  "theme": "light",
+  "htmlOverflow": "hidden",
+  "bodyOverflow": "hidden",
+  "htmlHeight": "900px",
+  "appShellBg": "oklch(0.964435 0.001327 286.375)",
+  "pageCanvasBg": "oklch(0.988087 0 0)",
+  "headerHeight": 48,
+  "sidebarMode": "expanded",
+  "h1": "收件箱",
+  "currentNav": "收件箱当前页"
+}

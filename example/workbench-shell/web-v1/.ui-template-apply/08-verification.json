@@ -1,0 +1,158 @@
+{
+  "schema_version": 2,
+  "kind": "phase-8-verification",
+  "template_digest": {
+    "algorithm": "sha256-canonical-json-v1",
+    "value": "36b5a502ad0e2ab0945f1826f69c003f3e0041180a8dabb6080c16c2636ef161"
+  },
+  "source_identity": "git:c960712517022d408654de70d3f7496ac8adf8b0:dirty:77e5deaabe3b4c9f4073ad2d9374839e69433dd727bfa44d875286e5b119b655",
+  "build_identity": "build:2936bcb383fa7fe1fb00ce03a5206803eec6cbd899018398fd89caa1850fd95a",
+  "browser_identity": "playwright/chromium@1.62.1",
+  "created_at": "2026-09-04T15:35:00Z",
+  "records": [
+    {
+      "id": "e9590a3b-3f11-44f1-8a35-29ec0a1eb1be",
+      "rule_id": "NN-001",
+      "status": "passed",
+      "expected": { "htmlOverflow": "hidden", "rootHeight": "100svh / 900px" },
+      "actual": { "htmlOverflow": "hidden", "bodyOverflow": "hidden", "htmlHeight": "900px" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json", "evidence/inbox-1440-light.png"]
+    },
+    {
+      "id": "98dbaf02-b840-47f9-a6fe-10e52e55ccbd",
+      "rule_id": "TOKEN-002",
+      "status": "passed",
+      "expected": { "app-shell": "oklch(0.964435 0.001327 286.375)", "page-canvas": "oklch(0.988087 0 0)" },
+      "actual": { "appShellBg": "oklch(0.964435 0.001327 286.375)", "pageCanvasBg": "oklch(0.988087 0 0)" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json"]
+    },
+    {
+      "id": "db5d37e3-442d-4a5e-b584-b41ecd71ef1f",
+      "rule_id": "LAYOUT-004",
+      "status": "passed",
+      "expected": { "page-header-height": "48px" },
+      "actual": { "headerHeight": 48 },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json"]
+    },
+    {
+      "id": "53e74a52-4ebd-4a2d-b14c-ea1ce3717a04",
+      "rule_id": "RESP-001",
+      "status": "passed",
+      "expected": { "expanded": ">=1280", "collapsed": "1024-1279", "overlay": "<1024" },
+      "actual": { "1440": "expanded", "1100": "collapsed", "900": "overlay-trigger" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440|1100|900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json", "evidence/phase8-collapsed.json", "evidence/phase8-overlay.json"]
+    },
+    {
+      "id": "9cd19bcf-8fb2-465b-b231-019a79d1f843",
+      "rule_id": "QUALITY-006",
+      "status": "passed",
+      "expected": { "rootScroll": false, "modeScroll": "internal" },
+      "actual": { "htmlOverflow": "hidden", "bodyOverflow": "hidden" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json"]
+    },
+    {
+      "id": "871641a3-e76d-4521-ad89-74e044546026",
+      "rule_id": "QUALITY-008",
+      "status": "passed",
+      "expected": { "overlayIsWeb": true, "notNativeMobile": true },
+      "actual": { "overlaySidebarInLayout": 0, "trigger": true },
+      "route": "/ws-alpha/inbox",
+      "viewport": "900x800",
+      "theme": "light",
+      "state": "overlay",
+      "evidence_refs": ["evidence/phase8-overlay.json"]
+    },
+    {
+      "id": "e42cc714-1c97-4c68-bcb0-70118a14ad91",
+      "rule_id": "ROUTE-001",
+      "status": "passed",
+      "expected": { "restore": ["status", "q"] },
+      "actual": { "url": "http://127.0.0.1:4178/ws-alpha/incidents?status=in-progress&q=gateway" },
+      "route": "/ws-alpha/incidents",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "filtered",
+      "evidence_refs": ["evidence/phase8-url-restore.json"]
+    },
+    {
+      "id": "aad7fcbc-8f4d-4ea6-9a82-3e3f514e2325",
+      "rule_id": "QUALITY-024",
+      "status": "passed",
+      "expected": { "reloadKeepsQuery": true },
+      "actual": { "urlContains": "status=in-progress" },
+      "route": "/ws-alpha/incidents",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "filtered",
+      "evidence_refs": ["evidence/phase8-url-restore.json"]
+    },
+    {
+      "id": "3a12dd29-86c4-44b8-8f85-82ac35b21f57",
+      "rule_id": "NN-009",
+      "status": "passed",
+      "expected": { "darkAppShell": "oklch(0.155 0.005 285.823)" },
+      "actual": { "backgroundColor": "oklch(0.155 0.005 285.823)" },
+      "route": "/ws-alpha/settings",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-dark.json", "evidence/settings-dark.png"]
+    },
+    {
+      "id": "d7e151dd-aa85-4ceb-90b7-46d86d469b5e",
+      "rule_id": "AX-012",
+      "status": "passed",
+      "expected": { "aria-current": "page" },
+      "actual": { "name": "工作区设置", "current": "page" },
+      "route": "/ws-alpha/settings",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-ax-settings.json"]
+    },
+    {
+      "id": "3d826411-8ba7-4c94-ab35-12dc7e0394fb",
+      "rule_id": "AX-016",
+      "status": "passed",
+      "expected": { "h1": "visible" },
+      "actual": { "h1": "收件箱" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json"]
+    },
+    {
+      "id": "dc021cbf-1ecd-4d2f-84c5-9f2d5bd53943",
+      "rule_id": "AX-061",
+      "status": "passed",
+      "expected": { "fabAccessibleName": true },
+      "actual": { "buttons": ["帮助与快捷键", "打开帮助"] },
+      "route": "/ws-alpha/settings",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-ax-settings.json"]
+    }
+  ]
+}

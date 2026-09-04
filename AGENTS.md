@@ -83,5 +83,5 @@ make install
 - 改公开生产 skill 后运行 `make mirror-write`，再以 `make mirror-check` 证明零漂移；生成器只管理 allowlist 文件。
 - 改 `templates/` 后至少运行真实模板 validator；不得把样例测试当模板契约证据。
 - 新增治理依赖必须精确固定版本，并更新 `governance/DEPENDENCIES.md` 与许可用途。
-- 不修改 `.gitignore` 来隐藏治理产物；报告目录通过命令参数指定。
+- `governance-reports/` 由 `.gitignore` 排除，不入库；命令仍通过 `REPORT_DIR` / `--json-out` 指定输出路径，不以本地报告当作发布证据。
 - 不自动 publish、tag、archive OpenSpec change 或 promote 样例；这些动作需要单独请求。

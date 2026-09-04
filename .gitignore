@@ -6,6 +6,10 @@ Thumbs.db
 !.vscode/extensions.json
 *.swp
 *.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
 # Dependencies
 node_modules/
@@ -18,7 +22,29 @@ build/
 # Test artifacts
 test-results/
 playwright-report/
+blob-report/
 coverage/
+trace.zip
+
+# Browser debug captures (Playwright MCP / local screenshots)
+page-*.png
+*screenshot*.png
+
+# Governance command output (still passed via REPORT_DIR / --json-out)
+governance-reports/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.tox/
 
 # Logs
 *.log
@@ -39,6 +65,4 @@ lerna-debug.log*
 .vite/
 .tsbuildinfo
 *.tsbuildinfo
-
 .kiro
-__pycache__
