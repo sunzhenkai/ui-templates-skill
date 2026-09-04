@@ -1,0 +1,23 @@
+[
+  {"id": "low-contrast-oklch", "mutation": "token-value", "path": "themes.light.foreground.value", "value": "oklch(0.95 0 0)", "expected": "CONTRAST_TOO_LOW"},
+  {"id": "alpha-failure", "mutation": "token-value", "path": "themes.light.foreground.value", "value": "#0000001A", "expected": "CONTRAST_TOO_LOW"},
+  {"id": "dangling-id", "mutation": "append", "file": "apply/playbook.md", "value": "\n- 检查 @QUALITY-999。\n", "expected": "RULE_REFERENCE_DANGLING"},
+  {"id": "missing-evidence", "mutation": "remove-evidence", "path": "themes.light.foreground", "expected": "TOKEN_EVIDENCE_COUNT"},
+  {"id": "missing-asset-evidence", "mutation": "create", "file": "assets/private.png", "value": "fixture", "expected": "ASSET_EVIDENCE_COUNT"},
+  {"id": "bad-index", "mutation": "replace", "file": "../INDEX.md", "old": "高对比双主题测试模板", "value": "错误描述", "expected": "INDEX_FIELD_MISMATCH"},
+  {"id": "copied-value-apply", "mutation": "append", "file": "apply/playbook.md", "value": "\n- 使用 16px。\n", "expected": "APPLY_PRECISION_DUPLICATION"},
+  {"id": "copied-percent-apply", "mutation": "append", "file": "apply/playbook.md", "value": "\n- 使用 50%。\n", "expected": "APPLY_PRECISION_DUPLICATION"},
+  {"id": "copied-angle-apply", "mutation": "append", "file": "apply/playbook.md", "value": "\n- 使用 45deg。\n", "expected": "APPLY_PRECISION_DUPLICATION"},
+  {"id": "copied-ratio-apply", "mutation": "append", "file": "apply/playbook.md", "value": "\n- 使用 1.25。\n", "expected": "APPLY_PRECISION_DUPLICATION"},
+  {"id": "nested-stack-adapter", "mutation": "create", "file": "nested/adapters/stack-react.md", "value": "# React adapter\n", "expected": "PROHIBITED_ENGINEERING_PATH"},
+  {"id": "nested-source", "mutation": "create", "file": "nested/src/domain.ts", "value": "export const domain = {};\n", "expected": "PROHIBITED_ENGINEERING_PATH"},
+  {"id": "nested-api-data", "mutation": "create", "file": "nested/api/client.txt", "value": "fixture\n", "expected": "PROHIBITED_ENGINEERING_PATH"},
+  {"id": "engineering-manifest", "mutation": "create", "file": "package.json", "value": "{}\n", "expected": "PROHIBITED_ENGINEERING_PATH"},
+  {"id": "zero-pair-theme", "mutation": "token-value", "path": "themes.light.background.value", "value": "transparent", "also": ["themes.light.foreground.value", "transparent", "themes.light.muted-foreground.value", "transparent", "themes.light.ring.value", "transparent"], "expected": "CONTRAST_ZERO_CHECKED"},
+  {"id": "source-revision-mismatch", "mutation": "set-evidence-field", "evidence_id": "evidence-light-bg", "field": "source_revision", "value": "revision-that-does-not-match-meta", "expected": "EVIDENCE_SOURCE_REVISION_MISMATCH", "expected_path": "templates/good-template/evidence.yaml#entries.0.source_revision"},
+  {"id": "duplicate-source-id", "mutation": "append-source", "value": {"id": "source-001", "type": "repo", "ref": "other-fixture", "revision": "other-revision", "captured_at": "2026-09-03T00:00:00Z"}, "expected": "META_SOURCE_ID_DUPLICATE", "expected_path": "templates/good-template/meta.yaml#sources"},
+  {"id": "dangling-supersedes", "mutation": "append-evidence", "value": {"id": "evidence-old-light-fg", "kind": "token", "path": "themes.light.foreground", "origin": "source", "method": "document", "source_id": "source-001", "source_revision": "rev-1", "locator": "fixture.md#old-light-fg", "status": "superseded", "supersedes": "evidence-does-not-exist", "confidence": "medium", "captured_at": "2026-09-03T00:00:00Z"}, "expected": "EVIDENCE_SUPERSEDES_DANGLING", "expected_path": "templates/good-template/evidence.yaml#entries.14.supersedes"},
+  {"id": "self-supersedes", "mutation": "append-evidence", "value": {"id": "evidence-old-self", "kind": "token", "path": "themes.light.foreground", "origin": "source", "method": "document", "source_id": "source-001", "source_revision": "rev-1", "locator": "fixture.md#old-self", "status": "superseded", "supersedes": "evidence-old-self", "confidence": "medium", "captured_at": "2026-09-03T00:00:00Z"}, "expected": "EVIDENCE_SUPERSEDES_SELF", "expected_path": "templates/good-template/evidence.yaml#entries.14.supersedes"},
+  {"id": "active-supersedes-direction", "mutation": "set-evidence-field", "evidence_id": "evidence-light-bg", "field": "supersedes", "value": "evidence-light-fg", "expected": "EVIDENCE_SUPERSEDES_STATUS_INVALID", "expected_path": "templates/good-template/evidence.yaml#entries.0.supersedes"},
+  {"id": "copied-unitless-integer-apply", "mutation": "unitless-integer-copy", "value": 12, "text": "\n- 网格固定为 12 列。\n", "expected": "APPLY_PRECISION_DUPLICATION", "expected_path": "templates/good-template/apply/playbook.md"}
+]

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "runner_version": "1.0.0",
+  "cases": {
+    "apply-out-of-scope-rejected": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "apply-requires-reference-reading": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "apply-token-freeze": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "authoring-normalizes-and-fills-defaults": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "authoring-out-of-scope-rejected": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "authoring-updates-index": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "browser-verification-evidence": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "doc-source-routed-correctly": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "no-apply-handoff-after-authoring": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "no-apply-without-template": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "no-engineering-structure-in-template": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "no-phase-skipping": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "routing-semantics-enforced": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "spec-wins-over-apply": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"},
+    "tokens-yaml-required-and-complete": {"fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d", "status": "passed"}
+  }
+}

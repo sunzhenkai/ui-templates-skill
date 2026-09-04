@@ -1,0 +1,20 @@
+name: legacy
+
+description: 旧版测试模板
+source:
+  type: repo
+  ref: "https://example.invalid/repo @ abcdef1234567890"
+captured_at: 2026-09-03
+tokens: tokens.yaml
+platforms: [web]
+tags: [legacy]
+confidence: medium
+coverage:
+  viewports: [desktop]
+  themes: [light]
+  components:
+    observed: [button]
+    defaulted: [dialog]
+  states:
+    observed: [default]
+    defaulted: [focus-visible]

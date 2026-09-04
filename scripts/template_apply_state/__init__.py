@@ -1,0 +1,43 @@
+"""Template Apply checkpoint、验证与 feedback 的可复用状态工具。"""
+
+from .state import (
+    ApplyStateError,
+    Finding,
+    build_identity,
+    canonical_digest,
+    canonical_json_bytes,
+    create_feedback,
+    feedback_fingerprint,
+    feedback_receipt,
+    load_structured,
+    merge_feedback,
+    normalize_text,
+    recover_checkpoint,
+    recovery_decision,
+    source_identity,
+    validate_checkpoint,
+    validate_feedback,
+    validate_feedback_inbox,
+    validate_verification,
+)
+
+__all__ = [
+    "ApplyStateError",
+    "Finding",
+    "build_identity",
+    "canonical_digest",
+    "canonical_json_bytes",
+    "create_feedback",
+    "feedback_fingerprint",
+    "feedback_receipt",
+    "load_structured",
+    "merge_feedback",
+    "normalize_text",
+    "recover_checkpoint",
+    "recovery_decision",
+    "source_identity",
+    "validate_checkpoint",
+    "validate_feedback",
+    "validate_feedback_inbox",
+    "validate_verification",
+]

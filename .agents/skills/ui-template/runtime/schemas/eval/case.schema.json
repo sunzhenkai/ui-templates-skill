@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/eval/case.schema.json",
+  "title": "Contract eval case collection v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "skill", "revision", "cases"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "skill": {"enum": ["ui-template", "ui-template-apply"]},
+    "revision": {"type": "string", "minLength": 1},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/case"}
+    }
+  },
+  "$defs": {
+    "expectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["must", "must_not"],
+      "properties": {
+        "must": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "must_not": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "skill", "category", "description", "given", "fixture", "fixture_sha256", "judge", "expect", "revision"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "skill": {"enum": ["ui-template", "ui-template-apply"]},
+        "category": {
+          "enum": ["routing", "schema", "origin", "validation-gate", "feedback", "checkpoint", "installation", "prohibited-content"]
+        },
+        "description": {"type": "string", "minLength": 1},
+        "given": {"type": "string", "minLength": 1},
+        "fixture": {"type": "string", "pattern": "^(?!/)(?!.*\\.\\.)(?!.*//)[A-Za-z0-9_./-]+#[a-z][a-z0-9-]*$"},
+        "fixture_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "judge": {"enum": ["script", "llm"]},
+        "expect": {"$ref": "#/$defs/expectation"},
+        "revision": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

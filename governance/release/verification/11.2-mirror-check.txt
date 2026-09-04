@@ -1,0 +1,5 @@
+{
+  "findings": [],
+  "status": "passed",
+  "target": "/home/wii/code/repos/github/sunzhenkai/ui-templates-skill/.agents/skills"
+}

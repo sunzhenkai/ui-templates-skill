@@ -1,0 +1,98 @@
+schema_version: 1
+config: distribution-v1.yaml
+bundle_version: 2.0.0
+skills:
+  ui-template:
+    version: 2.0.0
+    files:
+    - path: SKILL.md
+      sha256: d2e742fdba94d275f008b4c8dc9212b4f086aa608837a4f66c5d2c526c21b85a
+    - path: evals/README.md
+      sha256: 07cafb72bee864668249e992ec89a95d5eb6a3786fd782188588f3f77f8ea17e
+    - path: evals/cases.yaml
+      sha256: ffe756d0a7fe4949d9309a3211bb5fc672d5ff8e2758835b84d7182c28ecaa1a
+    - path: references/feedback-lifecycle.md
+      sha256: 9af98a725f8ea9950962bce7a3287c1758283b8c223977fc3c08a6e2295d61b9
+    - path: references/source-doc.md
+      sha256: ddc076bc438c6bced9d724bbeb814a4b0364611a04604abfbad39def780ef684
+    - path: references/source-image.md
+      sha256: c1b26a0cc5966d4d0ae0731d882d0a0fb173b234aa6188b38effc74a4244ef95
+    - path: references/source-repo.md
+      sha256: 07e9306aafe1762ab6610b15a6ba585aadefc505603d82ef38ef154e7a225005
+    - path: references/source-web.md
+      sha256: 59fbf995b6bd5a5284fc948389253871921333ef6b1e949fedcd42f5ee7465b7
+    - path: references/spec-format.md
+      sha256: 62be02c4c90ca96476e93f4c862366372d59d2a3ed42cd4707d48d8175e537a4
+    - path: runtime/check_template_apply_state.py
+      sha256: 8e4666630c021857707507b1d7eb410f043d984de291f8acf4d668c44bd66eb9
+    - path: runtime/contract_eval/__init__.py
+      sha256: 1c9acef6e515e28bb56b78987a817cfaf6bf885ac7e59f9b8dfbe65ee865f17c
+    - path: runtime/contract_eval/runner.py
+      sha256: 4de3988bce6aa2efe04d1f970dc6ab2f04cb5c953a6e62402da9a1d6d333ba82
+    - path: runtime/deterministic-baseline.json
+      sha256: f768356a3658955e7821378a9700e95f6d3469e3a9dc9301825b4afb47486fac
+    - path: runtime/fixtures/eval/llm-contracts.yaml
+      sha256: d7637a9e3389bd851b4a7c92ae9b5713a98f2e96e9eb6f1f419b3044ed3ae2c3
+    - path: runtime/fixtures/eval/script-contracts.yaml
+      sha256: 461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d
+    - path: runtime/run_contract_evals.py
+      sha256: 0115b5ad5f3ff8403af8e277e1af91fd2ae8de7571ddbcb59e5ea0975fa52074
+    - path: runtime/schemas/eval/case.schema.json
+      sha256: e2b1648d8bc56dfe850b715d33403f3fb231fcb19f5cdb083734419dc13e5306
+    - path: runtime/schemas/eval/llm-judge-result.schema.json
+      sha256: 44de33d228c71981083bf6d8bb10e12c9a57b45a90adb68ca6fc567f5a1e53be
+    - path: runtime/schemas/eval/result.schema.json
+      sha256: 088b9fb8813d8cb3fe109a044f2d415ff41a03a7d0acd483851cd5c2830c5ca5
+    - path: runtime/schemas/template/v2/checkpoint.schema.json
+      sha256: 1b667fe48501debf7a7cb31836c061ea44932e176feb93667f832c20f6dc0ff8
+    - path: runtime/schemas/template/v2/common.schema.json
+      sha256: 0f8f06e72eca019293a5166c9590ba6ca9d403d091f47bcb2232d6accd1de1a1
+    - path: runtime/schemas/template/v2/evidence.schema.json
+      sha256: 0551fd22eb7af104e59b7d1398ddaed50c0a0fb8e70a6b6c8b30b0f1d8ba56c9
+    - path: runtime/schemas/template/v2/feedback.schema.json
+      sha256: 3ca088b5bda799e7fad5a8098e2b248da16ce6183d52da153801f260b24bd33d
+    - path: runtime/schemas/template/v2/meta.schema.json
+      sha256: d754f930698f2b94613ceadc3bef5567b9478153521bbb63a687672fa071ccae
+    - path: runtime/schemas/template/v2/skills-manifest.schema.json
+      sha256: f53b212a7df1acff2d91e9e16abd652f336d27702fba4c37594e5311c9d90730
+    - path: runtime/schemas/template/v2/tokens.schema.json
+      sha256: 1932623e7507b37b3661506e93a5f65c68b92823781af4cff266a6d33613a7b0
+    - path: runtime/schemas/template/v2/verification.schema.json
+      sha256: 84d439d457c182163d8e7f8783ebf5c8dabedeb28cdc3ecf0113dcdd0a6cdcc1
+    - path: runtime/template_apply_state/__init__.py
+      sha256: e0ca250795e8c261b168ef304910f6de4d109c73283cce0056889e7f0ea8647d
+    - path: runtime/template_apply_state/state.py
+      sha256: fd8b1b807a273201b21ee101442818a3fcfe7cd6005ad0a1921db949a979f229
+    - path: runtime/template_validation/__init__.py
+      sha256: dc4566aced9559643b175f0e6a420744cc3ce50e1caa7fa88059267ac21b5ac5
+    - path: runtime/template_validation/cli.py
+      sha256: 7150107e1028387481e2392b724ca3ec4942ae02f141103bdc3c8314cb95ddf4
+    - path: runtime/template_validation/colors.py
+      sha256: 14847ca312126679004710bb4e3738f1249790dc8ef8537dd59e7784bbe9134d
+    - path: runtime/template_validation/loading.py
+      sha256: 780ebcc71cd585397976ffda79907fc404dbc419a23a92e68189caea4cc63a9d
+    - path: runtime/template_validation/model.py
+      sha256: fae6bf35672bf2f0850eb92a81c2b72e4dc3577b3ddb4fe96b82da6ae295b84d
+    - path: runtime/template_validation/schema.py
+      sha256: 6088af2b06ef0843b0010d6e76c96125891fd5365c93640f015f8d578b20983f
+    - path: runtime/template_validation/validator.py
+      sha256: 045190f72249f468ea910213ab20379598b2ab864bf0bcc07d34605253ceaa2e
+    - path: runtime/validate_templates.py
+      sha256: 5a1be7090ba3e7cabeed38dbe87f3d665e892629af58bd5cc3bfa3acb2e72996
+  ui-template-apply:
+    version: 2.0.0
+    files:
+    - path: SKILL.md
+      sha256: 5388854e4280ef0ea44e7b983bc9de468cdfb7428bd52bb34e6d0d9c9e4f13db
+    - path: evals/README.md
+      sha256: 5aec5a13279a6eff566cc48a940f75034f94a6d740a76e082dce5901d06b97a8
+    - path: evals/cases.yaml
+      sha256: f643fbeeea4bf8f8dccd5fbedb2f4321e68c04ab35240f3683c0635ad60a8997
+    - path: references/apply-workflow.md
+      sha256: 1f301e1c55ccd4c242a982ef4b81c5d9cdd78344160890ba05a71466bfadc616
+    - path: references/quality-gates.md
+      sha256: 2041b5f053130454a06c636dad9c33bbb996ec6759a40424ef54f28bf29cf1c9
+    - path: references/template-contract.md
+      sha256: 1b96e5fe4c7c563c380753f6b643ba4ffaa2ccd16ae776626a79f745d6494449
+    - path: references/toolchain.md
+      sha256: 06814e1f5a19db1cb44fc0039955da15f2b6d80bb6cd10df63bf02f8dfd4c4bc

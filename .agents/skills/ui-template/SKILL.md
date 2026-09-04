@@ -1,66 +1,76 @@
 ---
 name: ui-template
-description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 地址)、图片(截图/设计稿)或设计文档(Markdown/PDF)中提取 UI 设计风格，创建/导入/更新为可复用的设计规范文档，并维护 templates/ 模板库。当用户想把某个网站、页面、截图或项目的视觉风格"做成模板"、"导入 UI 模板"、"提取设计规范"，或浏览/更新已有模板时使用；不用于按模板实现页面（那属于 ui-template-apply）。
+description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 地址)、图片(截图/设计稿)或设计文档(Markdown/PDF)中提取 UI 设计风格，创建/导入/更新 schema v2 可复用设计规范并维护 templates/ 模板库。用于“做成模板/导入 UI 模板/提取设计规范/更新模板”；按模板实现页面应移交 ui-template-apply。
 ---
 
-# ui-template — 模板创建、导入与库管理
+# ui-template — Template Authoring
 
-本 skill 只负责 Template Authoring 与 `templates/` 库管理：把外部来源提炼成规范文档，并保证产物可被独立的 `ui-template-apply` skill 消费。用已有模板实现页面不是本 skill 的职责。
+本 skill 只创建、迁移、更新和索引 UI 模板，不实现消费项目页面。公开格式由 [references/spec-format.md](references/spec-format.md) 唯一定义；Apply 通过该契约解耦消费。
 
-## 触发边界
+## 路由
 
-进入本工作流：
+- URL → [source-web.md](references/source-web.md)
+- 代码仓库 → [source-repo.md](references/source-repo.md)
+- 图片/截图 → [source-image.md](references/source-image.md)
+- Markdown/PDF 设计文档 → [source-doc.md](references/source-doc.md)
+- “用模板实现页面/搭后台” → 停止 Authoring，移交 `ui-template-apply`。
 
-- 用户给定 URL、仓库、图片或设计文档，希望"提取风格 / 做成模板 / 导入模板"。
-- 用户想浏览、复用、更新或拆分 `templates/` 里已有的模板。
+## 不变量
 
-移交或拒绝：
+- 只产出设计规范；模板不得包含 `implementation/`、stack adapter、工程目录、依赖、API/mock/data、状态库或具体项目业务结构。
+- schema v2 必备 `spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml`；`tokens.yaml` 是精确值唯一载体。
+- token leaf 统一含 `value`、适用 `unit`、`origin: source | computed | estimated | default`。缺口用有 basis 的 default，不留给 Apply 猜测。
+- Non-negotiables 与跨文档规则使用稳定 rule ID；coverage 对声明项作 observed/defaulted/unsupported 完整互斥分类。
+- 来源、locator、revision、confidence、asset license/redistribution/privacy 与 default basis 都进入 evidence。
 
-- "用某个模板实现页面 / 按模板做 UI / 基于模板搭后台" → 提示移交 `ui-template-apply`，不在本 skill 内展开 Apply 阶段。
-- 用户想按某种风格做页面但尚无模板 → 先完成 Authoring，再提示用 `ui-template-apply` 继续。
-- 与 UI 模板库维护无关的任务 → 不套用本流程。
+## 强制工作流：Generate → Validate → Eval → Index → Report
 
-## 核心原则
+顺序不可交换，任何 gate 失败即停止；失败后不得修改生产 `templates/INDEX.md`、不得把任务/模板标为完成、不得报告成功。
 
-- **产物是规范，不是代码堆砌**：记录配色角色、字号阶梯、间距体系、组件状态和布局规则，而不是罗列零散样式。
-- **注明来源与置信度**：图片反推值标注 `(估算)`；来自代码或 computed style 的值标明出处。
-- **模板自包含**：引用外部来源只保留 URL/路径和采集时间，不依赖来源持续可用。
-- **Token 确定且可机读**：每个模板必须提供 `tokens.yaml` 作为精确值唯一载体；来源未体现的字段回填模板默认值并标注 `origin: default`，禁止留空交给消费方即兴发挥。
-- **模板只承载设计规则**：目录契约、API/data 分层、状态库选型和具体技术栈 adapter 属于消费项目实施决策，不进入模板。
-- **格式契约唯一归属**：`spec.md`、`tokens.yaml`、`meta.yaml` 与 `apply/` 的格式定义以本 skill 的 [references/spec-format.md](references/spec-format.md) 为唯一权威来源。
+### 0. Intake 与 feedback discovery
 
-## 来源路由
+确认来源、模板名、更新或新建、授权和范围。更新前按 [feedback-lifecycle.md](references/feedback-lifecycle.md) 扫描显式路径及已授权消费项目 `.ui-template-apply/feedback/`，按 UUID/fingerprint 幂等处置。未知 schema 或非法状态记录先修复，不跳过。
 
-| 来源 | 指南 |
-| --- | --- |
-| `web` 运行中的站点 | [references/source-web.md](references/source-web.md) |
-| `repo` 代码仓库 | [references/source-repo.md](references/source-repo.md) |
-| `image` 图片/截图 | [references/source-image.md](references/source-image.md) |
-| `doc` 设计文档 | [references/source-doc.md](references/source-doc.md) |
+### 1. Generate
 
-骨架、字段、`origin` 语义、coverage 与大型规范拆分 → [references/spec-format.md](references/spec-format.md)。按来源条件加载，不要求通读全部指南。
+按来源指南生成/更新候选模板四个必备文件及可选设计文档、assets、`apply/`。为规则分配稳定 ID，补齐 coverage、证据、默认依据和资产决定。新模板同时生成**候选 INDEX**（临时文件或 staging），但此时不得改生产 INDEX。
 
-## Authoring 流程
+### 2. Validate
 
-1. 确定来源类型与模板名；`templates/<name>/` 已存在时询问是更新还是另建。
-2. 按来源路由读取对应指南并提取设计信息。
-3. 归一与决策：合并近义色、间距归基数、字号收敛；缺口回填默认值并标注 `origin: default`；补齐交互状态；做对比度预检；在 `meta.yaml` coverage 区分 observed 与 defaulted。
-4. 生成模板：`spec.md`（开篇 Non-negotiables）+ `tokens.yaml` + `meta.yaml`，可选 `assets/` 与 `apply/`。写作细节见 [references/spec-format.md](references/spec-format.md)。
-5. 更新 `templates/INDEX.md` 并汇报模板路径、关键 token、默认值与估算值、coverage 和决策记录。
+运行下述发现协议找到 checker，对候选模板和候选 INDEX 执行 schema/语义/对比度/evidence/rule/link/禁入内容验证；必须获得可解析 JSON、零 error、每个声明主题非零 checked contrast。只运行 prose checklist 不算通过。
 
-## 模板反馈消费
+仓库内已知调用形态：
 
-更新模板前检查 `ui-template-apply` 产出的结构化反馈记录（场景、证据、建议、影响范围）：
+```bash
+python3 scripts/validate_templates.py <candidate-template-or-templates-root> --index <candidate-index> --json
+```
 
-- 可复用规则缺口 → 回写对应模板文档，必要时更新索引与元数据。
-- 仅属消费项目的工程问题 → 驳回，不污染模板。
+安装环境不得假设本仓 `AGENTS.md` 或固定当前目录。
 
-## 汇报要求
+### 3. Eval
 
-汇报模板路径、关键 token 摘要、默认值与估算值说明、coverage、决策记录和索引更新；发现 Apply 意图时说明移交 `ui-template-apply`。
+运行与 Authoring/schema/反馈相关的 portable contract eval；要求 runner 报告 `declared = parsed = executed` 且所有阻断 script judge 通过。LLM judge 仅在发布策略要求且已授权时运行。Eval 不存在、不可执行、输出不可解析或 case 数不一致都视为失败。
 
-## Self-evolution
+bundle 与生产镜像在本 skill 根分发 `runtime/run_contract_evals.py`；普通离线执行 script judges 并校验固定 LLM assets，不调用模型或网络。runner 缺失、不可执行或输出不满足计数/身份契约时必须停在 Eval，保持生产 INDEX 不变并报告 blocker。
 
-本 Skill 具备经验积累、评估与持续进化能力。目录（均相对本 Skill 根目录）：`examples/`、`evals/`、`experience/`、`patches/`。执行复杂任务前检查 `examples/` 与相关 `evals/`；任务完成后仅在有失败、纠正、明显成功或新方法时写入 `experience/`；不要为了自进化破坏上文已规定的目标、流程、输出与约束。
+### 4. Index
 
-Evolution 遵循：Experience → Repeated Pattern → Improvement Proposal → Eval → Pass → Update Skill。单次失败只留 Experience，不改生产稿。实际更新生产 `SKILL.md` 时不要直接覆盖原文；有 Git 则优先靠 Git diff 留历史；来自真实执行经验优先委托 `skill-evolver`；结构/规则显式修订走 `skill-upgrader` 的 update 模式。未展示 Proposal 并获得用户确认前，不改生产 Skill。
+只有 Validate 与 Eval 都成功后，才把候选 INDEX 变更原子应用到生产 `templates/INDEX.md`。应用后核对 INDEX 的 name/description/source.type/captured_at 与 meta 一致。若索引写入失败，回滚索引并不进入 Report 成功路径。
+
+### 5. Report
+
+报告模板路径、`schema_version`/`template_version`、来源与 coverage、default/estimated 摘要、资产许可/隐私决定、规则/feedback receipts、实际命令、checker/runner identity 和结果。仅在所有 gate 与 INDEX 更新成功后使用“完成”。失败报告必须说明停在哪个 gate，并确认 INDEX 未改。
+
+## Portable checker/eval 发现协议
+
+对 validator 和 eval runner 分别执行以下**有序且不模糊**的发现；第一个存在的候选必须通过调用/输出契约，否则失败，不继续尝试同名未知程序：
+
+1. 用户或受控环境显式设置的绝对路径：`UI_TEMPLATE_VALIDATOR` / `UI_TEMPLATE_EVAL_RUNNER`；
+2. 本 skill 根目录 `runtime/validate_templates.py` / `runtime/run_contract_evals.py`；
+3. 仅当检测到仓库根同时含 `schemas/template/v2/` 时，使用该根的 `scripts/validate_templates.py` / `scripts/run_contract_evals.py`。
+
+禁止从任意 `PATH`、网络下载或另一 checkout 猜测 runner。validator 必须接受候选路径、`--index`、`--json`，输出 schema version、findings、contrast counters 与失败退出码；eval runner 必须接受 skill/case scope 和 JSON 输出，提供 runner version、revision、fixture hash、declared/parsed/executed。候选缺失或能力不满足即 fail closed。bundle 与生产镜像必须把 runtime、schema 和固定 eval resources 一起分发。
+
+## Feedback 状态
+
+Apply 创建 proposed；Authoring 负责 accepted/known-gap/rejected，落盘后 applied，Validate+Eval 后 verified。重复 UUID 或 active fingerprint 合并证据，不重复生成规则；rejected/verified 返回终态 receipt。完整状态机见 [feedback-lifecycle.md](references/feedback-lifecycle.md)。

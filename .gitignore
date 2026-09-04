@@ -39,3 +39,6 @@ lerna-debug.log*
 .vite/
 .tsbuildinfo
 *.tsbuildinfo
+
+.kiro
+__pycache__

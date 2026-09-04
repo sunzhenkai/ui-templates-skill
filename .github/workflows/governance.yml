@@ -1,0 +1,51 @@
+name: governance
+
+on:
+  push:
+    paths-ignore:
+      - 'example/workbench-shell/web-v2/**'
+      - 'example/workbench-shell/web-v3/**'
+      - 'docs/**'
+  pull_request:
+    paths-ignore:
+      - 'example/workbench-shell/web-v2/**'
+      - 'example/workbench-shell/web-v3/**'
+      - 'docs/**'
+
+permissions:
+  contents: read
+
+jobs:
+  root-governance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      GOVERNANCE_VENV: /tmp/ui-template-governance-venv
+      REPORT_DIR: governance-reports
+      GOVERNANCE_EXCLUSIONS: 'example/workbench-shell/web-v2/**,example/workbench-shell/web-v3/**'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.7'
+          cache: pip
+          cache-dependency-path: governance/requirements-governance.txt
+      - name: Bootstrap pinned governance environment
+        run: make bootstrap PYTHON=python3
+      - name: Root governance validation (sample exclusions are not read or executed)
+        run: make validate
+      - name: Retain machine-readable governance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: governance-reports
+          path: |
+            governance-reports/*.json
+            governance-reports/*.xml
+            governance-reports/skills-manifest.yaml
+            governance-reports/*.sha256
+            governance-reports/unittest.txt
+          if-no-files-found: error
+          retention-days: 14

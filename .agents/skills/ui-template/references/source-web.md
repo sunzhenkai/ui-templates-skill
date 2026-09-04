@@ -1,45 +1,21 @@
-# 来源:运行中的 Web 站点(web)
+# 来源：运行中的 Web 站点（web）
 
-从可访问的 URL 提取设计规范。核心思路:**截图看整体,读 computed style 拿精确值**。
+核心：截图看整体，computed style 取精确值；只做获授权页面的样式观察，不批量抓取、不绕认证或反爬。
 
-## 步骤
+## 提取步骤
 
-1. **打开页面并截图**
-   - 使用可用的浏览器工具(如 Playwright MCP、browser-use)导航到目标 URL。
-   - 截取首屏整页截图(及关键区域截图),保存到 `templates/<name>/assets/`。
-   - 至少采集首页与一个代表性内页;只处理用户给的页面时,在 `meta.yaml` coverage 中记录未覆盖页面。
-   - 若有明显的深色/浅色切换,两套都采集并成对记录;只采到一套时在 coverage 标注。
+1. 记录 `meta.sources[]`：稳定 `source-###`、URL、响应 ETag/Last-Modified/内容 digest 等 revision、带时区 `captured_at`。登录态只在用户已授权环境使用，不记录 cookie/token。
+2. 用真实浏览器采集首页与代表性内页、用户要求的视口/主题；coverage 对未采页面、主题、状态明确标为 defaulted 或 unsupported。
+3. 读取 `:root`/`html` CSS variables；对 body、标题、正文、按钮、链接、容器、输入框读取 color/background/font/line-height/padding/border/radius/shadow。
+4. 采集 hover、focus-visible，并尽量补 disabled/selected。每个样本保存稳定 locator（URL + selector/role + state + viewport/theme）；computed style 用 `origin: computed`。
+5. 归纳角色与阶梯而非罗列：近义色合并、字号/间距收敛，但保留计算方法。归纳值为 `computed`，不能冒充 `source`。
 
-2. **提取 CSS 变量与设计 token**
-   - 在页面执行 JS,读取 `:root` / `html` 上的自定义属性:
+## evidence
 
-     ```js
-     const styles = getComputedStyle(document.documentElement);
-     const vars = {};
-     for (const name of styles) {
-       if (name.startsWith('--')) vars[name] = styles.getPropertyValue(name).trim();
-     }
-     return vars;
-     ```
+每个 token 在 `evidence.yaml` 记录 source ID/revision、locator、method（如 `css-variable`、`computed-style`、`frequency-normalization`）、artifact、captured_at、confidence。直接响应/CSS 声明可标 source，浏览器计算结果标 computed，视觉反推标 estimated。默认补全必须标 default，并写明来源缺失事实与可检查 basis/decision ID。
 
-   - 很多站点(Tailwind、Radix、自研 design system)的色板、间距都在这里,是最精确的入口。
+截图、字体、图标等资产入库前逐项记录 license、redistribution 和 redaction。页面含账号、邮箱、头像、内部 URL、业务数据或会话标识时先脱敏；许可未知/禁止再分发或 `redaction: required` 时不得把原件放进模板，可只保存不含敏感内容的派生证据描述。
 
-3. **采样关键元素的 computed style**
-   - 对 body、主要标题(h1/h2)、正文段落、主按钮、链接、卡片/容器、输入框,读取:
-     `color`、`background-color`、`font-family`、`font-size`、`font-weight`、`line-height`、`padding`、`border`、`border-radius`、`box-shadow`。
-   - 按钮注意区分 primary / secondary;有条件可看 hover 态。
+## 置信度
 
-4. **采集交互状态**
-   - 对主按钮、链接、输入框、导航项强制采集 hover 与 focus-visible(可用伪类强制或状态注入);有条件补 disabled、selected。
-   - 状态值写入 `tokens.yaml`,origin 标注 `computed`。
-
-5. **归纳,而非罗列**
-   - 把采样到的字号归纳成阶梯,间距归纳成体系(常见为 4px 或 8px 基数);视觉不可区分的近义色合并为一个 token,结果写入 `tokens.yaml`。
-   - 出现频次最高的背景色/文字色才是"页面背景/主文字",别被个别组件带偏。
-
-## 注意事项
-
-- 值全部属于**精确提取**,`meta.yaml` 的 `confidence` 一般为 `high`。
-- 页面可能是响应式的:默认按桌面宽度(1280~1440)提取,若用户关心移动端再补一轮窄屏。
-- 需要登录的页面:若用户环境已有登录态(如通过其真实浏览器),可使用;否则向用户说明受限范围。
-- 尊重站点:只做样式观察,不做批量抓取、不绕反爬。
+不要笼统写 high：layout/visual/components 分维度评估；computed style 定位稳定通常 high，动态/跨域样式或状态注入通常 medium。overall 不高于最弱必需维度。需要登录但无授权、关键页面不可达或响应式只采一档时，明确降低 coverage/confidence。

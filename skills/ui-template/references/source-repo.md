@@ -1,31 +1,20 @@
-# 来源:代码仓库(repo)
+# 来源：代码仓库（repo）
 
-从代码仓库提取设计规范。核心思路:**先找 token 定义(theme/config/CSS 变量),再读组件实现补全用法**。token 定义是精确的;用法归纳来自组件代码。
+核心：先找 token 定义，再沿引用读取组件用法。若来源实际只是 Markdown/PDF 设计文档，改走 `source-doc.md`。
 
-## 步骤
+## 提取步骤
 
-0. **确认来源形态**
-   - 来源必须是含可提取代码/token 的仓库;若实际是 Markdown/PDF 设计文档,改走 `source-doc.md`,不要按 repo 流程空转后把缺口留白。
+1. 确认用户有权读取仓库；记录 `meta.sources[]` 的仓库 ref、commit/tag/内容快照 digest revision 和采集时间。只读来源，不改来源仓库。
+2. 按优先级定位：design-token 文件/CSS variables/theme 对象；样式配置；组件 variants。大仓库先 Glob/Grep，再沿 import 追踪 3–5 个代表组件。
+3. token 声明直接转写为 `origin: source`；组件解析后的实际值若需计算则为 computed。token 与组件用法冲突时，以实际组件用法为设计判断依据，但在 evidence 保留两处 locator 和裁决方法。
+4. 读取按钮、输入、导航、容器、表格等 semantic/variants/sizes/states/a11y 用法；可运行且获准时再按 Web 指南补浏览器证据，运行失败不伪造观察结果。
 
-1. **定位 token 来源**(按优先级)
-   - `tailwind.config.*`:`theme.colors`、`fontFamily`、`fontSize`、`spacing`、`borderRadius`、`boxShadow`。
-   - CSS 变量:`:root`、`[data-theme]` 下的自定义属性(全局 CSS、`variables.css`、`theme.css` 等)。
-   - 设计系统文件:`theme.ts`、`tokens.json`、`design-tokens/`、CSS-in-JS 的 theme 对象。
-   - 组件库的变体定义:如 `button.tsx` 里的 variant 样式、`cva` 配置。
+## evidence
 
-2. **通读 token,直接转写为规范**
-   - 色板、字号阶梯、间距体系、圆角、阴影通常能在这里拿全,属于精确值,写入 `tokens.yaml` 时 origin 标注 `source`。
-   - 明暗双主题都定义了的话,两个都记录,在 spec.md 注明是双主题。
+locator 使用可复现的 `relative/path:line-or-symbol`、JSON pointer、CSS selector 或导出 symbol；同时记录 source revision、method、captured_at、confidence。归一多个声明时列出主 locator 与 artifact/辅助定位。无法从仓库确定的值必须 default + basis/decision ID，不得将框架默认值伪装为来源。
 
-3. **读代表性组件,归纳"用法规则"**
-   - 挑 3~5 个代表性组件(按钮、卡片、输入框、导航、表格之类),回答:哪个色用在哪个角色上、圆角和边框怎么用、hover/disabled 怎么表现。
-   - token 只告诉你"有哪些值",组件代码才告诉你"哪个角色用哪个值"——规范文档的价值主要在这一层。
+复制截图、字体、图标、插画前检查仓库许可证不等于资产许可证。每个入库资产记录具体 license、redistribution 与 redaction；未知许可、禁止分发、测试账号/内部数据/品牌敏感素材不得进入可分发模板。可以记录 locator 而不复制资产。
 
-4. **(可选)跑起来看一眼**
-   - 若仓库可运行且环境允许,启动后按 `source-web.md` 截图佐证;跑不起来不阻塞,以代码为准。
+## 置信度与 coverage
 
-## 注意事项
-
-- 值属于**精确提取**,`confidence` 一般为 `high`;如果 token 与组件实际用法矛盾,以组件用法为准并在 spec.md 注明矛盾点。
-- 大仓库不要全读:先 Glob/Grep 找 theme/config,再沿 import 追到组件。
-- 私有仓库注意用户授权;只读,不修改来源仓库。
+显式 token 声明通常 visual high；仅由类名或条件组合推断时降低 confidence。组件/状态未追踪到实际引用时不得标 observed。layout/visual/components 分维度记录，overall 不高于最弱必需维度；未覆盖主题、平台、页面模式和状态分别归入 defaulted 或 unsupported。

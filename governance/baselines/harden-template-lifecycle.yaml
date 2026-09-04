@@ -1,0 +1,9 @@
+schema_version: 1
+change: harden-template-lifecycle
+recorded_at: "2026-09-03T23:06:15+08:00"
+head_commit: c7849c55f17703b277e66cecfba303f3db93414f
+path: example/workbench-shell/web-v2
+head_tree: debc3e5e9f8f08bb87c0a62e17ab83e4a4f85f12
+tracked_status: clean
+untracked_status: clean
+guard_command: python3 scripts/check_governance_scope.py --guard-web-v2

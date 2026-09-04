@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/template/v2/verification.schema.json",
+  "title": "Template Apply verification/review v2",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "kind", "template_digest", "source_identity", "build_identity", "browser_identity", "records", "created_at"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"enum": ["phase-8-verification", "phase-9-review"]},
+    "template_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "source_identity": {"type": "string", "minLength": 1},
+    "build_identity": {"type": "string", "minLength": 1},
+    "browser_identity": {"type": "string", "minLength": 1},
+    "records": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/record"}},
+    "created_at": {"$ref": "common.schema.json#/$defs/timestamp"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"kind": {"const": "phase-8-verification"}}, "required": ["kind"]},
+      "then": {
+        "properties": {
+          "records": {"items": {"allOf": [{"$ref": "#/$defs/record"}, {"properties": {"status": {"enum": ["passed", "failed", "waived"]}}, "not": {"required": ["phase8_record_id"]}}]}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"kind": {"const": "phase-9-review"}}, "required": ["kind"]},
+      "then": {
+        "properties": {
+          "records": {"items": {"allOf": [{"$ref": "#/$defs/record"}, {"required": ["phase8_record_id"], "properties": {"status": {"enum": ["recheck-passed", "recheck-failed"]}}}]}}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "record": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "rule_id", "status", "expected", "actual", "route", "viewport", "theme", "state", "evidence_refs"],
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/uuid"},
+        "phase8_record_id": {"$ref": "common.schema.json#/$defs/uuid"},
+        "rule_id": {"$ref": "common.schema.json#/$defs/ruleId"},
+        "status": {"enum": ["passed", "failed", "waived", "recheck-passed", "recheck-failed"]},
+        "expected": {}, "actual": {},
+        "route": {"type": "string", "minLength": 1},
+        "viewport": {"type": "string", "minLength": 1},
+        "theme": {"type": "string", "minLength": 1},
+        "state": {"type": "string", "minLength": 1},
+        "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

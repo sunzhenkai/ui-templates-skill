@@ -1,0 +1,22 @@
+schema_version: 1
+bundle_version: 2.0.0
+public_skills:
+  ui-template: 2.0.0
+  ui-template-apply: 2.0.0
+template_schema:
+  minimum: 2
+  maximum: 2
+compatibility:
+  - bundle: 2.x
+    ui-template: 2.x
+    ui-template-apply: 2.x
+    template_schema: 2
+    status: supported
+  - bundle: 1.x
+    template_schema: 1
+    status: unsupported-explicit-migration-required
+breaking_boundaries:
+  - dual-skill-bundle
+  - schema-v2
+  - four-value-origin
+  - apply-directory-replaces-implementation

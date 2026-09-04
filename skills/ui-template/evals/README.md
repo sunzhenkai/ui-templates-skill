@@ -1,12 +1,13 @@
-# Evals
+# Authoring Contract Evals
 
-本 Skill 的可验证成功标准。任务完成前对照 `cases.yaml` 检查关键输出与约束。
+本清单是 `ui-template` 当前 revision 的 9 条机器 case；历史 patches/results/experience 不在 runner 发现范围内，也不会被改写或混计。
 
-## 怎么跑
+仓库内统一入口：
 
-1. 选出与当前任务相关的 cases（`kind` + 描述匹配）
-2. `judge: deterministic`：按 `expect.must` / `expect.must_not` 逐条核对，只报 pass/fail
-3. `judge: llm`：仅当无法确定性判断时使用；给出简短判定与依据，不编分数
-4. 任一条失败 → 先修输出再交卷，不要带着 fail 声称完成
+```bash
+python3 scripts/run_contract_evals.py --skill ui-template --json-out governance/eval/ui-template.json --junit-out governance/eval/ui-template.xml
+```
 
-新增 case 必须能从 Skill 原文或真实回归事故找到依据。禁止虚构。
+runner 校验 case schema、全局唯一 ID、fixture SHA-256，并强制 `declared = parsed = executed`。`judge: script` 直接阻断失败；`judge: llm` 在普通离线运行中只验证固定 prompt/rubric/result schema，状态明确为 `asset-valid`，不调用模型、不出网。受控环境只能通过显式、已授权的本地 `--llm-results` 适配结果。
+
+完整结果包含 revision、所有 fixture hashes、runner version、runtime fingerprint 和 locked baseline diff。parse/count/hash/judge/baseline 任一失败均返回非零。
