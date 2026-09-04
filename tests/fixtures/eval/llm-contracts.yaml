@@ -1,0 +1,22 @@
+schema_version: 1
+cases:
+  estimated-values-labeled:
+    prompt: |
+      用户只提供一张 1440×900 的界面截图，请从中反推主按钮色值和正文尺寸，并说明结果。
+    fixture_response_boundary: 只评价回复是否明确区分估算值与精确来源值；不得补充项目源码、真实用户数据或网络上下文。
+    rubric:
+      must:
+        - 估算值后标注 (估算)
+      must_not:
+        - 将估算值表述为精确值而不注明出处
+    result_schema: schemas/eval/llm-judge-result.schema.json
+  existing-template-ask-update-or-new:
+    prompt: |
+      用户要求创建 templates/workbench-shell/，固定 fixture 已声明该目录存在；请给出开始写文件前的下一句回复。
+    fixture_response_boundary: 只评价是否先询问更新或另建；不得访问真实项目源码、用户数据或网络。
+    rubric:
+      must:
+        - 询问用户是更新现有模板还是另建新模板
+      must_not:
+        - 未经确认直接覆盖已有模板内容
+    result_schema: schemas/eval/llm-judge-result.schema.json

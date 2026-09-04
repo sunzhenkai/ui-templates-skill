@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/template/v2/checkpoint.schema.json",
+  "title": "Template Apply checkpoint v2",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "template", "scope", "tokens_digest", "phases", "source_identity", "build_identity", "updated_at"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "template": {"type": "object", "additionalProperties": false, "required": ["name", "version", "digest"], "properties": {"name": {"type": "string", "minLength": 1}, "version": {"$ref": "common.schema.json#/$defs/semver"}, "digest": {"$ref": "common.schema.json#/$defs/digest"}}},
+    "scope": {"type": "object", "additionalProperties": false, "required": ["included", "deferred", "excluded"], "properties": {"included": {"type": "array", "items": {"type": "string"}}, "deferred": {"type": "array", "items": {"type": "string"}}, "excluded": {"type": "array", "items": {"type": "string"}}}},
+    "tokens_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "phases": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"id": {"const": 0}}}]},
+        {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"id": {"const": 1}}}]},
+        {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"id": {"const": 2}}}]},
+        {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"id": {"const": 3}}}]},
+        {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"id": {"const": 4}}}]},
+        {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"id": {"const": 5}}}]},
+        {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"id": {"const": 6}}}]},
+        {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"id": {"const": 7}}}]},
+        {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"id": {"const": 8}}}]},
+        {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"id": {"const": 9}}}]}
+      ],
+      "items": false
+    },
+    "source_identity": {"type": "string", "minLength": 1},
+    "build_identity": {"type": "string", "minLength": 1},
+    "updated_at": {"$ref": "common.schema.json#/$defs/timestamp"}
+  },
+  "$defs": {
+    "phase": {
+      "type": "object", "additionalProperties": false, "required": ["id", "status", "artifacts"],
+      "properties": {
+        "id": {"type": "integer", "minimum": 0, "maximum": 9},
+        "status": {"enum": ["pending", "in-progress", "complete", "stale", "blocked"]},
+        "artifacts": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["path", "digest"], "properties": {"path": {"type": "string", "minLength": 1}, "digest": {"$ref": "common.schema.json#/$defs/digest"}}}},
+        "evidence_refs": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

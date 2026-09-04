@@ -1,0 +1,154 @@
+schema_version: 1
+graph_type: ui-template-literal-source-graph
+platform: web
+closure_complete: true
+canonical_candidates:
+  themes: [theme.core]
+  entries: [entry.shell]
+definitions:
+  - {id: theme.core, kind: theme, name: core, locator: "ui-source-graph.yaml#/definitions/theme.core", exports: [theme], facts: []}
+  - {id: entry.shell, kind: entry, name: shell-entry, locator: "ui-source-graph.yaml#/definitions/entry.shell", exports: [shell], facts: []}
+  - {id: scene.shell, kind: scene, name: shell, locator: "ui-source-graph.yaml#/definitions/scene.shell", exports: [shell-scene], facts: []}
+  - {id: scene.board, kind: scene, name: board, locator: "ui-source-graph.yaml#/definitions/scene.board", exports: [board-scene], facts: []}
+  - {id: scene.master-detail, kind: scene, name: master-detail, locator: "ui-source-graph.yaml#/definitions/scene.master-detail", exports: [master-detail-scene], facts: []}
+  - {id: scene.dialog, kind: scene, name: dialog, locator: "ui-source-graph.yaml#/definitions/scene.dialog", exports: [dialog-scene], facts: []}
+  - {id: component.dialog, kind: component, name: dialog, locator: "ui-source-graph.yaml#/definitions/component.dialog", exports: [dialog], facts: []}
+  - {id: component.link, kind: component, name: link, locator: "ui-source-graph.yaml#/definitions/component.link", exports: [link], facts: []}
+  - {id: context.navigation-link, kind: context, name: navigation-link, locator: "ui-source-graph.yaml#/definitions/context.navigation-link", exports: [], facts: []}
+  - {id: context.entity-row-link, kind: context, name: entity-row-link, locator: "ui-source-graph.yaml#/definitions/context.entity-row-link", exports: [], facts: []}
+  - {id: context.button-link, kind: context, name: button-link, locator: "ui-source-graph.yaml#/definitions/context.button-link", exports: [], facts: []}
+  - {id: context.inline-prose-link, kind: context, name: inline-prose-link, locator: "ui-source-graph.yaml#/definitions/context.inline-prose-link", exports: [], facts: []}
+imports:
+  - {id: import.theme, from_definition: entry.shell, to_definition: theme.core, locator: "ui-source-graph.yaml#/imports/import.theme"}
+  - {id: import.shell, from_definition: entry.shell, to_definition: scene.shell, locator: "ui-source-graph.yaml#/imports/import.shell"}
+  - {id: import.board, from_definition: entry.shell, to_definition: scene.board, locator: "ui-source-graph.yaml#/imports/import.board"}
+  - {id: import.master-detail, from_definition: entry.shell, to_definition: scene.master-detail, locator: "ui-source-graph.yaml#/imports/import.master-detail"}
+  - {id: import.dialog-scene, from_definition: entry.shell, to_definition: scene.dialog, locator: "ui-source-graph.yaml#/imports/import.dialog-scene"}
+  - {id: import.dialog, from_definition: entry.shell, to_definition: component.dialog, locator: "ui-source-graph.yaml#/imports/import.dialog"}
+  - {id: import.link, from_definition: entry.shell, to_definition: component.link, locator: "ui-source-graph.yaml#/imports/import.link"}
+  - {id: import.nav-context, from_definition: entry.shell, to_definition: context.navigation-link, locator: "ui-source-graph.yaml#/imports/import.nav-context"}
+  - {id: import.row-context, from_definition: entry.shell, to_definition: context.entity-row-link, locator: "ui-source-graph.yaml#/imports/import.row-context"}
+  - {id: import.button-context, from_definition: entry.shell, to_definition: context.button-link, locator: "ui-source-graph.yaml#/imports/import.button-context"}
+  - {id: import.prose-context, from_definition: entry.shell, to_definition: context.inline-prose-link, locator: "ui-source-graph.yaml#/imports/import.prose-context"}
+usages:
+  - id: usage.shell
+    definition_id: scene.shell
+    scene: shell
+    component: null
+    context: null
+    slot: canvas
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.shell"
+    facts:
+      - {id: fact.shell.root-scroll-none, facet: layout_scenes, subject: shell, context: null, slot: canvas, state: default, property: root_scroll, value: {kind: semantic, value: none}, negative: true, rule_id: LAYOUT-001}
+      - {id: fact.shell.arrangement, facet: layout_scenes, subject: shell, context: null, slot: canvas, state: default, property: arrangement, value: {kind: semantic, value: horizontal}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.variant, facet: layout_scenes, subject: shell, context: null, slot: canvas, state: default, property: shell_variant, value: {kind: semantic, value: inset}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.switcher, facet: layout_scenes, subject: shell, context: null, slot: workspace-switcher, state: default, property: slot_role, value: {kind: semantic, value: workspace-switcher}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.switcher, facet: layout_scenes, subject: shell, context: null, slot: workspace-switcher, state: default, property: slot_order, value: {kind: semantic, value: "0"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.search, facet: layout_scenes, subject: shell, context: null, slot: search, state: default, property: slot_role, value: {kind: semantic, value: search}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.search, facet: layout_scenes, subject: shell, context: null, slot: search, state: default, property: slot_order, value: {kind: semantic, value: "1"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.compose, facet: layout_scenes, subject: shell, context: null, slot: compose, state: default, property: slot_role, value: {kind: semantic, value: compose}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.compose, facet: layout_scenes, subject: shell, context: null, slot: compose, state: default, property: slot_order, value: {kind: semantic, value: "2"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.anchor.trigger, facet: layout_scenes, subject: shell, context: null, slot: page-header, state: default, property: anchor_role, value: {kind: semantic, value: header-trigger}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.anchor.fab, facet: layout_scenes, subject: shell, context: null, slot: canvas, state: default, property: anchor_role, value: {kind: semantic, value: chat-fab}, negative: false, rule_id: LAYOUT-001}
+  - id: usage.board
+    definition_id: scene.board
+    scene: board
+    component: null
+    context: null
+    slot: columns
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.board"
+    facts:
+      - {id: fact.board.non-wrap, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: wrap, value: {kind: semantic, value: non-wrap}, negative: true, rule_id: LAYOUT-002}
+      - {id: fact.board.non-shrink, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: shrink, value: {kind: semantic, value: non-shrink}, negative: true, rule_id: LAYOUT-002}
+      - {id: fact.board.inline-scroll, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: scroll_inline, value: {kind: semantic, value: inline}, negative: false, rule_id: LAYOUT-002}
+  - id: usage.master-scroll
+    definition_id: scene.master-detail
+    scene: master-detail
+    component: null
+    context: null
+    slot: master
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.master-scroll"
+    facts:
+      - {id: fact.master.block-scroll, facet: layout_scenes, subject: master-detail, context: null, slot: master, state: default, property: scroll_block, value: {kind: semantic, value: block}, negative: false, rule_id: LAYOUT-003}
+  - id: usage.detail-scroll
+    definition_id: scene.master-detail
+    scene: master-detail
+    component: null
+    context: null
+    slot: detail
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.detail-scroll"
+    facts:
+      - {id: fact.detail.block-scroll, facet: layout_scenes, subject: master-detail, context: null, slot: detail, state: default, property: scroll_block, value: {kind: semantic, value: block}, negative: false, rule_id: LAYOUT-003}
+  - id: usage.overlay
+    definition_id: scene.shell
+    scene: shell
+    component: null
+    context: null
+    slot: overlay
+    state: open
+    locator: "ui-source-graph.yaml#/usages/usage.overlay"
+    facts:
+      - {id: fact.overlay.scope, facet: layout_scenes, subject: shell, context: null, slot: overlay, state: open, property: overlay_scope, value: {kind: semantic, value: region}, negative: false, rule_id: LAYOUT-004}
+      - {id: fact.overlay.anchor, facet: layout_scenes, subject: shell, context: null, slot: overlay, state: open, property: overlay_anchor, value: {kind: semantic, value: viewport}, negative: false, rule_id: LAYOUT-004}
+  - id: usage.dialog-content
+    definition_id: component.dialog
+    scene: dialog
+    component: dialog
+    context: null
+    slot: content
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.dialog-content"
+    facts:
+      - {id: fact.dialog.padding-block-start, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: padding_block_start, value: {kind: token-ref, value: spacing.dialog.block-start}, negative: false, rule_id: QUALITY-001}
+      - {id: fact.dialog.padding-inline-end, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: padding_inline_end, value: {kind: token-ref, value: spacing.dialog.inline-end}, negative: false, rule_id: QUALITY-001}
+      - {id: fact.dialog.padding-block-end, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: padding_block_end, value: {kind: token-ref, value: spacing.dialog.block-end}, negative: false, rule_id: QUALITY-001}
+      - {id: fact.dialog.padding-inline-start, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: padding_inline_start, value: {kind: token-ref, value: spacing.dialog.inline-start}, negative: false, rule_id: QUALITY-001}
+      - {id: fact.dialog.shadow, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: shadow, value: {kind: token-ref, value: shadows.dialog}, negative: false, rule_id: QUALITY-001}
+  - id: usage.navigation-link
+    definition_id: component.link
+    scene: shell
+    component: link
+    context: navigation-link
+    slot: item
+    state: hover
+    locator: "ui-source-graph.yaml#/usages/usage.navigation-link"
+    facts:
+      - {id: fact.navigation.decoration-none, facet: state_presentations, subject: link, context: navigation-link, slot: item, state: hover, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-002}
+      - {id: fact.navigation.background, facet: state_presentations, subject: link, context: navigation-link, slot: item, state: hover, property: background, value: {kind: token-ref, value: themes.light.sidebar-hover}, negative: false, rule_id: QUALITY-002}
+  - id: usage.entity-row-link
+    definition_id: component.link
+    scene: master-detail
+    component: link
+    context: entity-row-link
+    slot: row
+    state: hover
+    locator: "ui-source-graph.yaml#/usages/usage.entity-row-link"
+    facts:
+      - {id: fact.entity-row.decoration-none, facet: state_presentations, subject: link, context: entity-row-link, slot: row, state: hover, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-003}
+  - id: usage.button-link
+    definition_id: component.link
+    scene: shell
+    component: link
+    context: button-link
+    slot: label
+    state: hover
+    locator: "ui-source-graph.yaml#/usages/usage.button-link"
+    facts:
+      - {id: fact.button-link.underline, facet: state_presentations, subject: link, context: button-link, slot: label, state: hover, property: text_decoration, value: {kind: semantic, value: underline}, negative: false, rule_id: QUALITY-004}
+  - id: usage.inline-prose-link
+    definition_id: component.link
+    scene: shell
+    component: link
+    context: inline-prose-link
+    slot: text
+    state: hover
+    locator: "ui-source-graph.yaml#/usages/usage.inline-prose-link"
+    facts:
+      - {id: fact.prose-link.underline, facet: state_presentations, subject: link, context: inline-prose-link, slot: text, state: hover, property: text_decoration, value: {kind: semantic, value: underline}, negative: false, rule_id: QUALITY-005}
+exclusions:
+  - {id: exclusion.mobile, locator: "ui-source-graph.yaml#/exclusions/exclusion.mobile", reason: platform-mismatch}
+dynamic: []

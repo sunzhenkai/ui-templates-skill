@@ -1,0 +1,51 @@
+schema_version: 1
+active_release:
+  - README.md
+  - AGENTS.md
+  - Makefile
+  - .github/workflows/governance.yml
+  - governance/**
+  - schemas/**
+  - scripts/**
+  - tests/**
+  - openspec/config.yaml
+  - openspec/specs/**
+  - openspec/changes/harden-template-lifecycle/**
+  - skills/ui-template/SKILL.md
+  - skills/ui-template/references/**
+  - skills/ui-template/evals/**
+  - skills/ui-template/runtime/**
+  - skills/ui-template-apply/SKILL.md
+  - skills/ui-template-apply/references/**
+  - skills/ui-template-apply/evals/**
+  - templates/**
+immutable_history:
+  - openspec/changes/archive/**
+  - skills/**/patches/**
+  - skills/**/experience/**
+exclusions:
+  - example/workbench-shell/web-v1/**
+  - example/workbench-shell/web-v2/**
+  - docs/**
+  - example/workbench-shell/web-v3/**
+  - semantic-review/**
+checks:
+  documents:
+    - README.md
+    - AGENTS.md
+    - governance/release/**
+    - skills/ui-template/SKILL.md
+    - skills/ui-template/references/**
+    - skills/ui-template/evals/**
+    - skills/ui-template-apply/SKILL.md
+    - skills/ui-template-apply/references/**
+    - skills/ui-template-apply/evals/**
+    - templates/**
+  production_skills:
+    - skills/ui-template
+    - skills/ui-template-apply
+  mirror_target: .agents/skills
+  openspec:
+    base: openspec/specs
+    overlay: openspec/changes/harden-template-lifecycle/specs
+    change: harden-template-lifecycle

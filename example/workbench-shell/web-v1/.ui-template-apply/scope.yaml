@@ -1,0 +1,28 @@
+included:
+  - platform:web
+  - viewport:desktop
+  - viewport:tablet
+  - viewport:mobile
+  - theme:light
+  - theme:dark
+  - page-mode:A
+  - page-mode:B
+  - page-mode:C
+  - page-mode:D
+  - page-mode:E
+  - route:inbox
+  - route:incidents
+  - route:incident-detail
+  - route:board
+  - route:services
+  - route:service-detail
+  - route:oncall
+  - route:analytics
+  - route:settings
+  - component:defaulted-accepted
+  - state:defaulted-accepted
+deferred: []
+excluded:
+  - platform:native-mobile
+  - platform:native-desktop
+  - route:legacy-document-detail

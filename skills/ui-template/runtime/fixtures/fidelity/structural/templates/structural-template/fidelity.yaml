@@ -1,0 +1,231 @@
+schema_version: 1
+profile: repo-structural-v1
+conformance: structural
+platforms: [web]
+style_only_reason: null
+scope:
+  scenes: [shell, board, master-detail, dialog]
+  components: [dialog, link]
+  contexts: [navigation-link, entity-row-link, button-link, inline-prose-link]
+layout_scenes:
+  - id: scene.shell
+    scene: shell
+    scene_kind: shell
+    shell_variant: inset
+    rule_id: LAYOUT-001
+    status: observed
+    regions:
+      - {id: region.shell.root, role: root}
+      - {id: region.shell.canvas, role: canvas}
+      - {id: region.shell.overlay, role: overlay}
+      - {id: region.shell.workspace-switcher, role: workspace-switcher}
+      - {id: region.shell.search, role: search}
+      - {id: region.shell.compose, role: compose}
+      - {id: region.shell.page-header, role: page-header}
+    relations:
+      - {type: contains, from: region.shell.root, to: region.shell.canvas}
+      - {type: overlay, from: region.shell.root, to: region.shell.overlay}
+      - {type: contains, from: region.shell.root, to: region.shell.workspace-switcher, order: 0}
+      - {type: contains, from: region.shell.root, to: region.shell.search, order: 1}
+      - {type: contains, from: region.shell.root, to: region.shell.compose, order: 2}
+      - {type: contains, from: region.shell.root, to: region.shell.page-header}
+    slots:
+      - {id: slot.shell.workspace-switcher, role: workspace-switcher, region: region.shell.workspace-switcher, order: 0}
+      - {id: slot.shell.search, role: search, region: region.shell.search, order: 1}
+      - {id: slot.shell.compose, role: compose, region: region.shell.compose, order: 2}
+    chrome_anchors:
+      - {id: anchor.shell.header-trigger, role: header-trigger, region: region.shell.page-header}
+      - {id: anchor.shell.chat-fab, role: chat-fab, region: region.shell.canvas}
+    arrangement: horizontal
+    fill: intrinsic
+    wrap: wrap
+    shrink: shrink
+    scroll_domains: []
+    overlays:
+      - {id: overlay.shell, scope: region, anchor: region.shell.root, region: region.shell.overlay}
+    responsive_modes:
+      - {id: mode.desktop, viewport: desktop}
+    negative_facts:
+      - {property: root_scroll, value: none}
+    provenance:
+      source_id: source-001
+      source_revision: 60b90074a44184a8a7d2d79d740fd9e0f0dd9859
+      locator: {path: ui-source-graph.yaml, symbol: usage.shell, selector: null, pointer: "#/usages/usage.shell", line: null}
+      method: source-graph
+      source_span_sha256: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      captured_at: "2026-01-01T00:00:00Z"
+      confidence: high
+  - id: scene.board
+    scene: board
+    scene_kind: board
+    rule_id: LAYOUT-002
+    status: observed
+    regions:
+      - {id: region.board.root, role: root}
+      - {id: region.board.columns, role: columns}
+    relations:
+      - {type: contains, from: region.board.root, to: region.board.columns}
+    arrangement: horizontal
+    fill: intrinsic
+    wrap: non-wrap
+    shrink: non-shrink
+    scroll_domains:
+      - {id: scroll.board.inline, axis: inline, owner: region.board.columns, nested_in: null}
+    overlays: []
+    responsive_modes:
+      - {id: mode.desktop, viewport: desktop}
+    negative_facts:
+      - {property: wrap, value: non-wrap}
+      - {property: shrink, value: non-shrink}
+    provenance:
+      source_id: source-001
+      source_revision: 60b90074a44184a8a7d2d79d740fd9e0f0dd9859
+      locator: {path: ui-source-graph.yaml, symbol: usage.board, selector: null, pointer: "#/usages/usage.board", line: null}
+      method: source-graph
+      source_span_sha256: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      captured_at: "2026-01-01T00:00:00Z"
+      confidence: high
+  - id: scene.master-detail
+    scene: master-detail
+    scene_kind: master-detail
+    rule_id: LAYOUT-003
+    status: observed
+    regions:
+      - {id: region.master-detail.root, role: root}
+      - {id: region.master-detail.master, role: master}
+      - {id: region.master-detail.detail, role: detail}
+    relations:
+      - {type: contains, from: region.master-detail.root, to: region.master-detail.master}
+      - {type: contains, from: region.master-detail.root, to: region.master-detail.detail}
+    arrangement: horizontal
+    fill: fill
+    wrap: wrap
+    shrink: shrink
+    scroll_domains:
+      - {id: scroll.master-detail.master, axis: block, owner: region.master-detail.master, nested_in: null}
+      - {id: scroll.master-detail.detail, axis: block, owner: region.master-detail.detail, nested_in: scroll.master-detail.master}
+    overlays: []
+    responsive_modes:
+      - {id: mode.desktop, viewport: desktop}
+    negative_facts: []
+    provenance:
+      source_id: source-001
+      source_revision: 60b90074a44184a8a7d2d79d740fd9e0f0dd9859
+      locator: {path: ui-source-graph.yaml, symbol: usage.master-scroll, selector: null, pointer: "#/usages/usage.master-scroll", line: null}
+      method: source-graph
+      source_span_sha256: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      captured_at: "2026-01-01T00:00:00Z"
+      confidence: high
+component_geometry:
+  - id: geometry.dialog.content
+    component: dialog
+    slot: content
+    rule_id: QUALITY-001
+    status: observed
+    properties:
+      padding_block_start: {kind: token-ref, value: spacing.dialog.block-start}
+      padding_inline_end: {kind: token-ref, value: spacing.dialog.inline-end}
+      padding_block_end: {kind: token-ref, value: spacing.dialog.block-end}
+      padding_inline_start: {kind: token-ref, value: spacing.dialog.inline-start}
+      shadow: {kind: token-ref, value: shadows.dialog}
+    negative_facts: []
+    provenance:
+      source_id: source-001
+      source_revision: 60b90074a44184a8a7d2d79d740fd9e0f0dd9859
+      locator: {path: ui-source-graph.yaml, symbol: usage.dialog-content, selector: null, pointer: "#/usages/usage.dialog-content", line: null}
+      method: source-graph
+      source_span_sha256: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      captured_at: "2026-01-01T00:00:00Z"
+      confidence: high
+state_presentations:
+  - id: state.link.navigation-link.hover.item
+    subject_role: link
+    context: navigation-link
+    state: hover
+    surface: item
+    rule_id: QUALITY-002
+    status: observed
+    background: {kind: token-ref, value: themes.light.sidebar-hover}
+    text: null
+    border: null
+    text_decoration: none
+    visibility: visible
+    container_presentation: none
+    negative_facts:
+      - {property: text_decoration, value: none}
+    provenance:
+      source_id: source-001
+      source_revision: 60b90074a44184a8a7d2d79d740fd9e0f0dd9859
+      locator: {path: ui-source-graph.yaml, symbol: usage.navigation-link, selector: null, pointer: "#/usages/usage.navigation-link", line: null}
+      method: source-graph
+      source_span_sha256: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      captured_at: "2026-01-01T00:00:00Z"
+      confidence: high
+  - id: state.link.entity-row-link.hover.row
+    subject_role: link
+    context: entity-row-link
+    state: hover
+    surface: row
+    rule_id: QUALITY-003
+    status: observed
+    background: null
+    text: null
+    border: null
+    text_decoration: none
+    visibility: visible
+    container_presentation: none
+    negative_facts:
+      - {property: text_decoration, value: none}
+    provenance:
+      source_id: source-001
+      source_revision: 60b90074a44184a8a7d2d79d740fd9e0f0dd9859
+      locator: {path: ui-source-graph.yaml, symbol: usage.entity-row-link, selector: null, pointer: "#/usages/usage.entity-row-link", line: null}
+      method: source-graph
+      source_span_sha256: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      captured_at: "2026-01-01T00:00:00Z"
+      confidence: high
+  - id: state.link.button-link.hover.label
+    subject_role: link
+    context: button-link
+    state: hover
+    surface: label
+    rule_id: QUALITY-004
+    status: observed
+    background: null
+    text: null
+    border: null
+    text_decoration: underline
+    visibility: visible
+    container_presentation: none
+    negative_facts: []
+    provenance:
+      source_id: source-001
+      source_revision: 60b90074a44184a8a7d2d79d740fd9e0f0dd9859
+      locator: {path: ui-source-graph.yaml, symbol: usage.button-link, selector: null, pointer: "#/usages/usage.button-link", line: null}
+      method: source-graph
+      source_span_sha256: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      captured_at: "2026-01-01T00:00:00Z"
+      confidence: high
+  - id: state.link.inline-prose-link.hover.text
+    subject_role: link
+    context: inline-prose-link
+    state: hover
+    surface: text
+    rule_id: QUALITY-005
+    status: observed
+    background: null
+    text: null
+    border: null
+    text_decoration: underline
+    visibility: visible
+    container_presentation: none
+    negative_facts: []
+    provenance:
+      source_id: source-001
+      source_revision: 60b90074a44184a8a7d2d79d740fd9e0f0dd9859
+      locator: {path: ui-source-graph.yaml, symbol: usage.inline-prose-link, selector: null, pointer: "#/usages/usage.inline-prose-link", line: null}
+      method: source-graph
+      source_span_sha256: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      captured_at: "2026-01-01T00:00:00Z"
+      confidence: high
+unresolved: []

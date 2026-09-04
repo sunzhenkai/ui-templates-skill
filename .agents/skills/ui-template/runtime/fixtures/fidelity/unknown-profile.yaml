@@ -1,0 +1,13 @@
+schema_version: 1
+profile: unknown-profile-v9
+conformance: structural
+platforms: [web]
+style_only_reason: null
+scope:
+  scenes: []
+  components: []
+  contexts: []
+layout_scenes: []
+component_geometry: []
+state_presentations: []
+unresolved: []

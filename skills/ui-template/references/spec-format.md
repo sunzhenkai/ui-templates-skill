@@ -1,180 +1,149 @@
-# 设计规范文档格式(spec.md、tokens.yaml、meta.yaml 与 apply/)
+# UI 模板格式契约（schema v2）
 
-本文档定义 `templates/<name>/spec.md` 的章节骨架、`tokens.yaml` 与 `meta.yaml` 的字段,以及 optional `apply/` 约定。写规范时按此结构组织;来源未体现的字段必须在 `tokens.yaml` 回填默认值,`spec.md` 说明缺口与默认值依据,不要留空章节。
+本文是 `ui-template` 对 `templates/<name>/` 公开数据契约的 prose 权威；机器结构以 `schemas/template/v2/*.schema.json` 为准。两者冲突时不得任选其一发布，必须先修复漂移。Apply 只消费本契约，不反向定义格式。
 
-## spec.md 骨架
-
-```markdown
-# <模板名> 设计规范
-
-> 一句话风格描述(如:"深色开发者工具风,高对比,紧凑排版,克制的强调色")。
-
-- 来源:<类型 + URL/路径/文件名>
-- 采集日期:<YYYY-MM-DD>
-- 佐证截图:assets/<文件名>(如有)
-
-## 0. 不可协商规则(Non-negotiables)
-
-不超过 20 条、每条可独立检查的 MUST 规则;消费方无论使用什么技术栈都必须满足。其余正文规则标注 SHOULD(偏离须记录理由)或 MAY。
-
-## 1. 整体风格
-
-- 风格关键词:3~6 个(如:深色、极简、几何、高密度)
-- 明暗:深色 / 浅色 / 双主题
-- 密度:紧凑 / 适中 / 宽松
-- 圆角倾向:锐利(0~4px) / 柔和(6~12px) / 圆润(≥16px)
-
-## 2. 配色
-
-按角色给值,而不是罗列色卡。每个角色给出 hex 值,并注明依据(精确提取 / 估算)。
-
-| 角色 | 值 | 说明 |
-| --- | --- | --- |
-| 页面背景 | | |
-| 卡片/容器背景 | | |
-| 主文字 | | |
-| 次要文字 | | |
-| 主色(primary) | | 按钮、链接、关键交互 |
-| 强调色(accent) | | 点缀、高亮,可多个 |
-| 边框/分割线 | | |
-| 成功 / 警告 / 错误 | | 若来源有体现 |
-
-## 3. 字体
-
-- 字体族:正文 / 标题 / 等宽(如适用),含 fallback
-- 字号阶梯:列出实际出现的层级(如 12 / 14 / 16 / 20 / 28 / 36),注明各自用途(正文、卡片标题、页面标题等)
-- 字重用法:常规 / 中等 / 粗体分别用在哪
-- 行高与字距特点(如有明显特征)
-
-## 4. 间距与布局
-
-- 间距基调:以实际值归纳(如"4 的倍数体系,常用 8/16/24")
-- 页面容器:最大宽度、左右留白
-- 栅格/分栏特点(如有)
-- 常见内边距模式:卡片、按钮、输入框
-
-## 5. 组件风格要点
-
-按来源中实际出现的组件写成紧凑契约,每个组件至少覆盖 semantic element、variants、sizes、states、geometry、a11y;交互组件必须包含 hover、focus-visible、disabled、selected。来源未体现的状态按归一与决策阶段回填默认值。示例:
-
-- 按钮:实心主色、圆角 6px、hover 加深
-- 卡片:容器背景 + 1px 边框,无阴影
-- 输入框:……
-- 导航:……
-
-## 6. 其他特征(可选)
-
-- 阴影:无 / 轻微 / 明显,给出典型值
-- 动效:时长、缓动倾向(如来源可观察)
-- 图标风格:线性 / 面性、粗细
-- 图片/插画处理特点
-
-## 7. 还原要点
-
-写给"消费者"的 3~5 条最关键规则:照这几条做,页面就有这个风格的味道。例如:
-
-1. 背景必须用 #0d1117 级别的深色,卡片再浅半档
-2. 强调色只用于关键操作,面积不超过 5%
-3. ……
-```
-
-## meta.yaml 字段
-
-```yaml
-name: <模板名,与目录名一致>
-description: <一句话风格描述,与 spec.md 开头一致>
-source:
-  type: web | repo | image | doc
-  ref: <URL / 仓库路径或地址 / 图片或文档文件名>
-captured_at: <YYYY-MM-DD>
-tokens: tokens.yaml
-tags: [<风格关键词,如 dark, minimal, dashboard>]
-confidence: high | medium | low   # 取最弱维度;doc 来源建议在 spec.md 分别说明 layout 与 visual 置信度
-platforms: [web, mobile]   # 可选:模板覆盖多平台外壳时列出,各平台差异细节放 platforms/<platform>.md
-coverage:
-  visual_reference: true | false
-  viewports: [desktop]
-  themes: [light]
-  components:
-    observed: [<来源实际体现的组件>]
-    defaulted: [<回填默认契约的组件>]
-  states:
-    observed: [default, hover]
-    defaulted: [focus-visible, disabled, selected]
-```
-
-`confidence` 是模板复用时的重要参考:`low` 意味着消费者应把 spec.md 当风格方向而非精确数值。
-
-## tokens.yaml(必备)
-
-`tokens.yaml` 是颜色、字号、间距、圆角、阴影等精确值的机器可读唯一载体;`spec.md` 负责解释规则与用途,不维护第二份数值清单。最小结构:
-
-```yaml
-schema: 1
-themes:
-  light:
-    background: { value: "#ffffff", origin: source }
-    foreground: { value: "#0f172a", origin: default }
-  dark:
-    background: { value: "#0b1220", origin: default }
-    foreground: { value: "#e5e7eb", origin: default }
-typography:
-  family:
-    body: { value: "Inter, system-ui, sans-serif", origin: default }
-  scale:
-    body: { size: 14, lineHeight: 20, origin: source }
-spacing:
-  base: 4
-  allowed: [4, 8, 12, 16, 24, 32]
-radius:
-  control: 10
-  card: 8
-```
-
-硬性要求:
-
-- `origin` 必填,取值 `source | computed | estimated | default`;`default` 表示模板回填的默认值,不得伪装成来源派生。
-- 配色、字体族、字号阶梯、间距、圆角、阴影不允许空值或区间值;来源未体现时回填默认值并记录决策。
-- 支持双主题时,`themes.light` 与 `themes.dark` 的角色键必须一致。
-- 间距使用 `allowed` 白名单;组件几何(高度、内边距)优先引用该白名单。
-
-## optional apply/ 实施指南
-
-当模板足够复杂、需要约定消费顺序与验收方式时,可以增加 `apply/`;它只承载实施顺序与验收引用,不承载设计规则或工程结构:
+## 目录与所有权
 
 ```text
 templates/<name>/
-├── components.md    # 可选:设计层组件契约(semantic/variants/sizes/states/geometry/a11y,无栈映射)
+├── spec.md                 # 设计规则入口，开篇为 Non-negotiables
+├── tokens.yaml             # 精确值唯一载体
+├── meta.yaml               # 身份、来源、置信度、coverage
+├── evidence.yaml           # token/default/asset provenance
+├── fidelity.yaml           # 可选 compatible sidecar；repo Authoring 新建/更新时总是生成 receipt
+├── assets/                 # 可选，仅放许可允许且已完成隐私处理的资产
+├── components.md           # 可选，设计层组件契约
+├── platforms/*.md          # 可选，平台设计差异
+├── routes-and-layouts.md   # 可选，页面模式/路由/布局设计规则
 └── apply/
-    ├── playbook.md  # 必有:实施阶段顺序与 gate,逐条引用 spec 规则
-    └── quality.md   # 推荐:验收矩阵,只写“检查哪条规则、如何取证”,不复制数值
+    ├── playbook.md         # 存在 apply/ 时必需：阶段映射、gate、取证引用
+    └── quality.md          # 可选：rule ID → 检查方法
 ```
 
-归属判断:
+`implementation/` 已移除并禁止。模板内也禁止 stack adapter、框架/依赖清单、runnable starter、源码/项目目录契约、API/mock/data 分层、状态库选型及具体消费项目业务结构。这些决定只属于消费项目 `.ui-template-apply/03-structure.md`。
 
-- 页面模式、布局矩阵、断点表、URL 契约属于设计规则,写入 `spec.md` 或其拆分子文件,不放 `apply/`。
-- 组件契约是设计层内容,放模板根目录 `components.md`;不得包含 `source: <组件库>` 之类栈映射。
-- 以下内容**禁止**进入模板:目录契约(如 `src/` 结构)、API/mock/data 分层、状态库选型、stack adapter(如 `stack-<framework>.md`)、依赖清单、具体消费项目的业务域名。它们在 Apply Phase 3 由目标项目现场决策。
+## 必备 envelope
 
-职责边界:
+`meta.yaml`、`tokens.yaml`、`evidence.yaml` 都必须声明 `schema_version: 2`；`meta.yaml` 另须声明 SemVer `template_version`。未知或缺失 schema 必须 fail closed，不得按 v1 猜测。v1 只能通过显式迁移器生成候选和报告。
 
-- `spec.md` 是设计规则唯一入口,定义“结果必须长什么样、如何交互”。
-- `tokens.yaml` 是精确值唯一载体;`spec.md` 引用并解释,不维护第二份数值清单。
-- `apply/playbook.md` 只定义“按什么顺序做、每步引用哪条规则、如何验收”。
+## `spec.md` 与稳定规则 ID
 
-写作要求:
+`spec.md` 保持以下设计层骨架：0 Non-negotiables、整体风格、配色角色、字体、间距与布局、组件契约、可选特征、还原要点。它解释用途和行为，但不复制 `tokens.yaml` 的精确值。
 
-- apply 文档必须引用 `spec.md` 的规则,不复制色值、字号、间距或布局细节。
-- apply 文档使用简体中文;路径、组件名、命令、CSS 属性和框架术语保留原文。
-- 不把 runnable starter、依赖清单或完整业务代码放入模板;模板仍以可共享规范为主。
-- 若某个规则既需要出现在 `spec.md` 又影响实施验收,在 `spec.md` 定义规则,在 apply 文档中只写“检查该规则”的方式。
+跨文档或机器证据引用的规则必须定义稳定 ID，定义语法为 `[ID]`，引用语法为 `@ID`：
 
-冲突处理:
+- `NN-###`：不可协商规则；
+- `TOKEN-###`、`LAYOUT-###`、`ROUTE-###`、`AX-###`、`RESP-###`、`QUALITY-###`：对应领域规则。
 
-1. `spec.md` 与 `apply/` 冲突时,以 `spec.md` 为准。
-2. `spec.md`/`tokens.yaml` 与任何历史消费项目的工程结构冲突时,以模板为准;工程结构在目标项目重新决策。
-3. 更新模板时,先判断发现属于设计规则、验收方式还是当前业务实现;最后一种不回写模板。
+ID 在整个模板内唯一。按各命名空间单调分配；删除后永不复用。规则被替代时保留旧 ID 的 retired/superseded 说明并指向新 ID；不得静默改写历史 evidence、feedback 或 verification 中的引用。`apply/`、quality matrix、verification 与 feedback 只引用 ID，不复制规则数值。
 
-## 大型规范的拆分
+## `tokens.yaml`
 
-`spec.md` 始终是共享核心与入口。当规范体量过大、或存在平台/场景维度的大量差异细节时,允许拆出子文件(如 `platforms/web.md`),并在 `spec.md` 中以相对链接指向;拆分出的细节文件不重复 spec.md 已有的通用规则。
+每个可消费 leaf 都是统一 record：
+
+```yaml
+schema_version: 2
+themes:
+  light:
+    background: {value: "#ffffff", origin: source}
+typography:
+  scale:
+    body: {value: 14, unit: px, origin: source}
+spacing:
+  allowed: {value: [4, 8, 12, 16], unit: px, origin: computed}
+```
+
+硬性要求：
+
+- `value` 非空，`origin` 仅为 `source | computed | estimated | default`。
+- 有量纲数值必须声明 `unit`；闭集为 `px | rem | em | % | ms | s | deg | ratio | unitless`。scalar numeric 与包含 numeric 的同单位 list 都须有 unit；复合 map 的 numeric 成员使用 `{value, unit}`，不得用裸 numeric 绕过。
+- list/map 必须放在 record 的 `value` 中；不允许裸 scalar/list/map token leaf。
+- 来源缺口回填确定的 `default`，并在 evidence 写 basis 或 decision ID；不得留空、给区间或交给 Apply 即兴选择。
+- 双主题角色键必须一致。颜色、字体、字号、间距、圆角、阴影、动效等精确值只在本文件维护。
+
+## `meta.yaml`
+
+最小语义如下（完整字段闭集以 schema 为准）：
+
+```yaml
+schema_version: 2
+template_version: 2.0.0
+name: example
+description: 一句话设计描述
+sources:
+  - id: source-001
+    type: web # web | repo | image | doc
+    ref: https://example.invalid
+    revision: response-etag-or-content-digest
+    captured_at: 2026-09-03T00:00:00Z
+captured_at: 2026-09-03
+tokens: tokens.yaml
+evidence: evidence.yaml
+platforms: [web]
+confidence: {overall: medium, layout: medium, visual: medium, components: medium}
+coverage:
+  platforms: {declared: [web], observed: [web], defaulted: [], unsupported: []}
+  viewports: {declared: [desktop], observed: [desktop], defaulted: [], unsupported: []}
+  themes: {declared: [light], observed: [light], defaulted: [], unsupported: []}
+  page_modes: {declared: [collection], observed: [collection], defaulted: [], unsupported: []}
+  components: {declared: [button], observed: [button], defaulted: [], unsupported: []}
+  states: {declared: [default, focus-visible], observed: [default], defaulted: [focus-visible], unsupported: []}
+```
+
+每个 coverage dimension 的 `declared` 必须被 `observed/defaulted/unsupported` 恰好覆盖，三者互斥；`platforms` 与 `coverage.platforms.declared` 相等。`overall` 不高于 layout/visual/components 中最弱的必需维度。Apply 对 defaulted/unsupported 项必须在实现前作 accepted/deferred/excluded 决定。
+
+## `evidence.yaml`
+
+每个 token path 必须恰有一条 active evidence；历史记录用 `status: superseded` 保存，并由其 `supersedes` 向前指向同 kind/path 的唯一 active replacement，不得悬空、自引用或成环。
+
+```yaml
+schema_version: 2
+entries:
+  - id: evidence-theme-background
+    kind: token
+    path: themes.light.background
+    origin: source
+    method: computed-style
+    source_id: source-001
+    source_revision: etag-or-digest
+    locator: "GET / + body background-color"
+    artifact: assets/page-redacted.png
+    status: active
+    confidence: high
+    captured_at: 2026-09-03T00:00:00Z
+  - id: evidence-focus-default
+    kind: default
+    path: focus.ring
+    origin: default
+    basis: 来源未展示键盘焦点；采用可见且满足对比度门禁的模板默认决策
+    decision_id: DEFAULT-FOCUS-001
+    status: active
+    confidence: medium
+    captured_at: 2026-09-03T00:00:00Z
+```
+
+`source/computed/estimated` evidence 必须记录 `source_id`、与 meta 一致的 `source_revision`、`locator`、`method`、时间和 confidence；可用 `artifact` 指向本地佐证。`default` 必须记录 `basis` 或 `decision_id`，不得伪造 source。
+
+每个实际 `assets/` 文件还须有 `kind: asset` evidence，并记录 `license`、`redistribution: allowed | prohibited | not-applicable`、`redaction: none | applied | required | not-applicable`。禁止分发或仍需脱敏的资产不得留在模板中。
+
+## optional compatible `fidelity.yaml`
+
+`fidelity.yaml` 使用独立 schema family；支持的 v1 profile 为 `repo-structural-v1`。它只机器表达三类 source-derived observable：
+
+1. `layout_scenes`：region/relation、arrangement、fill/shrink/wrap、按轴 scroll domains、overlay scope/anchor、responsive mode，以及可选 chrome composition（`scene_kind`、`shell_variant`、有序 `slots`、`chrome_anchors`；`contains.order`）；
+2. `component_geometry`：component/slot 的逻辑方向 padding/gap/inset/size/radius/surface/border/shadow token refs 或闭集 semantic；
+3. `state_presentations`：subject/context/state/surface 的背景/文字/边界、decoration、visibility/container presentation，并把 `none` 等 negative fact 作为 expected。
+
+权威按职责分区，而非互相复制：`spec.md` 定义设计意图、Non-negotiables 与稳定 rule identity；`tokens.yaml` 唯一携带精确值；`fidelity.yaml` 定义 scene/component slot/context/state 中的 token usage、关系、status、negative facts 与 direct provenance；split docs 只做人类解释并引用 rule/profile record IDs；`apply/` 只定义 Phase 0–9 映射、取证方法和通过条件。跨职责悬空或越权即失败，不由 Apply 按 prose 优先级猜测。
+
+repo 新建/更新默认 structural；用户明确 style-only 时 sidecar 记录理由且三类 records 为空。合法 core v2 无 sidecar 是 `legacy-baseline`，并非 style-only；未知 schema/profile fail closed。`confidence.layout: high` 仅当存在 chrome-complete structural sidecar；无 sidecar 时 layout 最高 `medium`。A–E 等 page-mode 分类只作 Apply 映射，不得替代来源壳拓扑；双源时 repo 壳拓扑优先。profile canonical semantics 纳入 template identity。已发布模板的 `meta.sources[]` 只证明出处，不要求原仓库仍在本地；无 session source 时不得为补 sidecar 向用户索要历史路径。
+
+**Profile v1 Non-Goals：**不发布完整 AST/call graph/source snapshot，不成为通用 UI/component DSL，不规定 React/Vue/Tailwind、组件库、DOM、CSS class、工程目录、依赖、API/data/state 或 runnable starter，不要求目标源码/DOM 同构。所有精确数值仍只在 `tokens.yaml`。
+
+## optional `apply/`
+
+`apply/` 只归模板 Authoring 所有，只描述：模板步骤如何映射通用 Apply Phase 0–9、某个 rule/profile record ID 在何处/如何取证、通过条件是什么。页面模式、布局、断点、URL、组件语义属于设计规则，应在根设计文档定义；`apply/` 只能引用它们，不重新定义 expected。
+
+## Authoring 完整性
+
+Generate 在本次从源导入的 staging 至少生成四个 core 文件；有 session source 的 repo 来源另生成适用 sidecar 与 capture receipt，并补齐 evidence/coverage/rule ID。Validate 必须聚合 core/profile schema、语义、对比度、来源身份、links、INDEX 候选和禁入内容。structural Generate-from-source 才对该 session source 要求 replay；已发布模板无 session source 时 portable 通过即可，replay `not-run` 合法。Eval 在从源导入时验证 capture reproducibility 与 Authoring contract。只有本次从源路径的 capture/replay/reproducibility/eval 全部成功后才允许原子更新 production `templates/INDEX.md`；失败保持其 digest 不变。具体顺序与 report API 见 `../SKILL.md` 和 [authoring-report.md](authoring-report.md)。

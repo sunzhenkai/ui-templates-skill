@@ -1,0 +1,18 @@
+[
+  {"id": "unknown-version", "schema": "meta", "base": "meta", "set": ["schema_version", 3], "expected_path": "schema_version"},
+  {"id": "unknown-origin", "schema": "tokens", "base": "tokens", "set": ["themes.light.background.origin", "observed"], "expected_path": "themes.light.background.origin"},
+  {"id": "bare-scalar-leaf", "schema": "tokens", "base": "tokens", "set": ["themes.light.background", "#ffffff"], "expected_path": "themes.light.background"},
+  {"id": "bare-list-leaf", "schema": "tokens", "base": "tokens", "set": ["themes.light.background", [4, 8]], "expected_path": "themes.light.background"},
+  {"id": "bare-map-leaf", "schema": "tokens", "base": "tokens", "set": ["themes.light.background", {"hex": "#ffffff"}], "expected_path": "themes.light.background"},
+  {"id": "missing-scalar-unit", "schema": "tokens", "base": "tokens", "delete": "spacing.base.unit", "expected_path": "spacing.base"},
+  {"id": "missing-list-unit", "schema": "tokens", "base": "tokens", "delete": "spacing.allowed.unit", "expected_path": "spacing.allowed"},
+  {"id": "numeric-map-member-missing-unit", "schema": "tokens", "base": "tokens", "set": ["spacing.allowed.value", {"size": 14, "lineHeight": 20}], "expected_path": "spacing.allowed.value"},
+  {"id": "coverage-overlap", "schema": "meta", "base": "meta", "set": ["coverage.platforms.defaulted", ["web"]], "expected_semantic": "COVERAGE_OVERLAP"},
+  {"id": "invalid-evidence", "schema": "evidence", "base": "evidence", "delete": "entries.0.locator", "expected_path": "entries.0"},
+  {"id": "illegal-transition", "schema": "feedback", "base": "feedback", "set": ["status_history.1.to", "verified"], "expected_semantic": "FEEDBACK_TRANSITION_ILLEGAL"},
+  {"id": "checkpoint-duplicate-phase", "schema": "checkpoint", "base": "checkpoint", "set": ["phases.1.id", 0], "expected_path": "phases.1"},
+  {"id": "manifest-missing-skill", "schema": "skills-manifest", "base": "skills-manifest", "delete": "skills.ui-template-apply", "expected_path": "skills"},
+  {"id": "manifest-traversal", "schema": "skills-manifest", "base": "skills-manifest", "set": ["files.0.path", "skills/ui-template/../../outside.txt"], "expected_path": "files.0.path"},
+  {"id": "manifest-manager-path", "schema": "skills-manifest", "base": "skills-manifest", "set": ["files.0.path", "skills/ui-template-manager/SKILL.md"], "expected_path": "files.0.path"},
+  {"id": "manifest-duplicate-path", "schema": "skills-manifest", "base": "skills-manifest", "set": ["files.1.path", "skills/ui-template/SKILL.md"], "expected_path": "files.1.path"}
+]

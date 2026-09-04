@@ -1,0 +1,36 @@
+schema_version: 1
+bundle_version: 2.0.0
+public_skills:
+  ui-template: 2.0.0
+  ui-template-apply: 2.0.0
+template_schema:
+  minimum: 2
+  maximum: 2
+fidelity_schema:
+  minimum: 1
+  maximum: 1
+fidelity_profile:
+  supported: [repo-structural-v1]
+  baseline: legacy-baseline
+  style_only: style-only
+  unknown: fail-closed
+compatibility:
+  - bundle: 2.x
+    ui-template: 2.x
+    ui-template-apply: 2.x
+    template_schema: 2
+    fidelity_schema: 1
+    fidelity_profile: repo-structural-v1
+    status: supported
+  - bundle: 1.x
+    template_schema: 1
+    status: unsupported-explicit-migration-required
+breaking_boundaries:
+  - dual-skill-bundle
+  - schema-v2
+  - four-value-origin
+  - apply-directory-replaces-implementation
+  - fidelity-profile-unknown-fail-closed
+  - layout-high-requires-chrome-complete-sidecar
+notes:
+  - structural 导入需要 chrome-complete literal graph；旧 v2 无 sidecar 仍可消费但 layout 不得为 high。

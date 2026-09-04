@@ -1,215 +1,57 @@
 # Template Apply Quality Gates
 
-本文定义 Template Apply 的最低质量门禁。目标项目可以有更严格标准,但不得低于本文。每个 gate 都必须有证据;“看起来没问题”不算通过。
+门禁由模板稳定 rule IDs、Intake included scope 和 coverage 驱动，不由固定 checklist 数量驱动。每条通过结论都必须在 `08-verification.json` 或 `09-review.md` front matter 中绑定当前 template digest、source identity、build identity、route、viewport、theme、state、expected/actual 与 evidence refs；仅有 prose“已检查”无效。
 
-## 1. 路由与 URL 状态
+## 证据新鲜度
 
-### 必须通过
+开始和恢复 Phase 8/9 时核对 checkpoint：template/tokens/artifact/source/build 任一身份不一致，旧证据 stale。source/build 变化至少重开 Phase 8；模板/scope/token/artifact 变化按最早 phase 恢复。截图文件存在但无法关联当前 build 不算证据。
 
-- 跨页面目的地使用真实 `<a href>`;不需要导航的命令才使用 `<button>`。
-- 侧栏当前项、面包屑当前叶子或 route tab 使用正确的当前页语义。
-- 当前路由和可恢复状态可以通过 URL 恢复。
-- 刷新、浏览器前进、浏览器后退后页面状态一致。
-- 无效 `id`、失效 `tab`、不存在路由、未授权状态有明确表现。
-- 一次性意图参数消费后从 URL 移除。
+## 必须覆盖的规则域
 
-### 检查方法
+实际记录数量由模板 rule IDs、coverage 和 included routes 决定；没有适用规则的域要在 Intake 说明，而不是伪造固定条数。
 
-1. 从 Accessibility tree 或 DOM 中读取导航入口,确认语义是 link。
-2. 对每个 route state 复制 URL 到新标签页并刷新。
-3. 使用浏览器返回/前进,确认内容、选中项和高亮一致。
-4. 输入不存在或已删除的 id,记录页面表现。
+### 路由、URL 与信息架构
 
-### 常见反例
+验证跨页目的地为 link、当前项语义、深链/刷新/前进后退、可恢复状态、无效/未授权/not-found、一次性参数清理、标题/面包屑/主要动作一致。每个 route/state 记录相关 `ROUTE-###`/`LAYOUT-###` expected/actual。
 
-- 侧栏导航、面包屑祖先、搜索结果使用 `<button onClick>`。
-- `aria-current="page"` 放在没有导航能力的控件上。
-- URL 写入 `?id=`,但目标页面不消费该 id。
-- 无效路由静默回到首页,用户无法区分“未找到”和“默认页”。
+### 可访问性与焦点
 
-## 2. 可访问性语义
+用真实 Accessibility tree 和键盘路径验证 role/name/state、icon-only name、label、无嵌套交互、非颜色状态、focus-visible、弹层焦点进入/限制/Esc/返回及对比度。记录 `AX-###`；颜色/焦点环 expected 来自 token/rule，不凭肉眼。
 
-### 必须通过
+### 布局、滚动与响应式
 
-- 所有可操作控件键盘可达。
-- 焦点指示在亮暗主题下都可见。
-- icon-only 控件有非空 accessible name。
-- 表单控件有关联 `<label>`、`aria-label` 或 `aria-labelledby`。
-- tab、checkbox、switch、combobox、menu 使用正确 role 和状态。
-- 状态不能只靠颜色表达;必须有文字、图标、形状或辅助文本。
-- 交互控件不得嵌套;例如复选框不能嵌在整行 `<button>` 内。
-- 对比度满足 WCAG AA;大号文本也不例外,除非模板显式批准更高阈值。
+对 coverage 声明的每个 viewport/platform 验证 root/内部滚动归属、稳定 chrome、无意外横向滚动、允许横滚的替代操作、导航/动作降级、浮层/FAB/安全区和 included 页面模式。若存在 `fidelity.yaml`，Phase 8 required scenario IDs 由 profile records 派生；negative facts 不得被组件库默认覆盖。记录 `LAYOUT-###`/`RESP-###`；不强制模板未声明的固定三个视口。
 
-### 检查方法
+### Tokens 与 computed style
 
-1. 读取 Accessibility tree,确认每个控件的 role 和 name。
-2. 只用键盘完成关键流程。
-3. 对每个 icon-only 控件读取 accessible name。
-4. 检查 `:focus-visible` 或等效焦点样式。
-5. 对状态色和背景计算对比度。
+从 `01-token-map.yaml` 取得 expected，在当前 build 读取 body、标题、导航、文本、按钮、输入、容器、表格/指标、浮层等适用元素的 computed color/type/spacing/radius/border/shadow/motion。双主题按 coverage 验证角色一致和对比度。arbitrary/new-token 必须已有 rule ID、理由与确认。记录 `TOKEN-###`/`NN-###`。
 
-### 常见反例
+### 交互与页面状态
 
-- 窄屏隐藏文字后控件 accessible name 为空。
-- 列表行是 `<button>`,内部又渲染 checkbox 或 link。
-- SVG 上的 `onClick` 被当作“取消置顶”按钮。
-- 只用红色表示错误,没有文字或图标。
+对模板声明且 included 的 default/hover/focus/active/selected/disabled/loading/error/empty/dragging/offline 等状态逐项验证；触屏提供等效操作，loading 保持结构，error 有重试/公告，empty 有下一步。coverage 标 unsupported 的状态不得伪造 passed。
 
-## 3. 浮层与焦点
+### 全局系统
 
-### 必须通过
+只验证 Intake included 的搜索、创建、确认、通知、异步进度、错误横幅、快捷键、FAB 等系统；覆盖成功与失败、键盘、浮层和 route 结果。模板未要求或 scope excluded 的系统不靠固定清单强行加入。
 
-- dialog、drawer、command palette、confirm 打开时焦点进入弹层。
-- `Esc`、关闭按钮和取消路径可用。
-- 点击遮罩的行为与模板约定一致。
-- 关闭后焦点返回触发控件或合理的新位置。
-- modal 弹层阻止背景内容被键盘误触。
-- Toast 不遮挡关键操作;错误 Toast 提供重试或下一步。
+### 工程与构建
 
-### 检查方法
+运行目标项目已声明的构建、静态检查和测试命令，并把命令、退出码、source/build identity、日志 evidence 记录到 progress/verification。项目未配置某类检查时明确 `not-configured`，不得编造命令或把它标 passed。API/目录/状态边界是项目决定，不回写模板。
 
-1. 记录触发前 `document.activeElement`。
-2. 打开弹层后记录焦点位置。
-3. 用键盘遍历,确认焦点被合理限制。
-4. 用 `Esc` 和取消关闭,确认焦点返回。
+## Phase 8 通过条件
 
-## 4. 布局与滚动
+- 每个 included route × 模板适用 coverage × 关键 state 都有可解析记录或明确可复用证据引用；
+- console error/unhandled rejection、AX、computed style、URL/交互失败均为 failed；
+- expected/actual 与 rule ID 可追踪，evidence 文件存在；
+- 所有记录身份等于 checkpoint 当前身份；
+- failed 修复后不得覆写原记录；Phase 9 re-check 必须用 `phase8_record_id` 唯一引用原记录，并在相同 rule ID、expected、route、viewport、theme、state 下记录修复后的 actual 与 current-build evidence。仅有效的 `recheck-passed` 闭合该失败，未关联、重复/未知引用、身份过期或 `recheck-failed` 继续阻断。
 
-### 必须通过
+waived 仅接受模板契约允许且有稳定 rule ID/理由/期限的 waiver；项目方便性不是 waiver。
 
-- 根容器按模板锁定高度,例如 `100svh`,且不出现整页滚动条。
-- 滚动只发生在内容列、列表、详情、看板列或明确允许的面板内。
-- 页头、工具栏、页左距在不同页面保持一致。
-- 长列表滚动时页头、工具栏和必要操作保持稳定。
-- 可滚动主列使用 `scrollbar-gutter: stable` 或等效方案,避免滚动条出现导致横跳。
-- 长列表顶部使用模板要求的渐隐遮罩。
-- 文档流不使用阴影;阴影只用于 menu、dialog、drawer、popover、toast 等浮层。
+## Phase 9 review
 
-### 检查方法
+review 覆盖视觉、响应式、交互、可访问性、路由、IA、工程。正文可用 P0/P1/P2 分类，但机器 front matter 每条必须是 `recheck-passed` 或 `recheck-failed` 并指向修复后 current-build evidence。P0/P1 未修复只能由用户显式接受并保留理由/范围，不能靠删除 finding 通过；任何 recheck-failed 阻止完成。
 
-1. 比较 `document.documentElement.scrollHeight` 与 client height。
-2. 列出 `overflow` 为 `auto`/`scroll` 的容器及其滚动归属。
-3. 读取 PageHeader、Toolbar 和主要内容左边界的位置。
-4. 在滚动前后对比关键 chrome 的位置。
+## 最终报告
 
-## 5. 响应式
-
-### 必查视口
-
-至少验证模板定义的 desktop、compact 和 mobile 三档;没有明确值时使用 1440×900、900×900 和 390×844 或 480×900。
-
-### 必须通过
-
-- 每个视口下关键流程可完成。
-- 无意外横向滚动;允许横向滚动的表格、看板或日历必须有可视提示和替代操作。
-- 导航入口按模板规则出现或消失。
-- 页头动作按规则收缩,icon-only 时保留 accessible name。
-- 描述、次要文本和元数据按规则隐藏或折叠。
-- modal、drawer、FAB 和 toast 不遮挡唯一操作路径。
-
-### 检查方法
-
-1. 对每个 route 逐视口截图。
-2. 检查 `document.documentElement.scrollWidth`。
-3. 检查可交互元素的中心点是否在视口内且不被遮挡。
-4. 用窄视口完成搜索、创建、打开详情、返回和提交。
-
-## 6. Design tokens 与 computed style
-
-### 必须通过
-
-- 颜色、字号、行高、间距、圆角、边框、阴影和动效来自模板 token 或已确认规则。
-- 没有散落的 arbitrary value,除非模板明确允许。
-- 字号阶梯数量不超过模板限制。
-- 文字灰度层级不超过模板限制。
-- 数字、计数和编号使用模板要求的等宽数字或 tabular figures。
-- 双主题下 token 名一致,弱化方向按主题反转。
-- 自定义 utility 不会被 class merger 意外移除。
-
-### 检查方法
-
-对以下元素读取 `getComputedStyle`:body、页面标题、导航项、次要说明、按钮、输入框、卡片标题、表格头、徽章、指标数字、dialog 标题和说明。
-
-记录:
-
-```text
-| Element | Template token | Expected | Actual | Result |
-| --- | --- | --- | --- | --- |
-```
-
-### Tailwind/class merger 反例
-
-在 Tailwind + `tailwind-merge` 项目中,自定义类如果使用与框架冲突的命名空间,可能在合并时被移除。例如 `text-body` 可能被 `text-foreground` 或 `text-muted-foreground` 覆盖。验收时必须读取最终 DOM class 和 computed style,不能只看源码字符串。
-
-缓解方式:
-
-1. 为 class merger 配置自定义 class group。
-2. 将字号 utility 改为不冲突的命名,例如 `font-body`。
-3. 在 review 中批量比对 expected 与 actual。
-
-## 7. 交互状态
-
-### 必查状态
-
-| 状态 | 检查点 |
-| --- | --- |
-| default | 层级、尺寸、颜色、图标和文本对齐 |
-| hover | 底色或前景变化不破坏布局,触屏设备有等效操作 |
-| focus-visible | 焦点环可见且不裁剪 |
-| active | 反馈不过度移动布局 |
-| selected | 有非颜色信号,URL 状态一致 |
-| disabled | 原因可理解,不误导为可点击 |
-| loading | 结构骨架或局部进度,不丢失上下文 |
-| error | 文案、重试、焦点和辅助技术公告明确 |
-| empty | 解释原因并提供下一步 |
-| dragging | 拖拽反馈清晰,键盘/菜单有替代方案 |
-
-### 页面级状态
-
-至少验证 loading、empty、error、unauthorized、not found。项目声明支持 offline 时也要验证。
-
-## 8. 内容与信息架构
-
-### 必须通过
-
-- 页面标题、面包屑、文档标题和导航语义一致。
-- 主要动作位置稳定。
-- 空态说明原因并提供下一步。
-- 错误态说明能否重试和如何重试。
-- 危险操作有确认。
-- 截断文本有 tooltip 或展开方式;关键信息不能只存在于被截断区域。
-- 时间、计数、编号格式一致。
-
-## 9. 工程质量
-
-### 必须通过
-
-- 新文件符合目录契约。
-- 跨域 primitives 与业务组件边界清晰。
-- API、mock、类型和 UI 组件之间有明确边界。
-- 没有复制粘贴造成的不一致状态处理。
-- 项目已有静态检查和测试时全部通过。
-- 项目没有检查框架时,在交付说明中明确“未运行,因为项目未配置”,不得编造命令。
-
-## 10. 最低验收清单
-
-交付前逐项确认:
-
-- [ ] 所有 route entry 是真实 link,当前项语义正确。
-- [ ] URL 刷新、前进、后退和无效参数行为符合约定。
-- [ ] Accessibility tree 中所有可见交互控件有正确 role 和 name。
-- [ ] icon-only 控件没有空 accessible name。
-- [ ] 没有 interactive element 嵌套。
-- [ ] 键盘能完成关键流程,焦点可见。
-- [ ] dialog/drawer 焦点进入、关闭并返回。
-- [ ] 状态不只靠颜色表达。
-- [ ] 根容器不滚动,滚动归属符合模板。
-- [ ] 文档流无阴影;阴影只在浮层。
-- [ ] desktop、compact、mobile 三个视口无意外横向滚动。
-- [ ] loading、empty、error、unauthorized、not found 状态已实现。
-- [ ] computed style 与模板 token 一致。
-- [ ] 控制台无未处理错误。
-- [ ] 双主题下颜色、层级和对比度满足要求。
-- [ ] 构建、静态检查和已有测试通过,或明确说明项目未配置。
-- [ ] review 的 P0/P1 已修复或经用户明确接受。
-- [ ] 模板反馈决定已执行或记录。
+报告基于结构化产物汇总：当前 identities、included/deferred/excluded、按 rule domain 的 passed/failed/waived/recheck、实际命令、stale evidence 处理、P0/P1 接受记录和 feedback UUID。禁止使用“通过 N 项固定清单”替代 coverage/rule-ID 明细。

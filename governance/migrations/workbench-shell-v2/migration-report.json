@@ -1,0 +1,1374 @@
+{
+  "asset_review": {
+    "decision": "模板无 assets/ 文件；无需新增 asset evidence，未复制任何外部资产。",
+    "distributable_assets_found": 0
+  },
+  "atomic_replacement": {
+    "new_tree_sha256": "f51d51d80bf485f4e464737cfc9fe0fffbcc2829abdc6f839217281d78751ab9",
+    "old_tree_sha256": "95402085062abbd83572591796aaf42f930c43a2e54c68b67ab3148625ecb8f1",
+    "result_tree_sha256": "f51d51d80bf485f4e464737cfc9fe0fffbcc2829abdc6f839217281d78751ab9",
+    "source_path": "templates/workbench-shell",
+    "status": "completed",
+    "strategy": "same-parent staging + backup rename with rollback"
+  },
+  "breaking": [],
+  "candidate": "/home/wii/code/repos/github/sunzhenkai/ui-templates-skill/governance/migrations/workbench-shell-v2-candidate",
+  "converted": [
+    {
+      "action": "allocated-18-NN-rule-ids",
+      "path": "spec.md"
+    },
+    {
+      "action": "allocated-64-AX-rule-ids",
+      "path": "components.md"
+    },
+    {
+      "action": "allocated-stable-layout-route-responsive-quality-ids",
+      "path": "routes-and-layouts.md"
+    },
+    {
+      "action": "converted-to-sources-list",
+      "path": "meta.source"
+    },
+    {
+      "action": "generated-144-stable-entries",
+      "path": "evidence.yaml"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.chat-fab-clearance"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.chat-fab-inset"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.chat-fab-size"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.navigation-progress-height"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.page-gutter"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.page-header-height"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.root-height"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.sidebar-default-width"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.sidebar-icon-width"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.sidebar-max-width"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.sidebar-min-width"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.sidebar-mobile-width"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "layout.toolbar-height"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "radius.2xl"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "radius.3xl"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "radius.4xl"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "radius.base"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "radius.lg"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "radius.md"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "radius.sm"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "radius.xl"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "radius.xs"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "shadow.floating"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "shadow.menu"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "shadow.surface"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "spacing.allowed"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.accent"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.accent-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.app-shell"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.background"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.border"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.brand"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.brand-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.card"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.card-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.chart-1"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.chart-2"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.chart-3"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.chart-4"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.chart-5"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.destructive"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.faint-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.find-match"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.find-match-active"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.find-match-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.info"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.input"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.muted"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.muted-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.page-canvas"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.popover"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.popover-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.primary"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.primary-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.ring"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.scrollbar-thumb"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.scrollbar-thumb-hover"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.scrollbar-track"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.secondary"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.secondary-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.sidebar"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.sidebar-accent"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.sidebar-accent-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.sidebar-border"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.sidebar-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.sidebar-primary"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.sidebar-primary-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.sidebar-ring"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.success"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.surface"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.surface-border"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.surface-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.surface-hover"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.surface-raised"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.surface-selected"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.surface-selected-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.dark.warning"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.accent"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.accent-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.app-shell"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.background"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.border"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.brand"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.brand-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.card"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.card-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.chart-1"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.chart-2"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.chart-3"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.chart-4"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.chart-5"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.destructive"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.faint-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.find-match"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.find-match-active"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.find-match-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.info"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.input"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.muted"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.muted-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.page-canvas"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.popover"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.popover-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.primary"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.primary-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.ring"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.scrollbar-thumb"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.scrollbar-thumb-hover"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.scrollbar-track"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.secondary"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.secondary-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.sidebar"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.sidebar-accent"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.sidebar-accent-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.sidebar-border"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.sidebar-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.sidebar-primary"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.sidebar-primary-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.sidebar-ring"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.success"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.surface"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.surface-border"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.surface-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.surface-hover"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.surface-raised"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.surface-selected"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.surface-selected-foreground"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "themes.light.warning"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.family.body"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.family.heading"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.family.mono"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.scale.body"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.scale.body-lg"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.scale.caption"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.scale.display"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.scale.display-sm"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.scale.label"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.scale.micro"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.scale.title"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.scale.title-lg"
+    },
+    {
+      "action": "normalized-token-record",
+      "path": "typography.scale.title-sm"
+    },
+    {
+      "action": "validated-v2-meta-tokens-evidence-schemas",
+      "path": "candidate"
+    },
+    {
+      "action": "wrapped-bare-leaf",
+      "origin": "default",
+      "path": "spacing.base"
+    }
+  ],
+  "final_template": {
+    "active_evidence_count": 144,
+    "index": "templates/INDEX.md",
+    "path": "templates/workbench-shell",
+    "rule_definitions": {
+      "AX": 73,
+      "LAYOUT": 16,
+      "NN": 18,
+      "QUALITY": 24,
+      "RESP": 6,
+      "ROUTE": 15,
+      "TOKEN": 12
+    },
+    "rule_references": 84,
+    "schema_version": 2,
+    "template_version": "2.0.0",
+    "token_count": 144
+  },
+  "final_validation": {
+    "contrast": {
+      "workbench-shell/dark": {
+        "checked": 17,
+        "failed": 0,
+        "skipped": 0,
+        "waived": 0
+      },
+      "workbench-shell/light": {
+        "checked": 17,
+        "failed": 0,
+        "skipped": 0,
+        "waived": 0
+      }
+    },
+    "exit_code": 0,
+    "findings": 0,
+    "human_command": "python3 scripts/validate_templates.py templates/workbench-shell --index templates/INDEX.md",
+    "human_output": "governance/migrations/workbench-shell-v2/validation-human.txt",
+    "human_output_sha256": "32ac85ba8f68b98ab7ca9d7f31a23a0c9bd7e53b0e48187f5c82e9f077db434b",
+    "json_command": "python3 scripts/validate_templates.py templates/workbench-shell --index templates/INDEX.md --json",
+    "json_output": "governance/migrations/workbench-shell-v2/validation.json",
+    "json_output_sha256": "ea05d6db43cf9195be7210c0a9b1681c6b01843e61b534fa0a3196c0afa226f2"
+  },
+  "inferred": [
+    {
+      "basis": "v1 confidence 扩展到四个维度",
+      "path": "meta.confidence"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.chat-fab-clearance.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.chat-fab-inset.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.chat-fab-size.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.navigation-progress-height.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.page-gutter.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.page-header-height.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.sidebar-default-width.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.sidebar-icon-width.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.sidebar-max-width.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.sidebar-min-width.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.sidebar-mobile-width.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 layout 数值按旧模板维度约定候选为 px",
+      "path": "layout.toolbar-height.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 radius 数值按旧模板维度约定候选为 px",
+      "path": "radius.2xl.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 radius 数值按旧模板维度约定候选为 px",
+      "path": "radius.3xl.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 radius 数值按旧模板维度约定候选为 px",
+      "path": "radius.4xl.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 radius 数值按旧模板维度约定候选为 px",
+      "path": "radius.base.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 radius 数值按旧模板维度约定候选为 px",
+      "path": "radius.lg.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 radius 数值按旧模板维度约定候选为 px",
+      "path": "radius.md.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 radius 数值按旧模板维度约定候选为 px",
+      "path": "radius.sm.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 radius 数值按旧模板维度约定候选为 px",
+      "path": "radius.xl.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 radius 数值按旧模板维度约定候选为 px",
+      "path": "radius.xs.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 routes-and-layouts.md 的 A–E 模式",
+      "path": "meta.coverage.page_modes"
+    },
+    {
+      "basis": "v1 spacing 数值按旧模板维度约定候选为 px",
+      "path": "spacing.allowed.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 spacing 数值按旧模板维度约定候选为 px",
+      "path": "spacing.base.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.body-lg.lineHeight.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.body-lg.size.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.body.lineHeight.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.body.size.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.caption.lineHeight.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.caption.size.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.display-sm.lineHeight.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.display-sm.size.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.display.lineHeight.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.display.size.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.label.lineHeight.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.label.size.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.micro.lineHeight.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.micro.size.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.title-lg.lineHeight.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.title-lg.size.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.title-sm.lineHeight.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.title-sm.size.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.title.lineHeight.unit",
+      "value": "px"
+    },
+    {
+      "basis": "v1 typography 数值按旧模板维度约定候选为 px",
+      "path": "typography.scale.title.size.unit",
+      "value": "px"
+    }
+  ],
+  "initial_unresolved": [
+    {
+      "path": "evidence:spacing.base",
+      "reason": "default basis 需要确认"
+    },
+    {
+      "path": "evidence:themes.dark.brand-foreground",
+      "reason": "default basis 需要确认"
+    },
+    {
+      "path": "evidence:themes.light.brand",
+      "reason": "default basis 需要确认"
+    },
+    {
+      "path": "layout.chat-fab-clearance.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.chat-fab-inset.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.chat-fab-size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.navigation-progress-height.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.page-gutter.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.page-header-height.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.sidebar-default-width.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.sidebar-icon-width.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.sidebar-max-width.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.sidebar-min-width.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.sidebar-mobile-width.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "layout.toolbar-height.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "radius.2xl.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "radius.3xl.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "radius.4xl.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "radius.base.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "radius.lg.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "radius.md.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "radius.sm.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "radius.xl.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "radius.xs.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "spacing.allowed.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "spacing.base",
+      "reason": "v1 bare leaf 无 origin；候选暂标 default，需确认依据"
+    },
+    {
+      "path": "spacing.base.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.body-lg.lineHeight.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.body-lg.size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.body.lineHeight.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.body.size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.caption.lineHeight.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.caption.size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.display-sm.lineHeight.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.display-sm.size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.display.lineHeight.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.display.size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.label.lineHeight.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.label.size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.micro.lineHeight.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.micro.size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.title-lg.lineHeight.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.title-lg.size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.title-sm.lineHeight.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.title-sm.size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.title.lineHeight.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    },
+    {
+      "path": "typography.scale.title.size.unit",
+      "reason": "v1 未显式声明单位；候选单位需维护者确认"
+    }
+  ],
+  "manual_decisions": [
+    {
+      "basis": "spec.md §2",
+      "decision_id": "DEFAULT-BRAND-LIGHT-AA",
+      "token_path": "themes.light.brand"
+    },
+    {
+      "basis": "spec.md §2",
+      "decision_id": "DEFAULT-BRAND-DARK-FOREGROUND-AA",
+      "token_path": "themes.dark.brand-foreground"
+    },
+    {
+      "basis": "NN-012 + 模板自身 light 中性阶梯",
+      "decision_id": "DEFAULT-RING-LIGHT-NONTEXT-CONTRAST",
+      "token_path": "themes.light.ring"
+    }
+  ],
+  "migration": "template-v1-to-v2",
+  "resolution_constraints": {
+    "excluded_sources": [
+      "example/workbench-shell/web-v2/**"
+    ],
+    "read_sources": [
+      "templates/workbench-shell/**",
+      "templates/INDEX.md",
+      "git history limited to templates/workbench-shell and templates/INDEX.md"
+    ]
+  },
+  "resolutions": [
+    {
+      "original_reason": "default basis 需要确认",
+      "path": "evidence:spacing.base",
+      "resolution": "由 spec.md §4 的“间距基数”与来源 token 历史确认 origin=source、unit=px。"
+    },
+    {
+      "original_reason": "default basis 需要确认",
+      "path": "evidence:themes.dark.brand-foreground",
+      "resolution": "由 spec.md §2 的 dark brand 前景 AA 归一决策解决；evidence 使用 DEFAULT-BRAND-DARK-FOREGROUND-AA。"
+    },
+    {
+      "original_reason": "default basis 需要确认",
+      "path": "evidence:themes.light.brand",
+      "resolution": "由 spec.md §2 的 light brand AA 归一决策解决；evidence 使用 DEFAULT-BRAND-LIGHT-AA。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.chat-fab-clearance.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.chat-fab-inset.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.chat-fab-size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.navigation-progress-height.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.page-gutter.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.page-header-height.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.sidebar-default-width.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.sidebar-icon-width.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.sidebar-max-width.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.sidebar-min-width.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.sidebar-mobile-width.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "layout.toolbar-height.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "radius.2xl.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "radius.3xl.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "radius.4xl.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "radius.base.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "radius.lg.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "radius.md.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "radius.sm.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "radius.xl.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "radius.xs.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "spacing.allowed.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 bare leaf 无 origin；候选暂标 default，需确认依据",
+      "path": "spacing.base",
+      "resolution": "由 spec.md §4 的“间距基数”与来源 token 历史确认 origin=source、unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "spacing.base.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.body-lg.lineHeight.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.body-lg.size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.body.lineHeight.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.body.size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.caption.lineHeight.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.caption.size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.display-sm.lineHeight.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.display-sm.size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.display.lineHeight.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.display.size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.label.lineHeight.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.label.size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.micro.lineHeight.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.micro.size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.title-lg.lineHeight.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.title-lg.size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.title-sm.lineHeight.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.title-sm.size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.title.lineHeight.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    },
+    {
+      "original_reason": "v1 未显式声明单位；候选单位需维护者确认",
+      "path": "typography.scale.title.size.unit",
+      "resolution": "由 spec.md 对字号/行高/间距/圆角/布局值的 px 明示及初始模板“文中尺寸均为像素规格”历史确认 unit=px。"
+    }
+  ],
+  "retained_at": "governance/migrations/workbench-shell-v2/migration-report.json",
+  "schema_version": 1,
+  "source": "/home/wii/code/repos/github/sunzhenkai/ui-templates-skill/templates/workbench-shell",
+  "source_history": [
+    {
+      "revision": "0aedb680ecdf61aa8eafdb5d80e6b58edba63df5",
+      "role": "最初文档导入快照"
+    },
+    {
+      "revision": "c7849c55f17703b277e66cecfba303f3db93414f",
+      "role": "v1 repo-source token/template 快照"
+    },
+    {
+      "revision": "879d0de9166261c26ec35b69f5cec9382191eda1",
+      "role": "meta/spec 声明的上游来源 revision"
+    }
+  ],
+  "unresolved": [],
+  "validator_discoveries_resolved": [
+    {
+      "finding": "CONTRAST_TOO_LOW",
+      "resolution": "light ring 改为有 basis/decision 的模板内中性 default；所有声明表面均通过 3:1。"
+    },
+    {
+      "finding": "APPLY_PRECISION_DUPLICATION",
+      "resolution": "apply/playbook.md 改为 token path 与稳定 rule ID 引用，不复制精确值。"
+    },
+    {
+      "finding": "META_NAME_MISMATCH",
+      "resolution": "仅 candidate 目录名导致；原子替换到 templates/workbench-shell 后消失。"
+    }
+  ],
+  "validator_schema_compatibility_changes": []
+}

@@ -1,0 +1,49 @@
+schema_version: 1
+skill: ui-template-apply
+revision: add-structural-fidelity-profile-eval-v1
+cases:
+  - id: apply-fidelity-projections
+    skill: ui-template-apply
+    category: checkpoint
+    description: Phase 2/4/8 从 structural profile 派生稳定 constraint 与 scenario IDs，不要求 DOM 同构。
+    given: 消费含 Board/master-detail/Dialog/link contexts 的 structural fixture
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#apply-fidelity-projections
+    fixture_sha256: 1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274
+    judge: script
+    expect:
+      must:
+        - layout/geometry/scenario IDs 可重复派生
+        - Dialog padding_block_start 出现在 geometry projection
+      must_not:
+        - 要求目标技术栈或 DOM 同构
+    revision: add-structural-fidelity-profile-eval-v1
+  - id: apply-fidelity-facet-recovery
+    skill: ui-template-apply
+    category: checkpoint
+    description: layout 语义变化从 Phase 2 重开，geometry/state 从 Phase 4 重开。
+    given: 已有 checkpoint 的模板 fidelity layout wrap 或 text_decoration 发生变化
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#apply-fidelity-facet-recovery
+    fixture_sha256: 1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274
+    judge: script
+    expect:
+      must:
+        - layout 变化 earliest phase 为 2
+        - state 变化 earliest phase 为 4
+      must_not:
+        - 一律从 Phase 0 重开
+    revision: add-structural-fidelity-profile-eval-v1
+  - id: apply-chrome-unavailable
+    skill: ui-template-apply
+    category: checkpoint
+    description: 无 structural chrome sidecar 时不生成 chrome scenario，且不得标 profile-verified。
+    given: style-only fidelity fixture
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#apply-chrome-unavailable
+    fixture_sha256: 1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274
+    judge: script
+    expect:
+      must:
+        - has_chrome 为 false
+        - Phase 8 chrome scenario 为空
+      must_not:
+        - 标 profile-verified
+    revision: add-structural-fidelity-profile-eval-v1

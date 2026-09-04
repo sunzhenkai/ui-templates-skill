@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="contract-evals" tests="17" failures="0">
+  <properties>
+    <property name="runner_version" value="1.0.0" />
+    <property name="revision" value="c7849c55f17703b277e66cecfba303f3db93414f+eval.11085088a3683231" />
+    <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    <property name="baseline_status" value="matched" />
+    <property name="declared" value="17" />
+    <property name="parsed" value="17" />
+    <property name="executed" value="17" />
+  </properties>
+  <testcase classname="ui-template-apply" name="apply-out-of-scope-rejected">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template-apply" name="apply-requires-reference-reading">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template-apply" name="apply-token-freeze">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template" name="authoring-normalizes-and-fills-defaults">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template" name="authoring-out-of-scope-rejected">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template" name="authoring-updates-index">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template-apply" name="browser-verification-evidence">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template" name="doc-source-routed-correctly">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template" name="estimated-values-labeled">
+    <properties>
+      <property name="judge" value="llm" />
+      <property name="execution" value="llm-asset-validation" />
+      <property name="fixture_sha256" value="d7637a9e3389bd851b4a7c92ae9b5713a98f2e96e9eb6f1f419b3044ed3ae2c3" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+      <property name="llm_status" value="asset-valid-no-model-call" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template" name="existing-template-ask-update-or-new">
+    <properties>
+      <property name="judge" value="llm" />
+      <property name="execution" value="llm-asset-validation" />
+      <property name="fixture_sha256" value="d7637a9e3389bd851b4a7c92ae9b5713a98f2e96e9eb6f1f419b3044ed3ae2c3" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+      <property name="llm_status" value="asset-valid-no-model-call" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template" name="no-apply-handoff-after-authoring">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template-apply" name="no-apply-without-template">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template" name="no-engineering-structure-in-template">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template-apply" name="no-phase-skipping">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template-apply" name="routing-semantics-enforced">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template-apply" name="spec-wins-over-apply">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+  <testcase classname="ui-template" name="tokens-yaml-required-and-complete">
+    <properties>
+      <property name="judge" value="script" />
+      <property name="execution" value="script" />
+      <property name="fixture_sha256" value="461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d" />
+      <property name="revision" value="harden-template-lifecycle-eval-v1" />
+      <property name="runtime_fingerprint" value="sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db" />
+    </properties>
+  </testcase>
+</testsuite>

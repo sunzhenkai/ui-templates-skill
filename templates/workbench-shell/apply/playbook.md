@@ -1,40 +1,16 @@
 # apply/playbook
 
-本文件只规定实施顺序与 gate；数值以 [`../tokens.yaml`](../tokens.yaml) 为准，规则以 [`../spec.md`](../spec.md) 为准。
+本指南只把 workbench-shell 规则映射到通用 Apply Phase 0–9。checkpoint 只使用通用 phase ID；expected 从 [`../tokens.yaml`](../tokens.yaml) 与设计规则读取，provenance 从 [`../evidence.yaml`](../evidence.yaml) 读取。证据遵循通用 Apply 的 current-build 结构，不维护第二份报告。
 
-## Phase 1 — Tokens 与双主题
-
-1. 建立 [`../tokens.yaml`](../tokens.yaml) 的主题角色、字体阶梯、间距白名单、圆角与阴影；禁止组件内新增散落值。
-2. 实现 light / dark 切换，保持角色键一致。
-3. Gate：正文与 muted 文本对比达到 AA；faint 只用于非文本；所有页面读取 token。
-
-## Phase 2 — Shell 与导航
-
-1. 按目标平台实现 Web、Desktop 或 Mobile 壳；至少一个平台必须满足整页不滚动、面板滚动。
-2. 实现侧栏宽度、折叠、覆盖 Sheet、focus、激活态与 `aria-current`。
-3. 实现 48px PageHeader / Toolbar 与 16px 共同 gutter。
-4. Gate：切换路由时壳几何不变；导航可键盘到达；无重复触发器。
-
-## Phase 3 — 页面模式
-
-1. 按 [`../routes-and-layouts.md`](../routes-and-layouts.md) 把路由映射到 A–E。
-2. 实现 URL 恢复、面包屑、集合页头、工具栏和底部浮层净空。
-3. Gate：每个路由有明确模式；刷新后可恢复状态；标题 / 工具栏 / 内容左线对齐。
-
-## Phase 4 — 核心组件
-
-1. 实现 Button、Input、Card、Badge、Sidebar menu、Tabs、Tooltip / Popover。
-2. 实现 Dialog / Sheet、焦点管理和关闭返回。
-3. Gate：每个交互组件有 hover、focus-visible、active、disabled、selected 或对应状态；icon-only 有 accessible name。
-
-## Phase 5 — 数据表面
-
-1. 实现列表网格、表格、看板 / 泳道或聚合网格中目标项目需要的模式。
-2. 实现空态、错误态、骨架屏和批量操作净空。
-3. Gate：骨架形状等于最终形状；过滤空态可清除；交互单元格不嵌套在行链接内。
-
-## Phase 6 — 浏览与平台验收
-
-1. Web / Desktop：在桌面、1024–1279px、窄视口验证滚动、导航和弹层。
-2. Mobile：验证安全区、底部页签、sheet、触控目标与键盘。
-3. 双主题、减少动效、键盘路径与屏幕 reader 名称全部通过 [`quality.md`](quality.md)。
+| Phase | 检查对象 | Rule IDs | 取证 | 通过条件 |
+| --- | --- | --- | --- | --- |
+| Phase 0 — Intake | schema、coverage、目标平台、A–E route scope、legacy 文档详情 | @TOKEN-001、@ROUTE-005、@ROUTE-006、@ROUTE-007、@ROUTE-008、@ROUTE-009、@RESP-001 | validation 结果与 included/deferred/excluded decision | schema/evidence/rule refs 可解析；每个 route 映射 A–E；legacy 文档详情映射 B 或 excluded；Web/Mobile/Desktop 路径不混同。 |
+| Phase 1 — Design direction & token freeze | 四层表面、双主题、动态 token scale、focus | @NN-002、@NN-005、@NN-009、@NN-012、@TOKEN-002、@TOKEN-003、@TOKEN-004、@TOKEN-005、@TOKEN-006 | token map、active evidence refs 与 expected/actual mapping | 所有 consumable token 已映射；无 prose 重算或未解释值；focus expected 可追踪。 |
+| Phase 2 — IA/layout/routes | shell、A–E 映射、URL、scroll owner、Web 响应矩阵；无 sidecar 时 chrome unavailable | @NN-001、@NN-010、@LAYOUT-001、@LAYOUT-004、@ROUTE-001、@RESP-001 | route/layout artifact 与 rule-ID matrix | 每个 included route 有唯一 page mode、状态恢复、scroll owner 与平台响应行为；不得把 flush 硬切写成已验证来源变体。 |
+| Phase 3 — Project structure | 目标项目现场边界与命令归属 | @LAYOUT-002、@LAYOUT-003 | 通用 Phase 3 artifact | 现场决定不反向写入模板；shell/global/page-mode 责任可被后续证据定位。 |
+| Phase 4 — Component inventory | included route 的语义、状态、键盘与浮层 | @NN-012、@NN-016、@AX-001、@AX-017、@AX-031、@AX-041、@AX-046、@AX-050、@AX-051、@AX-061 | component inventory 与 AX rule refs | 交互无嵌套；icon-only、focus、非颜色状态和浮层返回均有 expected。 |
+| Phase 5 — Representative slice | 一个端到端 route 的 shell、模式、状态与窄路径 | @NN-014、@NN-015、@LAYOUT-004、@RESP-001、@ROUTE-004 | current-source 浏览器/测试 evidence refs | 代表切片同时覆盖 shell、URL、loading/empty/error、keyboard 与 computed style。 |
+| Phase 6 — Complete included modes | Phase 0 included 的 A–E 页面模式 | @ROUTE-005、@ROUTE-006、@ROUTE-007、@ROUTE-008、@ROUTE-009、@RESP-003、@RESP-005、@RESP-006 | 每个 included route/state 的 progress evidence | included modes 完整；deferred/excluded 不伪造证据；legacy 文档详情保持 B/excluded 决定。 |
+| Phase 7 — Global systems | 搜索、通知、modal、navigation progress、FloatingChat 等 included systems | @LAYOUT-002、@LAYOUT-008、@LAYOUT-009、@TOKEN-007、@AX-061、@AX-064 | 成功/失败、keyboard 与 route-result evidence | 只完成 Intake included systems；浮层边界、净空与 focus 返回符合规则。 |
+| Phase 8 — Browser verification | included route × coverage × state × current build | @QUALITY-001、@QUALITY-006、@QUALITY-008、@QUALITY-009、@QUALITY-011、@QUALITY-016、@QUALITY-020、@QUALITY-024 | 通用 Phase 8 records 与可定位 evidence refs | expected/actual、rule ID、route、viewport、theme、state 与 current identities 完整；未闭合 failure 阻断。 |
+| Phase 9 — Review & feedback | visual、responsive、interaction、a11y、route、IA 与 reusable gaps | @QUALITY-005、@QUALITY-014、@QUALITY-021、@QUALITY-022、@QUALITY-023、@QUALITY-024 | 通用 Phase 9 recheck 与 feedback records | P0/P1 已闭合或显式接受；recheck 绑定 Phase 8 record；模板反馈只描述可复用规则缺口。 |

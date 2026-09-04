@@ -1,68 +1,47 @@
 ---
 name: ui-template-apply
-description: 使用已有 UI 模板按阶段实现真实页面，覆盖美学方向、tokens 冻结、IA/layout/route、代码结构、组件、浏览器验证与 design review。当用户明确要求"用某个模板实现页面"、"按模板做 UI"、"基于该模板搭后台"、"把 workbench-shell 落成项目"时使用；不用于从站点/仓库/图片提取风格或创建模板（那属于 ui-template）。
+description: 使用已有 schema v2 UI 模板按 Phase 0–9 实现真实页面，维护 .ui-template-apply checkpoint/artifacts，完成 current-build 浏览器证据、review 与幂等 feedback。用于“用模板实现页面/按模板做 UI/基于模板搭后台”；创建模板应移交 ui-template。
 ---
 
-# ui-template-apply — 用已有模板落地真实 UI
+# ui-template-apply
 
-本 skill 只消费模板，不创建模板。模板创建、导入、更新与索引维护由 `ui-template` 负责；本 skill 通过 `templates/` 目录的公开数据契约与它解耦。
+本 skill 只消费已有模板，不创建、迁移或索引模板。Authoring 由 `ui-template` 所有。
 
-## 触发边界
+## 启动边界
 
-进入本工作流：
+- 已选模板并要求实现页面 → 进入本流程。
+- “做成模板/提取风格/导入模板” → 移交 `ui-template`。
+- 没有模板、schema 不支持、origin 未知或模板 validation 失败 → 停止；先迁移/修复，禁止猜测。
 
-- 用户明确选择 `templates/` 中已有模板，并要求实现页面或后台。
-- 用户要求把模板规则落成组件、页面、路由状态、响应式行为并完成验收。
+## 必读契约
 
-不进入本工作流：
+先读 [template-contract.md](references/template-contract.md)：只接受 `schema_version: 2` 与 `source | computed | estimated | default`；四种 origin 都按确定值消费；`spec.md` 是规则入口，`tokens.yaml` 是精确值唯一载体，coverage 在实现前形成 accepted/deferred/excluded 决定。存在 `fidelity.yaml` 时校验 supported profile；无 sidecar 为 legacy-baseline，未知 profile 停止。不得发布 stack adapter。
 
-- "做成模板 / 提取风格 / 导入模板" → 移交 `ui-template`。
-- 模板库中没有可用模板 → 先由 `ui-template` 完成 Authoring，再回到本 skill。
-- 与模板消费无关的普通 UI 任务 → 不套用本流程。
+## Phase 0–9
 
-## 模板消费契约（必读）
+严格按 [apply-workflow.md](references/apply-workflow.md) 执行，并在项目根维护标准 `.ui-template-apply/`：
 
-执行前先读 [references/template-contract.md](references/template-contract.md)，核心不变量：
+0. Intake → `00-intake.md`
+1. Design direction/token freeze → `01-design-direction.md`、`01-token-map.yaml`
+2. IA/layout/routes → `02-routes.yaml`
+3. Project structure → `03-structure.md`
+4. Component inventory → `04-components.yaml`
+5. Representative slice → `05-07-progress.yaml`
+6. Complete included page modes → 同上
+7. Global systems → 同上
+8. Browser verification → `08-verification.json` + `evidence/`
+9. Review/feedback → `09-review.md` + `feedback/`
 
-- `spec.md` 是设计规则唯一入口，冲突时以它为准。
-- `tokens.yaml` 是精确值唯一载体，expected 值只从它来。
-- `origin: observed / default / estimated` 均作为确定值消费；偏离须记录理由。
-- `meta.yaml` coverage 未覆盖的模式 → 实现前显式确认，不得静默即兴发挥。
+每阶段状态和 digest 写入 `checkpoint.yaml`。恢复先验证 scope、template/tokens、artifacts、source/build identity 和 Phase 8/9 证据，从最早失效 phase 重开：layout profile 语义变化从 Phase 2，geometry/state 从 Phase 4，相关 Phase 8 证据过期。页面存在不能替代证据。
 
-## 阶段列表（不得跳过或提前）
+## 工具与质量
 
-每个阶段的输入、产物、工具配合与 gate 详情见 [references/apply-workflow.md](references/apply-workflow.md)。
+- 外部知识/审美/组件/浏览器/review 路由见 [toolchain.md](references/toolchain.md)。`ui-ux-pro-max` 必须遵守 Query Contract；输出只是候选。
+- 门禁见 [quality-gates.md](references/quality-gates.md)。每个结果绑定稳定 rule ID、当前 template/source/build identity 和 evidence；不以固定 checklist 数量或 prose“已检查”宣称完成。
+- 没有真实浏览器能力时停止并请求可运行方式；静态检查不能替代 Phase 8。
 
-| 阶段 | Gate |
-| --- | --- |
-| 0. Intake | 模板名、页面范围、平台、技术栈、约束确认 |
-| 1. Art direction & tokens | 美学承诺 + token 冻结映射完成 |
-| 2. IA/layout/routes | route inventory、shell 形态、断点矩阵、URL 契约 |
-| 3. Code structure | 目录契约、命名、状态/数据/测试边界 |
-| 4. Component inventory | primitives、variants、states、a11y、source |
-| 5. Representative slice | 一个端到端真实页面打通 |
-| 6. Complete page modes | 模板要求的全部页面模式完成 |
-| 7. Global systems | 搜索、创建、确认、Toast、进度、FAB 等补齐 |
-| 8. Browser verification | 多视口、console、AX、computed style、URL 恢复全过 |
-| 9. Review & feedback | design review 通过 + 反馈记录产出 |
+## Feedback 与汇报
 
-用户要求缩小范围时，在 Intake 显式记录"本次不实现哪些模式"，不得悄悄降低验收标准。
+可复用模板缺口创建 schema v2 proposed feedback；文件名 stem 必须等于 UUID，evidence refs 必须相对 `.ui-template-apply/` 根存在且不越界，targets 必须在完整 known rule IDs 中命中。按 UUID 或 normalized fingerprint 命中时合并证据，不重复创建；新目标路径碰撞不得覆盖，写后必须验证整个 inbox，失败则回滚。项目目录、API/mock、技术栈和业务专属问题留在消费项目。
 
-## Reference 路由
-
-- 阶段细节与中断恢复 → [references/apply-workflow.md](references/apply-workflow.md)
-- 工具链与不可用回退 → [references/toolchain.md](references/toolchain.md)
-- 验收门禁清单 → [references/quality-gates.md](references/quality-gates.md)
-
-按所处阶段条件加载，不要求一次性通读全部 reference。
-
-## 模板反馈产出
-
-完成前评估实现中发现的规则缺口：
-
-- 会重复出现在其他消费者的缺口 → 产出结构化反馈记录（场景、证据、建议、影响范围），供 `ui-template` 下次更新模板时消费。
-- 仅属当前业务的问题 → 记录在项目实现说明，不产出模板反馈，不污染模板。
-
-## 汇报要求
-
-汇报已实现页面、未实现范围、目录结构、组件来源、浏览器验证证据、review 结论和模板反馈建议；工具不可用时说明回退方案；模板规则冲突时说明以 `spec.md` 为准的处理结果。
+最终汇报只引用 `.ui-template-apply/`：included/deferred/excluded、当前身份、完成 phases、current-build verification、P0/P1/recheck、反馈 UUID/receipt、实际工程命令及不可用工具回退。Phase 8/9 无效或任一 gate 失败时不得说“完成”。

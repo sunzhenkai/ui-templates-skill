@@ -1,0 +1,154 @@
+schema_version: 1
+config: distribution-v1.yaml
+bundle_version: 2.0.0
+skills:
+  ui-template:
+    version: 2.0.0
+    files:
+    - path: SKILL.md
+      sha256: 91cf761b0b36ab3d2faaca4d35573f634c163847bbd1e6c039bb4beb9ff1701b
+    - path: evals/README.md
+      sha256: 07cafb72bee864668249e992ec89a95d5eb6a3786fd782188588f3f77f8ea17e
+    - path: evals/cases.yaml
+      sha256: ffe756d0a7fe4949d9309a3211bb5fc672d5ff8e2758835b84d7182c28ecaa1a
+    - path: evals/fidelity-cases.yaml
+      sha256: 9c9eceeaf84c63510be100b070647c4105e1c342058f4f1c4ff7cd8900ed379e
+    - path: references/authoring-report.md
+      sha256: bc4b4845149e3c65c689f5227a34a662c1a1a4642998735704444e8c7c8867b1
+    - path: references/feedback-lifecycle.md
+      sha256: 9af98a725f8ea9950962bce7a3287c1758283b8c223977fc3c08a6e2295d61b9
+    - path: references/repo-capture-format.md
+      sha256: ce41dae23699ea977fbc8d102b4c24d2afadaa0e36bbff5f2c0e51b74d237bbb
+    - path: references/source-doc.md
+      sha256: ddc076bc438c6bced9d724bbeb814a4b0364611a04604abfbad39def780ef684
+    - path: references/source-image.md
+      sha256: c1b26a0cc5966d4d0ae0731d882d0a0fb173b234aa6188b38effc74a4244ef95
+    - path: references/source-repo.md
+      sha256: 13f19c791472337aa19f8cf703d092dca38a5b92b5aaa3a3361aadc0ec371476
+    - path: references/source-web.md
+      sha256: 59fbf995b6bd5a5284fc948389253871921333ef6b1e949fedcd42f5ee7465b7
+    - path: references/spec-format.md
+      sha256: e3f1dbfd9a13e6d75f315b59009ac5250b56d48537132bcc341a1d052623e67c
+    - path: runtime/capture_repo_fidelity.py
+      sha256: 5a5624800e37cf2c611c96267f98d72f8b7ba1479361a51a7e6f506ca8807f8a
+    - path: runtime/check_template_apply_state.py
+      sha256: 8e4666630c021857707507b1d7eb410f043d984de291f8acf4d668c44bd66eb9
+    - path: runtime/contract_eval/__init__.py
+      sha256: 1c9acef6e515e28bb56b78987a817cfaf6bf885ac7e59f9b8dfbe65ee865f17c
+    - path: runtime/contract_eval/runner.py
+      sha256: 5763872c21dccba0b9b96a53c3ec5cce5b34766a397a6bb16202c7c507d05a26
+    - path: runtime/deterministic-baseline.json
+      sha256: c8ae7ad66dc035029e1ecd8de21a01763f81f7ec1361161ecf9ff0473445272d
+    - path: runtime/fixtures/eval/fidelity-contracts.yaml
+      sha256: 1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274
+    - path: runtime/fixtures/eval/llm-contracts.yaml
+      sha256: d7637a9e3389bd851b4a7c92ae9b5713a98f2e96e9eb6f1f419b3044ed3ae2c3
+    - path: runtime/fixtures/eval/script-contracts.yaml
+      sha256: 461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d
+    - path: runtime/fixtures/fidelity/README.md
+      sha256: 3f8ebdcd0955ee48ed1e9ade0f6a8b199773138aa9cee37d7deb1cb840ee4802
+    - path: runtime/fixtures/fidelity/structural/templates/INDEX.md
+      sha256: d0605e95d1a8af00463a96825eba5dbe9131c59f136aaac7a318513927cdec55
+    - path: runtime/fixtures/fidelity/structural/templates/structural-template/apply/playbook.md
+      sha256: c980c63a9916aa1794297793fdac094eccbbd26e4258cc2026984e823d53e83a
+    - path: runtime/fixtures/fidelity/structural/templates/structural-template/evidence.yaml
+      sha256: 840a0827d6a337fa132fe2b9ac5ff8683015fe0abd0bf93206574d6dc74da4d9
+    - path: runtime/fixtures/fidelity/structural/templates/structural-template/fidelity.yaml
+      sha256: 05bc7863ae7fffec1b8e27b80346509dea29545c787383dfc865440fdb5c2420
+    - path: runtime/fixtures/fidelity/structural/templates/structural-template/meta.yaml
+      sha256: c7828169d718df5cd1a10fc585b1a5b6c1712230f9544722c4f16bc935c73d62
+    - path: runtime/fixtures/fidelity/structural/templates/structural-template/spec.md
+      sha256: 4f15bc564454d424d2ddde25ccfd3add59cb06e67f43cdf57015c1d4058231a1
+    - path: runtime/fixtures/fidelity/structural/templates/structural-template/tokens.yaml
+      sha256: 216a4c05196bf0fa79108623d6c14bfc7fcde453c95bffeb06a2f622530156d9
+    - path: runtime/fixtures/fidelity/style-only.yaml
+      sha256: c268a5d7e254f94a162ba357db743cde1ef90475091b37caa6f72b2eb444e180
+    - path: runtime/fixtures/fidelity/unknown-profile.yaml
+      sha256: a310da51a562cd3c9942d1035c9d6c475494b600676efbea7e652c0d3d2ce3bf
+    - path: runtime/fixtures/repo-capture/README.md
+      sha256: 86df56d90da1f14fcd578c9315d4310c264e42e2473f5796848c1b428fae3108
+    - path: runtime/fixtures/repo-capture/capture-request.yaml
+      sha256: 31d0adbd23d01a4c5665049ecb76b63d28c220b81d9482f1deee6001d98e8db6
+    - path: runtime/fixtures/repo-capture/source/ui-source-graph.yaml
+      sha256: a5b7a6c9c550f03592d58146d13aca60d791c5189e0d6ea076c22a0755ee713d
+    - path: runtime/run_authoring_gate.py
+      sha256: 4f416938cc6c82f2a223fd5d6a2a54714a6a1f11d4db973e1621fd57c9d4e2a3
+    - path: runtime/run_contract_evals.py
+      sha256: 0115b5ad5f3ff8403af8e277e1af91fd2ae8de7571ddbcb59e5ea0975fa52074
+    - path: runtime/schemas/eval/case.schema.json
+      sha256: e2b1648d8bc56dfe850b715d33403f3fb231fcb19f5cdb083734419dc13e5306
+    - path: runtime/schemas/eval/llm-judge-result.schema.json
+      sha256: 44de33d228c71981083bf6d8bb10e12c9a57b45a90adb68ca6fc567f5a1e53be
+    - path: runtime/schemas/eval/result.schema.json
+      sha256: 4a90a3d431ada9dbd534097adbababa75a7e7bf6cde0f0dfd199676a21a81098
+    - path: runtime/schemas/template/fidelity/v1/fidelity.schema.json
+      sha256: 59f0f11703caa3f78b3f40f28ed5b314daffb837b9dcd0310783ccd7396cc92b
+    - path: runtime/schemas/template/v2/checkpoint.schema.json
+      sha256: 1b667fe48501debf7a7cb31836c061ea44932e176feb93667f832c20f6dc0ff8
+    - path: runtime/schemas/template/v2/common.schema.json
+      sha256: 0f8f06e72eca019293a5166c9590ba6ca9d403d091f47bcb2232d6accd1de1a1
+    - path: runtime/schemas/template/v2/evidence.schema.json
+      sha256: 0551fd22eb7af104e59b7d1398ddaed50c0a0fb8e70a6b6c8b30b0f1d8ba56c9
+    - path: runtime/schemas/template/v2/feedback.schema.json
+      sha256: 3ca088b5bda799e7fad5a8098e2b248da16ce6183d52da153801f260b24bd33d
+    - path: runtime/schemas/template/v2/meta.schema.json
+      sha256: d754f930698f2b94613ceadc3bef5567b9478153521bbb63a687672fa071ccae
+    - path: runtime/schemas/template/v2/skills-manifest.schema.json
+      sha256: f53b212a7df1acff2d91e9e16abd652f336d27702fba4c37594e5311c9d90730
+    - path: runtime/schemas/template/v2/tokens.schema.json
+      sha256: 1932623e7507b37b3661506e93a5f65c68b92823781af4cff266a6d33613a7b0
+    - path: runtime/schemas/template/v2/verification.schema.json
+      sha256: 84d439d457c182163d8e7f8783ebf5c8dabedeb28cdc3ecf0113dcdd0a6cdcc1
+    - path: runtime/template_apply_state/__init__.py
+      sha256: 8f45c947db666fb44998cda73666f47ad5a4202d7a62ff3c2ca0ca85e1d1e554
+    - path: runtime/template_apply_state/fidelity.py
+      sha256: d362f16d7e4c1976b2f993154ba337b5241275580722dc0c86d514facd9a6578
+    - path: runtime/template_apply_state/state.py
+      sha256: b4fd65296c32176494c751b296b54a6635c975114131909a256e17115d1492db
+    - path: runtime/template_authoring/__init__.py
+      sha256: 2fe572af74497e93f8014b3b279892f0be39965a50a86dd84304b32ef546960a
+    - path: runtime/template_authoring/capture.py
+      sha256: ac3f93c621e41aa33a19278124765c1318cf01879a96ddb0645e3f7b2959be6a
+    - path: runtime/template_authoring/chrome.py
+      sha256: e844b26f8afff831e6e1800ced8f11fb93bd47541cd97b62c7a8811a9fe2f1bf
+    - path: runtime/template_authoring/gate.py
+      sha256: 52ca7fbbcf8570760a4ee9f40936df5765f193c2c37ccf9820f5d5b2e3c61187
+    - path: runtime/template_authoring/profile.py
+      sha256: 674b2baebef7bc50943561bb6c676487a8040c01b1ca36d81a92fa9e2fc6ddc6
+    - path: runtime/template_validation/__init__.py
+      sha256: dc4566aced9559643b175f0e6a420744cc3ce50e1caa7fa88059267ac21b5ac5
+    - path: runtime/template_validation/cli.py
+      sha256: 02d39e55e3f704fdc0ea7b8dd016caebaf3b0cb933ffe196b820bfb9e50f4a54
+    - path: runtime/template_validation/colors.py
+      sha256: 14847ca312126679004710bb4e3738f1249790dc8ef8537dd59e7784bbe9134d
+    - path: runtime/template_validation/fidelity.py
+      sha256: 263d2f3c0833c9c02ea167e22cb1c054db641150157d3f8b52880eb0863020ae
+    - path: runtime/template_validation/loading.py
+      sha256: 780ebcc71cd585397976ffda79907fc404dbc419a23a92e68189caea4cc63a9d
+    - path: runtime/template_validation/model.py
+      sha256: a3685d537de94dce52c91949e0024e1ed555dd0f8e734607d7804538909b145b
+    - path: runtime/template_validation/schema.py
+      sha256: 6088af2b06ef0843b0010d6e76c96125891fd5365c93640f015f8d578b20983f
+    - path: runtime/template_validation/validator.py
+      sha256: 72714f40bc70275a6d3d0d9c1912a4aa13a4a08cff7b6baa025284c6a3c49c37
+    - path: runtime/validate_templates.py
+      sha256: 5a1be7090ba3e7cabeed38dbe87f3d665e892629af58bd5cc3bfa3acb2e72996
+  ui-template-apply:
+    version: 2.0.0
+    files:
+    - path: SKILL.md
+      sha256: 2a2e27c3786e21b6fcf327bed4070f167748a68ab9964c4e66abaf5a9abe2f08
+    - path: evals/README.md
+      sha256: 5aec5a13279a6eff566cc48a940f75034f94a6d740a76e082dce5901d06b97a8
+    - path: evals/cases.yaml
+      sha256: f643fbeeea4bf8f8dccd5fbedb2f4321e68c04ab35240f3683c0635ad60a8997
+    - path: evals/fidelity-cases.yaml
+      sha256: e2e2b1571420872eae4d91b8c1c2376781ad948f6eb611bcbeb2104682fc973a
+    - path: references/apply-workflow.md
+      sha256: 03c8120d501bbd962e8d138e3a3613dcb16f433547cefacdfbc2bc7ea935811d
+    - path: references/quality-gates.md
+      sha256: d53faf6f186dba4c4bb0a7144b65b953eb6edd6778c59a49f427cdcc0c1d96ec
+    - path: references/template-contract.md
+      sha256: 28764bf34520a1f8a5f664269b02d6ee04f471d3a2234f0683d5afa135aca46b
+    - path: references/toolchain.md
+      sha256: 06814e1f5a19db1cb44fc0039955da15f2b6d80bb6cd10df63bf02f8dfd4c4bc

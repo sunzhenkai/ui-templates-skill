@@ -1,0 +1,71 @@
+schema_version: 1
+bundle:
+  version: 2.0.0
+  template_schema:
+    minimum: 2
+    maximum: 2
+public_skills:
+  ui-template:
+    version: 2.0.0
+    include:
+      - SKILL.md
+      - references/*.md
+      - evals/*.md
+      - evals/*.yaml
+      - runtime/*.py
+      - runtime/contract_eval/*.py
+      - runtime/template_validation/*.py
+      - runtime/template_apply_state/*.py
+      - runtime/schemas/template/v2/*.json
+      - runtime/schemas/template/fidelity/v1/*.json
+      - runtime/schemas/eval/*.json
+      - runtime/fixtures/eval/*.yaml
+      - runtime/fixtures/fidelity/**/*
+      - runtime/fixtures/repo-capture/**/*
+      - runtime/template_authoring/*.py
+      - runtime/deterministic-baseline.json
+  ui-template-apply:
+    version: 2.0.0
+    include:
+      - SKILL.md
+      - references/*.md
+      - evals/*.md
+      - evals/*.yaml
+shared_files:
+  - source: LICENSE
+    destination: LICENSE
+  - source: governance/release/VERSION
+    destination: VERSION
+  - source: governance/release/CHANGELOG.md
+    destination: CHANGELOG.md
+  - source: governance/release/compatibility.yaml
+    destination: compatibility.yaml
+  - source: governance/release/MIGRATION-v1-to-v2.md
+    destination: MIGRATION-v1-to-v2.md
+  - source: governance/release/ROLLBACK.md
+    destination: ROLLBACK.md
+exclusions:
+  - .agents/skills/ui-template-manager/**
+  - .agents/skills/openspec-*/**
+  - .kiro/skills/**
+  - skills/*/patches/**
+  - skills/*/experience/**
+  - skills/*/examples/**
+  - openspec/**
+  - governance/scope.yaml
+  - governance/baselines/**
+  - docs/**
+  - example/**
+  - semantic-review/**
+  - '**/ui-ux-pro-max/**'
+archive_directories:
+  - patches
+  - experience
+forbidden_path_terms:
+  - ui-ux-pro-max
+  - master
+  - catalog
+generator:
+  name: skill-distribution
+  version: 1.0.0
+license: MIT

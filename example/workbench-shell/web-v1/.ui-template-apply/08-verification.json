@@ -1,0 +1,182 @@
+{
+  "schema_version": 2,
+  "kind": "phase-8-verification",
+  "template_digest": {
+    "algorithm": "sha256-canonical-json-v1",
+    "value": "80435742401316c479a9d24ded637f3d64ef6fc4ae005d8ecc9ec8204870ca54"
+  },
+  "source_identity": "git:24cc6467c8c9181c3ce7460fc5916611f10f916d:dirty:5244d42047dfd10b650e8b20705ebbf59c41e95cf45f926d87326f4ba72c76a2",
+  "build_identity": "build:0059b452026d9e85f2f1450e309cfe27599af87e0a7ab827b2aae928ebd129ee",
+  "browser_identity": "playwright/chromium@1.62.1",
+  "created_at": "2026-09-04T17:05:00Z",
+  "records": [
+    {
+      "id": "75f4b2c4-050b-4382-b0fe-466df6370860",
+      "rule_id": "NN-001",
+      "status": "passed",
+      "expected": { "htmlOverflow": "hidden", "rootHeight": "100svh / 900px" },
+      "actual": { "htmlOverflow": "hidden", "bodyOverflow": "hidden", "htmlHeight": "900px" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json", "evidence/inbox-1440-light.png"]
+    },
+    {
+      "id": "4ab5523e-fd8c-405b-83c9-3589dd2f822f",
+      "rule_id": "TOKEN-002",
+      "status": "passed",
+      "expected": { "app-shell": "oklch(0.964435 0.001327 286.375)", "page-canvas": "oklch(0.988087 0 0)" },
+      "actual": { "appShellBg": "oklch(0.964435 0.001327 286.375)", "pageCanvasBg": "oklch(0.988087 0 0)" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json"]
+    },
+    {
+      "id": "b3fffbba-0919-46cb-b2bc-5c01191df211",
+      "rule_id": "LAYOUT-004",
+      "status": "passed",
+      "expected": { "page-header-height": "48px" },
+      "actual": { "headerHeight": 48 },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json"]
+    },
+    {
+      "id": "f528e8f3-2ef6-44ec-84b3-58a4b9942fad",
+      "rule_id": "LAYOUT-005",
+      "status": "passed",
+      "expected": { "inset": "8px from spacing.allowed", "radius": "14px radius.xl", "profile_verified": false },
+      "actual": { "insetTop": 8, "insetRight": 8, "insetBottom": 8, "canvasRadius": "14px", "shellVariant": "inset" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json", "evidence/inbox-1440-light.png"]
+    },
+    {
+      "id": "9b53f0f5-23bf-4db6-bc46-6e231b34d87f",
+      "rule_id": "RESP-001",
+      "status": "passed",
+      "expected": { "expanded": ">=1280", "collapsed": "1024-1279", "overlay": "<1024" },
+      "actual": { "1440": "expanded", "1100": "collapsed", "900": "overlay-trigger" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440|1100|900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json", "evidence/phase8-collapsed.json", "evidence/phase8-overlay.json"]
+    },
+    {
+      "id": "b2d682a9-f832-4bc0-8e09-90ae05b30f5b",
+      "rule_id": "RESP-001",
+      "status": "passed",
+      "expected": { "triggerInHeader": true, "profile_verified": false },
+      "actual": { "triggerInHeader": true, "overlaySidebarInLayout": 0 },
+      "route": "/ws-alpha/inbox",
+      "viewport": "900x800",
+      "theme": "light",
+      "state": "overlay",
+      "evidence_refs": ["evidence/phase8-overlay.json"]
+    },
+    {
+      "id": "23c56503-3b94-4b74-9c9b-03729f5674d9",
+      "rule_id": "QUALITY-006",
+      "status": "passed",
+      "expected": { "rootScroll": false, "modeScroll": "internal" },
+      "actual": { "htmlOverflow": "hidden", "bodyOverflow": "hidden" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json"]
+    },
+    {
+      "id": "d2ff49f8-7151-42f2-825a-5d895568ce9a",
+      "rule_id": "QUALITY-008",
+      "status": "passed",
+      "expected": { "overlayIsWeb": true, "notNativeMobile": true },
+      "actual": { "overlaySidebarInLayout": 0, "trigger": true },
+      "route": "/ws-alpha/inbox",
+      "viewport": "900x800",
+      "theme": "light",
+      "state": "overlay",
+      "evidence_refs": ["evidence/phase8-overlay.json"]
+    },
+    {
+      "id": "eaabc059-4435-4a91-b9a2-a5302d47c5e3",
+      "rule_id": "ROUTE-001",
+      "status": "passed",
+      "expected": { "restore": ["status", "q"] },
+      "actual": { "url": "http://127.0.0.1:4178/ws-alpha/incidents?status=in-progress&q=gateway" },
+      "route": "/ws-alpha/incidents",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "filtered",
+      "evidence_refs": ["evidence/phase8-url-restore.json"]
+    },
+    {
+      "id": "368e9d1a-cf0a-46e4-ba38-1de8ad44c48d",
+      "rule_id": "QUALITY-024",
+      "status": "passed",
+      "expected": { "reloadKeepsQuery": true },
+      "actual": { "urlContains": "status=in-progress" },
+      "route": "/ws-alpha/incidents",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "filtered",
+      "evidence_refs": ["evidence/phase8-url-restore.json"]
+    },
+    {
+      "id": "fb4be7c0-b8d7-490f-9730-a989065266dc",
+      "rule_id": "NN-009",
+      "status": "passed",
+      "expected": { "darkAppShell": "oklch(0.155 0.005 285.823)" },
+      "actual": { "backgroundColor": "oklch(0.155 0.005 285.823)" },
+      "route": "/ws-alpha/settings",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-dark.json", "evidence/settings-dark.png"]
+    },
+    {
+      "id": "85c7a572-6c75-4c99-b8a0-7427979ac2a3",
+      "rule_id": "AX-012",
+      "status": "passed",
+      "expected": { "aria-current": "page" },
+      "actual": { "name": "工作区设置", "current": "page" },
+      "route": "/ws-alpha/settings",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-ax-settings.json"]
+    },
+    {
+      "id": "69ac7336-3fc8-4787-8c5e-ee6e555701c7",
+      "rule_id": "AX-016",
+      "status": "passed",
+      "expected": { "h1": "visible" },
+      "actual": { "h1": "收件箱" },
+      "route": "/ws-alpha/inbox",
+      "viewport": "1440x900",
+      "theme": "light",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-computed-inbox-1440.json"]
+    },
+    {
+      "id": "e5e75d50-d1df-434a-9dc7-73bb1def586f",
+      "rule_id": "AX-061",
+      "status": "passed",
+      "expected": { "fabAccessibleName": true },
+      "actual": { "buttons": ["帮助与快捷键", "打开帮助"] },
+      "route": "/ws-alpha/settings",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "state": "default",
+      "evidence_refs": ["evidence/phase8-ax-settings.json"]
+    }
+  ]
+}

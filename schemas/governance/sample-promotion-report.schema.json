@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/governance/sample-promotion-report.schema.json",
+  "title": "Sample promotion report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "sample", "execution", "gates", "decision"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "change", "revision", "tracked"],
+      "properties": {
+        "path": {"$ref": "#/$defs/repoPath"},
+        "change": {"type": "string", "minLength": 1},
+        "revision": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+        "tracked": {"const": true}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "commands_executed"],
+      "properties": {
+        "mode": {"const": "evidence-only"},
+        "commands_executed": {"const": false}
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frozen_install", "build", "static", "test", "multi_viewport", "feedback", "localization"],
+      "properties": {
+        "frozen_install": {"$ref": "#/$defs/frozenGate"},
+        "build": {"$ref": "#/$defs/gate"},
+        "static": {"$ref": "#/$defs/gate"},
+        "test": {"$ref": "#/$defs/gate"},
+        "multi_viewport": {"$ref": "#/$defs/gate"},
+        "feedback": {"$ref": "#/$defs/gate"},
+        "localization": {"$ref": "#/$defs/gate"}
+      }
+    },
+    "decision": {"enum": ["eligible", "blocked"]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision": {"const": "eligible"}}},
+      "then": {
+        "properties": {
+          "gates": {
+            "properties": {
+              "frozen_install": {"properties": {"status": {"const": "passed"}}},
+              "build": {"properties": {"status": {"const": "passed"}}},
+              "static": {"properties": {"status": {"const": "passed"}}},
+              "test": {"properties": {"status": {"const": "passed"}}},
+              "multi_viewport": {"properties": {"status": {"const": "passed"}}},
+              "feedback": {"properties": {"status": {"const": "passed"}}},
+              "localization": {"properties": {"status": {"const": "passed"}}}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "repoPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "command", "evidence"],
+      "properties": {
+        "status": {"enum": ["passed", "failed"]},
+        "command": {"type": "string", "minLength": 1},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/repoPath"}
+        }
+      }
+    },
+    "frozenGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "command", "evidence", "frozen_identity"],
+      "properties": {
+        "status": {"enum": ["passed", "failed"]},
+        "command": {"type": "string", "minLength": 1},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/repoPath"}
+        },
+        "frozen_identity": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

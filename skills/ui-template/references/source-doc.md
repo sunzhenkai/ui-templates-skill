@@ -1,27 +1,21 @@
-# 来源:设计文档(doc)
+# 来源：设计文档（doc）
 
-从 Markdown、PDF 等设计/规范文档提取模板。核心思路:**布局与交互规则按文档精确转写;视觉 token 的缺口显式回填默认值,不得伪装成来源派生。**
+核心：布局与交互按文档精确转写；文档没有给出的视觉 token 显式回填 default，不得伪装成来源派生。
 
-## 步骤
+## 提取步骤
 
-1. **通读并分类内容**
-   - 布局、chrome、断点、交互、组件规则:精确转写,置信度高。
-   - 颜色、字体、阴影等视觉值:文档给了才记录(origin: `source`);没给就是缺口,不是"待消费方自选"。
+1. 记录 `meta.sources[]`：文件/URL ref、文档版本/commit/文件 SHA-256 revision、采集时间。Markdown、PDF 或导出文档都要固定 revision。
+2. 分类：布局、chrome、断点、交互、组件规则可按原文 source 转写；颜色、字体、阴影等只有文档明确给值时才是 source。
+3. 尽量索取获授权截图或运行 URL，并分别按 image/web 指南增加独立 source；没有视觉参考时 visual coverage 使用 defaulted，overall 上限为 medium。
+4. 缺口 token 填完整 default，basis 说明文档缺失、风格/密度推理与可访问性依据。禁止留空或交给 Apply 自选。
+5. 文档冲突按更具体、更新 revision 裁决，同时保留两个 locator 与决策理由。业务实体、项目名、目录/API/技术栈内容先泛化，不进入模板。
 
-2. **索取视觉参考**
-   - 尽量向用户要参考截图或原产品 URL;拿到后按 `source-image.md` / `source-web.md` 补采。
-   - 拿不到时在 `meta.yaml` coverage 标注 `visual_reference: false`,并回填一套完整的模板默认值(origin: `default`)。
+## evidence
 
-3. **回填默认值并记录决策**
-   - 缺口字段在 `tokens.yaml` 给出默认值,决策记录说明选择理由(通常依据模板风格关键词与密度推导)。
-   - 禁止留空,禁止把"来源未体现(消费方自选)"作为最终状态。
+source locator 使用标题层级 + 段落/页码/表格单元格（例如 `§Responsive > Breakpoints, PDF p.12`），记录 source revision、转写方法、captured_at 和 confidence。跨段归纳标 computed；无法确定的视觉推断标 estimated；默认补全标 default + basis/decision ID。
 
-4. **置信度拆分**
-   - `spec.md` 中分别说明 layout 与 visual 的置信度;`meta.yaml` 的 `confidence` 取最弱维度。
-   - 无视觉参考时整体 `confidence` 上限为 `medium`。
+文档中的截图、图标、字体和附件并不自动允许再分发。每项归档资产记录 license、redistribution、redaction；客户名、内部链接、账号/人员数据和未公开产品信息必须脱敏。许可不明/禁止分发或仍需脱敏时，只保留 locator/digest，不入库原资产。
 
-## 注意事项
+## 置信度与 coverage
 
-- 文档中的规则互相矛盾时,以更具体/更新的规则为准,并记录矛盾点。
-- 不把文档中的业务实体、项目名、目录结构带入模板;泛化后再写入。
-- 文档描述的状态不完整时,交互组件仍必须补齐 hover、focus-visible、disabled、selected。
+layout、visual、components 分维度记录：明确布局规则可 high，缺视觉参考时 visual 不高于 medium；overall 不高于最弱必需维度。文档未定义的主题、平台、页面模式、组件和状态归入 defaulted/unsupported，不能因已补默认值而标 observed。

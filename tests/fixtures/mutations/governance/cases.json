@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {"id": "broken-active-link", "expected_code": "ACTIVE_LINK_MISSING"},
+    {"id": "active-implementation-claim", "expected_code": "ACTIVE_IMPLEMENTATION_SEMANTIC"},
+    {"id": "missing-public-skill", "expected_code": "PUBLIC_SKILL_MISSING"},
+    {"id": "production-mirror-drift", "expected_code": "MIRROR_FILE_CHANGED"}
+  ]
+}

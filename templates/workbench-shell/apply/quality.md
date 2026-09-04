@@ -1,52 +1,52 @@
 # apply/quality
 
-验收只写取证方式；不复制数值。规则出处见括号内的文档。
+本矩阵只定义 workbench-shell 的 rule ID、检查对象、取证和通过条件。expected 读取 [`../tokens.yaml`](../tokens.yaml) 当前声明及 [`../evidence.yaml`](../evidence.yaml) active provenance；结果写入通用 Phase 8/9 current-build records。检查数量由 included scope、coverage、动态 token scale 与适用 rule IDs 生成。
 
 ## Tokens 与视觉
 
-| 检查 | 取证 |
-| --- | --- |
-| 表面层级正确 | computed style 证明 shell / canvas / surface / raised 使用对应主题角色。（spec §2） |
-| 字号白名单 | 遍历可见文本 computed style，只出现 10 档之一；可编辑触控文本单独核对。（spec §3） |
-| 文本灰度 | 检查正文 / 次级文本只使用 foreground / muted；faint 未用于文本。（spec Non-negotiables #6） |
-| 阴影层级 | surface、menu、floating 分别匹配对应 token；普通分区未使用浮层阴影。（spec §6） |
-| 双主题一致性 | light / dark 角色键一致，截图或 computed style 证明选中 / hover 方向反转。（spec Non-negotiables #9） |
+| Rule IDs | 检查对象 | 取证 | 通过条件 |
+| --- | --- | --- | --- |
+| [QUALITY-001] | shell/canvas/surface/raised 表面 | applicable elements 的 computed style，引用 @TOKEN-002 | 每层匹配当前主题角色，无反向混用。 |
+| [QUALITY-002] | 全部可见文本字号与行高 | 遍历 computed style，并与 `typography.scale` 当前键集合比对，引用 @TOKEN-005 | 每个值可映射到当前声明；不依赖固定档数。 |
+| [QUALITY-003] | 正文、次级文本与非文本弱化标记 | DOM role + computed color，引用 @NN-006 | 正文只使用允许角色，faint 未承载正文。 |
+| [QUALITY-004] | 普通表面、菜单与窗口级浮层阴影 | computed shadow 与 `shadow.*` token map，引用 @NN-007 | 阴影层级与表面语义一致。 |
+| [QUALITY-005] | light/dark 主题角色与交互层级 | 双主题 computed style + token/evidence refs，引用 @NN-009 | 角色键完整，hover/selected 语义一致。 |
 
 ## Shell 与布局
 
-| 检查 | 取证 |
-| --- | --- |
-| 整页滚动 | Web/Desktop 根元素高度锁定且 `overflow: hidden`；滚动容器为面板。（spec Non-negotiables #1） |
-| Chrome 对齐 | PageHeader、Toolbar 与正文左缘 computed x 相同；高度均为 token 值。（spec §4） |
-| 侧栏行为 | 修改窗口 / 容器宽度，验证默认、折叠、覆盖 Sheet 与外层触发器规则。（platform 文件） |
-| 页面模式 | 路由清单映射到 A–E，混合槽位可逐条解释。（routes §3） |
-| 浮动净空 | 滚动到最后一条并打开底部浮层，证明 FAB、batch bar 不遮挡内容。（routes §2） |
+| Rule IDs | 检查对象 | 取证 | 通过条件 |
+| --- | --- | --- | --- |
+| [QUALITY-006] | root 与模式滚动容器 | scroll owner、bounding box 与 overflow evidence，引用 @NN-001、@LAYOUT-001 | root 不滚动；A–E 的声明容器承担滚动。 |
+| [QUALITY-007] | PageHeader、Toolbar、正文对齐 | computed geometry 与 layout token map，引用 @NN-004、@LAYOUT-004 | chrome 对齐且模式切换不漂移。 |
+| [QUALITY-008] | Web expanded/collapsed/overlay | `responsive.web.*` 边界两侧的浏览器 evidence，引用 @RESP-001 | expanded、collapsed、overlay 行为正确；窄 Web 未冒充 Mobile。 |
+| [QUALITY-009] | included route 的 page mode | route inventory 与 @ROUTE-005–@ROUTE-009 evidence | 每个 route 唯一映射 A–E；legacy 文档详情为 B 或 excluded。 |
+| [QUALITY-010] | FloatingChat 与底部工具区域 | scroll-end 与 overlay-open evidence，引用 @NN-011、@LAYOUT-008 | 最后内容和动作不被遮挡。 |
 
 ## 组件与状态
 
-| 检查 | 取证 |
-| --- | --- |
-| 交互状态 | 每个核心组件记录 default、hover、active、focus-visible、disabled、selected / open 的截图或 DOM 状态。（components.md） |
-| 表单可访问性 | label、错误描述、required / disabled / readonly 语义可从 DOM 读取。（components.md Input） |
-| 行导航 | 键盘 Tab 只到真实可交互元素；checkbox、菜单、按钮不在行 anchor 内。（routes §5） |
-| 弹层 | 打开、键盘困住、Esc 关闭、焦点返回、Sheet 路由关闭均有证据。（components.md Dialog） |
-| 空态 | 无数据、过滤空、错误、404 各有正确 role 和动作。（components.md Empty） |
+| Rule IDs | 检查对象 | 取证 | 通过条件 |
+| --- | --- | --- | --- |
+| [QUALITY-011] | included components 的适用状态 | DOM/AX/computed-style/state evidence，引用对应 AX rule | coverage 中 included 状态均有非颜色可辨 expected/actual。 |
+| [QUALITY-012] | label、error、required、disabled、read-only | Accessibility tree 与 DOM association，引用 @AX-035 | name/description/state 可由 AT 解析。 |
+| [QUALITY-013] | A/B 集合行与单元格动作 | keyboard path 与 DOM nesting，引用 @NN-016 | 只聚焦真实交互元素，无嵌套交互。 |
+| [QUALITY-014] | Dialog/Sheet/Popover | open、focus enter/contain、close、return 与 route-close evidence，引用 @AX-050 | 全部焦点行为在 current build 可复验。 |
+| [QUALITY-015] | empty、filtered-empty、error、not-found | role、文案与 action evidence，引用 @AX-051、@AX-054 | 状态语义和下一步明确。 |
 
 ## 响应与平台
 
-| 检查 | 取证 |
-| --- | --- |
-| 断点 | 320 / 768 / 1024 / 1280 / 1440px 截图验证导航、页头、卡片、设置页签。（routes §4） |
-| 容器查询 | 缩小侧栏或分屏，列表网格列行为随容器而非窗口变化。（spec Non-negotiables #13） |
-| Desktop chrome | 页签、窗口工具栏、back / forward、画布 hairline 与圆角截图验证。（platforms/desktop.md） |
-| Mobile shell | 安全区、底部页签、badge、formSheet、键盘与最小触控目标验证。（platforms/mobile.md） |
+| Rule IDs | 检查对象 | 取证 | 通过条件 |
+| --- | --- | --- | --- |
+| [QUALITY-016] | Web shell、A–E 内容与 C tabs | coverage 驱动 viewport evidence，引用 @RESP-001、@RESP-003、@RESP-005 | 所有 included Web viewport 行为匹配规则。 |
+| [QUALITY-017] | A 列表列与 E 聚合网格 | 改变容器而非仅改变 viewport 的 evidence，引用 @NN-013、@RESP-006 | 列/卡片响应由容器和当前 token scale 驱动。 |
+| [QUALITY-018] | Desktop window chrome、tabs、history、canvas | Desktop current-build evidence，引用 @LAYOUT-012、@ROUTE-013、@ROUTE-014 | 独立 Desktop 路径完整，未套用 Web breakpoint。 |
+| [QUALITY-019] | Mobile safe area、bottom tabs、sheet、keyboard、gestures | Mobile current-build evidence，引用 @LAYOUT-010、@AX-065、@AX-068、@AX-069 | 独立 Mobile 路径完整，未套用 Web overlay shell。 |
 
 ## 全局质量
 
-| 检查 | 取证 |
-| --- | --- |
-| WCAG AA | 正文 / 次级文本对真实背景达到 4.5:1；非文本弱化标记至少 3:1。（spec §2） |
-| 键盘 | 仅用键盘完成导航、打开 / 关闭弹层、列表、设置、提交与取消。（spec Non-negotiables #12） |
-| Screen reader | 页面标题、`aria-current`、icon-only label、status / alert、表格 role 可从 DOM 读取。（spec §7） |
-| 减少动效 | 开启 reduced motion 后无位移 / 滚动干扰，状态变化仍可感知。（spec §6） |
-| URL 恢复 | 刷新或分享 URL 后恢复视图、过滤、页签、详情或页签状态。（routes §5） |
+| Rule IDs | 检查对象 | 取证 | 通过条件 |
+| --- | --- | --- | --- |
+| [QUALITY-020] | 文本、状态与 focus indicator 对比 | validator 结果 + 真实背景 computed evidence，引用 @TOKEN-003、@TOKEN-004、@NN-012 | required pairs 可解析并达到适用门禁；无静默跳过。 |
+| [QUALITY-021] | navigation、overlay、collection、settings、submit/cancel | 仅键盘操作 trace，引用 @NN-012 | included 流程无需 pointer 可完成。 |
+| [QUALITY-022] | title、current item、icon-only、status/alert、table semantics | Accessibility tree，引用 @AX-012、@AX-016、@AX-017 | role/name/state/relationship 完整。 |
+| [QUALITY-023] | navigation、overlay 与 progress motion | reduced-motion current-build evidence，引用 @NN-018 | 减少动效后无位移/滚动干扰，状态仍可感知。 |
+| [QUALITY-024] | view、filter、selected item、detail 与 tabs | refresh/deep-link/back-forward evidence，引用 @NN-010、@ROUTE-001 | URL 或等价 route state 完整恢复声明状态。 |
