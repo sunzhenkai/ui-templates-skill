@@ -16,6 +16,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { Textarea } from "@/components/ui/textarea"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { UnreadBadge } from "@/components/shared/chrome"
+import { ShellChromeProvider } from "@/components/shell/shell-chrome-context"
 import { isOverlayMode, useShellMode } from "@/hooks/use-shell-mode"
 import { createIncident, incidentFormSchema, listChanges, listIncidents, listInbox, listMembers, listServices, listTeams, listWorkspaces, searchAll } from "@/lib/api/client"
 import { keys, queryClient } from "@/lib/query"
@@ -25,11 +26,9 @@ import {
   BarChart3Icon,
   BellIcon,
   CalendarIcon,
-  ChevronsUpDownIcon,
   CircleHelpIcon,
   InboxIcon,
   KanbanIcon,
-  MenuIcon,
   MoonIcon,
   PinIcon,
   PlusIcon,
@@ -153,7 +152,7 @@ export function AppShell() {
       data-slot="app-sidebar"
       data-mode={mode}
     >
-      <div className="flex h-12 items-center gap-2 px-2">
+      <div className="flex h-12 items-center px-2" data-slot="slot-workspace-switcher">
         <Select
           value={workspaceId}
           onValueChange={(value) => {
@@ -173,63 +172,69 @@ export function AppShell() {
             ))}
           </SelectContent>
         </Select>
-        {!collapsed ? <ChevronsUpDownIcon className="size-3.5 text-[var(--faint-foreground)]" /> : null}
       </div>
-      <div className="flex gap-1 px-2">
-        <Button variant="outline" size={collapsed ? "icon-sm" : "sm"} className="flex-1" onClick={() => setSearchOpen(true)} aria-label="全局搜索" title="⌘K / Ctrl+K">
+      <div className="flex flex-col gap-1 px-2" data-slot="slot-search">
+        <Button variant="outline" size={collapsed ? "icon-sm" : "sm"} className={collapsed ? undefined : "w-full justify-start"} onClick={() => setSearchOpen(true)} aria-label="全局搜索" title="⌘K / Ctrl+K">
           <SearchIcon />
           {collapsed ? null : "搜索"}
         </Button>
-        <Button variant="brand" size={collapsed ? "icon-sm" : "sm"} onClick={() => setCreateOpen(true)} aria-label="创建事件" title="C">
+      </div>
+      <div className="px-2 pb-1" data-slot="slot-compose">
+        <Button variant="brand" size={collapsed ? "icon-sm" : "sm"} className={collapsed ? undefined : "w-full justify-start"} onClick={() => setCreateOpen(true)} aria-label="创建事件" title="C">
           <PlusIcon />
           {collapsed ? null : "创建"}
         </Button>
       </div>
       <ScrollArea className="min-h-0 flex-1 px-2 py-3">
-        {NAV.map((group) => (
-          <div key={group.section} className="mb-3">
-            {collapsed ? null : <p className="px-2 pb-1 text-[length:var(--type-micro)] text-[var(--faint-foreground)]">{group.section}</p>}
+        <nav aria-label="工作区导航" data-slot="slot-nav-group">
+          {NAV.map((group) => (
+            <div key={group.section} className="mb-3">
+              {collapsed ? null : <p className="px-2 pb-1 text-[length:var(--type-micro)] text-muted-foreground">{group.section}</p>}
+              <ul className="flex flex-col gap-0.5">
+                {group.items.map((item) => (
+                  <li key={item.to}>
+                    <NavLink
+                      to={`/${workspaceId}/${item.to}`}
+                      aria-label={item.label}
+                      title={collapsed ? item.label : undefined}
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 rounded-md px-2 py-1.5 text-[length:var(--type-label)] hover:bg-[var(--sidebar-accent)] ${isActive ? "bg-[var(--sidebar-accent)] text-[var(--sidebar-accent-foreground)]" : ""}`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <item.icon className="size-4 shrink-0" />
+                          {collapsed ? null : <span className="flex-1 truncate">{item.label}</span>}
+                          {item.badge === "inbox" ? <UnreadBadge count={unread} /> : null}
+                          {isActive ? <span className="sr-only">当前页</span> : null}
+                        </>
+                      )}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+        <div data-slot="slot-pin-list">
+          <button type="button" className="mb-1 flex w-full items-center justify-between px-2 text-[length:var(--type-micro)] text-muted-foreground" onClick={() => setPinnedOpen((value) => !value)} aria-expanded={pinnedOpen}>
+            {collapsed ? <PinIcon className="size-4" /> : "置顶事件"}
+          </button>
+          {pinnedOpen ? (
             <ul className="flex flex-col gap-0.5">
-              {group.items.map((item) => (
-                <li key={item.to}>
-                  <NavLink
-                    to={`/${workspaceId}/${item.to}`}
-                    aria-label={item.label}
-                    className={({ isActive }) =>
-                      `flex items-center gap-2 rounded-md px-2 py-1.5 text-[length:var(--type-label)] hover:bg-[var(--sidebar-accent)] ${isActive ? "bg-[var(--sidebar-accent)] text-[var(--sidebar-accent-foreground)]" : ""}`
-                    }
-                  >
-                    {({ isActive }) => (
-                      <>
-                        <item.icon className="size-4 shrink-0" />
-                        {collapsed ? null : <span className="flex-1 truncate">{item.label}</span>}
-                        {item.badge === "inbox" ? <UnreadBadge count={unread} /> : null}
-                        {isActive ? <span className="sr-only">当前页</span> : null}
-                      </>
-                    )}
-                  </NavLink>
+              {pinned.map((item) => (
+                <li key={item.id}>
+                  <Link to={`/${workspaceId}/incidents/${item.id}`} title={item.number} className="flex items-center gap-2 truncate rounded-md px-2 py-1 text-[length:var(--type-caption)] hover:bg-[var(--sidebar-accent)]">
+                    <PinIcon className="size-3" />
+                    {collapsed ? null : item.number}
+                  </Link>
                 </li>
               ))}
             </ul>
-          </div>
-        ))}
-        <button type="button" className="mb-1 flex w-full items-center justify-between px-2 text-[length:var(--type-micro)] text-[var(--faint-foreground)]" onClick={() => setPinnedOpen((value) => !value)} aria-expanded={pinnedOpen}>
-          {collapsed ? <PinIcon className="size-4" /> : "置顶事件"}
-        </button>
-        {pinnedOpen ? (
-          <ul className="flex flex-col gap-0.5">
-            {pinned.map((item) => (
-              <li key={item.id}>
-                <Link to={`/${workspaceId}/incidents/${item.id}`} className="flex items-center gap-2 truncate rounded-md px-2 py-1 text-[length:var(--type-caption)] hover:bg-[var(--sidebar-accent)]">
-                  <PinIcon className="size-3" />
-                  {collapsed ? null : item.number}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : null}
+          ) : null}
+        </div>
       </ScrollArea>
-      <div className="flex items-center gap-1 border-t border-[var(--sidebar-border)] p-2">
+      <div className="flex items-center justify-end gap-1 border-t border-[var(--sidebar-border)] p-2" data-slot="slot-footer-utility">
         <Button variant="ghost" size="icon-sm" aria-label="帮助与快捷键" onClick={() => setHelpOpen(true)}>
           <CircleHelpIcon />
         </Button>
@@ -241,57 +246,57 @@ export function AppShell() {
         >
           {prefs.theme === "dark" ? <SunIcon /> : <MoonIcon />}
         </Button>
-        <span className="ml-auto text-[length:var(--type-micro)] text-[var(--faint-foreground)]">
+        <span className="text-[length:var(--type-micro)] text-muted-foreground">
           <BellIcon className="inline size-3.5" /> {unread}
         </span>
       </div>
     </aside>
   )
 
+  const canvasInset = overlay
+    ? "relative min-w-0 flex-1 overflow-hidden bg-[var(--page-canvas)]"
+    : `relative min-w-0 flex-1 overflow-hidden bg-[var(--page-canvas)] my-[var(--shell-inset)] mr-[var(--shell-inset)] rounded-[var(--radius-xl)] shadow-[var(--shadow-surface)] ${collapsed ? "ml-[var(--shell-inset)]" : ""}`
+
   return (
-    <div className="flex h-[100svh] overflow-hidden bg-[var(--app-shell)]" data-slot="app-shell">
-      {overlay ? (
-        <Sheet open={navOpen} onOpenChange={setNavOpen}>
-          <SheetContent side="left" className="w-[var(--sidebar-mobile-width)] p-0" aria-describedby={undefined}>
-            <SheetHeader className="sr-only">
-              <SheetTitle>导航</SheetTitle>
-              <SheetDescription>工作区导航</SheetDescription>
-            </SheetHeader>
-            {sidebar}
-          </SheetContent>
-        </Sheet>
-      ) : (
-        <div className="relative shrink-0">
-          {sidebar}
-          {collapsed ? null : (
-            <div
-              role="separator"
-              aria-orientation="vertical"
-              aria-label="调整侧栏宽度"
-              className="absolute inset-y-0 right-0 z-10 w-1 cursor-col-resize bg-transparent hover:bg-[var(--brand)]"
-              onPointerDown={startResize}
-              onPointerMove={onResize}
-              onPointerUp={endResize}
-            />
-          )}
-        </div>
-      )}
-      <div className="relative min-w-0 flex-1 overflow-hidden bg-[var(--page-canvas)]" data-slot="page-canvas">
-        {progress ? <div className="absolute inset-x-0 top-0 z-20 bg-[var(--brand)]" style={{ height: "var(--navigation-progress-height)" }} role="progressbar" aria-label="路由加载" /> : null}
+    <ShellChromeProvider value={{ overlay, openNav: () => setNavOpen(true) }}>
+      <div className="flex h-[100svh] overflow-hidden bg-[var(--app-shell)]" data-slot="app-shell" data-shell-variant="inset">
         {overlay ? (
-          <div className="absolute top-2 left-2 z-10">
-            <Button size="icon-sm" variant="outline" aria-label="打开导航" onClick={() => setNavOpen(true)}>
-              <MenuIcon />
-            </Button>
+          <Sheet open={navOpen} onOpenChange={setNavOpen}>
+            <SheetContent side="left" className="w-[var(--sidebar-mobile-width)] p-0" aria-describedby={undefined}>
+              <SheetHeader className="sr-only">
+                <SheetTitle>导航</SheetTitle>
+                <SheetDescription>工作区导航</SheetDescription>
+              </SheetHeader>
+              {sidebar}
+            </SheetContent>
+          </Sheet>
+        ) : (
+          <div className="relative shrink-0 py-[var(--shell-inset)] pl-[var(--shell-inset)]">
+            {sidebar}
+            {collapsed ? null : (
+              <div
+                role="separator"
+                aria-orientation="vertical"
+                aria-label="调整侧栏宽度"
+                data-slot="slot-rail"
+                className="absolute inset-y-[var(--shell-inset)] right-0 z-10 w-1 cursor-col-resize bg-transparent hover:bg-[var(--brand)]"
+                onPointerDown={startResize}
+                onPointerMove={onResize}
+                onPointerUp={endResize}
+              />
+            )}
           </div>
-        ) : null}
-        <Outlet context={{ openCreate: (status?: typeof createStatus) => { if (status) setCreateStatus(status); setCreateOpen(true) }, openSearch: () => setSearchOpen(true) }} />
-        <HelpFab onOpen={() => setHelpOpen(true)} />
+        )}
+        <div className={canvasInset} data-slot="page-canvas">
+          {progress ? <div className="absolute inset-x-0 top-0 z-20 bg-[var(--brand)]" style={{ height: "var(--navigation-progress-height)" }} role="progressbar" aria-label="路由加载" /> : null}
+          <Outlet context={{ openCreate: (status?: typeof createStatus) => { if (status) setCreateStatus(status); setCreateOpen(true) }, openSearch: () => setSearchOpen(true) }} />
+          <HelpFab onOpen={() => setHelpOpen(true)} />
+        </div>
+        <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} workspaceId={workspaceId} />
+        <CreateIncidentDialog open={createOpen} onOpenChange={setCreateOpen} workspaceId={workspaceId} defaultStatus={createStatus} />
+        <ShortcutHelp open={helpOpen} onOpenChange={setHelpOpen} />
       </div>
-      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} workspaceId={workspaceId} />
-      <CreateIncidentDialog open={createOpen} onOpenChange={setCreateOpen} workspaceId={workspaceId} defaultStatus={createStatus} />
-      <ShortcutHelp open={helpOpen} onOpenChange={setHelpOpen} />
-    </div>
+    </ShellChromeProvider>
   )
 }
 

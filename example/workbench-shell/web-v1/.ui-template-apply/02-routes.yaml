@@ -1,6 +1,13 @@
 schema_version: 2
 scroll_owner: page-mode-internal
 root: { height: 100svh, overflow: hidden }
+structural_chrome: unavailable
+project_shell:
+  note: 项目自选 inset 画布与 PageHeader trigger；不得标 profile-verified
+  variant: inset
+  inset_token: spacing.allowed#8px
+  radius_token: radius.xl
+  shadow_token: shadow.surface
 shell_modes:
   expanded: { min: 1280, nav: persistent-expanded }
   collapsed: { min: 1024, max: 1279, nav: persistent-icon }
@@ -68,6 +75,7 @@ constraints:
   - id: arrangement-sidebar-canvas
     type: arrangement
     rule_ids: [NN-003, RESP-001]
+    note: 项目自选 inset，非 profile shell_variant
   - id: fill-canvas
     type: fill
     rule_ids: [LAYOUT-007]
@@ -82,10 +90,44 @@ constraints:
     rule_ids: [NN-001, LAYOUT-001]
   - id: overlay-nav-sheet
     type: overlay
-    rule_ids: [ROUTE-003, AX-050]
+    rule_ids: [ROUTE-003, AX-050, RESP-001]
+    anchor: page-header
   - id: responsive-web-matrix
     type: responsive
     rule_ids: [RESP-001]
+  - id: slot-workspace-switcher
+    type: slot
+    order: 0
+    profile_verified: false
+  - id: slot-search
+    type: slot
+    order: 1
+    profile_verified: false
+  - id: slot-compose
+    type: slot
+    order: 2
+    profile_verified: false
+  - id: slot-nav-group
+    type: slot
+    order: 3
+    profile_verified: false
+  - id: slot-pin-list
+    type: slot
+    order: 4
+    profile_verified: false
+  - id: slot-footer-utility
+    type: slot
+    order: 5
+    profile_verified: false
+  - id: slot-rail
+    type: slot
+    order: 6
+    profile_verified: false
+  - id: anchor-header-trigger
+    type: overlay
+    rule_ids: [RESP-001]
+    expected: page-header
+    profile_verified: false
 invalid:
   - not-found-incident
   - not-found-service

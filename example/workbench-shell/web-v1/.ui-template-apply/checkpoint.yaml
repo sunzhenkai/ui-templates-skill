@@ -4,7 +4,7 @@ template:
   version: 2.0.0
   digest:
     algorithm: sha256-canonical-json-v1
-    value: 36b5a502ad0e2ab0945f1826f69c003f3e0041180a8dabb6080c16c2636ef161
+    value: 80435742401316c479a9d24ded637f3d64ef6fc4ae005d8ecc9ec8204870ca54
 scope:
   included:
   - platform:web
@@ -44,7 +44,7 @@ phases:
   - path: 00-intake.md
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 83f0675c66388fa2e9483381b2f816fa88849dc4e657ab67ec4cb0cc8d8a20b9
+      value: c5eb398f2b7fbe2ffd050f4a60789a2722d5df467d25c28871b68f1c529d922a
   evidence_refs: []
 - id: 1
   status: complete
@@ -52,11 +52,11 @@ phases:
   - path: 01-design-direction.md
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 046123e92323b7b5a896406e333c5d7d94f9cbfe7b4b0b043949757a7a422eb5
+      value: 1ec10cd91663810e4b293c59a041ae5b72d14b071c3edca9e155df33866e3834
   - path: 01-token-map.yaml
     digest:
       algorithm: sha256-canonical-json-v1
-      value: c9a0bfc98c6ef480931a131dba4b605f8d240159e2acaaf33f6f64db97bc503a
+      value: fc5c972697ced2d4b709f13e99ed67b89188951310682fe352667ac523de7fe4
   evidence_refs: []
 - id: 2
   status: complete
@@ -64,7 +64,7 @@ phases:
   - path: 02-routes.yaml
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 4227eff7e7cbb85edfeb8c045ce05e8b9ae31c58daab93bf0db270163dc56b03
+      value: 2b8f61efa1b1348fe7466f6f546be261e8798b3f960092c16ccc3421d20cda22
   evidence_refs: []
 - id: 3
   status: complete
@@ -72,7 +72,7 @@ phases:
   - path: 03-structure.md
     digest:
       algorithm: sha256-canonical-json-v1
-      value: e461bfab2af2cd6d65d94cd4a18b90bb98dd9cc72c29b901a06cf864f9066bb6
+      value: 29dc6274b00fcd948bf6f0f989d7dd82f69d49cb363cb6a90a2d500357619ef9
   evidence_refs: []
 - id: 4
   status: complete
@@ -80,7 +80,7 @@ phases:
   - path: 04-components.yaml
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 8e9b906c3ab09aae3cccb32314611b96fe0cd08bc5020bf53bc8d6e8234acef9
+      value: 9363d37ea771ed03e024436d443a7c4bacb5ce2dca9748e04776ffe5d79effa1
   evidence_refs: []
 - id: 5
   status: complete
@@ -88,7 +88,7 @@ phases:
   - path: 05-07-progress.yaml
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 991423053777722cc7af08a350c5f6194125d9f1a39913b180b90f7bc9a353eb
+      value: a7aea061d8fa9d3c7c90ddc46e4061150816acb3772860530ab00c7529f8bb40
   evidence_refs: []
 - id: 6
   status: complete
@@ -96,7 +96,7 @@ phases:
   - path: 05-07-progress.yaml
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 991423053777722cc7af08a350c5f6194125d9f1a39913b180b90f7bc9a353eb
+      value: a7aea061d8fa9d3c7c90ddc46e4061150816acb3772860530ab00c7529f8bb40
   evidence_refs: []
 - id: 7
   status: complete
@@ -104,7 +104,7 @@ phases:
   - path: 05-07-progress.yaml
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 991423053777722cc7af08a350c5f6194125d9f1a39913b180b90f7bc9a353eb
+      value: a7aea061d8fa9d3c7c90ddc46e4061150816acb3772860530ab00c7529f8bb40
   evidence_refs: []
 - id: 8
   status: complete
@@ -112,7 +112,7 @@ phases:
   - path: 08-verification.json
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 51a3f6c18b471b619f0b044c1bba68ff3a79726a3b679f52dc406fd603f14f71
+      value: 7a34c9f16bd413c50a0a591db30e51b8c550712ece10c78d033f9fef3b740e70
   evidence_refs:
   - evidence/inbox-1440-light.png
   - evidence/phase8-ax-settings.json
@@ -128,11 +128,11 @@ phases:
   - path: 09-review.md
     digest:
       algorithm: sha256-canonical-json-v1
-      value: fc03a3242ac82fde16c8250f614624f119bb66966bd6dac5e3280ebef5668a93
+      value: d77b9e3ca1463e9b06a8d3b8184a14690c180b0c0d426b61a79fb61c2300ac4d
   evidence_refs:
   - evidence/phase8-collapsed.json
   - evidence/phase8-computed-inbox-1440.json
   - evidence/phase8-overlay.json
-source_identity: git:c960712517022d408654de70d3f7496ac8adf8b0:dirty:77e5deaabe3b4c9f4073ad2d9374839e69433dd727bfa44d875286e5b119b655
-build_identity: build:2936bcb383fa7fe1fb00ce03a5206803eec6cbd899018398fd89caa1850fd95a
-updated_at: '2026-09-04T15:40:00Z'
+source_identity: git:24cc6467c8c9181c3ce7460fc5916611f10f916d:dirty:5244d42047dfd10b650e8b20705ebbf59c41e95cf45f926d87326f4ba72c76a2
+build_identity: build:0059b452026d9e85f2f1450e309cfe27599af87e0a7ab827b2aae928ebd129ee
+updated_at: '2026-09-04T17:06:00Z'

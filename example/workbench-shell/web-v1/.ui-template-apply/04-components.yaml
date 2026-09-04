@@ -9,12 +9,15 @@ components:
     semantic: nav
     source: custom
     rule_ids: [AX-007, AX-008, AX-012, NN-003, RESP-001]
-    keyboard: Tab / Enter 链接；折叠项 Tooltip
+    keyboard: Tab / Enter 链接；折叠项 title
     icon_only: 折叠与 overlay 触发器有 aria-label
+    slots: [workspace-switcher, search, compose, nav-group, pin-list, footer-utility, rail]
+    notes: 槽位顺序为项目自选，非 profile-verified
   - id: page-header
     semantic: header + h1
     source: custom
-    rule_ids: [AX-013, AX-016, LAYOUT-004]
+    rule_ids: [AX-013, AX-016, LAYOUT-004, RESP-001]
+    notes: overlay 时 leading 槽承载 header-trigger
   - id: toolbar
     semantic: toolbar
     source: custom

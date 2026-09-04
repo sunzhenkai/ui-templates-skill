@@ -1,7 +1,9 @@
+import { OverlayNavTrigger, useShellChrome } from "@/components/shell/shell-chrome-context"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
+import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import { healthLabel, severityLabel, statusLabel } from "@/lib/labels"
 import type { HealthState, IncidentStatus, Severity } from "@/types/domain"
@@ -35,11 +37,14 @@ export function PageHeader({
   actions?: ReactNode
   leading?: ReactNode
 }) {
+  const chrome = useShellChrome()
   return (
     <header
       className="flex h-[var(--page-header-height)] shrink-0 items-center gap-3 border-b border-[var(--surface-border)] bg-[var(--page-canvas)] px-[var(--page-gutter)]"
       data-slot="page-header"
     >
+      <OverlayNavTrigger />
+      {chrome?.overlay && leading ? <Separator orientation="vertical" className="data-[orientation=vertical]:h-4" /> : null}
       {leading}
       <div className="min-w-0 flex-1">
         <h1 className="truncate text-[length:var(--type-title-sm)] leading-[var(--type-title-sm-lh)] font-medium">{title}</h1>

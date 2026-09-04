@@ -4,7 +4,7 @@
 
 | 边界 | 路径 | 职责 |
 | --- | --- | --- |
-| shell | `src/components/shell/app-shell.tsx` | App Shell、侧栏、搜索、创建、帮助 FAB、快捷键 |
+| shell | `src/components/shell/app-shell.tsx`、`src/components/shell/shell-chrome-context.tsx` | App Shell、侧栏槽位、搜索、创建、帮助 FAB、快捷键、PageHeader overlay trigger 上下文 |
 | page | `src/pages/*` | A–E 页面模式 |
 | shared chrome | `src/components/shared/chrome.tsx` | PageHeader / Toolbar / empty / error / skeleton |
 | ui primitives | `src/components/ui/` | shadcn 生成物，不放业务 |

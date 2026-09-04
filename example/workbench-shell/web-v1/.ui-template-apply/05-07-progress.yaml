@@ -4,7 +4,7 @@ phase_5:
   routes: [/ws-alpha/inbox]
   states: [loading, data, empty, error]
   rule_ids: [NN-001, NN-014, NN-015, LAYOUT-004, RESP-001, ROUTE-004]
-  notes: 代表切片覆盖 shell、URL item 详情、骨架、键盘搜索 ⌘K、1440/1100/900 视口。
+  notes: 代表切片覆盖 inset 画布、PageHeader overlay trigger、URL item 详情、骨架、键盘搜索 ⌘K、1440/1100/900 视口。structural chrome 证据不标 profile-verified。
 phase_6:
   routes:
     - /:workspaceId/inbox

@@ -4,7 +4,7 @@ template:
   version: 2.0.0
   digest:
     algorithm: sha256-canonical-json-v1
-    value: 36b5a502ad0e2ab0945f1826f69c003f3e0041180a8dabb6080c16c2636ef161
+    value: 80435742401316c479a9d24ded637f3d64ef6fc4ae005d8ecc9ec8204870ca54
 tokens_digest:
   algorithm: sha256-canonical-json-v1
   value: 507960a802ad6275fa7e3b2eb8d4bd221eb2c5c08fce882a496c565f9539dfa9
@@ -409,6 +409,10 @@ mappings:
 - token_path: layout.page-gutter
   project: --page-gutter
   origin: source
+- token_path: spacing.allowed
+  project: --shell-inset
+  origin: source
+  note: 取 allowed 中的 8px 作为项目自选 inset 画布净空；非 chrome profile token，不得标 profile-verified
 - token_path: layout.page-header-height
   project: --page-header-height
   origin: source

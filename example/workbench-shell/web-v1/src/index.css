@@ -106,6 +106,7 @@
   --page-gutter: 16px;
   --page-header-height: 48px;
   --toolbar-height: 48px;
+  --shell-inset: 8px;
   --sidebar-default-width: 256px;
   --sidebar-min-width: 200px;
   --sidebar-max-width: 360px;

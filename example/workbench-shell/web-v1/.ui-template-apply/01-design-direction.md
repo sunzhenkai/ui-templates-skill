@@ -29,6 +29,26 @@ persisted: false
 fallback: 使用 workbench-shell tokens.yaml 的中性浅暗双主题与 Inter。
 ```
 
+```yaml
+intent: overlay-header-trigger
+mode: domain
+terms: [workbench, overlay, navigation]
+attempts: 2
+query: "workbench overlay navigation"
+retry: "header overlay trigger"
+top_identity:
+  id: Sticky Navigation
+  name: Sticky Navigation
+  source: ui-ux-pro-max/ux
+  platform: web
+verified: false
+selected: false
+abstained: true
+reason: 首轮命中 sticky nav/breadcrumb，重试命中 transform 动效，均与 PageHeader overlay trigger 无关。
+persisted: false
+fallback: 按 @RESP-001 与 platforms/web.md，overlay 触发器放在 PageHeader，不得画布角悬浮。
+```
+
 ## 偏离
 
-无 token 值偏离。project-init 默认 Geist 字体已替换为 `typography.family.body` 的 Inter Variable。
+无 token 值偏离。项目自选 inset 画布净空映射 `spacing.allowed` 的 8px → `--shell-inset`，不新增模板 token。

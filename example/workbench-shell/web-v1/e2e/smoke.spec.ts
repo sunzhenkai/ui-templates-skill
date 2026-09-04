@@ -42,6 +42,8 @@ test('phase8: shell tokens, scroll owner, responsive, url restore', async ({ pag
     const cs = (el: Element | null) => (el ? getComputedStyle(el) : null)
     const rootCs = getComputedStyle(root)
     const bodyCs = getComputedStyle(document.body)
+    const shellBox = shell?.getBoundingClientRect()
+    const canvasBox = canvas?.getBoundingClientRect()
     return {
       htmlOverflow: rootCs.overflow,
       bodyOverflow: bodyCs.overflow,
@@ -50,6 +52,12 @@ test('phase8: shell tokens, scroll owner, responsive, url restore', async ({ pag
       pageCanvasBg: cs(canvas)?.backgroundColor,
       headerHeight: header?.getBoundingClientRect().height ?? null,
       sidebarMode: document.querySelector('[data-slot="app-sidebar"]')?.getAttribute('data-mode'),
+      shellVariant: shell?.getAttribute('data-shell-variant'),
+      insetTop: shellBox && canvasBox ? Math.round(canvasBox.top - shellBox.top) : null,
+      insetRight: shellBox && canvasBox ? Math.round(shellBox.right - canvasBox.right) : null,
+      insetBottom: shellBox && canvasBox ? Math.round(shellBox.bottom - canvasBox.bottom) : null,
+      canvasRadius: cs(canvas)?.borderTopRightRadius ?? null,
+      slotOrder: [...document.querySelectorAll('[data-slot^="slot-"]')].map((el) => el.getAttribute('data-slot')),
       h1: document.querySelector('h1')?.textContent,
       currentNav: document.querySelector('[aria-current="page"]')?.textContent ?? document.querySelector('a[aria-current="page"]')?.getAttribute('href'),
     }
@@ -60,6 +68,10 @@ test('phase8: shell tokens, scroll owner, responsive, url restore', async ({ pag
   expect(metrics.htmlOverflow === 'hidden' || metrics.bodyOverflow === 'hidden').toBeTruthy()
   expect(metrics.headerHeight).toBeGreaterThan(40)
   expect(metrics.sidebarMode).toBe('expanded')
+  expect(metrics.shellVariant).toBe('inset')
+  expect(metrics.insetTop).toBeGreaterThanOrEqual(8)
+  expect(metrics.insetRight).toBeGreaterThanOrEqual(8)
+  expect(metrics.slotOrder?.slice(0, 3)).toEqual(['slot-workspace-switcher', 'slot-search', 'slot-compose'])
 
   await page.setViewportSize({ width: 1100, height: 800 })
   await page.waitForTimeout(200)
@@ -72,7 +84,19 @@ test('phase8: shell tokens, scroll owner, responsive, url restore', async ({ pag
   const overlay = await page.locator('[data-slot="app-sidebar"]').count()
   const trigger = page.getByRole('button', { name: '打开导航' })
   await expect(trigger).toBeVisible()
-  fs.writeFileSync(path.join(evidenceDir, 'phase8-overlay.json'), JSON.stringify({ overlaySidebarInLayout: overlay, trigger: true }))
+  const header = page.locator('[data-slot="page-header"]')
+  const triggerBox = await trigger.boundingBox()
+  const headerBox = await header.boundingBox()
+  const triggerInHeader = Boolean(
+    triggerBox &&
+      headerBox &&
+      triggerBox.x >= headerBox.x - 1 &&
+      triggerBox.y >= headerBox.y - 1 &&
+      triggerBox.x + triggerBox.width <= headerBox.x + headerBox.width + 1 &&
+      triggerBox.y + triggerBox.height <= headerBox.y + headerBox.height + 1,
+  )
+  fs.writeFileSync(path.join(evidenceDir, 'phase8-overlay.json'), JSON.stringify({ overlaySidebarInLayout: overlay, trigger: true, triggerInHeader }))
+  expect(triggerInHeader).toBeTruthy()
 
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/ws-alpha/incidents?status=in-progress&q=gateway', { waitUntil: 'domcontentloaded' })
