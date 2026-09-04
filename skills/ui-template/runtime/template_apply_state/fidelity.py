@@ -25,6 +25,14 @@ def project_layout(profile: dict[str, Any] | None) -> list[str]:
         identities.append(f"layout:{scene_id}:fill:{scene.get('fill')}")
         identities.append(f"layout:{scene_id}:wrap:{scene.get('wrap')}")
         identities.append(f"layout:{scene_id}:shrink:{scene.get('shrink')}")
+        if scene.get("shell_variant"):
+            identities.append(f"shell_variant:{scene_id}:{scene.get('shell_variant')}")
+        for slot in scene.get("slots") or []:
+            if isinstance(slot, dict):
+                identities.append(f"slot:{slot.get('role')}:{slot.get('order')}")
+        for anchor in scene.get("chrome_anchors") or []:
+            if isinstance(anchor, dict):
+                identities.append(f"anchor:{anchor.get('role')}→{anchor.get('region')}")
         for domain in scene.get("scroll_domains") or []:
             if isinstance(domain, dict):
                 identities.append(f"scroll:{scene_id}:{domain.get('id')}:{domain.get('axis')}:{domain.get('owner')}")
@@ -78,7 +86,7 @@ def derive_scenario_ids(profile: dict[str, Any] | None) -> list[str]:
         return []
     identities: list[str] = []
     for item in project_layout(profile):
-        if item.startswith("scroll:") or item.startswith("overlay:") or item.startswith("layout-negative:"):
+        if item.startswith(("scroll:", "overlay:", "layout-negative:", "shell_variant:", "slot:", "anchor:")):
             identities.append(f"phase8:{item}")
     for item in project_geometry_state(profile):
         identities.append(f"phase8:{item}")

@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | Phase 0 — Intake | schema、coverage、目标平台、A–E route scope、legacy 文档详情 | @TOKEN-001、@ROUTE-005、@ROUTE-006、@ROUTE-007、@ROUTE-008、@ROUTE-009、@RESP-001 | validation 结果与 included/deferred/excluded decision | schema/evidence/rule refs 可解析；每个 route 映射 A–E；legacy 文档详情映射 B 或 excluded；Web/Mobile/Desktop 路径不混同。 |
 | Phase 1 — Design direction & token freeze | 四层表面、双主题、动态 token scale、focus | @NN-002、@NN-005、@NN-009、@NN-012、@TOKEN-002、@TOKEN-003、@TOKEN-004、@TOKEN-005、@TOKEN-006 | token map、active evidence refs 与 expected/actual mapping | 所有 consumable token 已映射；无 prose 重算或未解释值；focus expected 可追踪。 |
-| Phase 2 — IA/layout/routes | shell、A–E、URL、scroll owner、Web 响应矩阵 | @NN-001、@NN-010、@LAYOUT-001、@LAYOUT-004、@ROUTE-001、@RESP-001 | route/layout artifact 与 rule-ID matrix | 每个 included route 有唯一 page mode、状态恢复、scroll owner 与平台响应行为。 |
+| Phase 2 — IA/layout/routes | shell、A–E 映射、URL、scroll owner、Web 响应矩阵；无 sidecar 时 chrome unavailable | @NN-001、@NN-010、@LAYOUT-001、@LAYOUT-004、@ROUTE-001、@RESP-001 | route/layout artifact 与 rule-ID matrix | 每个 included route 有唯一 page mode、状态恢复、scroll owner 与平台响应行为；不得把 flush 硬切写成已验证来源变体。 |
 | Phase 3 — Project structure | 目标项目现场边界与命令归属 | @LAYOUT-002、@LAYOUT-003 | 通用 Phase 3 artifact | 现场决定不反向写入模板；shell/global/page-mode 责任可被后续证据定位。 |
 | Phase 4 — Component inventory | included route 的语义、状态、键盘与浮层 | @NN-012、@NN-016、@AX-001、@AX-017、@AX-031、@AX-041、@AX-046、@AX-050、@AX-051、@AX-061 | component inventory 与 AX rule refs | 交互无嵌套；icon-only、focus、非颜色状态和浮层返回均有 expected。 |
 | Phase 5 — Representative slice | 一个端到端 route 的 shell、模式、状态与窄路径 | @NN-014、@NN-015、@LAYOUT-004、@RESP-001、@ROUTE-004 | current-source 浏览器/测试 evidence refs | 代表切片同时覆盖 shell、URL、loading/empty/error、keyboard 与 computed style。 |

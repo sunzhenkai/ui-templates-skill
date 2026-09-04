@@ -48,6 +48,7 @@ PYTHON_OPERATIONS = frozenset({
     "canonical_digest_file",
     "validate_mutated_profile",
     "capture_reproducibility",
+    "capture_error",
     "project_ids",
     "facet_recovery",
     "example_path_rejected",
@@ -248,6 +249,8 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             shutil.copytree(source, dest)
             template_dir = next(path for path in dest.iterdir() if path.is_dir() and (path / "fidelity.yaml").is_file())
             original = load_yaml(template_dir / "fidelity.yaml")
+            original_spec = (template_dir / "spec.md").read_text(encoding="utf-8") if (template_dir / "spec.md").is_file() else None
+            original_meta = (template_dir / "meta.yaml").read_bytes() if (template_dir / "meta.yaml").is_file() else None
             for mutation in assertion.get("mutations") or []:
                 kind = mutation.get("kind")
                 if kind == "delete_sidecar":
@@ -257,6 +260,15 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                         spec.write_text(
                             spec.read_text(encoding="utf-8").replace("[fidelity.yaml](fidelity.yaml)", "core v2 files"),
                             encoding="utf-8",
+                        )
+                    if mutation.get("layout_confidence") and (template_dir / "meta.yaml").is_file():
+                        meta = load_yaml(template_dir / "meta.yaml")
+                        confidence = meta.setdefault("confidence", {})
+                        confidence["layout"] = mutation["layout_confidence"]
+                        if mutation.get("overall_confidence"):
+                            confidence["overall"] = mutation["overall_confidence"]
+                        (template_dir / "meta.yaml").write_text(
+                            yaml.safe_dump(meta, sort_keys=False, allow_unicode=True), encoding="utf-8",
                         )
                 elif kind == "replace_sidecar":
                     sidecar = load_yaml(resource_path(root, mutation["sidecar"]))
@@ -285,6 +297,10 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                 (template_dir / "fidelity.yaml").write_text(
                     yaml.safe_dump(original, sort_keys=False, allow_unicode=True), encoding="utf-8",
                 )
+                if original_spec is not None:
+                    (template_dir / "spec.md").write_text(original_spec, encoding="utf-8")
+                if original_meta is not None:
+                    (template_dir / "meta.yaml").write_bytes(original_meta)
         return {"results": results, "all_failed": all(item["failed"] and item["present"] for item in results)}
     if operation == "capture_reproducibility":
         import os
@@ -328,6 +344,64 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                 "conformance": profile.get("conformance"),
                 "revision": revision,
             }
+    if operation == "capture_error":
+        import os
+        import tempfile
+        import shutil
+        from template_authoring.capture import CaptureError, capture_from_files
+
+        source_fixture = resource_path(root, assertion["source"])
+        request_fixture = resource_path(root, assertion["request"])
+        with tempfile.TemporaryDirectory() as temp:
+            source = Path(temp) / "source"
+            shutil.copytree(source_fixture, source)
+            graphs = list(source.glob("ui-source-graph.*"))
+            graph = graphs[0] if graphs else None
+            if assertion.get("drop_graph") and graph is not None:
+                graph.unlink()
+                graph = None
+            if assertion.get("drop_chrome") and graph is not None:
+                document = load_yaml(graph)
+                for usage in document.get("usages") or []:
+                    if usage.get("id") == "usage.shell":
+                        usage["facts"] = [
+                            item for item in usage.get("facts") or []
+                            if item.get("property") in {"root_scroll", "arrangement"}
+                        ]
+                graph.write_text(yaml.safe_dump(document, sort_keys=False, allow_unicode=True), encoding="utf-8")
+            if graph is not None:
+                subprocess.run(["git", "init", "-q"], cwd=source, check=True)
+                subprocess.run(["git", "config", "user.name", "UI Fixture"], cwd=source, check=True)
+                subprocess.run(["git", "config", "user.email", "fixture@example.invalid"], cwd=source, check=True)
+                subprocess.run(["git", "add", graph.name], cwd=source, check=True)
+                env = dict(os.environ)
+                env.update({"GIT_AUTHOR_DATE": "2026-01-01T00:00:00Z", "GIT_COMMITTER_DATE": "2026-01-01T00:00:00Z"})
+                subprocess.run(["git", "commit", "-q", "-m", "fixed literal graph fixture"], cwd=source, check=True, env=env)
+                revision = subprocess.run(
+                    ["git", "rev-parse", "HEAD"], cwd=source, check=True, text=True, capture_output=True,
+                ).stdout.strip()
+            else:
+                subprocess.run(["git", "init", "-q"], cwd=source, check=True)
+                subprocess.run(["git", "config", "user.name", "UI Fixture"], cwd=source, check=True)
+                subprocess.run(["git", "config", "user.email", "fixture@example.invalid"], cwd=source, check=True)
+                (source / "README.md").write_text("empty source\n", encoding="utf-8")
+                subprocess.run(["git", "add", "README.md"], cwd=source, check=True)
+                env = dict(os.environ)
+                env.update({"GIT_AUTHOR_DATE": "2026-01-01T00:00:00Z", "GIT_COMMITTER_DATE": "2026-01-01T00:00:00Z"})
+                subprocess.run(["git", "commit", "-q", "-m", "empty source"], cwd=source, check=True, env=env)
+                revision = subprocess.run(
+                    ["git", "rev-parse", "HEAD"], cwd=source, check=True, text=True, capture_output=True,
+                ).stdout.strip()
+            request = load_yaml(request_fixture)
+            request["source_revision"] = revision
+            request["graph_path"] = assertion.get("graph_path") or (graph.name if graph is not None else "ui-source-graph.yaml")
+            request_path = Path(temp) / "capture-request.yaml"
+            request_path.write_text(yaml.safe_dump(request, sort_keys=False), encoding="utf-8")
+            try:
+                capture_from_files(request_path, source)
+            except CaptureError as exc:
+                return {"status": "failed", "code": exc.code, "raised": True}
+            return {"status": "captured", "code": None, "raised": False}
     if operation == "project_ids":
         from template_apply_state.fidelity import derive_scenario_ids, project_geometry_state, project_layout
         from template_validation.fidelity import canonicalize, load_fidelity
@@ -342,6 +416,7 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "scenarios": scenarios,
             "layout_stable": layout == project_layout(canonicalize(data)),
             "scenario_stable": scenarios == derive_scenario_ids(canonicalize(data)),
+            "has_chrome": any(item.startswith("shell_variant:") or item.startswith("slot:") or item.startswith("anchor:") for item in layout),
         }
     if operation == "facet_recovery":
         from template_apply_state.fidelity import facet_change_phase
@@ -352,10 +427,14 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
         layout_changed["layout_scenes"][1]["wrap"] = "wrap"
         state_changed = json.loads(json.dumps(data))
         state_changed["state_presentations"][0]["text_decoration"] = "underline"
+        chrome_changed = json.loads(json.dumps(data))
+        if chrome_changed.get("layout_scenes"):
+            chrome_changed["layout_scenes"][0]["shell_variant"] = "flush"
         return {
             "unchanged": facet_change_phase(data, data),
             "layout_phase": facet_change_phase(data, layout_changed),
             "state_phase": facet_change_phase(data, state_changed),
+            "chrome_phase": facet_change_phase(data, chrome_changed),
         }
     from template_validation.validator import validate_paths
 

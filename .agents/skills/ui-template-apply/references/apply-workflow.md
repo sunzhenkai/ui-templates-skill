@@ -37,7 +37,7 @@ Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题�
 
 ## Phase 2 — IA/layout/routes（`02-routes.yaml`）
 
-记录 route、页面模式、入口/主要动作、URL params、shell/scroll owner、响应式矩阵及无效状态；跨页目的地为 link。将 included layout scene 投影为稳定 constraint IDs（region/arrangement/fill/shrink/wrap/scroll/overlay/responsive），不要求目标 DOM 或技术栈同构。Gate：每个 included route 与 coverage/page mode 有确定映射；Board non-wrap 与独立 scroll owners 不得被根滚动或自动换行替代。
+记录 route、页面模式、入口/主要动作、URL params、shell/scroll owner、响应式矩阵及无效状态；跨页目的地为 link。将 included layout scene 投影为稳定 constraint IDs（region/arrangement/fill/shrink/wrap/scroll/overlay/responsive、`shell_variant`、`slot:<role>:<order>`、`anchor:<role>→<region>`），不要求目标 DOM 或技术栈同构。inset 不得改 flush；header-trigger 不得改画布悬浮。Gate：每个 included route 与 coverage/page mode 有确定映射；Board non-wrap 与独立 scroll owners 不得被根滚动或自动换行替代。
 
 ## Phase 3 — Project structure（`03-structure.md`）
 
@@ -59,7 +59,7 @@ Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题�
 
 记录必须符合 schema v2 `verification.schema.json`，`kind: phase-8-verification`，顶层绑定当前 template digest、source identity、build identity、browser identity。每条 UUID record 必含：rule ID、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。evidence 文件放 `evidence/`；截图、trace、AX、console、computed-style 或脚本输出必须可定位。
 
-按模板 coverage、included route 和 fidelity records 确定性生成 required scenario IDs，不使用固定“三视口/十项”等数量代替模板声明。每条 UUID record 必含：rule ID、profile record ID（若有）、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
+按模板 coverage、included route 和 fidelity records 确定性生成 required scenario IDs，不使用固定“三视口/十项”等数量代替模板声明。chrome composition scenario（inset 画布几何、header-trigger bounding box、槽位顺序）只从 structural sidecar 派生；无 sidecar 时这些 scenario unavailable，且不得标 profile-verified。每条 UUID record 必含：rule ID、profile record ID（若有）、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
 
 ## Phase 9 — Review & feedback（`09-review.md`, `feedback/`）
 
@@ -96,7 +96,7 @@ python3 scripts/check_template_apply_state.py feedback-merge .ui-template-apply/
 
 - scope 变化或 template identity/digest 变化 → 最早 Phase 0；
 - token semantic digest 变化 → 最早 Phase 1；
-- layout profile 语义变化（scroll owner、region、wrap/shrink、overlay、responsive）→ 最早 Phase 2，并使 Phase 8 相关证据过期；
+- layout profile 语义变化（scroll owner、region、wrap/shrink、overlay、responsive、chrome composition）→ 最早 Phase 2，并使 Phase 8 相关证据过期；
 - geometry/state profile 语义变化 → 最早 Phase 4，并使 Phase 8 相关证据过期；
 - artifact 缺失、路径越界或 digest 不匹配 → 该 artifact 所属最早 phase；
 - source/build identity 变化、Phase 8 缺失或身份不一致 → 最早 Phase 8；

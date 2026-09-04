@@ -44,9 +44,17 @@ python3 runtime/capture_repo_fidelity.py capture-request.yaml \
 
 `--source-root` 必须是本会话用户给出的路径，禁止从 provenance、sibling 或 `/tmp` 猜测。没有 session source 就不要运行 capture，也不要因此去问历史路径。
 
-这不是 TSX parser：runtime 不用 regex 冒充 AST，不解释 class/source syntax，**不执行来源代码**（包括 package script、compiler、bundler、hook 或来源程序）。`.tsx`、`.jsx`、`.js`、任意 source tree 猜测及未知 graph schema/profile 一律 `unsupported`；调用方必须先由获授权的可信工具在 session source 内显式生成 literal graph，或收窄/改用 style-only，禁止静默抽样。
+这不是 TSX parser：runtime 不用 regex 冒充 AST，不解释 class/source syntax，**不执行来源代码**（包括 package script、compiler、bundler、hook 或来源程序）。`.tsx`、`.jsx`、`.js`、任意 source tree 猜测及未知 graph schema/profile 一律 `unsupported`；调用方必须先由获授权的可信工具在 session source 内显式生成 literal graph，或收窄/改用 style-only，禁止静默抽样。禁止用散文、代表页面截图或抽样 TSX 代替 tracked literal graph。
 
-Capture 从声明 scope 的 canonical theme/entry/definitions 出发，沿显式 imports 形成 usage closure，稳定输出：definitions、exports、imports、usages、exclusions、dynamic/unresolved、facts、计数、graph digest 与 closure digest。完成标准是 scope closure 完整，不再是“3–5 个代表组件”。超限时 receipt 的 closure 为空并报告 `limit-exceeded`；动态表达式、歧义或同 context/slot 冲突进入 unresolved，structural Generate-from-source 必须停止。
+可写入 required shell slot 占位的骨架 graph（不解析源码）：
+
+```bash
+python3 runtime/capture_repo_fidelity.py --init-source-graph ui-source-graph.yaml
+```
+
+骨架 `closure_complete` 为 false 且 facts 为空，capture 仍 incomplete；补齐 chrome facts（`shell_variant`、有序 `slot_role`/`slot_order`、`header-trigger` 与 `chat-fab`）之前不得 Index。
+
+Capture 从声明 scope 的 canonical theme/entry/definitions 出发，沿显式 imports 形成 usage closure，稳定输出：definitions、exports、imports、usages、exclusions、dynamic/unresolved、facts、计数、graph digest 与 closure digest。完成标准是 scope closure 完整，不再是“3–5 个代表组件”。shell usage 缺 chrome composition 时报告 `CHROME_COMPOSITION_INCOMPLETE`，closure 不得 complete。超限时 receipt 的 closure 为空并报告 `limit-exceeded`；动态表达式、歧义或同 context/slot 冲突进入 unresolved，structural Generate-from-source 必须停止。
 
 ## Context 与 negative facts
 

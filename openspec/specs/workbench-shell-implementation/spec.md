@@ -4,91 +4,105 @@
 
 ## Requirements
 
-### Requirement: 完整实施 playbook
-`workbench-shell` SHALL 提供 `implementation/` playbook，完整覆盖 App Shell、五种页面模式、页面 chrome、核心组件、全局浮层、状态反馈、响应式降级、代码目录结构、可访问性和浏览器验收。playbook SHALL 引用 `spec.md` 与 `platforms/*.md`，不重复定义相同规则。
-
-#### Scenario: 检查页面模式覆盖
-- **WHEN** reviewer 阅读 implementation playbook
-- **THEN** 能找到列表/集合模式、主从双栏模式、文档详情模式、设置页模式和聚合网格模式的实现与验收路径
-
-#### Scenario: 检查全局能力覆盖
-- **WHEN** consumer 准备实现一个 workbench 应用
-- **THEN** playbook 能指导实现全局搜索、创建入口、Toast、确认对话框、快捷键帮助、进度反馈和右下角 FAB
-
-#### Scenario: playbook 与主 spec 冲突
-- **WHEN** implementation playbook 中出现与 `spec.md` 不同的 chrome 高度、断点或颜色规则
-- **THEN** consumer 以 `spec.md` 为准，并修复 implementation playbook
-
 ### Requirement: 分阶段实现顺序
-workbench-shell playbook SHALL 要求按以下顺序推进：范围确认、设计 tokens、代码结构、App Shell、页面 chrome、基础组件、代表性页面切片、五种页面模式、全局浮层、响应式状态、浏览器验证和 design review。App Shell 与页面 chrome SHALL 先于完整页面模式实现。
+workbench-shell 的 `apply/` 指南 SHALL 将模板专属步骤映射到通用 Apply Phase 0–9，并 SHALL 要求按范围确认、token freeze、IA/route、项目现场代码结构、App Shell、组件、代表切片、included 页面模式、全局系统、浏览器验证和 review 顺序推进。模板指南 SHALL 只引用设计规则与取证方式，不定义消费项目工程结构。
 
 #### Scenario: 先写页面再写 Shell
-- **WHEN** consumer 在 App Shell 未完成前实现完整列表页
-- **THEN** playbook 判定阶段顺序不通过，并要求先完成 Shell 与页面 chrome
+- **WHEN** consumer 在 App Shell 与页面 chrome 未通过代表切片 gate 前批量实现完整页面
+- **THEN** `apply/` 指南判定阶段顺序不通过，并要求回到对应通用 phase
 
 #### Scenario: 先完成代表性切片
-- **WHEN** consumer 完成基础组件
-- **THEN** playbook 要求先实现一个端到端代表页面，再批量扩展其余页面模式
+- **WHEN** consumer 完成基础组件和 shell
+- **THEN** 指南要求先实现一个端到端代表页面并保留浏览器证据，再扩展其余 included 模式
 
-### Requirement: 默认技术栈 adapter
-workbench-shell playbook SHALL 提供默认 React + Vite + Tailwind + shadcn 技术栈 adapter，说明该组合下的目录结构、组件来源、样式 token 和验收方式。模板主 spec SHALL 继续保持技术栈无关，stack adapter SHALL 只补充实现映射。
+#### Scenario: 恢复时阶段编号不一致
+- **WHEN** 模板步骤与通用 Phase 0–9 使用不同名称
+- **THEN** checkpoint 以通用 phase ID 为唯一状态，模板步骤只作为映射标签
 
-#### Scenario: 使用默认技术栈
-- **WHEN** consumer 选择 React + Vite + Tailwind + shadcn
-- **THEN** playbook 给出基础组件来源、样式组织、路由/状态建议和目录映射
+### Requirement: 技术栈无关 apply 指南
+workbench-shell SHALL 提供 optional `apply/` 指南，用于映射通用 Apply 阶段、引用模板规则 ID 和规定取证方式。该指南 SHALL 不包含默认框架、依赖、代码目录、状态库、API/mock 分层或可运行 starter。
 
-#### Scenario: 使用其他技术栈
-- **WHEN** consumer 使用 Vue、Svelte 或服务端渲染等非默认栈
-- **THEN** playbook 要求继续遵守 `spec.md` 的布局、密度、状态和可访问性规则，并自行建立 stack adapter
+#### Scenario: 消费者选择任意技术栈
+- **WHEN** consumer 使用 React、Vue、原生平台或其他技术栈
+- **THEN** 读取相同的 workbench-shell 设计规则与 `apply/` gate，并在消费项目中自行记录 stack adapter
 
-### Requirement: 代码目录契约
-playbook SHALL 定义 App Shell、route/page、layout region、business feature、基础 UI 组件、通用工具、状态管理、mock/API 边界和测试文件的存放约定。每个新增文件 SHALL 能根据用途找到唯一主目录。
+#### Scenario: apply 指南与 spec 冲突
+- **WHEN** `apply/` 的顺序或验收说明暗含与 `spec.md` 不同的设计结果
+- **THEN** consumer 以 `spec.md` 为准，使冲突 gate 失败并产出反馈
 
-#### Scenario: 新增业务组件
-- **WHEN** consumer 新增只属于某个业务域的卡片或表单
-- **THEN** 目录契约指定该文件归属该业务域，而不是通用基础组件目录
-
-#### Scenario: 新增跨页面组件
-- **WHEN** consumer 新增 Dialog、Toast、Table shell 或 PageHeader
-- **THEN** 目录契约将其归入共享 layout 或基础组件目录
+#### Scenario: apply 指南复制精确值
+- **WHEN** `apply/` 重复维护颜色、字号、间距、断点或组件几何值
+- **THEN** 模板验证失败，并要求改为引用 token 或规则 ID
 
 ### Requirement: App Shell 完整实现
-playbook SHALL 指导实现三种平台外壳的 web 路径默认行为，包括应用底色、浮岛侧栏、画布卡片、48px 页头、窄屏触发器、移动抽屉、100svh 不滚动和内容区滚动。路由型侧栏项 SHALL 使用真实 link，当前项 SHALL 使用当前页标记，抽屉内导航后 SHALL 自动关闭。
+workbench-shell 设计规则 SHALL 定义 Web 与 Desktop 的 shell 表面、侧栏、画布、页头、覆盖导航、滚动归属和可访问性行为。Web 在不小于 1280px 时使用展开侧栏，1024–1279px 使用折叠侧栏，小于 1024px 使用带可访问触发器的 288px 覆盖 Sheet；根容器保持 100svh 且不滚动。
+
+#### Scenario: 展开桌面宽度渲染
+- **WHEN** Web viewport 不小于 1280px
+- **THEN** App Shell 显示展开浮岛侧栏、画布卡片和模板定义的外层呼吸边
 
 #### Scenario: 桌面宽度渲染
-- **WHEN** viewport 不小于 1024px
-- **THEN** App Shell 显示常驻浮岛侧栏、8px 呼吸边和圆角画布卡片，整页不出现滚动条
+- **WHEN** Web viewport 不小于 1024px
+- **THEN** App Shell 按 1024–1279px 折叠侧栏或不小于 1280px 展开侧栏的矩阵渲染，并保持画布与根滚动规则
+
+#### Scenario: compact 宽度渲染
+- **WHEN** Web viewport 为 1024–1279px
+- **THEN** 侧栏以模板定义的折叠形态常驻，核心导航仍可达且画布不产生意外根滚动
 
 #### Scenario: 窄屏打开导航
-- **WHEN** viewport 小于 1024px 且用户打开导航触发器
-- **THEN** Shell 显示可关闭的覆盖式抽屉，触发器保持可访问
+- **WHEN** Web viewport 小于 1024px 且用户激活页头导航触发器
+- **THEN** Shell 显示可关闭的 288px 覆盖 Sheet，触发器有 accessible name
 
 #### Scenario: 抽屉内选择路由
-- **WHEN** 用户在抽屉中选择一个真实路由
-- **THEN** URL 更新、目标页面渲染、当前导航标记正确，且抽屉自动关闭
+- **WHEN** 用户在覆盖 Sheet 中选择真实路由
+- **THEN** URL 更新、当前项语义正确、目标页面渲染，Sheet 关闭并按约定恢复焦点
 
 ### Requirement: 五种页面模式全覆盖
-playbook SHALL 分别定义并验收五种页面模式：列表/集合模式、主从双栏模式、文档详情模式、设置页模式和聚合网格模式。每种模式 SHALL 包含结构、滚动归属、状态表达、响应式降级、空态/加载态/错误态和可访问性要求。
+workbench-shell SHALL 以技术栈无关的 A–E 模式定义 included route 的结构与验收：A 常驻集合、B 主从、C 设置页签、D 聊天/时间线、E 聚合网格。每种模式 SHALL 定义滚动归属、状态表达、响应式降级、空/加载/错误状态和可访问性；未纳入范围的模式 SHALL 在 Intake 显式 excluded。
+
+#### Scenario: A 常驻集合模式
+- **WHEN** consumer 实现列表、表格、卡片集合、看板或泳道
+- **THEN** 页面使用稳定 PageHeader/Toolbar、内部滚动、筛选排序、状态和 URL 恢复规则
+
+#### Scenario: B 主从模式
+- **WHEN** viewport 降到模板 compact 或 mobile 路径
+- **THEN** 主从布局按规则降级为单列，选中项保留在 URL，返回后可恢复
+
+#### Scenario: C 设置页签模式
+- **WHEN** viewport 在宽屏与窄屏之间切换
+- **THEN** 设置页签在纵向列与横向条之间切换，当前页签可由 URL 恢复
+
+#### Scenario: D 聊天或时间线模式
+- **WHEN** consumer 实现会话、活动流或时间线页面
+- **THEN** 会话列表、内部滚动时间线和底部 composer 的滚动与固定边界均可独立验收
+
+#### Scenario: E 聚合网格模式
+- **WHEN** consumer 实现指标或卡片聚合页
+- **THEN** 网格随容器宽度变化，并覆盖层级、hover、空态和创建入口
 
 #### Scenario: 列表模式
-- **WHEN** consumer 实现列表或集合页
-- **THEN** playbook 覆盖 48px 集合页头、内部滚动列表、筛选排序、分页、行交互和 URL 恢复
+- **WHEN** consumer 实现列表、表格、看板或其他集合页
+- **THEN** 该页面映射到 A 常驻集合模式，并按 A 模式完成结构、状态、滚动和 URL 验收
 
 #### Scenario: 主从双栏模式
-- **WHEN** viewport 降到 compact 断点
-- **THEN** 双栏切换为单栏，选中项保留在 URL，返回列表后原选中项仍可恢复
+- **WHEN** consumer 实现列表与详情并列的页面
+- **THEN** 该页面映射到 B 主从模式，并在 compact/mobile 下验证单列降级与 URL 恢复
 
 #### Scenario: 文档详情模式
-- **WHEN** consumer 实现详情页
-- **THEN** playbook 覆盖面包屑祖先链接、主列限宽、属性栏、移动端属性降级和 FAB 安全区
+- **WHEN** legacy route inventory 将文档详情列为独立模式
+- **THEN** Intake 将其映射到 B 主从模式的详情槽位或显式 excluded，不再把它计为 A–E 之外的第六种必需模式
 
 #### Scenario: 设置页模式
-- **WHEN** viewport 在桌面与移动宽度之间切换
-- **THEN** 设置页签从竖排分组切换为顶部横向条，当前页签写入 URL 且可刷新恢复
+- **WHEN** consumer 实现设置页
+- **THEN** 该页面映射到 C 设置页签模式，并验证宽窄屏页签与 URL 状态
 
 #### Scenario: 聚合网格模式
-- **WHEN** consumer 实现卡片集合页
-- **THEN** playbook 覆盖响应式网格、卡片信息层级、悬停态、空态和创建入口
+- **WHEN** consumer 实现卡片或指标集合
+- **THEN** 该页面映射到 E 聚合网格模式，并验证容器响应、层级和状态
+
+#### Scenario: 模式未纳入范围
+- **WHEN** 本次实现不需要 A–E 中某个模式
+- **THEN** Intake 将其标记为 excluded 并说明理由，不得伪造覆盖证据
 
 ### Requirement: 页面 chrome 与导航语义
 playbook SHALL 规定集合页头、面包屑页头和简单页头的实现方式，保持 48px 高度、16px 页左距、标题截断、计数和动作区一致。面包屑祖先 SHALL 是真实可导航 link，叶子 SHALL 不渲染为交互控件，面包屑页 SHALL 保留明确的页面标题语义。
@@ -132,19 +146,31 @@ playbook SHALL 为页面选中项、设置页签、视图切换、筛选、分�
 - **THEN** 页面恢复上一 URL 状态，导航高亮与内容保持一致
 
 ### Requirement: 响应式与平台路径
-playbook SHALL 消除断点与平台路径的歧义，明确 web 路径在 compact 和 mobile 宽度下的侧栏、页头触发器、页面模式和动作降级；同时单独说明 mobile 平台路径的覆盖抽屉和 desktop 平台路径的顶行 chrome。行为矩阵 SHALL 可直接验收。
+workbench-shell SHALL 以可直接验收的行为矩阵区分 Web expanded、Web compact、Web overlay、Mobile 平台 shell 和 Desktop 平台 chrome。断点、触发器、页头动作、页面模式与安全区 SHALL 引用 `spec.md`、tokens 和平台文档的唯一规则。
+
+#### Scenario: Web compact 宽度
+- **WHEN** Web viewport 为 1024–1279px
+- **THEN** 使用折叠侧栏和 compact 页面降级，行为与平台矩阵一致
+
+#### Scenario: Web overlay 宽度
+- **WHEN** Web viewport 小于 1024px
+- **THEN** 常驻侧栏退出布局，页头提供覆盖导航入口，且所有 included 页面保持一致
 
 #### Scenario: web compact 宽度
-- **WHEN** web 应用 viewport 进入 768–1023px
-- **THEN** 画布内容按 compact 规则降级，页头提供导航入口，且实施行为与矩阵一致
+- **WHEN** Web viewport 为 768–1023px
+- **THEN** 使用小于 1024px 的 overlay 路径，页头提供导航入口，页面内容按 compact 规则降级
 
 #### Scenario: web mobile 宽度
-- **WHEN** web 应用 viewport 小于 768px
-- **THEN** playbook 明确侧栏是覆盖抽屉还是折叠形态，并保持该行为在所有页面一致
+- **WHEN** Web viewport 小于 768px
+- **THEN** 继续使用一致的覆盖导航，并按 mobile 宽度收缩动作、内容和页面模式，不与原生 Mobile 平台路径混淆
 
 #### Scenario: 页头动作降级
-- **WHEN** viewport 小于 768px
-- **THEN** 页头动作按模板规则收缩，且每个 icon-only 控件保留非空 accessible name
+- **WHEN** 可用宽度不足以显示完整动作标签
+- **THEN** 动作按模板规则收缩，所有 icon-only 控件保留非空 accessible name
+
+#### Scenario: 平台路径切换
+- **WHEN** consumer 选择 Mobile 或 Desktop 平台而非 Web 响应式路径
+- **THEN** 使用对应平台文档定义的 shell 与安全区，不把 Web 断点行为误当原生平台规则
 
 ### Requirement: 可访问性契约
 playbook SHALL 要求所有可点击操作键盘可达，图标控件有 accessible name，表单控件有关联 label，弹层管理焦点并支持关闭后返回，禁止交互控件嵌套，焦点指示可见，状态不得只依赖颜色。
@@ -162,30 +188,42 @@ playbook SHALL 要求所有可点击操作键盘可达，图标控件有 accessi
 - **THEN** playbook 要求拆分选择控件与打开目标，禁止把复选框嵌在整行按钮内
 
 ### Requirement: 浏览器与工程验收
-playbook SHALL 要求消费项目在交付前通过构建、静态检查、单元测试或等效工程检查，以及真实浏览器多视口验收。验收 SHALL 检查控制台、computed style、可访问性树、交互状态、加载/空/错误状态、URL 恢复和亮暗主题，并保留截图或可复查证据。
+workbench-shell 的 `apply/quality.md` SHALL 只定义模板专属的规则 ID、检查对象、取证方式和通过条件，并 SHALL 复用通用 Apply 的工程与浏览器证据格式。取证 SHALL 使用模板当前声明的 token 阶梯、页面模式和断点，不复制易漂移的数量或精确值清单。
 
 #### Scenario: 交付前检查
 - **WHEN** consumer 宣称 workbench 应用完成
-- **THEN** 构建、静态检查、已有测试和浏览器验收均通过
+- **THEN** included 范围的工程检查、模板规则、浏览器证据和 review 均通过或有明确用户接受记录
 
 #### Scenario: 检查字号 token
-- **WHEN** reviewer 对导航、页头、说明文字、指标数字和对话框读取 computed style
-- **THEN** 实际字号与行高匹配模板九档 token，自定义类没有被样式合并工具移除
+- **WHEN** reviewer 读取导航、页头、正文、指标和对话框 computed style
+- **THEN** 实际字号与行高匹配 `tokens.yaml` 当前声明的完整阶梯，不依赖文档中的固定“九档/十档”文字
 
 #### Scenario: 检查亮暗主题
 - **WHEN** 消费项目声明支持双主题
-- **THEN** 两套主题下背景、前景、边框、状态色和浮层均来自主题 token，且满足可读性要求
+- **THEN** 两套主题下角色键一致，实际表面与文字对比度均有可关联当前构建的证据
+
+#### Scenario: 模板步骤与通用证据重复
+- **WHEN** 通用 Apply 已生成满足同一规则 ID 的有效证据
+- **THEN** 模板 quality matrix 引用该证据，不要求维护第二份互相漂移的报告
 
 ### Requirement: workbench 模板反馈
-workbench-shell 的实现反馈 SHALL 回写到 `spec.md`、`platforms/*.md` 或 `implementation/` 中对应文件。playbook SHALL 说明哪类问题属于布局模板、哪类属于 stack adapter、哪类属于业务实现。
+workbench-shell 的可复用设计规则反馈 SHALL 指向 `spec.md`、`platforms/*.md`、`routes-and-layouts.md`、`components.md` 或 `apply/`；技术栈、代码目录、API/mock 和消费项目业务问题 SHALL 指向通用 toolchain 或消费项目产物，不得进入模板。
 
 #### Scenario: 发现通用布局缺口
-- **WHEN** 实现发现五种页面模式都缺少某类状态或安全区规则
-- **THEN** 更新 `spec.md` 或对应平台文档
+- **WHEN** 实现发现多个消费者都会遇到的页面模式、布局或安全区规则缺口
+- **THEN** feedback 记录引用对应设计文档和规则 ID，交由 Authoring 处置
+
+#### Scenario: 发现模板验收缺口
+- **WHEN** 问题属于 workbench-shell 的实施顺序或取证方式
+- **THEN** feedback 目标为 `apply/`，且不复制新的设计数值
+
+#### Scenario: 发现技术栈专属问题
+- **WHEN** 问题只出现在 React、Tailwind、shadcn、构建链路或项目目录
+- **THEN** feedback 留在通用 toolchain 或消费项目，不修改 workbench-shell 模板
 
 #### Scenario: 发现 React/Tailwind 专属问题
-- **WHEN** 问题只出现在样式合并、shadcn 组件或前端构建链路
-- **THEN** 更新默认 stack adapter 或 quality 文档，不修改技术栈无关主 spec
+- **WHEN** 问题只出现在样式合并、shadcn 组件或 React/Tailwind 构建链路
+- **THEN** 将决定写入通用 toolchain 或消费项目 stack adapter，不修改技术栈无关模板
 
 ### Requirement: Workbench 已发布模板保持可消费且不索取上游路径
 `templates/workbench-shell/` SHALL 继续作为合法 schema v2 模板被 portable 校验与 Apply baseline 消费。`meta.sources[]` SHALL 只作为并列出处身份（固定 repo revision 与已泛化 doc revision）。无本会话 session source 时，模板 SHALL 保持无 `fidelity.yaml` 的 `legacy-baseline`；Authoring/治理 SHALL NOT 向用户索要这两个来源的本地绝对路径，SHALL NOT 扫描 sibling checkout、`/tmp` 或 `example/**`，SHALL NOT 按 provenance ref clone，也 SHALL NOT 用旧模板 snapshot locator 冒充 source-direct observed records。
@@ -202,16 +240,42 @@ workbench-shell 的实现反馈 SHALL 回写到 `spec.md`、`platforms/*.md` 或
 - **WHEN**`example/workbench-shell/**` 的生成代码、样式、测试或文档发生变化
 - **THEN**workbench 校验与任何后续 profile 生成不读取、不修改也不使用该变化作为来源证据
 
+### Requirement: Workbench layout 置信度诚实降级
+在 `templates/workbench-shell/` 无 chrome-complete `fidelity.yaml` 期间，`meta.confidence.layout` SHALL 不高于 `medium`。Authoring/治理 SHALL NOT 为满足 high 而伪造 source-direct sidecar，SHALL NOT 向用户索要 source-001/source-002 的本地绝对路径。该降级是 portable 契约，不改变 core v2 可消费性。
+
+#### Scenario: 无 sidecar 时 layout 不得为 high
+- **WHEN** maintainer 校验当前无 sidecar 的 workbench-shell
+- **THEN** `confidence.layout` 为 medium 或更低，portable validator 不因 layout-high-without-chrome 失败
+
+#### Scenario: 不得靠编造 sidecar 恢复 high
+- **WHEN** 本会话没有与声明 revision 一致的 session source
+- **THEN** 不得写入声称 observed 的 chrome records 或把 locator 指回模板自身以恢复 `layout: high`
+
+### Requirement: A–E 是映射不是壳配方
+workbench-shell 的 `routes-and-layouts.md` 与 `apply/playbook.md` SHALL 把 A–E 标明为 Apply 验收映射。壳层级说明 SHALL 区分「来源 chrome 槽位（若有 profile）」与「页面模式验收」。无 sidecar 时 prose SHALL NOT 暗示 A–E 等于上游 App Shell 视觉配方，也 SHALL NOT 把 Web 路径写成与来源 inset 冲突的唯一合法形态，除非同时声明 structural chrome unavailable。
+
+#### Scenario: 阅读 routes-and-layouts
+- **WHEN** consumer 打开 `routes-and-layouts.md`
+- **THEN** 能区分 A–E 验收模式与壳 chrome；不会把五种页面模式误认为侧栏槽位顺序
+
+#### Scenario: Web 平台文档
+- **WHEN** consumer 阅读 `platforms/web.md` 且模板仍无 chrome sidecar
+- **THEN** 文档不把 flush 硬切标为已验证的来源壳变体；inset 仅在后续 source-direct records 存在时成为 profile 约束
+
 ### Requirement: Structural 正向实例由 fixtures 承担
-Board non-wrap/non-shrink、主从独立滚动、overlay scope、Dialog 四向 padding 与四类 link context 的 source-direct structural 机器证据 SHALL 由非 example 固定 revision fixtures 提供，而不是把已发布 workbench 模板重新绑定到外部 checkout。仅当用户后续会话明确提供与 meta 声明 revision 一致的 session source 时，才允许对 workbench 做 Generate-from-source 并写入 `fidelity.yaml`。
+Board non-wrap/non-shrink、主从独立滚动、overlay scope、Dialog 四向 padding、四类 link context，以及 **shell chrome composition**（inset vs flush、有序槽位、header-trigger 与 chat-fab 锚点）的 source-direct structural 机器证据 SHALL 由非 example 固定 revision fixtures 提供，而不是把已发布 workbench 模板重新绑定到外部 checkout。仅当用户后续会话明确提供与 meta 声明 revision 一致的 session source 时，才允许对 workbench 做 Generate-from-source 并写入含 chrome records 的 `fidelity.yaml`。
 
 #### Scenario: Fixture 覆盖非常规 layout
 - **WHEN** contract eval 运行 repo-capture fixture
-- **THEN** Board 横向 non-wrap、主从独立 scroll owner 与 overlay scope 作为 fixture records 可重复，而不要求本机存在 multica checkout
+- **THEN** Board 横向 non-wrap、主从独立 scroll owner、overlay scope 与 inset chrome 槽位图作为 fixture records 可重复，而不要求本机存在 multica checkout
 
 #### Scenario: 后续会话才允许 source-direct sidecar
 - **WHEN** 用户为本会话提供与声明 revision 一致的可读 session source
-- **THEN** Authoring 可按 Generate-from-source 为 workbench 补 structural sidecar；该路径不是无 source 时的完成条件
+- **THEN** Authoring 可按 Generate-from-source 为 workbench 补含 chrome composition 的 structural sidecar；该路径不是无 source 时的完成条件
+
+#### Scenario: Chrome mutation 不依赖 workbench checkout
+- **WHEN** fixture 将 header-trigger 改锚到 page-canvas 或将 variant 改为 flush
+- **THEN** eval/validator 失败且不读取 `templates/workbench-shell/` 或 `example/**` 作为修复依据
 
 ### Requirement: Workbench profile 质量矩阵在有 sidecar 之前保持 baseline
 在 workbench 仍无 `fidelity.yaml` 期间，`apply/quality.md` SHALL 继续按 core v2 rule IDs 工作，SHALL NOT 因为缺 profile record IDs 而要求补上游路径。若未来 sidecar 存在，quality matrix 只引用 record IDs，不复制 token 值或第二套 profile。

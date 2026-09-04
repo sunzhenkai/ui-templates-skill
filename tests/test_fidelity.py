@@ -64,6 +64,9 @@ class FidelityContractTests(unittest.TestCase):
             shutil.copytree(STRUCTURAL / "templates", root)
             template = root / "structural-template"
             shutil.copyfile(ROOT / "tests/fixtures/fidelity/style-only.yaml", template / "fidelity.yaml")
+            meta = yaml.safe_load((template / "meta.yaml").read_text(encoding="utf-8"))
+            meta["confidence"]["layout"] = "medium"
+            (template / "meta.yaml").write_text(yaml.safe_dump(meta, sort_keys=False, allow_unicode=True), encoding="utf-8")
             result = validate_paths([root], ROOT, index=root / "INDEX.md")
             payload = result.to_dict()
             self.assertEqual(0, payload["exit_code"], payload["findings"])
@@ -220,6 +223,63 @@ class FidelityContractTests(unittest.TestCase):
         layout_changed = json.loads(json.dumps(data))
         layout_changed["layout_scenes"][1]["wrap"] = "wrap"
         self.assertEqual(2, facet_change_phase(data, layout_changed))
+        chrome_changed = json.loads(json.dumps(data))
+        chrome_changed["layout_scenes"][0]["shell_variant"] = "flush"
+        self.assertEqual(2, facet_change_phase(data, chrome_changed))
+        swapped = json.loads(json.dumps(data))
+        swapped["layout_scenes"][0]["slots"][0]["order"] = 2
+        swapped["layout_scenes"][0]["slots"][2]["order"] = 0
+        self.assertEqual(2, facet_change_phase(data, swapped))
+        misanchored = json.loads(json.dumps(data))
+        misanchored["layout_scenes"][0]["chrome_anchors"][0]["region"] = "region.shell.canvas"
+        self.assertEqual(2, facet_change_phase(data, misanchored))
+        self.assertTrue(any(item.startswith("shell_variant:scene.shell:inset") for item in layout))
+        self.assertTrue(any(item == "slot:workspace-switcher:0" for item in layout))
+        self.assertTrue(any(item.startswith("anchor:header-trigger→") for item in layout))
+        self.assertTrue(any(item.startswith("phase8:shell_variant:") for item in scenarios))
+        style_only = load_fidelity(ROOT / "tests/fixtures/fidelity/style-only.yaml")
+        self.assertFalse(any(item.startswith("shell_variant:") for item in project_layout(style_only)))
+        self.assertEqual([], derive_scenario_ids(style_only))
+
+    def test_chrome_mutations_and_layout_high_without_sidecar(self) -> None:
+        data = yaml.safe_load((STRUCTURAL / "templates/structural-template/fidelity.yaml").read_text(encoding="utf-8"))
+        cases = [
+            ("missing-variant", "CHROME_COMPOSITION_INCOMPLETE"),
+            ("duplicate-order", "CHROME_COMPOSITION_INCOMPLETE"),
+            ("missing-anchor", "CHROME_COMPOSITION_INCOMPLETE"),
+            ("evasion", "CHROME_COMPOSITION_INCOMPLETE"),
+            ("layout-high", "LAYOUT_CONFIDENCE_WITHOUT_CHROME"),
+        ]
+        for kind, expected in cases:
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp) / "templates"
+                shutil.copytree(STRUCTURAL / "templates", root)
+                template = root / "structural-template"
+                if kind == "layout-high":
+                    (template / "fidelity.yaml").unlink()
+                    spec = template / "spec.md"
+                    spec.write_text(spec.read_text(encoding="utf-8").replace("[fidelity.yaml](fidelity.yaml)", "core v2 files"), encoding="utf-8")
+                else:
+                    mutated = json.loads(json.dumps(data))
+                    if kind == "missing-variant":
+                        mutated["layout_scenes"][0].pop("shell_variant", None)
+                    elif kind == "duplicate-order":
+                        mutated["layout_scenes"][0]["slots"][0]["order"] = 0
+                        mutated["layout_scenes"][0]["slots"][1]["order"] = 0
+                    elif kind == "missing-anchor":
+                        mutated["layout_scenes"][0]["chrome_anchors"] = [
+                            item for item in mutated["layout_scenes"][0]["chrome_anchors"]
+                            if item.get("role") != "header-trigger"
+                        ]
+                    else:
+                        mutated["layout_scenes"][0]["scene_kind"] = "other"
+                    (template / "fidelity.yaml").write_text(yaml.safe_dump(mutated, sort_keys=False, allow_unicode=True), encoding="utf-8")
+                result = validate_paths([root], ROOT)
+                self.assertTrue(result.failed)
+                self.assertTrue(
+                    any(finding.code == expected for finding in result.findings),
+                    [finding.to_dict() for finding in result.findings],
+                )
 
     def test_workbench_stays_legacy_baseline_without_source_root(self) -> None:
         result = validate_paths([ROOT / "templates/workbench-shell"], ROOT, index=ROOT / "templates/INDEX.md")
@@ -227,6 +287,10 @@ class FidelityContractTests(unittest.TestCase):
         self.assertEqual(0, payload["exit_code"], payload["findings"])
         self.assertFalse((ROOT / "templates/workbench-shell/fidelity.yaml").exists())
         self.assertEqual("legacy-baseline", payload["templates"][0]["fidelity"]["conformance"])
+        self.assertEqual(
+            "medium",
+            yaml.safe_load((ROOT / "templates/workbench-shell/meta.yaml").read_text(encoding="utf-8"))["confidence"]["layout"],
+        )
         self.assertEqual("not-run", payload["templates"][0]["fidelity"]["replay"]["status"])
         self.assertNotIn("请提供本地绝对路径", json.dumps(payload, ensure_ascii=False))
 

@@ -80,7 +80,7 @@ captured_at: 2026-09-03
 tokens: tokens.yaml
 evidence: evidence.yaml
 platforms: [web]
-confidence: {overall: medium, layout: high, visual: medium, components: medium}
+confidence: {overall: medium, layout: medium, visual: medium, components: medium}
 coverage:
   platforms: {declared: [web], observed: [web], defaulted: [], unsupported: []}
   viewports: {declared: [desktop], observed: [desktop], defaulted: [], unsupported: []}
@@ -130,13 +130,13 @@ entries:
 
 `fidelity.yaml` 使用独立 schema family；支持的 v1 profile 为 `repo-structural-v1`。它只机器表达三类 source-derived observable：
 
-1. `layout_scenes`：region/relation、arrangement、fill/shrink/wrap、按轴 scroll domains、overlay scope/anchor、responsive mode；
+1. `layout_scenes`：region/relation、arrangement、fill/shrink/wrap、按轴 scroll domains、overlay scope/anchor、responsive mode，以及可选 chrome composition（`scene_kind`、`shell_variant`、有序 `slots`、`chrome_anchors`；`contains.order`）；
 2. `component_geometry`：component/slot 的逻辑方向 padding/gap/inset/size/radius/surface/border/shadow token refs 或闭集 semantic；
 3. `state_presentations`：subject/context/state/surface 的背景/文字/边界、decoration、visibility/container presentation，并把 `none` 等 negative fact 作为 expected。
 
 权威按职责分区，而非互相复制：`spec.md` 定义设计意图、Non-negotiables 与稳定 rule identity；`tokens.yaml` 唯一携带精确值；`fidelity.yaml` 定义 scene/component slot/context/state 中的 token usage、关系、status、negative facts 与 direct provenance；split docs 只做人类解释并引用 rule/profile record IDs；`apply/` 只定义 Phase 0–9 映射、取证方法和通过条件。跨职责悬空或越权即失败，不由 Apply 按 prose 优先级猜测。
 
-repo 新建/更新默认 structural；用户明确 style-only 时 sidecar 记录理由且三类 records 为空。合法 core v2 无 sidecar 是 `legacy-baseline`，并非 style-only；未知 schema/profile fail closed。profile canonical semantics 纳入 template identity。已发布模板的 `meta.sources[]` 只证明出处，不要求原仓库仍在本地；无 session source 时不得为补 sidecar 向用户索要历史路径。
+repo 新建/更新默认 structural；用户明确 style-only 时 sidecar 记录理由且三类 records 为空。合法 core v2 无 sidecar 是 `legacy-baseline`，并非 style-only；未知 schema/profile fail closed。`confidence.layout: high` 仅当存在 chrome-complete structural sidecar；无 sidecar 时 layout 最高 `medium`。A–E 等 page-mode 分类只作 Apply 映射，不得替代来源壳拓扑；双源时 repo 壳拓扑优先。profile canonical semantics 纳入 template identity。已发布模板的 `meta.sources[]` 只证明出处，不要求原仓库仍在本地；无 session source 时不得为补 sidecar 向用户索要历史路径。
 
 **Profile v1 Non-Goals：**不发布完整 AST/call graph/source snapshot，不成为通用 UI/component DSL，不规定 React/Vue/Tailwind、组件库、DOM、CSS class、工程目录、依赖、API/data/state 或 runnable starter，不要求目标源码/DOM 同构。所有精确数值仍只在 `tokens.yaml`。
 

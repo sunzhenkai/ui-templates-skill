@@ -31,3 +31,6 @@ breaking_boundaries:
   - four-value-origin
   - apply-directory-replaces-implementation
   - fidelity-profile-unknown-fail-closed
+  - layout-high-requires-chrome-complete-sidecar
+notes:
+  - structural 导入需要 chrome-complete literal graph；旧 v2 无 sidecar 仍可消费但 layout 不得为 high。

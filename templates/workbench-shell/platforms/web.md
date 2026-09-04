@@ -1,6 +1,6 @@
 # web 平台壳
 
-Web 是响应式浏览器平台路径。精确 token 与 provenance 分别见 [`../tokens.yaml`](../tokens.yaml) 和 [`../evidence.yaml`](../evidence.yaml)；A–E 与响应规则见 [`../routes-and-layouts.md`](../routes-and-layouts.md)。
+Web 是响应式浏览器平台路径。精确 token 与 provenance 分别见 [`../tokens.yaml`](../tokens.yaml) 和 [`../evidence.yaml`](../evidence.yaml)；A–E 与响应规则见 [`../routes-and-layouts.md`](../routes-and-layouts.md)。无 chrome sidecar 时 inset/flush 与 header-trigger 锚点 unavailable，不得把左右硬切写成已验证来源变体。
 
 ## 结构
 

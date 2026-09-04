@@ -18,6 +18,7 @@ from .fidelity import (
     FidelityError,
     UNKNOWN,
 )
+from template_authoring.chrome import LAYOUT_HIGH_WITHOUT_CHROME, chrome_complete_sidecar
 from .loading import LoadError, load_data
 from .model import ValidationResult
 from .schema import SchemaStore
@@ -228,6 +229,7 @@ class TemplateValidator:
             definitions,
             set(records),
             {item for item in source_ids if isinstance(item, str)},
+            meta=meta if isinstance(meta, dict) else {},
         )
         self.result.templates.append(identity)
         # Variables intentionally retained: schema errors are aggregated with semantics.
@@ -671,24 +673,41 @@ class TemplateValidator:
                 if PROHIBITED_TEXT.search(text):
                     self.add("PROHIBITED_ENGINEERING_CONTENT", path, "模板设计文档包含项目工程或技术栈内容")
 
+    def _check_layout_confidence(self, template: Path, meta: dict[str, Any], data: dict[str, Any] | None, *, present: bool) -> None:
+        layout = (meta.get("confidence") if isinstance(meta.get("confidence"), dict) else {}).get("layout")
+        if layout != "high":
+            return
+        complete = present and isinstance(data, dict) and classify_sidecar(data, present=True) == "structural" and chrome_complete_sidecar(data)
+        if complete:
+            return
+        self.add(
+            LAYOUT_HIGH_WITHOUT_CHROME,
+            template / "meta.yaml",
+            "confidence.layout 为 high 时必须存在 chrome-complete structural sidecar",
+        )
+
     def _check_fidelity(
         self,
         template: Path,
         rule_ids: set[str],
         token_paths: set[str],
         source_ids: set[str],
+        meta: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         path = template / "fidelity.yaml"
+        meta = meta or {}
         if not path.is_file():
             replay = empty_replay()
             if self.require_source_replay:
                 self.add("STRUCTURAL_REPLAY_REQUIRED", template, "structural Generate-from-source 要求对该 session source 执行 replay")
+            self._check_layout_confidence(template, meta, None, present=False)
             return identity_payload(None, present=False, replay=replay)
         data = self.load(path)
         if not isinstance(data, dict):
             payload = identity_payload(data if isinstance(data, dict) else None, present=True, replay=empty_replay())
             if self.require_source_replay:
                 self.add("STRUCTURAL_REPLAY_REQUIRED", path, "fidelity sidecar 无法 replay")
+            self._check_layout_confidence(template, meta, None, present=True)
             return payload
         for subpath, message, details in fidelity_schema_errors(data, self.repo_root):
             full = f"{self.rel(path)}#{subpath}" if subpath else self.rel(path)
@@ -702,6 +721,7 @@ class TemplateValidator:
                 declared_schema=data.get("schema_version"),
                 declared_profile=data.get("profile"),
             )
+            self._check_layout_confidence(template, meta, data, present=True)
             return identity_payload(data, present=True, replay=empty_replay())
         validate_fidelity_semantics(
             data,
@@ -742,6 +762,7 @@ class TemplateValidator:
                     "structural Generate-from-source 要求 declared = resolved = executed = passed > 0",
                     replay=replay,
                 )
+        self._check_layout_confidence(template, meta, data, present=True)
         return identity_payload(data, present=True, replay=replay)
 
     def validate_index(self, index: Path, templates: list[Path]) -> None:

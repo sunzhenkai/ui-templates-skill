@@ -7,13 +7,15 @@
 ```text
 root（token 驱动的视口高度，overflow hidden）
 └─ app-shell
-   ├─ platform navigation
-   └─ page-canvas（overflow hidden）
-      ├─ NavigationProgress
-      ├─ 页面列/模式槽位（内部滚动）
-      ├─ Modal registry
-      └─ FloatingChat / FAB
+    ├─ platform navigation
+    └─ page-canvas（overflow hidden）
+       ├─ NavigationProgress
+       ├─ 页面列/模式槽位（内部滚动）
+       ├─ Modal registry
+       └─ FloatingChat / FAB
 ```
+
+本模板当前无 `fidelity.yaml` chrome sidecar：`inset`/`flush` 变体、有序壳槽位与 `header-trigger`/`chat-fab` 锚点均为 unavailable，不得把 Web 左右硬切写成已验证来源变体。A–E 只是 Apply 页面模式验收映射，不是来源壳拓扑。
 
 - [LAYOUT-001] Web 与 Desktop 使用固定根壳和内部滚动；Mobile 使用独立安全区与原生导航栈，不把 Web overlay 当作 Mobile shell。
 - [LAYOUT-002] 搜索、通知、浮动聊天与 modal registry 属于壳级能力，但视觉覆盖范围在 page-canvas 内。
@@ -40,7 +42,7 @@ root（token 驱动的视口高度，overflow hidden）
 | [ROUTE-008] D. 聊天/时间线 | 会话集合 + 内部时间线 + composer | 时间线内部滚动，composer 固定在模式边界，键盘/安全区不破坏当前阅读位置。 |
 | [ROUTE-009] E. 聚合网格 | metric/card aggregate grid | 列数由容器与当前 token scale 决定；层级、hover、empty 与 create 入口可验收。 |
 
-每个 included route 必须映射到 @ROUTE-005–@ROUTE-009 之一。legacy route inventory 中的“文档详情”只能映射到 @ROUTE-006 的 detail 槽位；若目标产品没有可解释的 master，则在 Phase 0 Intake 标为 `excluded` 并记录理由，不得创建第六种模式。混合页面拆成可独立验收的 A–E 槽位。
+每个 included route 必须映射到 @ROUTE-005–@ROUTE-009 之一（Apply 验收映射，不是来源壳配方）。legacy route inventory 中的“文档详情”只能映射到 @ROUTE-006 的 detail 槽位；若目标产品没有可解释的 master，则在 Phase 0 Intake 标为 `excluded` 并记录理由，不得创建第六种模式。混合页面拆成可独立验收的 A–E 槽位。
 
 ## 4. Web 响应矩阵与容器规则
 

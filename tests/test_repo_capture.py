@@ -14,12 +14,12 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from template_authoring.capture import CaptureError, capture_from_files, load_document, replay
+from template_authoring.capture import CaptureError, capture_from_files, load_document, replay, write_source_graph_skeleton
 from template_authoring.gate import run_authoring_gate
 
 FIXTURE = ROOT / "tests/fixtures/repo-capture"
-FIXED_REVISION = "60b90074a44184a8a7d2d79d740fd9e0f0dd9859"
-FIXED_CLOSURE_DIGEST = "sha256:22d1444000bad03c08bc170dfbca8628673c6911f5dc1b11a6862ae400a6fefd"
+FIXED_REVISION = "58397b5ae6c0fb56d75c21d790a0643595c743ac"
+FIXED_CLOSURE_DIGEST = "sha256:84b6ea77c0ad95eb3fac81c8e57c7d5bff28c394283bb1b631c58c2918b7a879"
 
 
 class RepoCaptureTests(unittest.TestCase):
@@ -148,6 +148,45 @@ class RepoCaptureTests(unittest.TestCase):
             with self.assertRaises(CaptureError) as raised:
                 capture_from_files(request_path, source)
             self.assertEqual("UNSUPPORTED_SOURCE_FORMAT", raised.exception.code)
+
+    def test_shell_usage_without_chrome_facts_does_not_complete(self) -> None:
+        def drop_chrome(graph):
+            usage = next(item for item in graph["usages"] if item["id"] == "usage.shell")
+            usage["facts"] = [item for item in usage["facts"] if item["property"] in {"root_scroll", "arrangement"}]
+
+        with tempfile.TemporaryDirectory() as temp:
+            source, request_path, _ = self.materialize(temp, drop_chrome)
+            with self.assertRaises(CaptureError) as raised:
+                capture_from_files(request_path, source)
+            self.assertEqual("CHROME_COMPOSITION_INCOMPLETE", raised.exception.code)
+
+    def test_missing_graph_stays_unsupported_or_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            source, request_path, _ = self.materialize(temp)
+            request = yaml.safe_load(request_path.read_text(encoding="utf-8"))
+            request["graph_path"] = "missing-graph.yaml"
+            request_path.write_text(yaml.safe_dump(request, sort_keys=False), encoding="utf-8")
+            with self.assertRaises(CaptureError) as raised:
+                capture_from_files(request_path, source)
+            self.assertEqual("SOURCE_GRAPH_MISSING", raised.exception.code)
+
+    def test_source_graph_skeleton_has_empty_facts_and_is_incomplete(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "ui-source-graph.yaml"
+            written = write_source_graph_skeleton(path)
+            graph = yaml.safe_load(written.read_text(encoding="utf-8"))
+            self.assertFalse(graph["closure_complete"])
+            self.assertEqual([], graph["usages"][0]["facts"])
+            command = [
+                sys.executable, str(ROOT / "scripts/capture_repo_fidelity.py"),
+                "--init-source-graph", str(Path(temp) / "skeleton.yaml"),
+            ]
+            completed = subprocess.run(command, cwd=ROOT, text=True, capture_output=True)
+            self.assertEqual(0, completed.returncode, completed.stderr)
+            payload = json.loads(completed.stdout)
+            self.assertEqual("skeleton", payload["status"])
+            self.assertFalse(payload["parses_source"])
+            self.assertFalse(payload["closure_complete"])
 
     def _fake_tools(self, directory: Path, replay_status: str = "passed") -> tuple[Path, Path]:
         validator = directory / "validator.py"
@@ -290,12 +329,14 @@ class RepoCaptureTests(unittest.TestCase):
     def test_production_runtime_is_synchronized_without_mirror_write(self) -> None:
         pairs = (
             ("scripts/template_authoring/__init__.py", "skills/ui-template/runtime/template_authoring/__init__.py"),
+            ("scripts/template_authoring/chrome.py", "skills/ui-template/runtime/template_authoring/chrome.py"),
             ("scripts/template_authoring/capture.py", "skills/ui-template/runtime/template_authoring/capture.py"),
             ("scripts/template_authoring/profile.py", "skills/ui-template/runtime/template_authoring/profile.py"),
             ("scripts/template_authoring/gate.py", "skills/ui-template/runtime/template_authoring/gate.py"),
             ("scripts/capture_repo_fidelity.py", "skills/ui-template/runtime/capture_repo_fidelity.py"),
             ("scripts/run_authoring_gate.py", "skills/ui-template/runtime/run_authoring_gate.py"),
             ("scripts/template_validation/fidelity.py", "skills/ui-template/runtime/template_validation/fidelity.py"),
+            ("scripts/template_validation/validator.py", "skills/ui-template/runtime/template_validation/validator.py"),
             ("scripts/template_apply_state/fidelity.py", "skills/ui-template/runtime/template_apply_state/fidelity.py"),
             ("scripts/contract_eval/runner.py", "skills/ui-template/runtime/contract_eval/runner.py"),
         )

@@ -42,6 +42,15 @@ usages:
     facts:
       - {id: fact.shell.root-scroll-none, facet: layout_scenes, subject: shell, context: null, slot: canvas, state: default, property: root_scroll, value: {kind: semantic, value: none}, negative: true, rule_id: LAYOUT-001}
       - {id: fact.shell.arrangement, facet: layout_scenes, subject: shell, context: null, slot: canvas, state: default, property: arrangement, value: {kind: semantic, value: horizontal}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.variant, facet: layout_scenes, subject: shell, context: null, slot: canvas, state: default, property: shell_variant, value: {kind: semantic, value: inset}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.switcher, facet: layout_scenes, subject: shell, context: null, slot: workspace-switcher, state: default, property: slot_role, value: {kind: semantic, value: workspace-switcher}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.switcher, facet: layout_scenes, subject: shell, context: null, slot: workspace-switcher, state: default, property: slot_order, value: {kind: semantic, value: "0"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.search, facet: layout_scenes, subject: shell, context: null, slot: search, state: default, property: slot_role, value: {kind: semantic, value: search}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.search, facet: layout_scenes, subject: shell, context: null, slot: search, state: default, property: slot_order, value: {kind: semantic, value: "1"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.compose, facet: layout_scenes, subject: shell, context: null, slot: compose, state: default, property: slot_role, value: {kind: semantic, value: compose}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.compose, facet: layout_scenes, subject: shell, context: null, slot: compose, state: default, property: slot_order, value: {kind: semantic, value: "2"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.anchor.trigger, facet: layout_scenes, subject: shell, context: null, slot: page-header, state: default, property: anchor_role, value: {kind: semantic, value: header-trigger}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.anchor.fab, facet: layout_scenes, subject: shell, context: null, slot: canvas, state: default, property: anchor_role, value: {kind: semantic, value: chat-fab}, negative: false, rule_id: LAYOUT-001}
   - id: usage.board
     definition_id: scene.board
     scene: board

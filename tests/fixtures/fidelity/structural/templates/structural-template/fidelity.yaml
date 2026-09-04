@@ -10,15 +10,32 @@ scope:
 layout_scenes:
   - id: scene.shell
     scene: shell
+    scene_kind: shell
+    shell_variant: inset
     rule_id: LAYOUT-001
     status: observed
     regions:
       - {id: region.shell.root, role: root}
       - {id: region.shell.canvas, role: canvas}
       - {id: region.shell.overlay, role: overlay}
+      - {id: region.shell.workspace-switcher, role: workspace-switcher}
+      - {id: region.shell.search, role: search}
+      - {id: region.shell.compose, role: compose}
+      - {id: region.shell.page-header, role: page-header}
     relations:
       - {type: contains, from: region.shell.root, to: region.shell.canvas}
       - {type: overlay, from: region.shell.root, to: region.shell.overlay}
+      - {type: contains, from: region.shell.root, to: region.shell.workspace-switcher, order: 0}
+      - {type: contains, from: region.shell.root, to: region.shell.search, order: 1}
+      - {type: contains, from: region.shell.root, to: region.shell.compose, order: 2}
+      - {type: contains, from: region.shell.root, to: region.shell.page-header}
+    slots:
+      - {id: slot.shell.workspace-switcher, role: workspace-switcher, region: region.shell.workspace-switcher, order: 0}
+      - {id: slot.shell.search, role: search, region: region.shell.search, order: 1}
+      - {id: slot.shell.compose, role: compose, region: region.shell.compose, order: 2}
+    chrome_anchors:
+      - {id: anchor.shell.header-trigger, role: header-trigger, region: region.shell.page-header}
+      - {id: anchor.shell.chat-fab, role: chat-fab, region: region.shell.canvas}
     arrangement: horizontal
     fill: intrinsic
     wrap: wrap
@@ -40,6 +57,7 @@ layout_scenes:
       confidence: high
   - id: scene.board
     scene: board
+    scene_kind: board
     rule_id: LAYOUT-002
     status: observed
     regions:
@@ -69,6 +87,7 @@ layout_scenes:
       confidence: high
   - id: scene.master-detail
     scene: master-detail
+    scene_kind: master-detail
     rule_id: LAYOUT-003
     status: observed
     regions:

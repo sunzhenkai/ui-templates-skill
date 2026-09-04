@@ -4,12 +4,16 @@ from collections import defaultdict
 from typing import Any
 
 from .capture import digest
+from .chrome import ANCHOR_ROLES, CHROME_FACT_PROPERTIES, SHELL_VARIANTS, SLOT_ROLES, scene_kind_for
 
 PROFILE = "repo-structural-v1"
 REQUIRED_PADDING = (
     "padding_block_start", "padding_inline_end", "padding_block_end", "padding_inline_start",
 )
-LAYOUT_PROPERTIES = {"arrangement", "fill", "wrap", "shrink", "scroll_inline", "scroll_block", "root_scroll", "overlay_scope", "overlay_anchor"}
+LAYOUT_PROPERTIES = {
+    "arrangement", "fill", "wrap", "shrink", "scroll_inline", "scroll_block", "root_scroll",
+    "overlay_scope", "overlay_anchor", *CHROME_FACT_PROPERTIES,
+}
 GEOMETRY_PROPERTIES = {
     "padding_block_start", "padding_inline_end", "padding_block_end", "padding_inline_start",
     "gap", "inset_block_start", "inset_inline_end", "inset_block_end", "inset_inline_start",
@@ -144,9 +148,67 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
         if "root_scroll" in properties and properties["root_scroll"].get("value", {}).get("value") == "none":
             if not any(item["property"] == "root_scroll" for item in negatives):
                 negatives.append({"property": "root_scroll", "value": "none"})
-        layout_scenes.append({
+        slot_orders: dict[Any, int] = {}
+        for fact in group:
+            if fact["property"] != "slot_order":
+                continue
+            raw = fact.get("value", {}).get("value")
+            try:
+                slot_orders[fact.get("slot")] = int(raw)
+            except (TypeError, ValueError):
+                slot_orders[fact.get("slot")] = 0
+        slots = []
+        for fact in sorted(
+            (item for item in group if item["property"] == "slot_role"),
+            key=lambda item: (slot_orders.get(item.get("slot"), 0), str(item.get("slot"))),
+        ):
+            role = fact.get("value", {}).get("value")
+            slot = fact.get("slot") or role
+            region_id = f"region.{scene}.{slot}"
+            if region_id not in seen_regions:
+                regions.append({"id": region_id, "role": slot})
+                seen_regions.add(region_id)
+            slots.append({
+                "id": f"slot.{scene}.{role}",
+                "role": role if role in SLOT_ROLES else role,
+                "region": region_id,
+                "order": slot_orders.get(slot, 0),
+            })
+        chrome_anchors = []
+        for fact in group:
+            if fact["property"] != "anchor_role":
+                continue
+            role = fact.get("value", {}).get("value")
+            slot = fact.get("slot") or "canvas"
+            region_id = f"region.{scene}.{slot}"
+            if region_id not in seen_regions:
+                regions.append({"id": region_id, "role": slot})
+                seen_regions.add(region_id)
+            chrome_anchors.append({
+                "id": f"anchor.{scene}.{role}",
+                "role": role if role in ANCHOR_ROLES else role,
+                "region": region_id,
+            })
+        relations = []
+        for item in regions:
+            if item["id"] == f"region.{scene}.root":
+                continue
+            relation = {"type": "contains", "from": f"region.{scene}.root", "to": item["id"]}
+            matching = next((slot for slot in slots if slot["region"] == item["id"]), None)
+            if matching is not None:
+                relation["order"] = matching["order"]
+            relations.append(relation)
+        if overlays:
+            relations.append({
+                "type": "overlay",
+                "from": f"region.{scene}.root",
+                "to": overlays[0]["region"],
+            })
+        scene_kind = scene_kind_for(scene)
+        record = {
             "id": f"scene.{scene}",
             "scene": scene,
+            "scene_kind": scene_kind,
             "rule_id": group[0]["rule_id"],
             "status": "observed",
             "regions": regions,
@@ -160,7 +222,13 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
             "responsive_modes": [{"id": "mode.desktop", "viewport": "desktop"}],
             "negative_facts": sorted(negatives, key=lambda item: (item["property"], item["value"])),
             "provenance": _provenance(group[0], source_id, revision, captured_at),
-        })
+        }
+        if scene_kind == "shell" or scene == "shell":
+            variant = properties.get("shell_variant", {}).get("value", {}).get("value")
+            record["shell_variant"] = variant if variant in SHELL_VARIANTS else variant
+            record["slots"] = slots
+            record["chrome_anchors"] = chrome_anchors
+        layout_scenes.append(record)
     component_geometry = []
     for (component, slot), group in sorted(geometry_groups.items()):
         properties = {item["property"]: _value(item["value"]) for item in group if item["property"] in GEOMETRY_PROPERTIES}

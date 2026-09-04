@@ -37,7 +37,7 @@ description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 
 
 更新前按 [feedback-lifecycle.md](references/feedback-lifecycle.md) 扫描显式路径及已授权消费项目 `.ui-template-apply/feedback/`，按 UUID/fingerprint 幂等处置。未知 schema 或非法状态记录先修复，不跳过。
 
-repo capture 仅在已有 session source 时运行，且只接受 [repo-capture-format.md](references/repo-capture-format.md) 的 closed JSON/YAML literal source graph。不得执行来源代码、用 regex 冒充 TSX/JS parser、以“3–5 个代表组件”静默抽样，也不得为补 source 而按 provenance 自行联网 clone。用户把 Git 地址作为**本会话导入输入**时，读取该地址是 session source，不是补取。歧义、动态表达式、同 context/slot 冲突和 limit 超限均 unresolved；先请求收窄 scope 或显式 decision。
+repo capture 仅在已有 session source 时运行，且只接受 [repo-capture-format.md](references/repo-capture-format.md) 的 closed JSON/YAML literal source graph。不得执行来源代码、用 regex 冒充 TSX/JS parser、以“3–5 个代表组件”静默抽样，也不得为补 source 而按 provenance 自行联网 clone。用户把 Git 地址作为**本会话导入输入**时，读取该地址是 session source，不是补取。歧义、动态表达式、同 context/slot 冲突和 limit 超限均 unresolved；先请求收窄 scope 或显式 decision。structural 导入需要 chrome-complete graph；缺 graph、chrome incomplete 或用 A–E 覆盖来源壳 IA 时不得 Index。`confidence.layout: high` 需要 chrome-complete sidecar。
 
 ### 1. Generate
 
@@ -75,7 +75,7 @@ bundle 与生产镜像在本 skill 根分发 `runtime/capture_repo_fidelity.py`�
 
 ### 5. Report
 
-按 [authoring-report.md](references/authoring-report.md) 报告模板路径、`schema_version`/`template_version`、来源与 coverage、default/estimated 摘要、core/profile version、conformance/scope/canonical digest、capture closure digest、replay identity/counters、unresolved、资产决定、规则/feedback receipts、实际命令及 checker/runner identity。legacy v2 无 sidecar 明确为 `legacy-baseline`；style-only 明确未提供 layout/geometry/state structural fidelity。已发布模板 portable 成功且 replay `not-run` 时不得使用 `STRUCTURAL_REPLAY_REQUIRED`，也不得把「请提供本地绝对路径」当作失败原因。仅在本次从源导入的全部 gate 与 Index 成功后，或已发布模板 portable 校验成功后，使用相应“完成”。失败报告必须给出阻断 gate/稳定 issue code；若动过 INDEX 路径，证明 production INDEX before/after digest 相同。
+按 [authoring-report.md](references/authoring-report.md) 报告模板路径、`schema_version`/`template_version`、来源与 coverage、default/estimated 摘要、core/profile version、conformance/scope/canonical digest、capture closure digest、replay identity/counters、unresolved、资产决定、规则/feedback receipts、实际命令及 checker/runner identity。legacy v2 无 sidecar 明确为 `legacy-baseline`；style-only 明确未提供 layout/geometry/state structural fidelity。已发布模板 portable 成功且 replay `not-run` 时不得使用 `STRUCTURAL_REPLAY_REQUIRED`，也不得把「请提供本地绝对路径」当作失败原因。无 sidecar 时 layout 不得为 high。仅在本次从源导入的全部 gate 与 Index 成功后，或已发布模板 portable 校验成功后，使用相应“完成”。失败报告必须给出阻断 gate/稳定 issue code；若动过 INDEX 路径，证明 production INDEX before/after digest 相同。
 
 ## Portable checker/eval 发现协议
 

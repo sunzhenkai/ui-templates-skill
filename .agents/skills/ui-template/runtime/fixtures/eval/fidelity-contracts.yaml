@@ -41,6 +41,7 @@ cases:
         mutations:
           - id: delete-sidecar
             kind: delete_sidecar
+            layout_confidence: medium
         json_path_equals:
           - path: [results, 0, failed]
             value: false
@@ -130,14 +131,22 @@ cases:
       - type: python_call
         operation: project_ids
         path: tests/fixtures/fidelity/structural/templates/structural-template/fidelity.yaml
+        json_path_contains:
+          - path: [geometry]
+            value: geometry:dialog:content:padding_block_start:token-ref:spacing.dialog.block-start
+          - path: [layout]
+            value: shell_variant:scene.shell:inset
+          - path: [layout]
+            value: slot:workspace-switcher:0
+          - path: [layout]
+            value: "anchor:header-trigger→region.shell.page-header"
         json_path_equals:
           - path: [layout_stable]
             value: true
           - path: [scenario_stable]
             value: true
-        json_path_contains:
-          - path: [geometry]
-            value: geometry:dialog:content:padding_block_start:token-ref:spacing.dialog.block-start
+          - path: [has_chrome]
+            value: true
       - type: file_contains
         path: skills/ui-template-apply/references/template-contract.md
         all: ["fidelity.yaml", "legacy-baseline", "repo-structural-v1", "negative facts"]
@@ -154,7 +163,85 @@ cases:
             value: 2
           - path: [state_phase]
             value: 4
+          - path: [chrome_phase]
+            value: 2
       - type: file_contains
         path: skills/ui-template-apply/references/apply-workflow.md
         all: ["layout profile 语义变化", "geometry/state profile 语义变化", "structural fidelity unavailable"]
         none: []
+  fidelity-chrome-incomplete:
+    assertions:
+      - type: python_call
+        operation: validate_mutated_profile
+        path: tests/fixtures/fidelity/structural/templates
+        mutations:
+          - id: missing-variant
+            kind: delete
+            path: [layout_scenes, 0, shell_variant]
+            finding: CHROME_COMPOSITION_INCOMPLETE
+          - id: missing-anchor
+            kind: set
+            path: [layout_scenes, 0, chrome_anchors]
+            value: [{id: anchor.shell.chat-fab, role: chat-fab, region: region.shell.canvas}]
+            finding: CHROME_COMPOSITION_INCOMPLETE
+          - id: evasion
+            kind: set
+            path: [layout_scenes, 0, scene_kind]
+            value: other
+            finding: CHROME_COMPOSITION_INCOMPLETE
+        json_path_equals:
+          - path: [all_failed]
+            value: true
+  fidelity-layout-high-without-chrome:
+    assertions:
+      - type: python_call
+        operation: validate_mutated_profile
+        path: tests/fixtures/fidelity/structural/templates
+        mutations:
+          - id: delete-sidecar-keep-high
+            kind: delete_sidecar
+            finding: LAYOUT_CONFIDENCE_WITHOUT_CHROME
+        json_path_equals:
+          - path: [results, 0, failed]
+            value: true
+          - path: [results, 0, present]
+            value: true
+  fidelity-capture-no-graph:
+    assertions:
+      - type: python_call
+        operation: capture_error
+        source: tests/fixtures/repo-capture/source
+        request: tests/fixtures/repo-capture/capture-request.yaml
+        drop_graph: true
+        json_path_equals:
+          - path: [raised]
+            value: true
+          - path: [code]
+            value: SOURCE_GRAPH_MISSING
+  fidelity-capture-chrome-incomplete:
+    assertions:
+      - type: python_call
+        operation: capture_error
+        source: tests/fixtures/repo-capture/source
+        request: tests/fixtures/repo-capture/capture-request.yaml
+        drop_chrome: true
+        json_path_equals:
+          - path: [raised]
+            value: true
+          - path: [code]
+            value: CHROME_COMPOSITION_INCOMPLETE
+  apply-chrome-unavailable:
+    assertions:
+      - type: python_call
+        operation: project_ids
+        path: tests/fixtures/fidelity/style-only.yaml
+        json_path_equals:
+          - path: [has_chrome]
+            value: false
+          - path: [scenarios]
+            value: []
+      - type: file_contains
+        path: skills/ui-template-apply/references/apply-workflow.md
+        all: ["chrome composition", "不得标 profile-verified"]
+        none: []
+

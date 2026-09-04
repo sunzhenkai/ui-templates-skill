@@ -8,6 +8,13 @@ from typing import Any
 
 import yaml
 
+from .chrome import (
+    CHROME_FACT_PROPERTIES,
+    CHROME_INCOMPLETE,
+    CHROME_SEMANTIC_VALUES,
+    chrome_fact_gaps,
+)
+
 CAPTURE_SCHEMA_VERSION = 1
 CAPTURE_PROFILE = "repo-literal-graph-v1"
 GRAPH_TYPE = "ui-template-literal-source-graph"
@@ -20,12 +27,12 @@ FACT_PROPERTIES = {
     "padding_block_end", "padding_inline_start", "gap", "inset_block_start",
     "inset_inline_end", "inset_block_end", "inset_inline_start", "size", "radius",
     "surface", "border", "shadow", "background", "text", "text_decoration",
-    "visibility", "container_presentation",
+    "visibility", "container_presentation", *CHROME_FACT_PROPERTIES,
 }
 SEMANTIC_VALUES = {
     "none", "zero", "auto", "intrinsic", "fill", "non-wrap", "non-shrink",
     "underline", "visible", "hidden", "viewport", "region", "inline", "block",
-    "horizontal", "vertical", "overlay",
+    "horizontal", "vertical", "overlay", *CHROME_SEMANTIC_VALUES,
 }
 NEGATIVE_VALUES = {"none", "zero", "non-wrap", "non-shrink", "hidden"}
 HARD_LIMITS = {
@@ -305,7 +312,14 @@ def _root_and_graph(source_root: Path, relative: str) -> tuple[Path, Path]:
         if cursor.is_symlink():
             raise CaptureError("SOURCE_PATH_SYMLINK", f"source path uses symlink: {relative}")
         cursor = cursor.parent
-    graph = graph.resolve(strict=True)
+        if cursor == cursor.parent:
+            break
+    if not graph.exists() or not graph.is_file():
+        raise CaptureError("SOURCE_GRAPH_MISSING", f"graph is not a file: {relative}")
+    try:
+        graph = graph.resolve(strict=True)
+    except FileNotFoundError as exc:
+        raise CaptureError("SOURCE_GRAPH_MISSING", f"graph is not a file: {relative}") from exc
     try:
         graph.relative_to(root)
     except ValueError as exc:
@@ -456,6 +470,18 @@ def capture(request_data: Any, source_root: Path) -> dict[str, Any]:
     for key in sorted(groups, key=lambda item: canonical_json(item)):
         if len(groups[key]) > 1:
             unresolved.append({"code": "context-slot-conflict", "identity": list(key), "fact_ids": sorted(group_ids[key]), "values": sorted(groups[key])})
+    if request["conformance"] == "structural" and "shell" in request["scope"]["scenes"]:
+        shell_facts = [
+            item for item in fact_rows
+            if item.get("facet") == "layout_scenes" and item.get("subject") == "shell"
+        ]
+        gaps = chrome_fact_gaps(shell_facts)
+        if gaps:
+            raise CaptureError(
+                CHROME_INCOMPLETE,
+                "shell usage is missing a complete chrome composition",
+                gaps=gaps,
+            )
     exports = sorted(
         ({"definition_id": item["id"], "symbol": symbol} for item in definitions for symbol in item["exports"]),
         key=lambda item: (item["definition_id"], item["symbol"]),
@@ -533,3 +559,43 @@ def replay(request_data: Any, source_root: Path, expected_receipt: Any) -> dict[
         "expected_closure_digest": expected_digest, "actual_closure_digest": actual.get("closure_digest"),
         "source_revision": actual["source"]["revision"], "source_graph_digest": actual["source"]["graph_digest"],
     }
+
+
+SOURCE_GRAPH_SKELETON = """schema_version: 1
+graph_type: ui-template-literal-source-graph
+platform: web
+closure_complete: false
+canonical_candidates:
+  themes: [theme.core]
+  entries: [entry.shell]
+definitions:
+  - {id: theme.core, kind: theme, name: core, locator: "ui-source-graph.yaml#/definitions/theme.core", exports: [theme], facts: []}
+  - {id: entry.shell, kind: entry, name: shell-entry, locator: "ui-source-graph.yaml#/definitions/entry.shell", exports: [shell], facts: []}
+  - {id: scene.shell, kind: scene, name: shell, locator: "ui-source-graph.yaml#/definitions/scene.shell", exports: [shell-scene], facts: []}
+imports:
+  - {id: import.shell, from_definition: entry.shell, to_definition: scene.shell, locator: "ui-source-graph.yaml#/imports/import.shell"}
+usages:
+  - id: usage.shell
+    definition_id: scene.shell
+    scene: shell
+    component: null
+    context: null
+    slot: canvas
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.shell"
+    facts: []
+exclusions: []
+dynamic: []
+# Required shell chrome slots (empty facts remain incomplete; this file is not a TSX parser):
+# workspace-switcher, search, compose, header-trigger, chat-fab
+"""
+
+
+def write_source_graph_skeleton(path: Path) -> Path:
+    """Write a closed shell-slot placeholder graph. Empty facts stay incomplete; does not parse source."""
+    if "example" in path.absolute().parts:
+        raise CaptureError("EXCLUDED_EXAMPLE_PATH", "example/** cannot receive a source graph skeleton")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(SOURCE_GRAPH_SKELETON, encoding="utf-8")
+    return path
+

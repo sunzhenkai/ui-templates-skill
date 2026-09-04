@@ -10,6 +10,8 @@ from typing import Any, Iterable
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
+from template_authoring.chrome import CHROME_INCOMPLETE, chrome_record_gaps
+
 from .loading import LoadError, load_data
 from .model import ValidationResult
 
@@ -104,6 +106,16 @@ def canonicalize(value: Any) -> Any:
         items = [canonicalize(item) for item in value]
         if items and all(isinstance(item, dict) and "id" in item for item in items):
             return sorted(items, key=lambda item: str(item.get("id")))
+        if items and all(isinstance(item, dict) and {"type", "from", "to"} <= set(item) for item in items):
+            return sorted(
+                items,
+                key=lambda item: canonical_json({
+                    "order": item.get("order"),
+                    "type": item.get("type"),
+                    "from": item.get("from"),
+                    "to": item.get("to"),
+                }),
+            )
         if items and all(isinstance(item, dict) and {"property", "value"} <= set(item) for item in items):
             return sorted(items, key=lambda item: canonical_json(item))
         if items and all(not isinstance(item, (dict, list)) for item in items):
@@ -338,6 +350,9 @@ def validate_semantics(
             # scenes may legally have no scroll domains if they record root_scroll none
             if record.get("scene") == "shell" and ("root_scroll", "none") not in negatives:
                 add("FIDELITY_NEGATIVE_FACT_MISSING", "无根滚动必须记录 root_scroll none", f"{where}.negative_facts", property="root_scroll")
+        gaps = chrome_record_gaps(record)
+        if gaps:
+            add(CHROME_INCOMPLETE, "included shell scene chrome composition 不完整", where, gaps=gaps)
 
     for index, record in enumerate(data.get("component_geometry") or []):
         if not isinstance(record, dict):
@@ -409,6 +424,7 @@ def validate_semantics(
         ".conformance", ".method", ".status", ".captured_at", ".confidence",
         ".property", ".wrap", ".shrink", ".fill", ".arrangement", ".nested_in",
         ".text_decoration", ".visibility", ".container_presentation",
+        ".scene_kind", ".shell_variant", ".order",
     )
     for string_path, text in _walk_strings(data):
         if not string_path.endswith(".description") and "details." not in string_path:

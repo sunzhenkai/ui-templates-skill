@@ -30,8 +30,8 @@ tags:
 - blue
 - responsive
 confidence:
-  overall: high
-  layout: high
+  overall: medium
+  layout: medium
   visual: high
   components: high
 coverage:

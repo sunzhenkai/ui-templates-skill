@@ -2,12 +2,16 @@
   "schema_version": 1,
   "runner_version": "1.0.0",
   "cases": {
+    "apply-chrome-unavailable": {
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
+      "status": "passed"
+    },
     "apply-fidelity-facet-recovery": {
-      "fixture_sha256": "1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7",
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
       "status": "passed"
     },
     "apply-fidelity-projections": {
-      "fixture_sha256": "1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7",
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
       "status": "passed"
     },
     "apply-out-of-scope-rejected": {
@@ -43,31 +47,47 @@
       "status": "passed"
     },
     "fidelity-canonical-stable": {
-      "fixture_sha256": "1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7",
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
+      "status": "passed"
+    },
+    "fidelity-capture-chrome-incomplete": {
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
+      "status": "passed"
+    },
+    "fidelity-capture-no-graph": {
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
       "status": "passed"
     },
     "fidelity-capture-reproducibility": {
-      "fixture_sha256": "1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7",
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
+      "status": "passed"
+    },
+    "fidelity-chrome-incomplete": {
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
       "status": "passed"
     },
     "fidelity-example-exclusion": {
-      "fixture_sha256": "1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7",
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
+      "status": "passed"
+    },
+    "fidelity-layout-high-without-chrome": {
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
       "status": "passed"
     },
     "fidelity-legacy-baseline": {
-      "fixture_sha256": "1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7",
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
       "status": "passed"
     },
     "fidelity-negative-mutations": {
-      "fixture_sha256": "1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7",
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
       "status": "passed"
     },
     "fidelity-portable-structural": {
-      "fixture_sha256": "1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7",
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
       "status": "passed"
     },
     "fidelity-unknown-fail-closed": {
-      "fixture_sha256": "1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7",
+      "fixture_sha256": "1b7b5106afcfc06ae1afe83afc4483a830dbe5911edd6f5f1e018f3044f95274",
       "status": "passed"
     },
     "no-apply-handoff-after-authoring": {

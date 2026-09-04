@@ -99,6 +99,8 @@ class ContractEvalTests(unittest.TestCase):
             "fidelity-portable-structural", "fidelity-legacy-baseline", "fidelity-unknown-fail-closed",
             "fidelity-canonical-stable", "fidelity-negative-mutations", "fidelity-capture-reproducibility",
             "fidelity-example-exclusion", "apply-fidelity-projections", "apply-fidelity-facet-recovery",
+            "fidelity-chrome-incomplete", "fidelity-layout-high-without-chrome",
+            "fidelity-capture-no-graph", "fidelity-capture-chrome-incomplete", "apply-chrome-unavailable",
         }
         actual_ids: set[str] = set()
         judges: dict[str, int] = {"script": 0, "llm": 0}
@@ -114,7 +116,7 @@ class ContractEvalTests(unittest.TestCase):
                 actual_ids.add(case["id"])
                 judges[case["judge"]] += 1
         self.assertEqual(expected_ids, actual_ids)
-        self.assertEqual({"script": 24, "llm": 2}, judges)
+        self.assertEqual({"script": 29, "llm": 2}, judges)
         self.assertEqual(
             {
                 "skills/ui-template/evals/cases.yaml",
@@ -129,7 +131,7 @@ class ContractEvalTests(unittest.TestCase):
         first = run(ROOT)
         second = run(ROOT)
         self.assertEqual("passed", first["status"])
-        self.assertEqual({"declared": 26, "parsed": 26, "executed": 26, "script": 24, "llm": 2}, first["counts"])
+        self.assertEqual({"declared": 31, "parsed": 31, "executed": 31, "script": 29, "llm": 2}, first["counts"])
         self.assertEqual("matched", first["baseline"]["status"])
         self.assertEqual({"added": [], "removed": [], "changed": []}, first["baseline"]["diff"])
         self.assertEqual(first, second)

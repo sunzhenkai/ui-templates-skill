@@ -65,7 +65,11 @@
       "enum": [
         "none", "zero", "auto", "intrinsic", "fill", "wrap", "non-wrap", "shrink", "non-shrink",
         "underline", "visible", "hidden", "viewport", "region", "inline", "block",
-        "horizontal", "vertical", "overlay"
+        "horizontal", "vertical", "overlay", "inset", "flush",
+        "workspace-switcher", "search", "compose", "nav-group", "pin-list", "rail",
+        "header-trigger", "footer-utility", "chat-fab", "page-header", "page-toolbar", "page-canvas",
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+        "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32"
       ]
     },
     "valueRef": {
@@ -139,7 +143,35 @@
       "properties": {
         "type": {"enum": ["contains", "owns", "horizontal", "vertical", "overlay"]},
         "from": {"$ref": "#/$defs/stableId"},
-        "to": {"$ref": "#/$defs/stableId"}
+        "to": {"$ref": "#/$defs/stableId"},
+        "order": {"type": "integer", "minimum": 0, "maximum": 32}
+      }
+    },
+    "slotRole": {
+      "enum": [
+        "workspace-switcher", "search", "compose", "nav-group", "pin-list", "rail",
+        "header-trigger", "footer-utility", "chat-fab", "page-header", "page-toolbar", "page-canvas"
+      ]
+    },
+    "shellSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "region", "order"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "role": {"$ref": "#/$defs/slotRole"},
+        "region": {"$ref": "#/$defs/stableId"},
+        "order": {"type": "integer", "minimum": 0, "maximum": 32}
+      }
+    },
+    "chromeAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "region"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "role": {"enum": ["header-trigger", "chat-fab"]},
+        "region": {"$ref": "#/$defs/stableId"}
       }
     },
     "scrollDomain": {
@@ -198,7 +230,11 @@
         "overlays": {"type": "array", "items": {"$ref": "#/$defs/overlay"}},
         "responsive_modes": {"type": "array", "items": {"$ref": "#/$defs/responsiveMode"}},
         "negative_facts": {"type": "array", "items": {"$ref": "#/$defs/negativeFact"}},
-        "provenance": {"$ref": "#/$defs/provenance"}
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "scene_kind": {"enum": ["shell", "board", "master-detail", "dialog", "other"]},
+        "shell_variant": {"enum": ["inset", "flush"]},
+        "slots": {"type": "array", "items": {"$ref": "#/$defs/shellSlot"}},
+        "chrome_anchors": {"type": "array", "items": {"$ref": "#/$defs/chromeAnchor"}}
       }
     },
     "geometryProperties": {

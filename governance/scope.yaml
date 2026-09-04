@@ -24,6 +24,7 @@ immutable_history:
   - skills/**/patches/**
   - skills/**/experience/**
 exclusions:
+  - example/workbench-shell/web-v1/**
   - example/workbench-shell/web-v2/**
   - docs/**
   - example/workbench-shell/web-v3/**

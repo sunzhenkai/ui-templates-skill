@@ -9,7 +9,9 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from .capture import CaptureError, canonical_json, capture_from_files
+from .capture import CaptureError, canonical_json, capture_from_files, load_document
+from .chrome import CHROME_INCOMPLETE, COVERAGE_TAXONOMY_REPLACES_SHELL, chrome_complete_sidecar, page_modes_replace_shell
+from .profile import facts_to_fidelity
 
 REPORT_SCHEMA_VERSION = 1
 
@@ -123,6 +125,18 @@ def run_authoring_gate(
             issues.append({"code": "CAPTURE_UNRESOLVED", "details": first.get("unresolved", [])})
         if reproducibility != "passed":
             issues.append({"code": "CAPTURE_NOT_REPRODUCIBLE"})
+        if capture_status == "captured":
+            generated = facts_to_fidelity(first)
+            if "shell" in (first.get("request") or {}).get("scope", {}).get("scenes", []) and not chrome_complete_sidecar(generated):
+                issues.append({"code": CHROME_INCOMPLETE})
+            meta_path = candidate_template / "meta.yaml"
+            if meta_path.is_file():
+                meta = load_document(meta_path)
+                declared = ((meta.get("coverage") or {}).get("page_modes") or {}).get("declared") if isinstance(meta, dict) else None
+                if page_modes_replace_shell(declared) and not (candidate_template / "fidelity.yaml").is_file():
+                    issues.append({"code": COVERAGE_TAXONOMY_REPLACES_SHELL})
+        if capture_status == "style-only" and not (first.get("style_only_reason") or "").strip():
+            issues.append({"code": "STYLE_ONLY_REASON_REQUIRED"})
     except CaptureError as exc:
         issues.append({"code": exc.code, "message": str(exc), "details": exc.details})
     if not issues and capture_receipt is not None:
@@ -197,7 +211,7 @@ def run_authoring_gate(
             "promoted": promoted,
         },
         "degradation": (
-            "style-only: structural layout/geometry/state fidelity is not provided"
+            "style-only: structural layout/geometry/state fidelity is not provided; chrome composition is not provided"
             if isinstance(profile, dict) and profile.get("conformance") == "style-only" else None
         ),
         "issues": sorted(issues, key=canonical_json),
