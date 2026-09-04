@@ -1,0 +1,111 @@
+schema_version: 1
+skill: ui-template
+revision: add-structural-fidelity-profile-eval-v1
+cases:
+  - id: fidelity-portable-structural
+    skill: ui-template
+    category: validation-gate
+    description: 受支持 structural sidecar 的 portable 校验通过，replay 为 not-run，且报告排除 example/**。
+    given: 合法 v2 模板附带 repo-structural-v1 fidelity.yaml，调用方未提供 session source
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-portable-structural
+    fixture_sha256: 1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7
+    judge: script
+    expect:
+      must:
+        - portable validation 通过
+        - conformance 为 structural
+        - replay status 为 not-run
+        - 报告 discovery 排除 example/**
+      must_not:
+        - 向用户索要历史 checkout 路径
+    revision: add-structural-fidelity-profile-eval-v1
+  - id: fidelity-legacy-baseline
+    skill: ui-template
+    category: schema
+    description: 合法 v2 无 sidecar 模板按 legacy-baseline 消费。
+    given: 删除 structural fixture 的 fidelity.yaml 后只保留 core v2
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-legacy-baseline
+    fixture_sha256: 1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7
+    judge: script
+    expect:
+      must:
+        - portable validation 通过
+        - conformance 为 legacy-baseline
+      must_not:
+        - 因缺少 sidecar 失败
+    revision: add-structural-fidelity-profile-eval-v1
+  - id: fidelity-unknown-fail-closed
+    skill: ui-template
+    category: schema
+    description: 未知 fidelity profile 必须 fail closed。
+    given: sidecar 声明不受支持的 profile 名称
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-unknown-fail-closed
+    fixture_sha256: 1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7
+    judge: script
+    expect:
+      must:
+        - 报告 FIDELITY_PROFILE_UNSUPPORTED
+        - 命令非零退出
+      must_not:
+        - 按 legacy-baseline 静默降级
+    revision: add-structural-fidelity-profile-eval-v1
+  - id: fidelity-canonical-stable
+    skill: ui-template
+    category: schema
+    description: canonical digest 忽略 description 与 locator 行号噪声。
+    given: 同一 profile 仅改变 prose/行号/无序集合顺序
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-canonical-stable
+    fixture_sha256: 1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7
+    judge: script
+    expect:
+      must:
+        - digest 保持不变
+      must_not:
+        - 把允许的 YAML/prose 噪声当作语义变化
+    revision: add-structural-fidelity-profile-eval-v1
+  - id: fidelity-negative-mutations
+    skill: ui-template
+    category: validation-gate
+    description: Dialog padding、navigation underline、scroll owner 与悬空 token 的负向 mutation 产生稳定 finding。
+    given: 对 structural fixture 分别删除 padding_block_start、加入 underline 冲突、重复 scroll owner、写入悬空 token
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-negative-mutations
+    fixture_sha256: 1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7
+    judge: script
+    expect:
+      must:
+        - 对应 geometry/state/scroll/token finding 稳定出现
+        - 校验失败
+      must_not:
+        - 按文件顺序任选冲突值
+    revision: add-structural-fidelity-profile-eval-v1
+  - id: fidelity-capture-reproducibility
+    skill: ui-template
+    category: validation-gate
+    description: 固定 revision/scope 的 repo capture 重复运行产生相同 profile digest。
+    given: 非 example 固定 literal source graph fixture
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-capture-reproducibility
+    fixture_sha256: 1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7
+    judge: script
+    expect:
+      must:
+        - 两次 capture 结果一致
+        - facts_to_fidelity digest 一致
+        - conformance 为 structural
+      must_not:
+        - unresolved 漂移
+    revision: add-structural-fidelity-profile-eval-v1
+  - id: fidelity-example-exclusion
+    skill: ui-template
+    category: prohibited-content
+    description: validator/eval 输入包含 example/ 前缀时立即失败且不把该路径当作通过证据。
+    given: 校验路径为 example/workbench-shell/web-v3
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-example-exclusion
+    fixture_sha256: 1848da8eccf861e8f0d77a52d9e24403c99f909e342df92985a06da866018fa7
+    judge: script
+    expect:
+      must:
+        - 报告 EXAMPLE_PATH_IN_SCOPE
+        - discovery 声明 example/** exclusion
+      must_not:
+        - 打开或执行 example 内容
+    revision: add-structural-fidelity-profile-eval-v1

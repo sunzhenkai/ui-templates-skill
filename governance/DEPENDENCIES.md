@@ -11,7 +11,7 @@
 | referencing | 0.37.0 | MIT | 解析本地 schema `$ref` registry。 |
 | rpds-py | 2026.6.3 | MIT | `referencing` 使用的固定持久数据结构。 |
 
-许可信息来自各包发布元数据；两者均不随模板资产再分发。隔离安装与离线测试命令：
+许可信息来自各包发布元数据；两者均不随模板资产再分发。本 change 的 structural fidelity profile 实现未新增 governance dependency，继续使用上表固定版本。隔离安装与离线测试命令：
 
 ```bash
 python3 -m venv /tmp/ui-template-governance-venv

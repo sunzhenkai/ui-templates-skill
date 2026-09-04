@@ -5,6 +5,19 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from .colors import Color, composite, contrast_ratio, parse_color
+from .fidelity import (
+    classify_sidecar,
+    empty_replay,
+    identity_payload,
+    load_fidelity,
+    parse_source_roots,
+    path_has_example_prefix,
+    replay_profile,
+    schema_errors as fidelity_schema_errors,
+    validate_semantics as validate_fidelity_semantics,
+    FidelityError,
+    UNKNOWN,
+)
 from .loading import LoadError, load_data
 from .model import ValidationResult
 from .schema import SchemaStore
@@ -121,13 +134,24 @@ def _semver(value: str) -> tuple[int, int, int]:
 
 
 class TemplateValidator:
-    def __init__(self, repo_root: Path, schema_dir: Path | None = None):
+    def __init__(
+        self,
+        repo_root: Path,
+        schema_dir: Path | None = None,
+        *,
+        source_roots: dict[str, Path] | None = None,
+        require_source_replay: bool = False,
+        capture_receipt: dict[str, Any] | None = None,
+    ):
         self.repo_root = repo_root.resolve()
         canonical_schema_dir = self.repo_root / "schemas/template/v2"
         portable_schema_dir = Path(__file__).resolve().parents[1] / "schemas/template/v2"
         self.schema_dir = schema_dir or (canonical_schema_dir if canonical_schema_dir.is_dir() else portable_schema_dir)
         self.schemas = SchemaStore(self.schema_dir)
         self.result = ValidationResult()
+        self.source_roots = source_roots or {}
+        self.require_source_replay = require_source_replay
+        self.capture_receipt = capture_receipt
 
     def rel(self, path: Path) -> str:
         try:
@@ -180,7 +204,6 @@ class TemplateValidator:
             "schema_version": meta.get("schema_version") if isinstance(meta, dict) else None,
             "path": self.rel(template),
         }
-        self.result.templates.append(identity)
         self._check_prohibited(template)
         self._check_links(template)
         definitions, references = self._check_rules(template)
@@ -195,6 +218,18 @@ class TemplateValidator:
         if isinstance(tokens, dict) and isinstance(meta, dict):
             self._check_contrast(template, tokens, meta, definitions)
         self._check_structured_refs(template, definitions, references)
+        source_ids = {
+            item.get("id")
+            for item in (meta.get("sources") if isinstance(meta, dict) else []) or []
+            if isinstance(item, dict)
+        }
+        identity["fidelity"] = self._check_fidelity(
+            template,
+            definitions,
+            set(records),
+            {item for item in source_ids if isinstance(item, str)},
+        )
+        self.result.templates.append(identity)
         # Variables intentionally retained: schema errors are aggregated with semantics.
         _ = (meta_ok, tokens_ok, evidence_ok)
 
@@ -631,10 +666,83 @@ class TemplateValidator:
                 or re.fullmatch(r"(?:vite|webpack|rollup|eslint|prettier|tailwind)\.config\..+", name)
             ):
                 self.add("PROHIBITED_ENGINEERING_PATH", path, "模板内禁止源码、工程清单、stack adapter 或代码结构文件")
-            if path.suffix.lower() in TEXT_SUFFIXES and "apply" not in lowered:
+            if path.suffix.lower() in TEXT_SUFFIXES and "apply" not in lowered and name != "fidelity.yaml":
                 text = path.read_text(encoding="utf-8")
                 if PROHIBITED_TEXT.search(text):
                     self.add("PROHIBITED_ENGINEERING_CONTENT", path, "模板设计文档包含项目工程或技术栈内容")
+
+    def _check_fidelity(
+        self,
+        template: Path,
+        rule_ids: set[str],
+        token_paths: set[str],
+        source_ids: set[str],
+    ) -> dict[str, Any]:
+        path = template / "fidelity.yaml"
+        if not path.is_file():
+            replay = empty_replay()
+            if self.require_source_replay:
+                self.add("STRUCTURAL_REPLAY_REQUIRED", template, "structural Generate-from-source 要求对该 session source 执行 replay")
+            return identity_payload(None, present=False, replay=replay)
+        data = self.load(path)
+        if not isinstance(data, dict):
+            payload = identity_payload(data if isinstance(data, dict) else None, present=True, replay=empty_replay())
+            if self.require_source_replay:
+                self.add("STRUCTURAL_REPLAY_REQUIRED", path, "fidelity sidecar 无法 replay")
+            return payload
+        for subpath, message, details in fidelity_schema_errors(data, self.repo_root):
+            full = f"{self.rel(path)}#{subpath}" if subpath else self.rel(path)
+            self.result.add("FIDELITY_SCHEMA_INVALID", full, message, **details)
+        conformance = classify_sidecar(data, present=True)
+        if conformance == UNKNOWN:
+            self.add(
+                "FIDELITY_PROFILE_UNSUPPORTED",
+                path,
+                "未知 fidelity schema 或 profile，fail closed",
+                declared_schema=data.get("schema_version"),
+                declared_profile=data.get("profile"),
+            )
+            return identity_payload(data, present=True, replay=empty_replay())
+        validate_fidelity_semantics(
+            data,
+            result=self.result,
+            path=path,
+            rel=self.rel(path),
+            token_paths=token_paths,
+            rule_ids=rule_ids,
+            source_ids=source_ids,
+        )
+        replay = empty_replay()
+        if self.source_roots:
+            replay = replay_profile(
+                data,
+                source_roots=self.source_roots,
+                candidate_template=template,
+                capture_receipt=self.capture_receipt,
+            )
+            if replay.get("status") != "passed":
+                self.add(
+                    "FIDELITY_SOURCE_REPLAY_FAILED",
+                    path,
+                    "session source replay 失败",
+                    **{key: replay.get(key) for key in ("declared", "resolved", "executed", "passed", "errors")},
+                )
+        if self.require_source_replay:
+            counts = [replay.get(key) for key in ("declared", "resolved", "executed", "passed")]
+            ok = (
+                replay.get("status") == "passed"
+                and all(isinstance(value, int) and not isinstance(value, bool) for value in counts)
+                and counts[0] > 0
+                and len(set(counts)) == 1
+            )
+            if not ok:
+                self.add(
+                    "STRUCTURAL_REPLAY_REQUIRED",
+                    path,
+                    "structural Generate-from-source 要求 declared = resolved = executed = passed > 0",
+                    replay=replay,
+                )
+        return identity_payload(data, present=True, replay=replay)
 
     def validate_index(self, index: Path, templates: list[Path]) -> None:
         if not index.is_file():
@@ -681,8 +789,46 @@ def discover_templates(paths: list[Path]) -> tuple[list[Path], Path | None]:
     return sorted(set(templates)), inferred_index
 
 
-def validate_paths(paths: list[Path], repo_root: Path, *, index: Path | None = None, schema_dir: Path | None = None) -> ValidationResult:
-    validator = TemplateValidator(repo_root=repo_root, schema_dir=schema_dir)
+def _example_inputs(paths: Iterable[Path], extra: Iterable[Path] = ()) -> list[str]:
+    found: list[str] = []
+    for path in [*paths, *extra]:
+        posix = path.as_posix()
+        if path_has_example_prefix(posix) or path_has_example_prefix(path.resolve().as_posix()):
+            found.append(posix)
+    return found
+
+
+def validate_paths(
+    paths: list[Path],
+    repo_root: Path,
+    *,
+    index: Path | None = None,
+    schema_dir: Path | None = None,
+    source_roots: dict[str, Path] | None = None,
+    require_source_replay: bool = False,
+    capture_receipt: dict[str, Any] | None = None,
+) -> ValidationResult:
+    validator = TemplateValidator(
+        repo_root=repo_root,
+        schema_dir=schema_dir,
+        source_roots=source_roots,
+        require_source_replay=require_source_replay,
+        capture_receipt=capture_receipt,
+    )
+    example_hits = _example_inputs(paths, [index] if index is not None else [])
+    example_hits.extend(
+        str(root) for root in (source_roots or {}).values() if path_has_example_prefix(root)
+    )
+    validator.result.discovery = {
+        "inputs": [path.as_posix() for path in paths],
+        "source_bindings": sorted((source_roots or {})),
+        "require_source_replay": require_source_replay,
+        "example_hits": example_hits,
+    }
+    if example_hits:
+        for hit in example_hits:
+            validator.add("EXAMPLE_PATH_IN_SCOPE", hit, "example/** 不得作为 validator/eval/source 输入")
+        return validator.result
     templates, inferred_index = discover_templates(paths)
     if not templates:
         validator.add("NO_TEMPLATES", paths[0] if paths else repo_root, "没有发现模板目录")

@@ -20,7 +20,7 @@
 
 ### 布局、滚动与响应式
 
-对 coverage 声明的每个 viewport/platform 验证 root/内部滚动归属、稳定 chrome、无意外横向滚动、允许横滚的替代操作、导航/动作降级、浮层/FAB/安全区和 included 页面模式。记录 `LAYOUT-###`/`RESP-###`；不强制模板未声明的固定三个视口。
+对 coverage 声明的每个 viewport/platform 验证 root/内部滚动归属、稳定 chrome、无意外横向滚动、允许横滚的替代操作、导航/动作降级、浮层/FAB/安全区和 included 页面模式。若存在 `fidelity.yaml`，Phase 8 required scenario IDs 由 profile records 派生；negative facts 不得被组件库默认覆盖。记录 `LAYOUT-###`/`RESP-###`；不强制模板未声明的固定三个视口。
 
 ### Tokens 与 computed style
 

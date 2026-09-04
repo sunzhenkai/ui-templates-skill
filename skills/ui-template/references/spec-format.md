@@ -10,6 +10,7 @@ templates/<name>/
 ├── tokens.yaml             # 精确值唯一载体
 ├── meta.yaml               # 身份、来源、置信度、coverage
 ├── evidence.yaml           # token/default/asset provenance
+├── fidelity.yaml           # 可选 compatible sidecar；repo Authoring 新建/更新时总是生成 receipt
 ├── assets/                 # 可选，仅放许可允许且已完成隐私处理的资产
 ├── components.md           # 可选，设计层组件契约
 ├── platforms/*.md          # 可选，平台设计差异
@@ -125,12 +126,24 @@ entries:
 
 每个实际 `assets/` 文件还须有 `kind: asset` evidence，并记录 `license`、`redistribution: allowed | prohibited | not-applicable`、`redaction: none | applied | required | not-applicable`。禁止分发或仍需脱敏的资产不得留在模板中。
 
+## optional compatible `fidelity.yaml`
+
+`fidelity.yaml` 使用独立 schema family；支持的 v1 profile 为 `repo-structural-v1`。它只机器表达三类 source-derived observable：
+
+1. `layout_scenes`：region/relation、arrangement、fill/shrink/wrap、按轴 scroll domains、overlay scope/anchor、responsive mode；
+2. `component_geometry`：component/slot 的逻辑方向 padding/gap/inset/size/radius/surface/border/shadow token refs 或闭集 semantic；
+3. `state_presentations`：subject/context/state/surface 的背景/文字/边界、decoration、visibility/container presentation，并把 `none` 等 negative fact 作为 expected。
+
+权威按职责分区，而非互相复制：`spec.md` 定义设计意图、Non-negotiables 与稳定 rule identity；`tokens.yaml` 唯一携带精确值；`fidelity.yaml` 定义 scene/component slot/context/state 中的 token usage、关系、status、negative facts 与 direct provenance；split docs 只做人类解释并引用 rule/profile record IDs；`apply/` 只定义 Phase 0–9 映射、取证方法和通过条件。跨职责悬空或越权即失败，不由 Apply 按 prose 优先级猜测。
+
+repo 新建/更新默认 structural；用户明确 style-only 时 sidecar 记录理由且三类 records 为空。合法 core v2 无 sidecar 是 `legacy-baseline`，并非 style-only；未知 schema/profile fail closed。profile canonical semantics 纳入 template identity。已发布模板的 `meta.sources[]` 只证明出处，不要求原仓库仍在本地；无 session source 时不得为补 sidecar 向用户索要历史路径。
+
+**Profile v1 Non-Goals：**不发布完整 AST/call graph/source snapshot，不成为通用 UI/component DSL，不规定 React/Vue/Tailwind、组件库、DOM、CSS class、工程目录、依赖、API/data/state 或 runnable starter，不要求目标源码/DOM 同构。所有精确数值仍只在 `tokens.yaml`。
+
 ## optional `apply/`
 
-`apply/` 只归模板 Authoring 所有，只描述：模板步骤如何映射通用 Apply Phase 0–9、某个 rule ID 在何处/如何取证、通过条件是什么。页面模式、布局、断点、URL、组件语义属于设计规则，应在根设计文档定义；`apply/` 只能引用它们。
-
-冲突优先级：`spec.md` → `tokens.yaml` 的精确值 → 拆分设计文档 → `apply/`。冲突必须作为 feedback 记录，不得由消费方静默改模板。
+`apply/` 只归模板 Authoring 所有，只描述：模板步骤如何映射通用 Apply Phase 0–9、某个 rule/profile record ID 在何处/如何取证、通过条件是什么。页面模式、布局、断点、URL、组件语义属于设计规则，应在根设计文档定义；`apply/` 只能引用它们，不重新定义 expected。
 
 ## Authoring 完整性
 
-Generate 阶段至少生成四个必备文件并补齐 evidence/coverage/rule ID；Validate 必须聚合检查 schema、语义、对比度、来源、链接、INDEX 候选和禁入内容；Eval 验证 Authoring contract。只有两者成功后才允许更新生产 `templates/INDEX.md`。具体顺序与 portable runner 发现规则见 `../SKILL.md`。
+Generate 在本次从源导入的 staging 至少生成四个 core 文件；有 session source 的 repo 来源另生成适用 sidecar 与 capture receipt，并补齐 evidence/coverage/rule ID。Validate 必须聚合 core/profile schema、语义、对比度、来源身份、links、INDEX 候选和禁入内容。structural Generate-from-source 才对该 session source 要求 replay；已发布模板无 session source 时 portable 通过即可，replay `not-run` 合法。Eval 在从源导入时验证 capture reproducibility 与 Authoring contract。只有本次从源路径的 capture/replay/reproducibility/eval 全部成功后才允许原子更新 production `templates/INDEX.md`；失败保持其 digest 不变。具体顺序与 report API 见 `../SKILL.md` 和 [authoring-report.md](authoring-report.md)。

@@ -54,8 +54,15 @@ class ContractEvalTests(unittest.TestCase):
             shutil.copy2(source, target)
 
     def cli(self, *args: str) -> tuple[subprocess.CompletedProcess[str], dict]:
+        extra = args
+        if "--cases" not in args:
+            extra = (
+                "--cases", "skills/ui-template/evals/cases.yaml",
+                "--cases", "skills/ui-template-apply/evals/cases.yaml",
+                *args,
+            )
         proc = subprocess.run(
-            [sys.executable, str(SCRIPT), "--root", str(self.root), *args],
+            [sys.executable, str(SCRIPT), "--root", str(self.root), *extra],
             text=True,
             capture_output=True,
             check=False,
@@ -78,6 +85,8 @@ class ContractEvalTests(unittest.TestCase):
         return digest
 
     def test_case_and_result_schemas_cover_all_current_cases(self) -> None:
+        from contract_eval.runner import DEFAULT_CASES, LEGACY_CASES
+
         case_schema = json.loads((ROOT / "schemas/eval/case.schema.json").read_text(encoding="utf-8"))
         expected_ids = {
             "authoring-updates-index", "no-apply-handoff-after-authoring", "estimated-values-labeled",
@@ -87,13 +96,13 @@ class ContractEvalTests(unittest.TestCase):
             "apply-requires-reference-reading", "no-apply-without-template", "no-phase-skipping",
             "browser-verification-evidence", "spec-wins-over-apply", "routing-semantics-enforced",
             "apply-token-freeze", "apply-out-of-scope-rejected",
+            "fidelity-portable-structural", "fidelity-legacy-baseline", "fidelity-unknown-fail-closed",
+            "fidelity-canonical-stable", "fidelity-negative-mutations", "fidelity-capture-reproducibility",
+            "fidelity-example-exclusion", "apply-fidelity-projections", "apply-fidelity-facet-recovery",
         }
         actual_ids: set[str] = set()
         judges: dict[str, int] = {"script": 0, "llm": 0}
-        for relative in (
-            "skills/ui-template/evals/cases.yaml",
-            "skills/ui-template-apply/evals/cases.yaml",
-        ):
+        for relative in DEFAULT_CASES:
             document = yaml.safe_load((ROOT / relative).read_text(encoding="utf-8"))
             errors = list(Draft202012Validator(case_schema).iter_errors(document))
             self.assertEqual([], errors)
@@ -105,7 +114,14 @@ class ContractEvalTests(unittest.TestCase):
                 actual_ids.add(case["id"])
                 judges[case["judge"]] += 1
         self.assertEqual(expected_ids, actual_ids)
-        self.assertEqual({"script": 15, "llm": 2}, judges)
+        self.assertEqual({"script": 24, "llm": 2}, judges)
+        self.assertEqual(
+            {
+                "skills/ui-template/evals/cases.yaml",
+                "skills/ui-template-apply/evals/cases.yaml",
+            },
+            set(LEGACY_CASES),
+        )
         for name in ("result.schema.json", "llm-judge-result.schema.json"):
             Draft202012Validator.check_schema(json.loads((ROOT / "schemas/eval" / name).read_text(encoding="utf-8")))
 
@@ -113,13 +129,16 @@ class ContractEvalTests(unittest.TestCase):
         first = run(ROOT)
         second = run(ROOT)
         self.assertEqual("passed", first["status"])
-        self.assertEqual({"declared": 17, "parsed": 17, "executed": 17, "script": 15, "llm": 2}, first["counts"])
+        self.assertEqual({"declared": 26, "parsed": 26, "executed": 26, "script": 24, "llm": 2}, first["counts"])
         self.assertEqual("matched", first["baseline"]["status"])
         self.assertEqual({"added": [], "removed": [], "changed": []}, first["baseline"]["diff"])
         self.assertEqual(first, second)
         self.assertEqual(junit(first), junit(second))
         self.assertIn("<testsuite", junit(first))
         self.assertEqual(2, sum(item["status"] == "asset-valid" for item in first["results"]))
+        self.assertTrue(first["discovery"]["example_excluded"])
+        self.assertIn("example/**", first["discovery"]["exclusions"])
+        self.assertFalse(any(item.startswith("example/") for item in first["discovery"]["inputs"]))
 
     def test_injected_script_failure_returns_nonzero(self) -> None:
         fixture = self.root / "tests/fixtures/eval/script-contracts.yaml"
@@ -183,7 +202,9 @@ class ContractEvalTests(unittest.TestCase):
         self.assertEqual(
             {
                 "skills/ui-template/evals/cases.yaml",
+                "skills/ui-template/evals/fidelity-cases.yaml",
                 "skills/ui-template-apply/evals/cases.yaml",
+                "skills/ui-template-apply/evals/fidelity-cases.yaml",
             },
             set(__import__("contract_eval.runner", fromlist=["DEFAULT_CASES"]).DEFAULT_CASES),
         )

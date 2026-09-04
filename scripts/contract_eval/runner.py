@@ -19,9 +19,39 @@ from referencing import Registry, Resource
 RUNNER_VERSION = "1.0.0"
 DEFAULT_CASES = (
     "skills/ui-template/evals/cases.yaml",
+    "skills/ui-template/evals/fidelity-cases.yaml",
+    "skills/ui-template-apply/evals/cases.yaml",
+    "skills/ui-template-apply/evals/fidelity-cases.yaml",
+)
+LEGACY_CASES = (
+    "skills/ui-template/evals/cases.yaml",
     "skills/ui-template-apply/evals/cases.yaml",
 )
 DEFAULT_BASELINE = "governance/eval/deterministic-baseline.json"
+RESOURCE_MAPPINGS = (
+    ("schemas/", "schemas/"),
+    ("tests/fixtures/eval/", "fixtures/eval/"),
+    ("tests/fixtures/fidelity/", "fixtures/fidelity/"),
+    ("tests/fixtures/repo-capture/", "fixtures/repo-capture/"),
+    ("governance/eval/deterministic-baseline.json", "deterministic-baseline.json"),
+    ("scripts/check_template_apply_state.py", "check_template_apply_state.py"),
+    ("scripts/contract_eval/runner.py", "contract_eval/runner.py"),
+    ("scripts/validate_templates.py", "validate_templates.py"),
+    ("scripts/capture_repo_fidelity.py", "capture_repo_fidelity.py"),
+)
+COMMAND_PROGRAMS = {
+    "validate_templates": "scripts/validate_templates.py",
+    "capture_repo_fidelity": "scripts/capture_repo_fidelity.py",
+}
+PYTHON_OPERATIONS = frozenset({
+    "portable_validate",
+    "canonical_digest_file",
+    "validate_mutated_profile",
+    "capture_reproducibility",
+    "project_ids",
+    "facet_recovery",
+    "example_path_rejected",
+})
 
 
 class UniqueKeyLoader(yaml.SafeLoader):
@@ -84,14 +114,7 @@ def resource_path(root: Path, relative: str) -> Path:
     if direct.exists():
         return direct
     runtime = confined(root, "skills/ui-template/runtime")
-    mappings = (
-        ("schemas/", "schemas/"),
-        ("tests/fixtures/eval/", "fixtures/eval/"),
-        ("governance/eval/deterministic-baseline.json", "deterministic-baseline.json"),
-        ("scripts/check_template_apply_state.py", "check_template_apply_state.py"),
-        ("scripts/contract_eval/runner.py", "contract_eval/runner.py"),
-    )
-    for source_prefix, runtime_prefix in mappings:
+    for source_prefix, runtime_prefix in RESOURCE_MAPPINGS:
         if relative == source_prefix or relative.startswith(source_prefix):
             suffix = relative[len(source_prefix):]
             candidate = (runtime / runtime_prefix / suffix).resolve() if runtime_prefix.endswith("/") else (runtime / runtime_prefix).resolve()
@@ -102,6 +125,265 @@ def resource_path(root: Path, relative: str) -> Path:
             if candidate.exists():
                 return candidate
     raise EvalFailure(f"RESOURCE_MISSING: {relative}")
+
+
+def lookup_path(data: Any, path: list[Any]) -> Any:
+    current = data
+    for key in path:
+        if isinstance(current, list) and isinstance(key, int):
+            current = current[key]
+        elif isinstance(current, dict):
+            current = current[key]
+        else:
+            raise KeyError(key)
+    return current
+
+
+def json_checks(payload: Any, assertion: dict[str, Any]) -> tuple[bool, str]:
+    details: list[str] = []
+    ok = True
+    for item in assertion.get("json_path_equals") or []:
+        if not isinstance(item, dict) or "path" not in item:
+            return False, "json_path_equals items must include path"
+        try:
+            actual = lookup_path(payload, item["path"])
+        except (KeyError, IndexError, TypeError) as exc:
+            ok = False
+            details.append(f"{item['path']} missing: {exc}")
+            continue
+        if actual != item.get("value"):
+            ok = False
+            details.append(f"{item['path']} expected={item.get('value')!r} actual={actual!r}")
+    for item in assertion.get("json_path_gte") or []:
+        if not isinstance(item, dict) or "path" not in item:
+            return False, "json_path_gte items must include path"
+        try:
+            actual = lookup_path(payload, item["path"])
+        except (KeyError, IndexError, TypeError) as exc:
+            ok = False
+            details.append(f"{item['path']} missing: {exc}")
+            continue
+        if not isinstance(actual, (int, float)) or actual < item.get("value", 0):
+            ok = False
+            details.append(f"{item['path']} expected>={item.get('value')!r} actual={actual!r}")
+    for item in assertion.get("json_path_contains") or []:
+        if not isinstance(item, dict) or "path" not in item:
+            return False, "json_path_contains items must include path"
+        try:
+            actual = lookup_path(payload, item["path"])
+        except (KeyError, IndexError, TypeError) as exc:
+            ok = False
+            details.append(f"{item['path']} missing: {exc}")
+            continue
+        value = item.get("value")
+        present = value in actual if isinstance(actual, (list, str, dict)) else False
+        if not present:
+            ok = False
+            details.append(f"{item['path']} missing {value!r}")
+    return ok, "json checks" if ok else "; ".join(details)
+
+
+def apply_mutation(data: Any, mutation: dict[str, Any]) -> Any:
+    payload = json.loads(json.dumps(data))
+    kind = mutation.get("kind")
+    if kind == "delete":
+        parent = lookup_path(payload, mutation["path"][:-1])
+        del parent[mutation["path"][-1]]
+    elif kind == "set":
+        parent = lookup_path(payload, mutation["path"][:-1])
+        parent[mutation["path"][-1]] = mutation["value"]
+    elif kind == "append_scroll_owner":
+        scene = lookup_path(payload, mutation.get("path") or ["layout_scenes", 1])
+        scene.setdefault("scroll_domains", []).append(mutation["value"])
+    elif kind == "append_state_conflict":
+        extra = json.loads(json.dumps(payload["state_presentations"][0]))
+        extra["id"] = mutation.get("id", "state.link.navigation-link.hover.item.conflict")
+        extra["text_decoration"] = mutation.get("text_decoration", "underline")
+        extra["negative_facts"] = []
+        payload["state_presentations"].append(extra)
+    else:
+        raise EvalFailure(f"UNKNOWN_MUTATION {kind}")
+    return payload
+
+
+def load_yaml_resource(root: Path, relative: str) -> Any:
+    return load_yaml(resource_path(root, relative))
+
+
+def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
+    operation = assertion.get("operation")
+    if operation not in PYTHON_OPERATIONS:
+        raise EvalFailure(f"UNKNOWN_PYTHON_OPERATION {operation}")
+    if operation == "portable_validate":
+        from template_validation.validator import validate_paths
+
+        template_root = resource_path(root, assertion["path"])
+        index = resource_path(root, assertion["index"]) if assertion.get("index") else None
+        return validate_paths([template_root], root, index=index).to_dict()
+    if operation == "canonical_digest_file":
+        from template_validation.fidelity import canonical_digest, load_fidelity
+
+        data = load_fidelity(resource_path(root, assertion["path"]))
+        noisy = json.loads(json.dumps(data))
+        if noisy.get("layout_scenes"):
+            noisy["layout_scenes"][0]["description"] = "eval noise"
+            locator = noisy["layout_scenes"][0].get("provenance", {}).get("locator")
+            if isinstance(locator, dict):
+                locator["line"] = 99
+            noisy["layout_scenes"] = list(reversed(noisy["layout_scenes"]))
+        return {
+            "digest": canonical_digest(data),
+            "noisy_digest": canonical_digest(noisy),
+            "stable": canonical_digest(data) == canonical_digest(noisy),
+        }
+    if operation == "validate_mutated_profile":
+        import tempfile
+        import shutil
+        from template_validation.validator import validate_paths
+
+        source = resource_path(root, assertion["path"])
+        results = []
+        with tempfile.TemporaryDirectory() as temp:
+            dest = Path(temp) / "templates"
+            shutil.copytree(source, dest)
+            template_dir = next(path for path in dest.iterdir() if path.is_dir() and (path / "fidelity.yaml").is_file())
+            original = load_yaml(template_dir / "fidelity.yaml")
+            for mutation in assertion.get("mutations") or []:
+                kind = mutation.get("kind")
+                if kind == "delete_sidecar":
+                    (template_dir / "fidelity.yaml").unlink(missing_ok=True)
+                    spec = template_dir / "spec.md"
+                    if spec.is_file():
+                        spec.write_text(
+                            spec.read_text(encoding="utf-8").replace("[fidelity.yaml](fidelity.yaml)", "core v2 files"),
+                            encoding="utf-8",
+                        )
+                elif kind == "replace_sidecar":
+                    sidecar = load_yaml(resource_path(root, mutation["sidecar"]))
+                    (template_dir / "fidelity.yaml").write_text(
+                        yaml.safe_dump(sidecar, sort_keys=False, allow_unicode=True), encoding="utf-8",
+                    )
+                else:
+                    mutated = apply_mutation(original, mutation)
+                    (template_dir / "fidelity.yaml").write_text(
+                        yaml.safe_dump(mutated, sort_keys=False, allow_unicode=True), encoding="utf-8",
+                    )
+                payload = validate_paths([dest], root).to_dict()
+                codes = [item["code"] for item in payload.get("findings") or []]
+                conformance = None
+                templates = payload.get("templates") or []
+                if templates:
+                    conformance = (templates[0].get("fidelity") or {}).get("conformance")
+                results.append({
+                    "id": mutation.get("id") or kind,
+                    "failed": payload.get("exit_code", 1) != 0,
+                    "finding": mutation.get("finding"),
+                    "present": mutation.get("finding") in codes if mutation.get("finding") else True,
+                    "conformance": conformance,
+                    "codes": codes,
+                })
+                (template_dir / "fidelity.yaml").write_text(
+                    yaml.safe_dump(original, sort_keys=False, allow_unicode=True), encoding="utf-8",
+                )
+        return {"results": results, "all_failed": all(item["failed"] and item["present"] for item in results)}
+    if operation == "capture_reproducibility":
+        import os
+        import tempfile
+        import shutil
+        from template_authoring.capture import capture_from_files
+        from template_authoring.profile import facts_to_fidelity
+        from template_validation.fidelity import canonical_digest
+
+        source_fixture = resource_path(root, assertion["source"])
+        request_fixture = resource_path(root, assertion["request"])
+        with tempfile.TemporaryDirectory() as temp:
+            source = Path(temp) / "source"
+            shutil.copytree(source_fixture, source)
+            graph = next(source.glob("ui-source-graph.*"))
+            subprocess.run(["git", "init", "-q"], cwd=source, check=True)
+            subprocess.run(["git", "config", "user.name", "UI Fixture"], cwd=source, check=True)
+            subprocess.run(["git", "config", "user.email", "fixture@example.invalid"], cwd=source, check=True)
+            subprocess.run(["git", "add", graph.name], cwd=source, check=True)
+            env = dict(os.environ)
+            env.update({"GIT_AUTHOR_DATE": "2026-01-01T00:00:00Z", "GIT_COMMITTER_DATE": "2026-01-01T00:00:00Z"})
+            subprocess.run(["git", "commit", "-q", "-m", "fixed literal graph fixture"], cwd=source, check=True, env=env)
+            revision = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=source, check=True, text=True, capture_output=True,
+            ).stdout.strip()
+            request = load_yaml(request_fixture)
+            request["source_revision"] = revision
+            request["graph_path"] = graph.name
+            request_path = Path(temp) / "capture-request.yaml"
+            request_path.write_text(yaml.safe_dump(request, sort_keys=False), encoding="utf-8")
+            first = capture_from_files(request_path, source)
+            second = capture_from_files(request_path, source)
+            profile = facts_to_fidelity(first)
+            again = facts_to_fidelity(second)
+            return {
+                "status": first.get("status"),
+                "repeatable": first == second,
+                "profile_digest": canonical_digest(profile),
+                "profile_repeatable": canonical_digest(profile) == canonical_digest(again),
+                "unresolved": bool(profile.get("unresolved")),
+                "conformance": profile.get("conformance"),
+                "revision": revision,
+            }
+    if operation == "project_ids":
+        from template_apply_state.fidelity import derive_scenario_ids, project_geometry_state, project_layout
+        from template_validation.fidelity import canonicalize, load_fidelity
+
+        data = load_fidelity(resource_path(root, assertion["path"]))
+        layout = project_layout(data)
+        geometry = project_geometry_state(data)
+        scenarios = derive_scenario_ids(data)
+        return {
+            "layout": layout,
+            "geometry": geometry,
+            "scenarios": scenarios,
+            "layout_stable": layout == project_layout(canonicalize(data)),
+            "scenario_stable": scenarios == derive_scenario_ids(canonicalize(data)),
+        }
+    if operation == "facet_recovery":
+        from template_apply_state.fidelity import facet_change_phase
+        from template_validation.fidelity import load_fidelity
+
+        data = load_fidelity(resource_path(root, assertion["path"]))
+        layout_changed = json.loads(json.dumps(data))
+        layout_changed["layout_scenes"][1]["wrap"] = "wrap"
+        state_changed = json.loads(json.dumps(data))
+        state_changed["state_presentations"][0]["text_decoration"] = "underline"
+        return {
+            "unchanged": facet_change_phase(data, data),
+            "layout_phase": facet_change_phase(data, layout_changed),
+            "state_phase": facet_change_phase(data, state_changed),
+        }
+    from template_validation.validator import validate_paths
+
+    payload = validate_paths([Path("example") / "workbench-shell" / "web-v3"], root).to_dict()
+    return {
+        "exit_code": payload.get("exit_code"),
+        "code": (payload.get("findings") or [{}])[0].get("code"),
+        "exclusions": payload.get("discovery", {}).get("exclusions"),
+    }
+
+
+def command_json(root: Path, assertion: dict[str, Any]) -> tuple[int, Any]:
+    program = assertion.get("program")
+    if program not in COMMAND_PROGRAMS:
+        raise EvalFailure(f"UNKNOWN_COMMAND_PROGRAM {program}")
+    argv = [sys.executable, str(resource_path(root, COMMAND_PROGRAMS[program]))]
+    if assertion.get("json", True):
+        argv.append("--json")
+    for relative in assertion.get("paths") or []:
+        argv.append(str(resource_path(root, relative)))
+    if assertion.get("index"):
+        argv.extend(["--index", str(resource_path(root, assertion["index"]))])
+    proc = subprocess.run(argv, text=True, capture_output=True, check=False)
+    try:
+        payload = json.loads(proc.stdout) if proc.stdout.strip() else None
+    except json.JSONDecodeError as exc:
+        raise EvalFailure(f"COMMAND_JSON_PARSE_FAILURE {program}: {exc}: {proc.stdout[:300]}") from exc
+    return proc.returncode, payload
 
 
 def runtime_fingerprint() -> str:
@@ -122,7 +404,7 @@ def revision(root: Path, paths: Iterable[Path]) -> str:
     except (OSError, subprocess.CalledProcessError):
         head = "untracked"
     digest = hashlib.sha256()
-    for path in sorted({p.resolve() for p in paths if p.exists()}, key=lambda p: str(p)):
+    for path in sorted({p.resolve() for p in paths if p.exists() and p.is_file()}, key=lambda p: str(p)):
         digest.update(str(path.relative_to(root.resolve())).encode("utf-8"))
         digest.update(b"\0")
         digest.update(path.read_bytes())
@@ -288,6 +570,19 @@ def run_assertion(root: Path, assertion: dict[str, Any]) -> tuple[bool, str]:
         if not required.issubset(assertion):
             return False, f"json_schema_validity missing {sorted(required - set(assertion))}"
         return schema_validity(root, assertion)
+    if kind == "command_json":
+        code, payload = command_json(root, assertion)
+        expected = assertion.get("expected_exit", 0)
+        if code != expected:
+            return False, f"command_json exit expected={expected} actual={code}"
+        if payload is None:
+            return False, "command_json produced no JSON"
+        ok, detail = json_checks(payload, assertion)
+        return ok, f"command_json {assertion.get('program')} {detail}"
+    if kind == "python_call":
+        payload = python_operation(root, assertion)
+        ok, detail = json_checks(payload, assertion)
+        return ok, f"python_call {assertion.get('operation')} {detail}"
     return False, f"unknown assertion type: {kind}"
 
 
@@ -399,6 +694,14 @@ def validate_report(root: Path, report: dict[str, Any]) -> list[str]:
             "EVAL_COUNT_MISMATCH "
             f"declared={counts['declared']} parsed={counts['parsed']} executed={counts['executed']} results={len(report['results'])}"
         )
+    discovery = report.get("discovery") if isinstance(report.get("discovery"), dict) else {}
+    if not discovery.get("example_excluded", False):
+        failures.append("EVAL_EXAMPLE_PATH_IN_SCOPE")
+    if "example/**" not in (discovery.get("exclusions") or []):
+        failures.append("EVAL_EXAMPLE_EXCLUSION_MISSING")
+    inputs = discovery.get("inputs") or []
+    if any(item == "example" or str(item).startswith("example/") for item in inputs):
+        failures.append("EVAL_EXAMPLE_INPUT_PRESENT")
     ids = [item["id"] for item in report["results"]]
     if len(ids) != len(set(ids)):
         failures.append("EVAL_RESULT_DUPLICATE_ID")
@@ -477,9 +780,13 @@ def run(
             if case["judge"] == "script":
                 for assertion in entry.get("assertions", []):
                     if isinstance(assertion, dict):
-                        for key in ("path", "schema"):
+                        for key in ("path", "schema", "index", "source", "request", "template"):
                             if isinstance(assertion.get(key), str):
                                 revision_inputs.append(resource_path(root, assertion[key]))
+                        for key in ("paths",):
+                            for item in assertion.get(key) or []:
+                                if isinstance(item, str):
+                                    revision_inputs.append(resource_path(root, item))
                 results.append(script_result(root, case, entry, fixture_hash, fingerprint))
             else:
                 if isinstance(entry.get("result_schema"), str):
@@ -513,6 +820,13 @@ def run(
             ))
     results.sort(key=lambda item: item["id"])
     selected_ids = {item.data["id"] for item in selected}
+    input_paths = list(paths)
+    example_inputs = [item for item in input_paths if item == "example" or item.startswith("example/")]
+    discovery = {
+        "example_excluded": not example_inputs,
+        "exclusions": ["example/**"],
+        "inputs": sorted(input_paths),
+    }
     if check_baseline:
         baseline_status, diff, baseline_failures = baseline_diff(root, baseline_path, results, selected_ids)
         failures.extend(baseline_failures)
@@ -531,6 +845,7 @@ def run(
             "parsed": parsed,
             "script": sum(item.data["judge"] == "script" for item in selected),
         },
+        "discovery": discovery,
         "failures": sorted(set(failures)),
         "fixture_hashes": dict(sorted(fixture_hashes.items())),
         "results": results,

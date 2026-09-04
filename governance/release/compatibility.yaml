@@ -6,11 +6,21 @@ public_skills:
 template_schema:
   minimum: 2
   maximum: 2
+fidelity_schema:
+  minimum: 1
+  maximum: 1
+fidelity_profile:
+  supported: [repo-structural-v1]
+  baseline: legacy-baseline
+  style_only: style-only
+  unknown: fail-closed
 compatibility:
   - bundle: 2.x
     ui-template: 2.x
     ui-template-apply: 2.x
     template_schema: 2
+    fidelity_schema: 1
+    fidelity_profile: repo-structural-v1
     status: supported
   - bundle: 1.x
     template_schema: 1
@@ -20,3 +30,4 @@ breaking_boundaries:
   - schema-v2
   - four-value-origin
   - apply-directory-replaces-implementation
+  - fidelity-profile-unknown-fail-closed

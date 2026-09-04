@@ -9,9 +9,9 @@
 
 ## 模板契约
 
-schema v2 模板以 `spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml` 为必备文件，可包含拆分设计文档和技术栈无关的 `apply/`。`tokens.yaml` 是精确值唯一载体；origin 只允许 `source | computed | estimated | default`。模板不包含 `implementation/`、stack adapter、消费项目目录、API/mock/data 分层或 runnable starter。
+schema v2 模板以 `spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml` 为必备文件，可包含拆分设计文档、可选 `fidelity.yaml` 和技术栈无关的 `apply/`。`tokens.yaml` 是精确值唯一载体；origin 只允许 `source | computed | estimated | default`。模板不包含 `implementation/`、stack adapter、消费项目目录、API/mock/data 分层或 runnable starter。无 sidecar 的合法 v2 模板按 baseline fidelity 消费。
 
-格式语义以 [`skills/ui-template/references/spec-format.md`](skills/ui-template/references/spec-format.md) 为准，机器结构以 [`schemas/template/v2/`](schemas/template/v2/) 为准。当前模板库见 [`templates/INDEX.md`](templates/INDEX.md)；`workbench-shell` 来源同时包含固定 revision 的公开仓库源码和一份已泛化的用户设计文档。
+格式语义以 [`skills/ui-template/references/spec-format.md`](skills/ui-template/references/spec-format.md) 为准，机器结构以 [`schemas/template/v2/`](schemas/template/v2/) 为准，可选结构保真 sidecar 以 [`schemas/template/fidelity/v1/`](schemas/template/fidelity/v1/) 为准。当前模板库见 [`templates/INDEX.md`](templates/INDEX.md)；`workbench-shell` 来源同时包含固定 revision 的公开仓库源码和一份已泛化的用户设计文档。无本会话 source 时 workbench 保持 `legacy-baseline`，不索取上游本地路径。双 skill 必须配套升级；未知 profile 不静默降级。`example/**` 是治理排除项。
 
 ## 安装与升级 2.0.0 bundle
 
@@ -37,7 +37,7 @@ make install
 ```bash
 make validate       # root governance gate；显式排除 web-v2/web-v3 样例路径
 make test           # 全部 Python unittest
-make eval           # 当前 17 个 Authoring/Apply contract eval，输出 JSON/JUnit
+make eval           # 当前 26 个 Authoring/Apply contract eval，输出 JSON/JUnit
 make mirror-check   # 检查 .agents/skills 中双 public skill 生产镜像
 make mirror-write   # 以 allowlist 原子重建受管镜像，不触碰其他 skills
 ```

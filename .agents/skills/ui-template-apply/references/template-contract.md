@@ -8,15 +8,17 @@
 2. `meta.yaml`、`tokens.yaml`、`evidence.yaml` 必须都声明 `schema_version: 2`；`meta.template_version` 必须可解析。缺失或未知版本立即停止并要求显式迁移，禁止按 v1 猜测。
 3. 每个 token leaf 必须是含 `value`、适用 `unit` 与 origin 的 record。origin 只接受 `source | computed | estimated | default`；出现 `observed` 或任意未知值即拒绝开始。
 4. checker 必须确认 token/evidence、coverage、rule ID、链接和 required contrast 可解析。验证失败的模板不得进入 Phase 0 complete。
+5. 可选 `fidelity.yaml`：受支持 `repo-structural-v1` 进入 included/deferred/excluded；合法 v2 无 sidecar 明确记录 `legacy-baseline`；用户明确 style-only receipt 与 legacy 不同；未知 schema/profile 停止并要求兼容升级，不得忽略 sidecar。
 
-四种合法 origin 的 `value` 都是确定性 expected：source 为来源声明，computed 为计算/实测，estimated 为可追踪估算，default 为 Authoring 明确补全。Apply 不因 estimated/default 自行换值；偏离必须在 `.ui-template-apply/01-token-map.yaml` 记录 rule ID、理由和用户确认。
+四种合法 origin 的 `value` 都是确定性 expected：source 为来源声明，computed 为计算/实测，estimated 为可追踪估算，default 为 Authoring 明确补全。Apply 不因 estimated/default 自行换值；偏离必须在 `.ui-template-apply/01-token-map.yaml` 记录 rule ID、理由和用户确认。profile 的 `none`、non-wrap、non-shrink、无 shadow 等 negative facts 同样是 expected，不得被组件库默认值覆盖。
 
 ## 读取优先级
 
 1. `spec.md` 是设计规则入口，Non-negotiables 优先。
 2. `tokens.yaml` 是精确值唯一载体，expected 不从 prose 重算。
-3. 拆分设计文档补充平台/页面模式/组件设计。
-4. `apply/` 只补阶段映射和取证方法，不能推翻设计规则或复制精确值。
+3. `fidelity.yaml`（若存在）定义 scene/slot/context 的 token 用法、区域关系和 negative facts；不复制精确值。
+4. 拆分设计文档补充平台/页面模式/组件设计。
+5. `apply/` 只补阶段映射和取证方法，不能推翻设计规则或复制精确值。
 
 发现冲突时，以较高层为准，在 Phase 9 记录 rule ID/裁决并创建 feedback；不得静默处理。
 

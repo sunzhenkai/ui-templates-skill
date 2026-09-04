@@ -1,5 +1,13 @@
 """Template Apply checkpoint、验证与 feedback 的可复用状态工具。"""
 
+from .fidelity import (
+    derive_scenario_ids,
+    facet_change_phase,
+    fidelity_recovery_findings,
+    project_geometry_state,
+    project_layout,
+    required_evidence_kinds,
+)
 from .state import (
     ApplyStateError,
     Finding,
@@ -28,13 +36,19 @@ __all__ = [
     "canonical_digest",
     "canonical_json_bytes",
     "create_feedback",
+    "derive_scenario_ids",
+    "facet_change_phase",
     "feedback_fingerprint",
     "feedback_receipt",
+    "fidelity_recovery_findings",
     "load_structured",
     "merge_feedback",
     "normalize_text",
+    "project_geometry_state",
+    "project_layout",
     "recover_checkpoint",
     "recovery_decision",
+    "required_evidence_kinds",
     "source_identity",
     "validate_checkpoint",
     "validate_feedback",

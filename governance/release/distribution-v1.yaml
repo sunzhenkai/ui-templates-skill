@@ -17,8 +17,12 @@ public_skills:
       - runtime/template_validation/*.py
       - runtime/template_apply_state/*.py
       - runtime/schemas/template/v2/*.json
+      - runtime/schemas/template/fidelity/v1/*.json
       - runtime/schemas/eval/*.json
       - runtime/fixtures/eval/*.yaml
+      - runtime/fixtures/fidelity/**/*
+      - runtime/fixtures/repo-capture/**/*
+      - runtime/template_authoring/*.py
       - runtime/deterministic-baseline.json
   ui-template-apply:
     version: 2.0.0

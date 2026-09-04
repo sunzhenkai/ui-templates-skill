@@ -26,7 +26,7 @@
 
 ## Phase 0 — Intake（`00-intake.md`）
 
-记录模板 name/version/digest、平台/技术栈/既有约束、成功流程，以及 `included/deferred/excluded` 范围。对 coverage 的 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。Gate：schema/origin/checker 通过，范围与非目标经确认。
+记录模板 name/version/digest、平台/技术栈/既有约束、成功流程，以及 `included/deferred/excluded` 范围。对 coverage 的 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。检测 `fidelity.yaml`：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。Gate：schema/origin/checker 通过，范围与非目标经确认。profile digest 纳入现有 template identity，不新增 checkpoint 字段。
 
 ## Phase 1 — Design direction & token freeze
 
@@ -37,7 +37,7 @@ Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题�
 
 ## Phase 2 — IA/layout/routes（`02-routes.yaml`）
 
-记录 route、页面模式、入口/主要动作、URL params、shell/scroll owner、响应式矩阵及无效状态；跨页目的地为 link。Gate：每个 included route 与 coverage/page mode 有确定映射。
+记录 route、页面模式、入口/主要动作、URL params、shell/scroll owner、响应式矩阵及无效状态；跨页目的地为 link。将 included layout scene 投影为稳定 constraint IDs（region/arrangement/fill/shrink/wrap/scroll/overlay/responsive），不要求目标 DOM 或技术栈同构。Gate：每个 included route 与 coverage/page mode 有确定映射；Board non-wrap 与独立 scroll owners 不得被根滚动或自动换行替代。
 
 ## Phase 3 — Project structure（`03-structure.md`）
 
@@ -45,7 +45,7 @@ Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题�
 
 ## Phase 4 — Component inventory（`04-components.yaml`）
 
-每项记录 semantic element、variants/sizes/states、keyboard/AT、source 与 template rule IDs。Gate：included route 的交互全覆盖；无嵌套交互；icon-only、浮层焦点和非颜色状态明确。
+每项记录 semantic element、variants/sizes/states、keyboard/AT、source 与 template rule IDs。将 included component/slot geometry 和 subject/context/state presentation 纳入 inventory/token map；保留 `none`、不对称 padding 等 negative facts，禁止组件库默认值覆盖 profile expected。Gate：included route 的交互全覆盖；无嵌套交互；icon-only、浮层焦点和非颜色状态明确。
 
 ## Phase 5–7 — 实现进度（`05-07-progress.yaml`）
 
@@ -59,13 +59,13 @@ Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题�
 
 记录必须符合 schema v2 `verification.schema.json`，`kind: phase-8-verification`，顶层绑定当前 template digest、source identity、build identity、browser identity。每条 UUID record 必含：rule ID、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。evidence 文件放 `evidence/`；截图、trace、AX、console、computed-style 或脚本输出必须可定位。
 
-按模板 coverage 和 included route 生成矩阵，不使用固定“三视口/十项”等数量代替模板声明。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。
+按模板 coverage、included route 和 fidelity records 确定性生成 required scenario IDs，不使用固定“三视口/十项”等数量代替模板声明。每条 UUID record 必含：rule ID、profile record ID（若有）、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
 
 ## Phase 9 — Review & feedback（`09-review.md`, `feedback/`）
 
 `09-review.md` 必须以 YAML front matter 开头；front matter 使用同一 verification schema，`kind: phase-9-review`，顶层同样必须绑定执行复验的 `browser_identity`。每条记录仅允许 `recheck-passed | recheck-failed`，并以 `phase8_record_id` 引用一条 Phase 8 UUID；引用的 rule ID、expected、route、viewport、theme、state 必须一致，`actual` 与 evidence refs 记录修复后的 current-build 复验结果。一个 Phase 8 record 最多对应一条 Phase 9 record，未知或重复引用均 fail closed。保留的 Phase 8 `failed` 仅在其关联记录为 `recheck-passed` 且 Phase 9 记录整体有效时闭合；未关联、`recheck-failed` 或身份过期仍阻止完成。正文可写 P0/P1/P2 解释与取舍。
 
-可复用模板缺口在 `feedback/<uuid>.yaml` 创建 schema v2 proposed 记录；项目/技术栈专属问题只留当前项目。创建/合并规则见本文件“Feedback”。
+可复用模板缺口在 `feedback/<uuid>.yaml` 创建 schema v2 proposed 记录，引用 profile record/rule/current-build identities；项目/技术栈专属问题只留当前项目。创建/合并规则见本文件“Feedback”。
 
 ## checkpoint 与身份
 
@@ -96,6 +96,8 @@ python3 scripts/check_template_apply_state.py feedback-merge .ui-template-apply/
 
 - scope 变化或 template identity/digest 变化 → 最早 Phase 0；
 - token semantic digest 变化 → 最早 Phase 1；
+- layout profile 语义变化（scroll owner、region、wrap/shrink、overlay、responsive）→ 最早 Phase 2，并使 Phase 8 相关证据过期；
+- geometry/state profile 语义变化 → 最早 Phase 4，并使 Phase 8 相关证据过期；
 - artifact 缺失、路径越界或 digest 不匹配 → 该 artifact 所属最早 phase；
 - source/build identity 变化、Phase 8 缺失或身份不一致 → 最早 Phase 8；
 - Phase 9 review 缺失/无效 → Phase 9；

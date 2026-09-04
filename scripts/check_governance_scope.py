@@ -61,6 +61,45 @@ def git(*args: str) -> str:
     return subprocess.run(["git", *args], cwd=ROOT, check=True, text=True, capture_output=True).stdout.strip()
 
 
+def path_has_example_prefix(value: str) -> bool:
+    posix = value.replace("\\", "/").lstrip("./")
+    return posix == "example" or posix.startswith("example/")
+
+
+def git_changed_path_names() -> list[str]:
+    """只读取仓库级 changed-path 名称，不打开文件内容。"""
+    proc = subprocess.run(
+        ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all"],
+        cwd=ROOT, check=True, capture_output=True,
+    )
+    names: list[str] = []
+    entries = proc.stdout.split(b"\0")
+    index = 0
+    while index < len(entries):
+        raw = entries[index]
+        index += 1
+        if not raw:
+            continue
+        text = raw.decode("utf-8", errors="surrogateescape")
+        if len(text) < 4:
+            continue
+        status, path = text[:2], text[3:]
+        if "R" in status or "C" in status:
+            names.append(path)
+            if index < len(entries) and entries[index]:
+                names.append(entries[index].decode("utf-8", errors="surrogateescape"))
+                index += 1
+        else:
+            names.append(path)
+    return names
+
+
+def guard_example_paths(paths: list[str] | None = None) -> list[str]:
+    names = paths if paths is not None else git_changed_path_names()
+    hits = sorted({name for name in names if path_has_example_prefix(name)})
+    return [f"EXAMPLE_PATH_IN_SCOPE: {name}" for name in hits]
+
+
 def guard_web_v2() -> list[str]:
     baseline = load(BASELINE)
     path = str(baseline["path"])
@@ -77,16 +116,21 @@ def guard_web_v2() -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--guard-web-v2", action="store_true", help="同时校验 web-v2 tree 与工作区状态")
+    parser.add_argument("--guard-example-changed-paths", action="store_true", help="拒绝任何以 example/ 开头的 changed-path 名称")
     args = parser.parse_args()
     errors = check_domains()
     if args.guard_web_v2:
         errors.extend(guard_web_v2())
+    if args.guard_example_changed_paths:
+        errors.extend(guard_example_paths())
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
     print("治理 scope 无意外交叠；web-v2 排除项已声明。")
     if args.guard_web_v2:
         print("web-v2 guard 通过：HEAD tree 与记录基线一致，工作区无改动。")
+    if args.guard_example_changed_paths:
+        print("example changed-path guard 通过：没有 example/ 前缀变更。")
     return 0
 
 

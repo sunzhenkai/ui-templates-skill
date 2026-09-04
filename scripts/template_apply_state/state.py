@@ -322,10 +322,13 @@ def validate_checkpoint(
     build_identity: str,
     known_rule_ids: set[str] | None = None,
     schema_dir: Path | None = None,
+    fidelity_value: Any | None = None,
+    previous_fidelity: Any | None = None,
 ) -> list[Finding]:
     root = apply_root.resolve()
     findings = _schema_findings("checkpoint", checkpoint, "checkpoint.yaml", schema_dir)
-    template_digest = canonical_digest(template_value)
+    identity_value = template_value if fidelity_value is None else {"template": template_value, "fidelity": fidelity_value}
+    template_digest = canonical_digest(identity_value)
     tokens_digest = canonical_digest(tokens_value)
     current_template = _template_identity(template_value)
     checkpoint_template = checkpoint.get("template", {})
@@ -342,7 +345,13 @@ def validate_checkpoint(
             {"expected": current_template, "actual": checkpoint_identity},
         ))
     if not _digest_equal(checkpoint.get("template", {}).get("digest"), template_digest):
-        findings.append(Finding("CHECKPOINT_TEMPLATE_DRIFT", "checkpoint.yaml#template.digest", "模板语义已变化", 0))
+        from .fidelity import fidelity_recovery_findings
+
+        facet_findings = fidelity_recovery_findings(previous=previous_fidelity, current=fidelity_value)
+        if facet_findings and checkpoint_identity == current_template:
+            findings.extend(facet_findings)
+        else:
+            findings.append(Finding("CHECKPOINT_TEMPLATE_DRIFT", "checkpoint.yaml#template.digest", "模板语义已变化", 0))
     if not _digest_equal(checkpoint.get("tokens_digest"), tokens_digest):
         findings.append(Finding("CHECKPOINT_TOKEN_DRIFT", "checkpoint.yaml#tokens_digest", "tokens 语义已变化", 1))
     if checkpoint.get("scope") != scope:

@@ -4,7 +4,7 @@
   "title": "Contract eval run result v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "runner_version", "revision", "runtime_fingerprint", "counts", "fixture_hashes", "baseline", "results", "status", "failures"],
+  "required": ["schema_version", "runner_version", "revision", "runtime_fingerprint", "counts", "fixture_hashes", "baseline", "results", "status", "failures", "discovery"],
   "properties": {
     "schema_version": {"const": 1},
     "runner_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
@@ -51,7 +51,17 @@
       "items": {"$ref": "#/$defs/caseResult"}
     },
     "status": {"enum": ["passed", "failed"]},
-    "failures": {"type": "array", "items": {"type": "string", "minLength": 1}}
+    "failures": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "discovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["example_excluded", "exclusions", "inputs"],
+      "properties": {
+        "example_excluded": {"type": "boolean"},
+        "exclusions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "inputs": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    }
   },
   "$defs": {
     "caseResult": {

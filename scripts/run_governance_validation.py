@@ -80,7 +80,10 @@ def validate(root: Path, report_dir: Path) -> dict:
     for value in EXCLUDED_SAMPLE_PATHS:
         print(f"governance exclusion (content not read/executed): {value}")
 
-    run([python, "scripts/check_governance_scope.py", "--guard-web-v2"], cwd=root, label="scope guard")
+    run(
+        [python, "scripts/check_governance_scope.py", "--guard-web-v2", "--guard-example-changed-paths"],
+        cwd=root, label="scope guard",
+    )
     run(
         [python, "scripts/check_active_release.py", "--json-out", str(report_dir / "active-release.json")],
         cwd=root, label="active/release checker",

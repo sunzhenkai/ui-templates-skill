@@ -15,7 +15,7 @@ description: 使用已有 schema v2 UI 模板按 Phase 0–9 实现真实页面�
 
 ## 必读契约
 
-先读 [template-contract.md](references/template-contract.md)：只接受 `schema_version: 2` 与 `source | computed | estimated | default`；四种 origin 都按确定值消费；`spec.md` 是规则入口，`tokens.yaml` 是精确值唯一载体，coverage 在实现前形成 accepted/deferred/excluded 决定。
+先读 [template-contract.md](references/template-contract.md)：只接受 `schema_version: 2` 与 `source | computed | estimated | default`；四种 origin 都按确定值消费；`spec.md` 是规则入口，`tokens.yaml` 是精确值唯一载体，coverage 在实现前形成 accepted/deferred/excluded 决定。存在 `fidelity.yaml` 时校验 supported profile；无 sidecar 为 legacy-baseline，未知 profile 停止。不得发布 stack adapter。
 
 ## Phase 0–9
 
@@ -32,7 +32,7 @@ description: 使用已有 schema v2 UI 模板按 Phase 0–9 实现真实页面�
 8. Browser verification → `08-verification.json` + `evidence/`
 9. Review/feedback → `09-review.md` + `feedback/`
 
-每阶段状态和 digest 写入 `checkpoint.yaml`。恢复先验证 scope、template/tokens、artifacts、source/build identity 和 Phase 8/9 证据，从最早失效 phase 重开；页面存在不能替代证据。
+每阶段状态和 digest 写入 `checkpoint.yaml`。恢复先验证 scope、template/tokens、artifacts、source/build identity 和 Phase 8/9 证据，从最早失效 phase 重开：layout profile 语义变化从 Phase 2，geometry/state 从 Phase 4，相关 Phase 8 证据过期。页面存在不能替代证据。
 
 ## 工具与质量
 

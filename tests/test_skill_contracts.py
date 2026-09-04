@@ -1,9 +1,15 @@
 from __future__ import annotations
 
+import sys
 import unittest
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from template_validation.validator import validate_paths
 
 
 class SkillContractTests(unittest.TestCase):
@@ -34,8 +40,44 @@ class SkillContractTests(unittest.TestCase):
         self.assertTrue((ROOT / "skills/ui-template/runtime/validate_templates.py").is_file())
         self.assertTrue((ROOT / "skills/ui-template/runtime/run_contract_evals.py").is_file())
         self.assertIn("缺失或能力不满足即 fail closed", text)
+        self.assertIn("Session source", text)
+        self.assertIn("出处身份", text)
+        self.assertIn("请提供本地绝对路径", text)
+        self.assertIn("已发布模板、无 session source：portable 即可", text)
         for variable in ("UI_TEMPLATE_VALIDATOR", "UI_TEMPLATE_EVAL_RUNNER"):
             self.assertIn(variable, text)
+
+    def test_repo_guide_separates_session_source_from_published_provenance(self) -> None:
+        skill = self.read("skills/ui-template/SKILL.md")
+        repo = self.read("skills/ui-template/references/source-repo.md")
+        report = self.read("skills/ui-template/references/authoring-report.md")
+        for text in (skill, repo):
+            self.assertIn("Session source", text)
+            self.assertIn("不是文件系统", text)
+            self.assertNotRegex(text, r"(?m)^- 用户授权的只读 source root 与 `meta\.sources\[\]` source ID")
+        self.assertIn("向用户索要历史 checkout 的本地绝对路径", repo)
+        self.assertIn("扫描 sibling checkout", repo)
+        self.assertIn("不要调用该 gate", repo)
+        self.assertIn("STRUCTURAL_REPLAY_REQUIRED", report)
+        self.assertIn("**仅**用于本会话声称 structural Generate-from-source", report)
+        self.assertIn("请提供本地绝对路径", report)
+
+    def test_workbench_meta_sources_are_identity_not_live_checkouts(self) -> None:
+        meta = yaml.safe_load((ROOT / "templates/workbench-shell/meta.yaml").read_text(encoding="utf-8"))
+        ids = [item["id"] for item in meta["sources"]]
+        self.assertEqual(["source-001", "source-002"], ids)
+        self.assertTrue(all(item.get("ref") and item.get("revision") for item in meta["sources"]))
+        self.assertFalse((ROOT / "templates/workbench-shell/fidelity.yaml").exists())
+        repo = self.read("skills/ui-template/references/source-repo.md")
+        self.assertIn("已发布模板没有 session source 时", repo)
+        self.assertIn("不得停下来要求用户提供路径", repo)
+        result = validate_paths([ROOT / "templates/workbench-shell"], ROOT, index=ROOT / "templates/INDEX.md")
+        self.assertEqual(0, result.to_dict()["exit_code"], result.to_dict()["findings"])
+        index = self.read("templates/INDEX.md")
+        self.assertIn(meta["name"], index)
+        self.assertIn(meta["description"], index)
+        self.assertIn("repo", index)
+        self.assertIn(str(meta["captured_at"]), index)
 
     def test_authoring_feedback_state_uuid_fingerprint_and_receipt(self) -> None:
         text = self.read("skills/ui-template/references/feedback-lifecycle.md")
@@ -56,12 +98,16 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("source | computed | estimated | default", text)
         self.assertIn("任意未知值即拒绝开始", text)
         self.assertIn("observed", text)
+        self.assertIn("fidelity.yaml", text)
+        self.assertIn("legacy-baseline", text)
+        self.assertIn("repo-structural-v1", text)
+        self.assertIn("negative facts", text)
 
     def test_apply_artifact_tree_checkpoint_and_recovery_contract(self) -> None:
         text = self.read("skills/ui-template-apply/references/apply-workflow.md")
         for artifact in ("checkpoint.yaml", "00-intake.md", "01-design-direction.md", "01-token-map.yaml", "02-routes.yaml", "03-structure.md", "04-components.yaml", "05-07-progress.yaml", "08-verification.json", "09-review.md", "feedback/"):
             self.assertIn(artifact, text)
-        for required in ("sha256-canonical-json-v1", "最早失效 phase", "source identity", "build identity", "recheck-passed", "recheck-failed", "expected/actual", "template_version", "filename stem", "known_rule_ids", "重新验证整个 inbox", "回滚"):
+        for required in ("sha256-canonical-json-v1", "最早失效 phase", "source identity", "build identity", "recheck-passed", "recheck-failed", "expected/actual", "template_version", "filename stem", "known_rule_ids", "重新验证整个 inbox", "回滚", "fidelity.yaml", "Phase 2", "Phase 4"):
             self.assertIn(required, text)
 
     def test_query_contract_is_complete(self) -> None:

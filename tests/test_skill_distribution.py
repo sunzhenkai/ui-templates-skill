@@ -115,6 +115,12 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertEqual(config.bundle_version, (release / "VERSION").read_text().strip())
         compatibility = yaml.safe_load((release / "compatibility.yaml").read_text())
         self.assertEqual("unsupported-explicit-migration-required", compatibility["compatibility"][1]["status"])
+        self.assertEqual(1, compatibility["fidelity_schema"]["minimum"])
+        self.assertEqual(1, compatibility["fidelity_schema"]["maximum"])
+        self.assertEqual(["repo-structural-v1"], compatibility["fidelity_profile"]["supported"])
+        self.assertEqual("legacy-baseline", compatibility["fidelity_profile"]["baseline"])
+        self.assertEqual("fail-closed", compatibility["fidelity_profile"]["unknown"])
+        self.assertIn("fidelity-profile-unknown-fail-closed", compatibility["breaking_boundaries"])
         self.assertIn("破坏性版本", (release / "CHANGELOG.md").read_text())
         self.assertIn("不会静默读取 v1", (release / "MIGRATION-v1-to-v2.md").read_text())
         self.assertIn("任一目录替换失败", (release / "ROLLBACK.md").read_text())
@@ -147,6 +153,10 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertIn("CHANGELOG.md", paths)
         self.assertIn("skills/ui-template/runtime/validate_templates.py", paths)
         self.assertIn("skills/ui-template/runtime/run_contract_evals.py", paths)
+        self.assertIn("skills/ui-template/runtime/schemas/template/fidelity/v1/fidelity.schema.json", paths)
+        self.assertIn("skills/ui-template/runtime/template_authoring/profile.py", paths)
+        self.assertIn("skills/ui-template/runtime/template_validation/fidelity.py", paths)
+        self.assertIn("skills/ui-template/runtime/template_apply_state/fidelity.py", paths)
         self.assertIn("skills/ui-template-apply/SKILL.md", paths)
         with tarfile.open(first.artifact, "r:gz") as archive:
             members = archive.getmembers()
@@ -327,7 +337,9 @@ class SkillDistributionTests(unittest.TestCase):
         )
         self.assertEqual(0, eval_proc.returncode, eval_proc.stderr + eval_proc.stdout)
         report = json.loads(eval_proc.stdout)
-        self.assertEqual({"declared": 17, "parsed": 17, "executed": 17, "script": 15, "llm": 2}, report["counts"])
+        self.assertEqual({"declared": 26, "parsed": 26, "executed": 26, "script": 24, "llm": 2}, report["counts"])
+        self.assertTrue(report["discovery"]["example_excluded"])
+        self.assertIn("example/**", report["discovery"]["exclusions"])
         portable_templates = self.base / "project/templates"
         shutil.copytree(
             ROOT / "tests/fixtures/validator/good/templates",

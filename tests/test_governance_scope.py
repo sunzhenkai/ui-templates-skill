@@ -17,9 +17,16 @@ class GovernanceScopeTests(unittest.TestCase):
     def test_web_v2_matches_baseline_and_is_clean(self) -> None:
         self.assertEqual(scope.guard_web_v2(), [])
 
+    def test_example_changed_path_guard_fails_closed(self) -> None:
+        import check_governance_scope as scope
+
+        findings = scope.guard_example_paths(["tests/fixtures/fidelity/README.md", "example/workbench-shell/web-v3/src/x.ts"])
+        self.assertEqual(["EXAMPLE_PATH_IN_SCOPE: example/workbench-shell/web-v3/src/x.ts"], findings)
+        self.assertEqual([], scope.guard_example_paths())
+
     def test_root_fixture_layout_is_complete(self) -> None:
         fixture_root = ROOT / "tests/fixtures"
-        for name in ("schema", "validator", "migrator", "feedback-checkpoint", "eval", "bundle", "mirror", "mutations"):
+        for name in ("schema", "validator", "migrator", "feedback-checkpoint", "eval", "bundle", "mirror", "mutations", "repo-capture", "fidelity"):
             with self.subTest(name=name):
                 self.assertTrue((fixture_root / name).is_dir())
 

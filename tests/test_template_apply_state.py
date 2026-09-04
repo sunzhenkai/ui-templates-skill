@@ -445,5 +445,22 @@ class ApplyStateTests(unittest.TestCase):
         self.assertEqual(["evidence/a.json"], unchanged["evidence_refs"])
         self.assertTrue(feedback_receipt(unchanged)["terminal"])
 
+    def test_fidelity_facet_recovery_reopens_layout_or_geometry_phase(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        data = yaml.safe_load(
+            (root / "tests/fixtures/fidelity/structural/templates/structural-template/fidelity.yaml").read_text(encoding="utf-8")
+        )
+        self.checkpoint["template"]["digest"] = canonical_digest({"template": self.template, "fidelity": data})
+        layout = copy.deepcopy(data)
+        layout["layout_scenes"][1]["wrap"] = "wrap"
+        layout_findings = self.validate(fidelity_value=layout, previous_fidelity=data)
+        self.assertIn("CHECKPOINT_FIDELITY_LAYOUT_DRIFT", {item.code for item in layout_findings})
+        self.assertEqual(2, recovery_decision(layout_findings, self.checkpoint)["earliest_phase"])
+        state = copy.deepcopy(data)
+        state["state_presentations"][0]["text_decoration"] = "underline"
+        state_findings = self.validate(fidelity_value=state, previous_fidelity=data)
+        self.assertIn("CHECKPOINT_FIDELITY_GEOMETRY_STATE_DRIFT", {item.code for item in state_findings})
+        self.assertEqual(4, recovery_decision(state_findings, self.checkpoint)["earliest_phase"])
+
 if __name__ == "__main__":
     unittest.main()
