@@ -66,8 +66,8 @@ class ActiveReleaseTests(unittest.TestCase):
 
     def test_mutation_missing_public_skill_has_stable_code(self) -> None:
         findings = active.check_required_paths(
-            {"skills/ui-template/SKILL.md"},
-            ["skills/ui-template", "skills/ui-template-apply"],
+            {"skills/ui-template-author/SKILL.md"},
+            ["skills/ui-template-author", "skills/ui-template-apply"],
         )
         self.assertIn(self.expected["missing-public-skill"], {item.code for item in findings})
 
@@ -75,7 +75,7 @@ class ActiveReleaseTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             mirror = Path(temporary) / ".agents/skills"
             write_mirror(ROOT, mirror)
-            changed = mirror / "ui-template/references/source-web.md"
+            changed = mirror / "ui-template-author/references/source-web.md"
             changed.write_text(changed.read_text(encoding="utf-8") + "\nmutation\n", encoding="utf-8")
             findings = check_mirror(ROOT, mirror)
         self.assertTrue(any(item.startswith(self.expected["production-mirror-drift"]) for item in findings))

@@ -8,7 +8,7 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Callable
 
-from .config import DistributionError, PUBLIC_SKILLS
+from .config import DistributionError, PUBLIC_SKILLS, RETIRED_PUBLIC_SKILLS, RETIRED_SKILL_SUCCESSORS
 from .manifest import load_manifest, sha256_bytes, validate_manifest_payload
 
 ReplaceFunction = Callable[[str | bytes | os.PathLike[str] | os.PathLike[bytes], str | bytes | os.PathLike[str] | os.PathLike[bytes]], None]
@@ -190,6 +190,19 @@ def install_bundle(
                 expected_by_skill[skill],
                 archive_directories,
             )
+        for retired in RETIRED_PUBLIC_SKILLS:
+            leftover = target_skills / retired
+            if leftover.is_symlink() or (leftover.exists() and not leftover.is_dir()):
+                raise DistributionError(f"INSTALL_RETIRED_TARGET_UNSAFE: {leftover}")
+            if not leftover.is_dir():
+                continue
+            successor = RETIRED_SKILL_SUCCESSORS.get(retired)
+            destination = target_skills / successor if successor else None
+            if destination is not None and destination.is_dir():
+                _preserve_archives(leftover, destination, archive_directories)
+            backup = backups / f"retired-{retired}"
+            replace(leftover, backup)
+            states.append((leftover, backup))
         return {
             "bundle_version": manifest["bundle_version"],
             "skills": dict(manifest["skills"]),

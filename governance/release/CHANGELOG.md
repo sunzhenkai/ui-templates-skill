@@ -4,7 +4,8 @@
 
 首个双 public skill 分发基线，属于破坏性版本：
 
-- 分发单元由单一 Authoring skill 改为同时包含 `ui-template` 与 `ui-template-apply`。
+- 分发单元由单一 Authoring skill 改为同时包含 `ui-template-author` 与 `ui-template-apply`。
+- Authoring public skill 身份由 `ui-template` 更名为 `ui-template-author`，与 Apply 成对；升级时安装器移除已退役的 `ui-template` 生产目录，并保留其 `patches/`、`experience/`。
 - 模板消费契约切换到 schema v2，只接受 `source | computed | estimated | default`。
 - 可选独立 `fidelity.yaml` sidecar（`repo-structural-v1`）表达 layout/geometry/state 与 chrome composition；core v2 无 sidecar 仍按 `legacy-baseline` 消费，layout 不得为 high，未知 profile fail closed。
 - Authoring session-source replay 与 portable validation 分离；`--source-root` 只用于本会话 Generate-from-source。

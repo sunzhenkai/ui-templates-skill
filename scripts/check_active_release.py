@@ -246,11 +246,11 @@ def effective_openspec(
 def check_document_contract(path: str, text: str) -> list[Finding]:
     requirements: dict[str, tuple[str, ...]] = {
         "README.md": (
-            "ui-template", "ui-template-apply", "2.0.0", "schema v2", "apply/",
+            "ui-template-author", "ui-template-apply", "2.0.0", "schema v2", "apply/",
             "make validate", "make eval", "migrate_template.py", "ROLLBACK.md",
         ),
         "AGENTS.md": (
-            "ui-template", "ui-template-apply", "schema v2", "apply/", "schemas/template/v2/",
+            "ui-template-author", "ui-template-apply", "schema v2", "apply/", "schemas/template/v2/",
             "harden-template-lifecycle", "make validate", "openspec validate --all --strict",
             "879d0de9166261c26ec35b69f5cec9382191eda1",
             "0aedb680ecdf61aa8eafdb5d80e6b58edba63df5",
@@ -275,17 +275,17 @@ def check_versions(root: Path) -> list[Finding]:
         compatibility = load_yaml(root / "governance/release/compatibility.yaml")
         declared = {
             "distribution.bundle": str(distribution.get("bundle", {}).get("version", "")),
-            "distribution.ui-template": str(distribution.get("public_skills", {}).get("ui-template", {}).get("version", "")),
+            "distribution.ui-template-author": str(distribution.get("public_skills", {}).get("ui-template-author", {}).get("version", "")),
             "distribution.ui-template-apply": str(distribution.get("public_skills", {}).get("ui-template-apply", {}).get("version", "")),
             "compatibility.bundle": str(compatibility.get("bundle_version", "")),
-            "compatibility.ui-template": str(compatibility.get("public_skills", {}).get("ui-template", "")),
+            "compatibility.ui-template-author": str(compatibility.get("public_skills", {}).get("ui-template-author", "")),
             "compatibility.ui-template-apply": str(compatibility.get("public_skills", {}).get("ui-template-apply", "")),
         }
         for label, actual in declared.items():
             if actual != version:
                 findings.append(Finding("RELEASE_VERSION_MISMATCH", label, f"expected {version}, got {actual}"))
         public = set(distribution.get("public_skills", {}))
-        if public != {"ui-template", "ui-template-apply"}:
+        if public != {"ui-template-author", "ui-template-apply"}:
             findings.append(Finding("PUBLIC_SKILL_SET_INVALID", "governance/release/distribution-v1.yaml", str(sorted(public))))
         schema_range = distribution.get("bundle", {}).get("template_schema", {})
         if schema_range != {"minimum": 2, "maximum": 2}:

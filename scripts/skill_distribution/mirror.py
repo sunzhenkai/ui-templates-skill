@@ -14,7 +14,7 @@ from .manifest import sha256_bytes, validate_references, validate_trigger_resour
 MIRROR_MANIFEST = ".ui-template-public-manifest.yaml"
 ReplaceFunction = Callable[[str | bytes | os.PathLike[str] | os.PathLike[bytes], str | bytes | os.PathLike[str] | os.PathLike[bytes]], None]
 MANAGED_DIRECTORIES = {
-    "ui-template": frozenset({"references", "evals", "runtime"}),
+    "ui-template-author": frozenset({"references", "evals", "runtime"}),
     "ui-template-apply": frozenset({"references", "evals"}),
 }
 

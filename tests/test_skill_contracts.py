@@ -17,7 +17,7 @@ class SkillContractTests(unittest.TestCase):
         return (ROOT / relative).read_text(encoding="utf-8")
 
     def test_authoring_schema_v2_evidence_rules_coverage_units_and_ownership(self) -> None:
-        text = self.read("skills/ui-template/references/spec-format.md")
+        text = self.read("skills/ui-template-author/references/spec-format.md")
         for required in ("schema_version: 2", "evidence.yaml", "NN-###", "observed/defaulted/unsupported", "unit", "apply/", "implementation/", "stack adapter", ".ui-template-apply/03-structure.md"):
             self.assertIn(required, text)
         self.assertIn("精确值唯一载体", text)
@@ -27,18 +27,18 @@ class SkillContractTests(unittest.TestCase):
     def test_each_source_guide_requires_provenance_license_privacy_and_default_basis(self) -> None:
         for name in ("web", "repo", "image", "doc"):
             with self.subTest(source=name):
-                text = self.read(f"skills/ui-template/references/source-{name}.md")
+                text = self.read(f"skills/ui-template-author/references/source-{name}.md")
                 for required in ("meta.sources[]", "revision", "locator", "confidence", "license", "redistribution", "redaction", "basis"):
                     self.assertIn(required, text)
 
     def test_authoring_gate_order_and_failed_index_rule(self) -> None:
-        text = self.read("skills/ui-template/SKILL.md")
+        text = self.read("skills/ui-template-author/SKILL.md")
         positions = [text.index(f"### {index}. {name}") for index, name in ((1, "Generate"), (2, "Validate"), (3, "Eval"), (4, "Index"), (5, "Report"))]
         self.assertEqual(positions, sorted(positions))
         self.assertIn("失败后不得修改生产 `templates/INDEX.md`", text)
         self.assertIn("bundle 与生产镜像在本 skill 根分发", text)
-        self.assertTrue((ROOT / "skills/ui-template/runtime/validate_templates.py").is_file())
-        self.assertTrue((ROOT / "skills/ui-template/runtime/run_contract_evals.py").is_file())
+        self.assertTrue((ROOT / "skills/ui-template-author/runtime/validate_templates.py").is_file())
+        self.assertTrue((ROOT / "skills/ui-template-author/runtime/run_contract_evals.py").is_file())
         self.assertIn("缺失或能力不满足即 fail closed", text)
         self.assertIn("Session source", text)
         self.assertIn("出处身份", text)
@@ -48,9 +48,9 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn(variable, text)
 
     def test_repo_guide_separates_session_source_from_published_provenance(self) -> None:
-        skill = self.read("skills/ui-template/SKILL.md")
-        repo = self.read("skills/ui-template/references/source-repo.md")
-        report = self.read("skills/ui-template/references/authoring-report.md")
+        skill = self.read("skills/ui-template-author/SKILL.md")
+        repo = self.read("skills/ui-template-author/references/source-repo.md")
+        report = self.read("skills/ui-template-author/references/authoring-report.md")
         for text in (skill, repo):
             self.assertIn("Session source", text)
             self.assertIn("不是文件系统", text)
@@ -68,7 +68,7 @@ class SkillContractTests(unittest.TestCase):
         self.assertEqual(["source-001", "source-002"], ids)
         self.assertTrue(all(item.get("ref") and item.get("revision") for item in meta["sources"]))
         self.assertFalse((ROOT / "templates/workbench-shell/fidelity.yaml").exists())
-        repo = self.read("skills/ui-template/references/source-repo.md")
+        repo = self.read("skills/ui-template-author/references/source-repo.md")
         self.assertIn("已发布模板没有 session source 时", repo)
         self.assertIn("不得停下来要求用户提供路径", repo)
         result = validate_paths([ROOT / "templates/workbench-shell"], ROOT, index=ROOT / "templates/INDEX.md")
@@ -80,7 +80,7 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn(str(meta["captured_at"]), index)
 
     def test_authoring_feedback_state_uuid_fingerprint_and_receipt(self) -> None:
-        text = self.read("skills/ui-template/references/feedback-lifecycle.md")
+        text = self.read("skills/ui-template-author/references/feedback-lifecycle.md")
         for required in (".ui-template-apply/feedback/", "UUID", "fingerprint", "NFKC", "accepted", "known-gap", "rejected", "applied", "verified", "receipt", "终态", "filename stem", "known_rule_ids", "符号链接越界", "原子替换", "回滚"):
             self.assertIn(required, text)
 
@@ -88,7 +88,7 @@ class SkillContractTests(unittest.TestCase):
         text = self.read(".agents/skills/ui-template-manager/SKILL.md")
         self.assertLessEqual(len(text.splitlines()), 30)
         self.assertIn("repository-only wrapper", text)
-        self.assertIn("skills/ui-template/SKILL.md", text)
+        self.assertIn("skills/ui-template-author/SKILL.md", text)
         self.assertIn("skills/ui-template-apply/SKILL.md", text)
         self.assertNotIn("## Self-evolution", text)
 

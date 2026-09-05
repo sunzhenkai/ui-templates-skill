@@ -8,7 +8,7 @@ cases:
     description: Template Apply 执行前必须完整阅读工作流、工具链、质量门禁与模板 spec。
     given: 用户要求使用已有模板实现页面
     fixture: tests/fixtures/eval/script-contracts.yaml#apply-requires-reference-reading
-    fixture_sha256: 461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d
+    fixture_sha256: fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c
     judge: script
     expect:
       must:
@@ -26,11 +26,11 @@ cases:
     description: 没有可用模板时必须提示先 Authoring，不得直接生成页面。
     given: 用户要求照某风格做页面但 templates/ 中无对应模板
     fixture: tests/fixtures/eval/script-contracts.yaml#no-apply-without-template
-    fixture_sha256: 461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d
+    fixture_sha256: fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c
     judge: script
     expect:
       must:
-        - 提示先由 ui-template 创建或扩展模板
+        - 提示先由 ui-template-author 创建或扩展模板
         - 模板就绪后再进入本工作流
       must_not:
         - 在无模板时直接生成页面
@@ -41,7 +41,7 @@ cases:
     description: Apply 的 0-9 阶段不得跳过或提前。
     given: Template Apply 进行中且前一阶段产物未确认
     fixture: tests/fixtures/eval/script-contracts.yaml#no-phase-skipping
-    fixture_sha256: 461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d
+    fixture_sha256: fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c
     judge: script
     expect:
       must:
@@ -56,7 +56,7 @@ cases:
     description: 完成宣称必须附带真实浏览器验证证据。
     given: 一次 Template Apply 即将收尾
     fixture: tests/fixtures/eval/script-contracts.yaml#browser-verification-evidence
-    fixture_sha256: 461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d
+    fixture_sha256: fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c
     judge: script
     expect:
       must:
@@ -72,7 +72,7 @@ cases:
     description: spec.md 与 apply/ 或工程约定冲突时以 spec.md 为准。
     given: 模板 apply/ 说明或目标项目工程约定与 spec.md 规则冲突
     fixture: tests/fixtures/eval/script-contracts.yaml#spec-wins-over-apply
-    fixture_sha256: 461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d
+    fixture_sha256: fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c
     judge: script
     expect:
       must:
@@ -87,7 +87,7 @@ cases:
     description: 路由入口使用真实链接，当前项使用 aria-current，可恢复状态进入 URL。
     given: 实现跨页面导航与可恢复状态
     fixture: tests/fixtures/eval/script-contracts.yaml#routing-semantics-enforced
-    fixture_sha256: 461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d
+    fixture_sha256: fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c
     judge: script
     expect:
       must:
@@ -103,7 +103,7 @@ cases:
     description: Apply 的项目 token 必须冻结映射自 tokens.yaml。
     given: Template Apply Phase 1 产出 Design Direction
     fixture: tests/fixtures/eval/script-contracts.yaml#apply-token-freeze
-    fixture_sha256: 461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d
+    fixture_sha256: fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c
     judge: script
     expect:
       must:
@@ -119,12 +119,12 @@ cases:
     description: 与用已有模板实现页面无关的任务不使用本 skill。
     given: 请求与模板消费落地无关
     fixture: tests/fixtures/eval/script-contracts.yaml#apply-out-of-scope-rejected
-    fixture_sha256: 461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d
+    fixture_sha256: fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c
     judge: script
     expect:
       must:
         - 判定不适用本 skill 并说明原因
-        - 模板创建/导入意图移交 ui-template
+        - 模板创建/导入意图移交 ui-template-author
       must_not:
         - 强行套用 Apply 工作流
     revision: harden-template-lifecycle-eval-v1

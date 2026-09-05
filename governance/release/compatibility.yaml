@@ -1,7 +1,7 @@
 schema_version: 1
 bundle_version: 2.0.0
 public_skills:
-  ui-template: 2.0.0
+  ui-template-author: 2.0.0
   ui-template-apply: 2.0.0
 template_schema:
   minimum: 2
@@ -16,7 +16,7 @@ fidelity_profile:
   unknown: fail-closed
 compatibility:
   - bundle: 2.x
-    ui-template: 2.x
+    ui-template-author: 2.x
     ui-template-apply: 2.x
     template_schema: 2
     fidelity_schema: 1

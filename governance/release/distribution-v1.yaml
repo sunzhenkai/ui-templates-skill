@@ -5,7 +5,7 @@ bundle:
     minimum: 2
     maximum: 2
 public_skills:
-  ui-template:
+  ui-template-author:
     version: 2.0.0
     include:
       - SKILL.md

@@ -27,8 +27,8 @@ class ContractEvalTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         files = [
-            "skills/ui-template/SKILL.md",
-            "skills/ui-template/evals/cases.yaml",
+            "skills/ui-template-author/SKILL.md",
+            "skills/ui-template-author/evals/cases.yaml",
             "skills/ui-template-apply/SKILL.md",
             "skills/ui-template-apply/evals/cases.yaml",
             "scripts/check_template_apply_state.py",
@@ -44,7 +44,7 @@ class ContractEvalTests(unittest.TestCase):
         )
         files.extend(
             str(path.relative_to(ROOT))
-            for directory in (ROOT / "skills/ui-template/references", ROOT / "skills/ui-template-apply/references")
+            for directory in (ROOT / "skills/ui-template-author/references", ROOT / "skills/ui-template-apply/references")
             for path in directory.glob("*.md")
         )
         for relative in files:
@@ -57,7 +57,7 @@ class ContractEvalTests(unittest.TestCase):
         extra = args
         if "--cases" not in args:
             extra = (
-                "--cases", "skills/ui-template/evals/cases.yaml",
+                "--cases", "skills/ui-template-author/evals/cases.yaml",
                 "--cases", "skills/ui-template-apply/evals/cases.yaml",
                 *args,
             )
@@ -73,7 +73,7 @@ class ContractEvalTests(unittest.TestCase):
         fixture = self.root / "tests/fixtures/eval/script-contracts.yaml"
         digest = hashlib.sha256(fixture.read_bytes()).hexdigest()
         for relative in (
-            "skills/ui-template/evals/cases.yaml",
+            "skills/ui-template-author/evals/cases.yaml",
             "skills/ui-template-apply/evals/cases.yaml",
         ):
             path = self.root / relative
@@ -119,7 +119,7 @@ class ContractEvalTests(unittest.TestCase):
         self.assertEqual({"script": 29, "llm": 2}, judges)
         self.assertEqual(
             {
-                "skills/ui-template/evals/cases.yaml",
+                "skills/ui-template-author/evals/cases.yaml",
                 "skills/ui-template-apply/evals/cases.yaml",
             },
             set(LEGACY_CASES),
@@ -177,14 +177,14 @@ class ContractEvalTests(unittest.TestCase):
         self.assertTrue(any(item.startswith("LLM_RESULT_COUNT_MISMATCH") for item in report["failures"]))
 
     def test_parse_failure_and_global_duplicate_id_return_nonzero(self) -> None:
-        authoring = self.root / "skills/ui-template/evals/cases.yaml"
+        authoring = self.root / "skills/ui-template-author/evals/cases.yaml"
         authoring.write_text(authoring.read_text(encoding="utf-8").replace("judge: script", "judge: invalid", 1), encoding="utf-8")
         proc, report = self.cli("--no-baseline")
         self.assertNotEqual(0, proc.returncode)
         self.assertTrue(any(item.startswith("EVAL_PARSE_FAILURE") for item in report["failures"]))
         self.assertNotEqual(report["counts"]["declared"], report["counts"]["parsed"])
 
-        shutil.copy2(ROOT / "skills/ui-template/evals/cases.yaml", authoring)
+        shutil.copy2(ROOT / "skills/ui-template-author/evals/cases.yaml", authoring)
         apply_cases = self.root / "skills/ui-template-apply/evals/cases.yaml"
         apply_cases.write_text(
             apply_cases.read_text(encoding="utf-8").replace(
@@ -203,8 +203,8 @@ class ContractEvalTests(unittest.TestCase):
         self.assertNotIn("web-v2", source)
         self.assertEqual(
             {
-                "skills/ui-template/evals/cases.yaml",
-                "skills/ui-template/evals/fidelity-cases.yaml",
+                "skills/ui-template-author/evals/cases.yaml",
+                "skills/ui-template-author/evals/fidelity-cases.yaml",
                 "skills/ui-template-apply/evals/cases.yaml",
                 "skills/ui-template-apply/evals/fidelity-cases.yaml",
             },

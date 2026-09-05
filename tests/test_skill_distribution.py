@@ -35,7 +35,7 @@ class SkillDistributionTests(unittest.TestCase):
         self.base = Path(self.temp.name)
         self.repo = self.base / "repo"
         self.repo.mkdir()
-        shutil.copytree(ROOT / "skills/ui-template", self.repo / "skills/ui-template")
+        shutil.copytree(ROOT / "skills/ui-template-author", self.repo / "skills/ui-template-author")
         shutil.copytree(ROOT / "skills/ui-template-apply", self.repo / "skills/ui-template-apply")
         shutil.copytree(ROOT / "governance/release", self.repo / "governance/release")
         shutil.copy2(ROOT / "LICENSE", self.repo / "LICENSE")
@@ -99,7 +99,7 @@ class SkillDistributionTests(unittest.TestCase):
     def test_versioned_allowlist_and_explicit_exclusions(self) -> None:
         config = load_config(self.repo)
         self.assertEqual("2.0.0", config.bundle_version)
-        self.assertEqual({"ui-template": "2.0.0", "ui-template-apply": "2.0.0"}, config.skill_versions)
+        self.assertEqual({"ui-template-author": "2.0.0", "ui-template-apply": "2.0.0"}, config.skill_versions)
         self.assertEqual((2, 2), (config.template_schema_minimum, config.template_schema_maximum))
         exclusions = set(config.exclusions)
         for required in (
@@ -151,19 +151,19 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertIn("LICENSE", paths)
         self.assertIn("VERSION", paths)
         self.assertIn("CHANGELOG.md", paths)
-        self.assertIn("skills/ui-template/runtime/validate_templates.py", paths)
-        self.assertIn("skills/ui-template/runtime/run_contract_evals.py", paths)
-        self.assertIn("skills/ui-template/runtime/schemas/template/fidelity/v1/fidelity.schema.json", paths)
-        self.assertIn("skills/ui-template/runtime/template_authoring/profile.py", paths)
-        self.assertIn("skills/ui-template/runtime/template_validation/fidelity.py", paths)
-        self.assertIn("skills/ui-template/runtime/template_apply_state/fidelity.py", paths)
+        self.assertIn("skills/ui-template-author/runtime/validate_templates.py", paths)
+        self.assertIn("skills/ui-template-author/runtime/run_contract_evals.py", paths)
+        self.assertIn("skills/ui-template-author/runtime/schemas/template/fidelity/v1/fidelity.schema.json", paths)
+        self.assertIn("skills/ui-template-author/runtime/template_authoring/profile.py", paths)
+        self.assertIn("skills/ui-template-author/runtime/template_validation/fidelity.py", paths)
+        self.assertIn("skills/ui-template-author/runtime/template_apply_state/fidelity.py", paths)
         self.assertIn("skills/ui-template-apply/SKILL.md", paths)
         with tarfile.open(first.artifact, "r:gz") as archive:
             members = archive.getmembers()
             self.assertEqual(sorted(item.name for item in members), [item.name for item in members])
             expected_mtime = first.manifest["generator"]["revision_time"]
             self.assertTrue(all((item.mtime, item.uid, item.gid) == (expected_mtime, 0, 0) for item in members))
-        injected = self.repo / "skills/ui-template/data/ui-ux-pro-max/catalog.json"
+        injected = self.repo / "skills/ui-template-author/data/ui-ux-pro-max/catalog.json"
         injected.parent.mkdir(parents=True)
         injected.write_text("{}", encoding="utf-8")
         with self.assertRaisesRegex(DistributionError, "FORBIDDEN_PUBLIC_DATA"):
@@ -171,7 +171,7 @@ class SkillDistributionTests(unittest.TestCase):
         injected.unlink()
         external = self.base / "external.py"
         external.write_text("print('outside')\n", encoding="utf-8")
-        linked = self.repo / "skills/ui-template/runtime/linked.py"
+        linked = self.repo / "skills/ui-template-author/runtime/linked.py"
         linked.symlink_to(external)
         with self.assertRaisesRegex(DistributionError, "PUBLIC_SOURCE_SYMLINK"):
             self.build("symlink-source")
@@ -184,12 +184,12 @@ class SkillDistributionTests(unittest.TestCase):
         unrelated.write_text("keep", encoding="utf-8")
         result = install_bundle(built.artifact, target)
         self.assertEqual("2.0.0", result["bundle_version"])
-        self.assertTrue((target / "ui-template/SKILL.md").is_file())
+        self.assertTrue((target / "ui-template-author/SKILL.md").is_file())
         self.assertTrue((target / "ui-template-apply/SKILL.md").is_file())
         self.assertEqual("keep", unrelated.read_text(encoding="utf-8"))
-        stale = target / "ui-template/references/stale-managed.md"
+        stale = target / "ui-template-author/references/stale-managed.md"
         stale.write_text("stale", encoding="utf-8")
-        history = target / "ui-template/patches/history/result.md"
+        history = target / "ui-template-author/patches/history/result.md"
         history.parent.mkdir(parents=True)
         history.write_text("audit", encoding="utf-8")
         install_bundle(built.artifact, target)
@@ -197,22 +197,38 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertEqual("audit", history.read_text(encoding="utf-8"))
         self.assertEqual("keep", unrelated.read_text(encoding="utf-8"))
 
+    def test_install_removes_retired_authoring_skill_and_keeps_its_history(self) -> None:
+        built = self.build()
+        target = self.base / "project/.agents/skills"
+        retired = target / "ui-template"
+        (retired / "patches/old").mkdir(parents=True)
+        (retired / "SKILL.md").write_text("old-authoring", encoding="utf-8")
+        (retired / "patches/old/result.md").write_text("old-audit", encoding="utf-8")
+        install_bundle(built.artifact, target)
+        self.assertFalse(retired.exists())
+        self.assertTrue((target / "ui-template-author/SKILL.md").is_file())
+        self.assertEqual(
+            "old-audit",
+            (target / "ui-template-author/patches/old/result.md").read_text(encoding="utf-8"),
+        )
+        self.assertNotEqual("old-authoring", (target / "ui-template-author/SKILL.md").read_text(encoding="utf-8"))
+
     def test_checksum_failure_and_injected_second_skill_failure_leave_previous_install(self) -> None:
         built = self.build()
         target = self.base / "project/.agents/skills"
         install_bundle(built.artifact, target)
-        before_authoring = self.tree_digest(target / "ui-template")
+        before_authoring = self.tree_digest(target / "ui-template-author")
         before_apply = self.tree_digest(target / "ui-template-apply")
         corrupt = self.base / built.artifact.name
         corrupt.write_bytes(built.artifact.read_bytes() + b"corrupt")
         shutil.copy2(built.checksum_file, corrupt.with_name(corrupt.name + ".sha256"))
         with self.assertRaisesRegex(DistributionError, "ARTIFACT_CHECKSUM_MISMATCH"):
             install_bundle(corrupt, target)
-        self.assertEqual(before_authoring, self.tree_digest(target / "ui-template"))
+        self.assertEqual(before_authoring, self.tree_digest(target / "ui-template-author"))
         self.assertEqual(before_apply, self.tree_digest(target / "ui-template-apply"))
         with self.assertRaisesRegex(DistributionError, "INJECTED_INSTALL_FAILURE"):
             install_bundle(built.artifact, target, fail_after_skill="ui-template-apply")
-        self.assertEqual(before_authoring, self.tree_digest(target / "ui-template"))
+        self.assertEqual(before_authoring, self.tree_digest(target / "ui-template-author"))
         self.assertEqual(before_apply, self.tree_digest(target / "ui-template-apply"))
 
         corrupted_once = False
@@ -232,15 +248,15 @@ class SkillDistributionTests(unittest.TestCase):
 
         with self.assertRaisesRegex(DistributionError, "INSTALL_POST_VERIFY_FAILED"):
             install_bundle(built.artifact, target, replace=corrupting_replace)
-        self.assertEqual(before_authoring, self.tree_digest(target / "ui-template"))
+        self.assertEqual(before_authoring, self.tree_digest(target / "ui-template-author"))
         self.assertEqual(before_apply, self.tree_digest(target / "ui-template-apply"))
 
     def test_archive_traversal_symlink_duplicate_and_manifest_boundaries_fail_closed(self) -> None:
         target = self.base / "project/.agents/skills"
         unsafe_cases = {
             "traversal.tar.gz": [("../escape", b"escape", None, "")],
-            "symlink.tar.gz": [("skills/ui-template/SKILL.md", b"", tarfile.SYMTYPE, "../../escape")],
-            "hardlink.tar.gz": [("skills/ui-template/SKILL.md", b"", tarfile.LNKTYPE, "../../escape")],
+            "symlink.tar.gz": [("skills/ui-template-author/SKILL.md", b"", tarfile.SYMTYPE, "../../escape")],
+            "hardlink.tar.gz": [("skills/ui-template-author/SKILL.md", b"", tarfile.LNKTYPE, "../../escape")],
             "duplicate.tar.gz": [
                 ("skills-manifest.yaml", b"first", None, ""),
                 ("skills-manifest.yaml", b"second", None, ""),
@@ -297,7 +313,7 @@ class SkillDistributionTests(unittest.TestCase):
         built = self.build()
         target = self.base / "project/.agents/skills"
         install_bundle(built.artifact, target)
-        before_authoring = self.tree_digest(target / "ui-template")
+        before_authoring = self.tree_digest(target / "ui-template-author")
         before_apply = self.tree_digest(target / "ui-template-apply")
         with mock.patch(
             "skill_distribution.installer._filesystem_device",
@@ -305,12 +321,12 @@ class SkillDistributionTests(unittest.TestCase):
         ):
             with self.assertRaisesRegex(DistributionError, "CROSS_FILESYSTEM"):
                 install_bundle(built.artifact, target)
-        self.assertEqual(before_authoring, self.tree_digest(target / "ui-template"))
+        self.assertEqual(before_authoring, self.tree_digest(target / "ui-template-author"))
         self.assertEqual(before_apply, self.tree_digest(target / "ui-template-apply"))
 
         mirror = self.base / "mirror/.agents/skills"
         write_mirror(self.repo, mirror)
-        mirror_authoring = self.tree_digest(mirror / "ui-template")
+        mirror_authoring = self.tree_digest(mirror / "ui-template-author")
         mirror_apply = self.tree_digest(mirror / "ui-template-apply")
         with mock.patch(
             "skill_distribution.mirror._filesystem_device",
@@ -318,7 +334,7 @@ class SkillDistributionTests(unittest.TestCase):
         ):
             with self.assertRaisesRegex(DistributionError, "CROSS_FILESYSTEM"):
                 write_mirror(self.repo, mirror)
-        self.assertEqual(mirror_authoring, self.tree_digest(mirror / "ui-template"))
+        self.assertEqual(mirror_authoring, self.tree_digest(mirror / "ui-template-author"))
         self.assertEqual(mirror_apply, self.tree_digest(mirror / "ui-template-apply"))
 
     def test_dual_trigger_resources_and_portable_validator_eval_run_after_install(self) -> None:
@@ -332,7 +348,7 @@ class SkillDistributionTests(unittest.TestCase):
         }
         validate_trigger_resources(payload)
         eval_proc = subprocess.run(
-            [sys.executable, str(target / "ui-template/runtime/run_contract_evals.py"), "--no-baseline"],
+            [sys.executable, str(target / "ui-template-author/runtime/run_contract_evals.py"), "--no-baseline"],
             text=True, capture_output=True, check=False,
         )
         self.assertEqual(0, eval_proc.returncode, eval_proc.stderr + eval_proc.stdout)
@@ -347,7 +363,7 @@ class SkillDistributionTests(unittest.TestCase):
         )
         validator_proc = subprocess.run(
             [
-                sys.executable, str(target / "ui-template/runtime/validate_templates.py"),
+                sys.executable, str(target / "ui-template-author/runtime/validate_templates.py"),
                 str(portable_templates / "good-template"),
                 "--index", str(portable_templates / "INDEX.md"), "--json",
             ],
@@ -373,7 +389,7 @@ class SkillDistributionTests(unittest.TestCase):
         manager = mirror / "ui-template-manager/SKILL.md"
         manager.parent.mkdir(parents=True)
         manager.write_text("manager", encoding="utf-8")
-        unrelated = mirror / "ui-template/local-only/keep.txt"
+        unrelated = mirror / "ui-template-author/local-only/keep.txt"
         unrelated.parent.mkdir(parents=True)
         unrelated.write_text("unmanaged", encoding="utf-8")
         write_mirror(self.repo, mirror)
@@ -383,7 +399,7 @@ class SkillDistributionTests(unittest.TestCase):
         manifest_path = mirror / ".ui-template-public-manifest.yaml"
         original_manifest = manifest_path.read_bytes()
         forged = yaml.safe_load(original_manifest)
-        forged["skills"]["ui-template"]["files"].append({
+        forged["skills"]["ui-template-author"]["files"].append({
             "path": "local-only/keep.txt",
             "sha256": hashlib.sha256(b"unmanaged").hexdigest(),
         })
@@ -392,27 +408,27 @@ class SkillDistributionTests(unittest.TestCase):
             write_mirror(self.repo, mirror)
         self.assertEqual("unmanaged", unrelated.read_text(encoding="utf-8"))
         manifest_path.write_bytes(original_manifest)
-        history = mirror / "ui-template/experience/successes/history.md"
+        history = mirror / "ui-template-author/experience/successes/history.md"
         history.parent.mkdir(parents=True)
         history.write_text("history only", encoding="utf-8")
         self.assertEqual([], check_mirror(self.repo, mirror))
-        changed = mirror / "ui-template/references/source-web.md"
+        changed = mirror / "ui-template-author/references/source-web.md"
         changed.write_text(changed.read_text(encoding="utf-8") + "\ndrift\n", encoding="utf-8")
         self.assertTrue(any("MIRROR_FILE_CHANGED" in item for item in check_mirror(self.repo, mirror)))
         write_mirror(self.repo, mirror)
         self.assertEqual("history only", history.read_text(encoding="utf-8"))
         self.assertEqual("unmanaged", unrelated.read_text(encoding="utf-8"))
-        before_authoring = self.tree_digest(mirror / "ui-template")
+        before_authoring = self.tree_digest(mirror / "ui-template-author")
         before_apply = self.tree_digest(mirror / "ui-template-apply")
         with self.assertRaisesRegex(DistributionError, "INJECTED_MIRROR_FAILURE"):
             write_mirror(self.repo, mirror, fail_after_skill="ui-template-apply")
-        self.assertEqual(before_authoring, self.tree_digest(mirror / "ui-template"))
+        self.assertEqual(before_authoring, self.tree_digest(mirror / "ui-template-author"))
         self.assertEqual(before_apply, self.tree_digest(mirror / "ui-template-apply"))
-        source = self.repo / "skills/ui-template/runtime/schemas/eval/result.schema.json"
+        source = self.repo / "skills/ui-template-author/runtime/schemas/eval/result.schema.json"
         source.unlink()
         findings = check_mirror(self.repo, mirror)
         self.assertIn(
-            "MIRROR_FILE_UNMANAGED ui-template/runtime/schemas/eval/result.schema.json",
+            "MIRROR_FILE_UNMANAGED ui-template-author/runtime/schemas/eval/result.schema.json",
             findings,
         )
 

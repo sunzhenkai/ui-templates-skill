@@ -11,10 +11,10 @@ active_release:
   - openspec/config.yaml
   - openspec/specs/**
   - openspec/changes/harden-template-lifecycle/**
-  - skills/ui-template/SKILL.md
-  - skills/ui-template/references/**
-  - skills/ui-template/evals/**
-  - skills/ui-template/runtime/**
+  - skills/ui-template-author/SKILL.md
+  - skills/ui-template-author/references/**
+  - skills/ui-template-author/evals/**
+  - skills/ui-template-author/runtime/**
   - skills/ui-template-apply/SKILL.md
   - skills/ui-template-apply/references/**
   - skills/ui-template-apply/evals/**
@@ -34,15 +34,15 @@ checks:
     - README.md
     - AGENTS.md
     - governance/release/**
-    - skills/ui-template/SKILL.md
-    - skills/ui-template/references/**
-    - skills/ui-template/evals/**
+    - skills/ui-template-author/SKILL.md
+    - skills/ui-template-author/references/**
+    - skills/ui-template-author/evals/**
     - skills/ui-template-apply/SKILL.md
     - skills/ui-template-apply/references/**
     - skills/ui-template-apply/evals/**
     - templates/**
   production_skills:
-    - skills/ui-template
+    - skills/ui-template-author
     - skills/ui-template-apply
   mirror_target: .agents/skills
   openspec:

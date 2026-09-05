@@ -1,6 +1,6 @@
 # Template Apply 消费契约
 
-本文件只定义消费不变量；字段全集和生成语义由 `ui-template/references/spec-format.md` 所有。
+本文件只定义消费不变量；字段全集和生成语义由 `ui-template-author/references/spec-format.md` 所有。
 
 ## 启动前 fail-closed 检查
 

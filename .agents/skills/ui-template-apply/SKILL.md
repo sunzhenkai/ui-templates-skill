@@ -1,16 +1,16 @@
 ---
 name: ui-template-apply
-description: 使用已有 schema v2 UI 模板按 Phase 0–9 实现真实页面，维护 .ui-template-apply checkpoint/artifacts，完成 current-build 浏览器证据、review 与幂等 feedback。用于“用模板实现页面/按模板做 UI/基于模板搭后台”；创建模板应移交 ui-template。
+description: 使用已有 schema v2 UI 模板按 Phase 0–9 实现真实页面，维护 .ui-template-apply checkpoint/artifacts，完成 current-build 浏览器证据、review 与幂等 feedback。用于“用模板实现页面/按模板做 UI/基于模板搭后台”；创建模板应移交 ui-template-author。
 ---
 
 # ui-template-apply
 
-本 skill 只消费已有模板，不创建、迁移或索引模板。Authoring 由 `ui-template` 所有。
+本 skill 只消费已有模板，不创建、迁移或索引模板。Authoring 由 `ui-template-author` 所有。
 
 ## 启动边界
 
 - 已选模板并要求实现页面 → 进入本流程。
-- “做成模板/提取风格/导入模板” → 移交 `ui-template`。
+- “做成模板/提取风格/导入模板” → 移交 `ui-template-author`。
 - 没有模板、schema 不支持、origin 未知或模板 validation 失败 → 停止；先迁移/修复，禁止猜测。
 
 ## 必读契约

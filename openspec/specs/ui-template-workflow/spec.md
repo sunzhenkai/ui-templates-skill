@@ -1,11 +1,11 @@
 ## Purpose
 
-定义 `ui-template` skill 的模板创建/导入/更新与模板库管理职责：产出可被独立 `ui-template-apply` skill 消费的公开数据契约，并通过结构化反馈闭环持续维护模板质量。
+定义 `ui-template-author` skill 的模板创建/导入/更新与模板库管理职责：产出可被独立 `ui-template-apply` skill 消费的公开数据契约，并通过结构化反馈闭环持续维护模板质量。
 
 ## Requirements
 
 ### Requirement: Authoring 单一职责入口
-`ui-template` skill SHALL 只响应模板创建、导入、更新、浏览与拆分意图。当用户请求使用已有模板实现页面时，skill SHALL 提示移交到 `ui-template-apply` skill，且不得在同一 SKILL.md 中加载 Apply 阶段流程。
+`ui-template-author` skill SHALL 只响应模板创建、导入、更新、浏览与拆分意图。当用户请求使用已有模板实现页面时，skill SHALL 提示移交到 `ui-template-apply` skill，且不得在同一 SKILL.md 中加载 Apply 阶段流程。
 
 #### Scenario: 用户要求从新来源创建模板
 - **WHEN** 用户给定 URL、仓库、图片或设计文档并要求沉淀风格
@@ -20,11 +20,11 @@
 - **THEN** skill 先引导完成 Authoring，再提示使用 `ui-template-apply` 继续消费端流程
 
 ### Requirement: 模板格式契约唯一归属
-`ui-template` skill SHALL 作为版本化模板 schema、`spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml` 与 optional `apply/` 格式定义的唯一所有者，并 SHALL 在 Authoring 时保证模板可被独立 Apply skill 确定性消费。模板 SHALL 不包含 `implementation/`、技术栈 adapter、消费项目目录契约、API/data 分层或状态库选型。
+`ui-template-author` skill SHALL 作为版本化模板 schema、`spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml` 与 optional `apply/` 格式定义的唯一所有者，并 SHALL 在 Authoring 时保证模板可被独立 Apply skill 确定性消费。模板 SHALL 不包含 `implementation/`、技术栈 adapter、消费项目目录契约、API/data 分层或状态库选型。
 
 #### Scenario: Apply 侧需要理解模板格式
 - **WHEN** `ui-template-apply` 读取模板目录
-- **THEN** 其只依赖 `ui-template` 定义的版本化公开数据契约，不加载 Authoring 流程，也不从 prose 猜测缺失字段
+- **THEN** 其只依赖 `ui-template-author` 定义的版本化公开数据契约，不加载 Authoring 流程，也不从 prose 猜测缺失字段
 
 #### Scenario: 模板包含工程实施内容
 - **WHEN** Authoring 产物包含 `implementation/`、stack adapter、代码目录或消费项目业务结构
@@ -35,7 +35,7 @@
 - **THEN** 消费者明确拒绝继续并报告所需迁移，不得静默按其他版本解释
 
 ### Requirement: 模板反馈消费
-`ui-template` skill SHALL 在更新模板前发现或读取结构化反馈记录，并 SHALL 按唯一 ID 幂等地将每条反馈处置为 `accepted`、`known-gap` 或 `rejected`；已接受反馈 SHALL 继续记录 `applied` 与 `verified` 状态。仅属消费项目的工程问题 SHALL 不进入模板，所有终态 SHALL 保留理由和目标引用。
+`ui-template-author` skill SHALL 在更新模板前发现或读取结构化反馈记录，并 SHALL 按唯一 ID 幂等地将每条反馈处置为 `accepted`、`known-gap` 或 `rejected`；已接受反馈 SHALL 继续记录 `applied` 与 `verified` 状态。仅属消费项目的工程问题 SHALL 不进入模板，所有终态 SHALL 保留理由和目标引用。
 
 #### Scenario: Apply 报告可复用规则缺口
 - **WHEN** 反馈记录显示模板缺少可复用的 icon-only 控件命名规则且证据完整
@@ -69,7 +69,7 @@ Authoring SHALL 为 Non-negotiables 和其他被跨文档引用的关键规则�
 - **THEN** 验证失败并报告所有悬空或冲突引用
 
 ### Requirement: Authoring 完成门禁
-`ui-template` skill SHALL 按 Generate → Validate → Eval → Index → Report 顺序完成模板创建或更新。schema、语义、对比度、证据、链接或相关 contract eval 任一失败时，skill SHALL 不更新 `templates/INDEX.md`，也不得宣称模板完成。
+`ui-template-author` skill SHALL 按 Generate → Validate → Eval → Index → Report 顺序完成模板创建或更新。schema、语义、对比度、证据、链接或相关 contract eval 任一失败时，skill SHALL 不更新 `templates/INDEX.md`，也不得宣称模板完成。
 
 #### Scenario: 新模板验证通过
 - **WHEN** 新模板通过全部必需 validator 和相关 contract eval
@@ -80,11 +80,11 @@ Authoring SHALL 为 Non-negotiables 和其他被跨文档引用的关键规则�
 - **THEN** Authoring 停止在验证阶段，保留失败详情且不更新索引
 
 #### Scenario: 外部安装环境执行 Authoring
-- **WHEN** `ui-template` 在没有本仓 `AGENTS.md` 的项目中创建模板
+- **WHEN** `ui-template-author` 在没有本仓 `AGENTS.md` 的项目中创建模板
 - **THEN** skill 仍调用 bundle 内可发现的 portable contract checker，并执行同等完成门禁
 
 ### Requirement: Session source 与 recorded provenance 分离
-`ui-template` SHALL 把本次 Generate 的可读来源（session source）与已发布模板的 `meta.sources[]` provenance 当作不同对象。Provenance SHALL 只记录 id/type/ref/revision/captured_at 等出处身份，SHALL NOT 被解释为文件系统绑定或下次 Authoring 的必填 checkout。Authoring SHALL NOT 因 provenance 存在而向用户索要历史本地绝对路径、扫描 sibling checkout / `/tmp` / `example/**`，或按 `meta.sources[].ref` 自行 clone。
+`ui-template-author` SHALL 把本次 Generate 的可读来源（session source）与已发布模板的 `meta.sources[]` provenance 当作不同对象。Provenance SHALL 只记录 id/type/ref/revision/captured_at 等出处身份，SHALL NOT 被解释为文件系统绑定或下次 Authoring 的必填 checkout。Authoring SHALL NOT 因 provenance 存在而向用户索要历史本地绝对路径、扫描 sibling checkout / `/tmp` / `example/**`，或按 `meta.sources[].ref` 自行 clone。
 
 #### Scenario: 已发布模板没有 session source
 - **WHEN** 用户要求校验、索引检查或非从源更新已发布的 repo 来源模板，且本会话未给出可读 source
@@ -99,7 +99,7 @@ Authoring SHALL 为 Non-negotiables 和其他被跨文档引用的关键规则�
 - **THEN** 这不是 blocker，也不是「请提供本地绝对路径」的理由
 
 ### Requirement: Repo fidelity Intake
-`ui-template` SHALL 仅在本次从源导入或从源更新时记录 session source、固定 source revision、结构 scope 和 fidelity conformance。新建或从源更新的 repo 来源模板 SHALL 默认使用 structural conformance；只有用户明确选择仅提取视觉语言时才能使用 style-only，并 SHALL 保留可审计理由。对已发布模板的非从源操作 SHALL 跳过 session-source Intake，不得阻塞。
+`ui-template-author` SHALL 仅在本次从源导入或从源更新时记录 session source、固定 source revision、结构 scope 和 fidelity conformance。新建或从源更新的 repo 来源模板 SHALL 默认使用 structural conformance；只有用户明确选择仅提取视觉语言时才能使用 style-only，并 SHALL 保留可审计理由。对已发布模板的非从源操作 SHALL 跳过 session-source Intake，不得阻塞。
 
 #### Scenario: 用户未指定 fidelity
 - **WHEN** 用户要求从代码仓库导入 UI 模板且未声明只要视觉风格

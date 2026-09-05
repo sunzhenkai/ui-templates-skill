@@ -1,11 +1,11 @@
 ## Purpose
 
-为 `ui-template` 与 `ui-template-apply` 建立可复现的双-skill 分发、安装、镜像、评估、CI 和版本发布治理，并使 structural profile schema、eval 资产与 `example/**` 排除进入同一发布边界。
+为 `ui-template-author` 与 `ui-template-apply` 建立可复现的双-skill 分发、安装、镜像、评估、CI 和版本发布治理，并使 structural profile schema、eval 资产与 `example/**` 排除进入同一发布边界。
 
 ## Requirements
 
 ### Requirement: 双-skill bundle
-对外分发单元 SHALL 同时包含 `ui-template` 与 `ui-template-apply` 的生产文件、版本化 manifest 和许可信息。项目级 `ui-template-manager`、内部 patches/experience 及仓库专属配置 SHALL 不默认进入外部 bundle。
+对外分发单元 SHALL 同时包含 `ui-template-author` 与 `ui-template-apply` 的生产文件、版本化 manifest 和许可信息。项目级 `ui-template-manager`、内部 patches/experience 及仓库专属配置 SHALL 不默认进入外部 bundle。
 
 #### Scenario: 构建发布 bundle
 - **WHEN** maintainer 构建可分发 artifact
@@ -29,6 +29,10 @@
 #### Scenario: 重复安装新版本
 - **WHEN** 新 bundle 删除了旧版本的普通生产文件
 - **THEN** 重装后目标残留消失，且 bundle 外的其他 skills 不受影响
+
+#### Scenario: 升级时移除已退役 Authoring 目录
+- **WHEN** 目标已有旧 public skill `ui-template`，且新 bundle 的 Authoring 身份是 `ui-template-author`
+- **THEN** 安装成功后 `ui-template` 生产目录被移除，其 `patches/` 与 `experience/` 迁到 `ui-template-author`，其他非 bundle skill 不受影响
 
 #### Scenario: 安装校验失败
 - **WHEN** checksum、manifest 或引用完整性校验失败
@@ -148,7 +152,7 @@ bundle SHALL 不复制 `ui-ux-pro-max` 的数据集、持久化设计系统或 s
 
 #### Scenario: 构建 profile-capable bundle
 - **WHEN**maintainer 构建包含 structural fidelity 能力的 bundle
-- **THEN**安装后的 `ui-template` 可生成/验证/replay profile，`ui-template-apply` 可消费 profile，全部引用 schema/fixtures/runtime 均存在且 manifest digest 正确
+- **THEN**安装后的 `ui-template-author` 可生成/验证/replay profile，`ui-template-apply` 可消费 profile，全部引用 schema/fixtures/runtime 均存在且 manifest digest 正确
 
 #### Scenario: Bundle 缺 profile schema
 - **WHEN**SKILL/reference 声明 structural profile 但 artifact 缺少 schema、runtime 或 fixture

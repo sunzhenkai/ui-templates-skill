@@ -13,16 +13,16 @@
 
 本仓库发布两个必须配套安装的 public skills：
 
-- `skills/ui-template/`：Template Authoring、schema v2 格式语义、迁移/验证/反馈消费和模板索引流程。
+- `skills/ui-template-author/`：Template Authoring、schema v2 格式语义、迁移/验证/反馈消费和模板索引流程。
 - `skills/ui-template-apply/`：消费已有模板的 Phase 0–9、checkpoint、current-build 浏览器证据、review 与 feedback。
 
-`.agents/skills/ui-template-manager/` 是 repository-only 路由薄封装；不得把它当作公开产品源码。生产正文唯一源码是 `skills/`，`.agents/skills/{ui-template,ui-template-apply}` 是 allowlist 生成镜像。
+`.agents/skills/ui-template-manager/` 是 repository-only 路由薄封装；不得把它当作公开产品源码。生产正文唯一源码是 `skills/`，`.agents/skills/{ui-template-author,ui-template-apply}` 是 allowlist 生成镜像。
 
 事实源按职责分层：
 
 1. `schemas/template/v2/`：core 字段、类型和闭集枚举。
 2. `schemas/template/fidelity/v1/`：可选 `fidelity.yaml` sidecar 的独立 profile schema。
-3. `skills/ui-template/references/spec-format.md`：模板字段语义、所有权和 Authoring 行为。
+3. `skills/ui-template-author/references/spec-format.md`：模板字段语义、所有权和 Authoring 行为。
 4. active OpenSpec：对外可观察要求。`harden-template-lifecycle` 尚未 archive 时，effective contract 是 `openspec/specs/` base（含已合入的 structural fidelity requirements）加 `openspec/changes/harden-template-lifecycle/specs/` delta；不得为消除该 overlay 修改 base。
 5. `scripts/template_validation/`：上述契约的可执行实现（含 portable profile 与 session-source replay）。
 6. `governance/release/`：bundle 2.0.0、兼容、迁移、回滚与分发 allowlist。
@@ -68,7 +68,7 @@ INSTALL_TARGET=/path/to/project/.agents/skills \
 make install
 ```
 
-不得恢复旧 `cp -r skills/ui-template ...` 入口。installer 只替换两个 public skill，保留其他 skills 与独立历史档案。v1 迁移使用：
+不得恢复旧 `cp -r skills/ui-template-author ...` 入口。installer 只替换两个 public skill，保留其他 skills 与独立历史档案。v1 迁移使用：
 
 ```bash
 /tmp/ui-template-governance-venv/bin/python scripts/migrate_template.py SOURCE CANDIDATE
@@ -78,7 +78,7 @@ make install
 
 ## 修改规则
 
-- 改模板 schema/Authoring：同步 `schemas/template/v2/`、`skills/ui-template/`、validator、fixtures、active OpenSpec delta 与派生文档。
+- 改模板 schema/Authoring：同步 `schemas/template/v2/`、`skills/ui-template-author/`、validator、fixtures、active OpenSpec delta 与派生文档。
 - 改 Apply：同步 `skills/ui-template-apply/`、Apply state/schema、eval、active OpenSpec delta。
 - 改公开生产 skill 后运行 `make mirror-write`，再以 `make mirror-check` 证明零漂移；生成器只管理 allowlist 文件。
 - 改 `templates/` 后至少运行真实模板 validator；不得把样例测试当模板契约证据。

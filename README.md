@@ -2,7 +2,7 @@
 
 `ui-templates-skill` 是一套双 public skill 产品：
 
-- **`ui-template`**：从获授权的 Web、代码仓库、图片或设计文档提取设计规则，创建、迁移、更新 schema v2 模板并维护索引。
+- **`ui-template-author`**：从获授权的 Web、代码仓库、图片或设计文档提取设计规则，创建、迁移、更新 schema v2 模板并维护索引。
 - **`ui-template-apply`**：消费已验证模板，按 Phase 0–9 在目标项目实现 UI，维护 checkpoint、current-build 浏览器证据、review 与 feedback。
 
 完整能力必须同时安装两个 skill。仓库内 `.agents/skills/ui-template-manager/` 只是项目级路由薄封装，不进入公开 bundle。
@@ -11,7 +11,7 @@
 
 schema v2 模板以 `spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml` 为必备文件，可包含拆分设计文档、可选 `fidelity.yaml` 和技术栈无关的 `apply/`。`tokens.yaml` 是精确值唯一载体；origin 只允许 `source | computed | estimated | default`。模板不包含 `implementation/`、stack adapter、消费项目目录、API/mock/data 分层或 runnable starter。无 sidecar 的合法 v2 模板按 baseline fidelity 消费，layout 不得为 high。structural 导入需要 chrome-complete literal graph。
 
-格式语义以 [`skills/ui-template/references/spec-format.md`](skills/ui-template/references/spec-format.md) 为准，机器结构以 [`schemas/template/v2/`](schemas/template/v2/) 为准，可选结构保真 sidecar 以 [`schemas/template/fidelity/v1/`](schemas/template/fidelity/v1/) 为准。当前模板库见 [`templates/INDEX.md`](templates/INDEX.md)；`workbench-shell` 来源同时包含固定 revision 的公开仓库源码和一份已泛化的用户设计文档。无本会话 source 时 workbench 保持 `legacy-baseline`，`confidence.layout` 不高于 medium，不索取上游本地路径。双 skill 必须配套升级；未知 profile 不静默降级。`example/**` 是治理排除项。
+格式语义以 [`skills/ui-template-author/references/spec-format.md`](skills/ui-template-author/references/spec-format.md) 为准，机器结构以 [`schemas/template/v2/`](schemas/template/v2/) 为准，可选结构保真 sidecar 以 [`schemas/template/fidelity/v1/`](schemas/template/fidelity/v1/) 为准。当前模板库见 [`templates/INDEX.md`](templates/INDEX.md)；`workbench-shell` 来源同时包含固定 revision 的公开仓库源码和一份已泛化的用户设计文档。无本会话 source 时 workbench 保持 `legacy-baseline`，`confidence.layout` 不高于 medium，不索取上游本地路径。双 skill 必须配套升级；未知 profile 不静默降级。`example/**` 是治理排除项。
 
 ## 安装与升级 2.0.0 bundle
 
@@ -30,7 +30,7 @@ INSTALL_TARGET=/path/to/project/.agents/skills \
 make install
 ```
 
-同一命令用于升级：安装器先验证 checksum/manifest，在目标父目录 staging，只原子替换 `ui-template` 与 `ui-template-apply`，清理已删除的受管生产文件，并保留其他 skills 以及单独管理的 `patches/`、`experience/`。不要用旧的单目录 `cp -r` 安装。
+同一命令用于升级：安装器先验证 checksum/manifest，在目标父目录 staging，只原子替换 `ui-template-author` 与 `ui-template-apply`，清理已删除的受管生产文件和已退役的 `ui-template` 目录，并保留其他 skills 以及单独管理的 `patches/`、`experience/`。不要用旧的单目录 `cp -r` 安装。
 
 ## 验证、评估与镜像
 
