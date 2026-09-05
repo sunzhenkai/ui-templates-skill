@@ -525,6 +525,10 @@ layout:
     value: 48
     origin: source
     unit: px
+  sidebar-item-height:
+    value: 32
+    origin: source
+    unit: px
   sidebar-mobile-width:
     value: 288
     origin: source
@@ -543,6 +547,10 @@ layout:
     unit: px
   navigation-progress-height:
     value: 2
+    origin: source
+    unit: px
+  canvas-inset:
+    value: 8
     origin: source
     unit: px
 

@@ -1,0 +1,8 @@
+{
+  "categories": { "correctness": "error" },
+  "plugins": ["react", "unicorn", "typescript"],
+  "rules": {
+    "react/set-state-in-effect": "off",
+    "react/incompatible-library": "off"
+  }
+}

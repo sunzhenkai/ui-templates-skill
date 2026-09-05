@@ -10,7 +10,6 @@ active_release:
   - tests/**
   - openspec/config.yaml
   - openspec/specs/**
-  - openspec/changes/harden-template-lifecycle/**
   - skills/ui-template-author/SKILL.md
   - skills/ui-template-author/references/**
   - skills/ui-template-author/evals/**
@@ -47,5 +46,3 @@ checks:
   mirror_target: .agents/skills
   openspec:
     base: openspec/specs
-    overlay: openspec/changes/harden-template-lifecycle/specs
-    change: harden-template-lifecycle

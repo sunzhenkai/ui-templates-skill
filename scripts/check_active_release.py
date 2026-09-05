@@ -322,10 +322,15 @@ def check_repository(root: Path, scope_path: Path) -> dict:
     checks = config.get("checks", {})
     document_paths = expand(checks.get("documents", []), paths) - domains["exclusions"] - domains["immutable_history"]
     openspec = checks.get("openspec", {})
-    effective, pending, openspec_findings, openspec_reads = effective_openspec(
-        root, str(openspec.get("base", "openspec/specs")),
-        str(openspec.get("overlay", "")), paths - domains["exclusions"],
-    )
+    overlay_root = str(openspec.get("overlay", "")).strip()
+    if overlay_root:
+        effective, pending, openspec_findings, openspec_reads = effective_openspec(
+            root, str(openspec.get("base", "openspec/specs")),
+            overlay_root, paths - domains["exclusions"],
+        )
+    else:
+        # 归档后的稳定态：没有 active change delta，effective contract 就是 base specs。
+        effective, pending, openspec_findings, openspec_reads = {}, [], [], set()
     del effective
     findings.extend(openspec_findings)
     read_paths.update(openspec_reads)

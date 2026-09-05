@@ -25,13 +25,11 @@ class ActiveReleaseTests(unittest.TestCase):
             for item in json.loads(FIXTURE.read_text(encoding="utf-8"))["cases"]
         }
 
-    def test_repository_active_release_contract_passes_with_pending_overlay_reported(self) -> None:
+    def test_repository_active_release_contract_passes_without_active_change(self) -> None:
         report = active.check_repository(ROOT, ROOT / "governance/scope.yaml")
         self.assertEqual("passed", report["status"], report["findings"])
-        self.assertTrue(report["pending_overlays"])
-        capabilities = {item["capability"] for item in report["pending_overlays"]}
-        self.assertIn("ui-template-workflow", capabilities)
-        self.assertIn("workbench-shell-implementation", capabilities)
+        # harden-template-lifecycle 已 archive：effective contract 只剩 base specs，无 pending overlay。
+        self.assertEqual([], report["pending_overlays"])
         self.assertTrue(all(item["content_read"] is False and item["traversed"] is False for item in report["exclusions"]))
         self.assertEqual("readability-only-no-semantic-rewrite", report["immutable_history"]["policy"])
 
@@ -80,19 +78,14 @@ class ActiveReleaseTests(unittest.TestCase):
             findings = check_mirror(ROOT, mirror)
         self.assertTrue(any(item.startswith(self.expected["production-mirror-drift"]) for item in findings))
 
-    def test_effective_view_removes_base_implementation_requirement(self) -> None:
-        paths = active.git_paths(ROOT)
-        effective, pending, findings, _reads = active.effective_openspec(
-            ROOT,
-            "openspec/specs",
-            "openspec/changes/harden-template-lifecycle/specs",
-            paths,
-        )
-        self.assertFalse(findings, findings)
-        self.assertTrue(pending)
-        self.assertNotIn("Optional implementation playbook 元数据", effective["ui-template-workflow"])
-        self.assertNotIn("完整实施 playbook", effective["workbench-shell-implementation"])
-        self.assertIn("技术栈无关 apply 指南", effective["workbench-shell-implementation"])
+    def test_archived_overlay_requirements_live_in_base_specs(self) -> None:
+        # harden-template-lifecycle archive 时已把 delta 合入 base specs；
+        # 归档后不再有 overlay，合并结果必须仍留在 base specs 中。
+        workflow = active._safe_text(ROOT, "openspec/specs/ui-template-workflow/spec.md")
+        self.assertNotIn("Optional implementation playbook 元数据", workflow)
+        implementation = active._safe_text(ROOT, "openspec/specs/workbench-shell-implementation/spec.md")
+        self.assertIn("技术栈无关 apply 指南", implementation)
+        self.assertNotIn("完整实施 playbook", implementation)
 
 
 if __name__ == "__main__":

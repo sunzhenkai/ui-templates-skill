@@ -1,9 +1,10 @@
 schema_version: 1
 change: harden-template-lifecycle
-recorded_at: "2026-09-03T23:06:15+08:00"
-head_commit: c7849c55f17703b277e66cecfba303f3db93414f
+recorded_at: "2026-09-05T12:40:00+08:00"
+head_commit: ca64d474d3bd35a7b20c2c7d4146400027dc6a3d
 path: example/workbench-shell/web-v2
-head_tree: debc3e5e9f8f08bb87c0a62e17ab83e4a4f85f12
-tracked_status: clean
+head_tree: null
+tracked_status: absent-from-head
 untracked_status: clean
+note: web-v2 排除样例已随 ca64d474 从仓库删除；guard 要求该路径在 HEAD 与工作区均不存在，不得以历史内容回填。
 guard_command: python3 scripts/check_governance_scope.py --guard-web-v2

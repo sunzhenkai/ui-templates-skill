@@ -1579,6 +1579,30 @@ entries:
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: git:c7849c55f17703b277e66cecfba303f3db93414f:templates/workbench-shell/tokens.yaml#typography.scale.title-sm
 
+- id: evidence-sidebar-item-height-source
+  kind: token
+  path: layout.sidebar-item-height
+  origin: source
+  status: active
+  confidence: high
+  captured_at: '2026-09-05T00:00:00Z'
+  method: repo-source-session-import
+  source_id: source-001
+  source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  locator: 'packages/ui/components/ui/sidebar.tsx SidebarMenuButton h-8；packages/views/layout/join-discord-card.tsx 度量注释 "h-8 / rounded-md / gap-2 / text-body"'
+
+- id: evidence-canvas-inset-source
+  kind: token
+  path: layout.canvas-inset
+  origin: source
+  status: active
+  confidence: high
+  captured_at: '2026-09-05T00:00:00Z'
+  method: repo-source-session-import
+  source_id: source-001
+  source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  locator: 'packages/ui/components/ui/sidebar.tsx#SidebarInset: lg:peer-data-[variant=inset]:m-2（0.5rem = 8px，collapsed 时含左侧 ml-2）；packages/views/layout/app-sidebar.tsx#595 variant="inset"'
+
 - id: evidence-focus-ring-width-default
   kind: default
   path: interaction.focus-ring-width
