@@ -133,7 +133,7 @@ entries:
 
 `fidelity.yaml` 使用独立 schema family；支持的 v1 profile 为 `repo-structural-v1`。它只机器表达三类 source-derived observable：
 
-1. `layout_scenes`：region/relation、arrangement、fill/shrink/wrap、按轴 scroll domains、overlay scope/anchor、responsive mode，以及可选 chrome composition（`scene_kind`、`shell_variant`、有序 `slots`、`chrome_anchors`；`contains.order`）；
+1. `layout_scenes`：region/relation、arrangement、fill/shrink/wrap、按轴 scroll domains、overlay scope/anchor、responsive mode，以及可选 chrome composition（`scene_kind`、`shell_variant`、有序 `slots`、`chrome_anchors`；`contains.order`）。壳的展开、折叠、退出布局与 overlay 是设计规则，写在 `routes-and-layouts.md` / `platforms/*.md`；`shrink` 只表示 flex 收缩，`visibility` 只表示控件态，二者不得表达整区进出布局；
 2. `component_geometry`：component/slot 的逻辑方向 padding/gap/inset/size/radius/surface/border/shadow token refs 或闭集 semantic；
 3. `state_presentations`：subject/context/state/surface 的背景/文字/边界、decoration、visibility/container presentation，并把 `none` 等 negative fact 作为 expected。
 

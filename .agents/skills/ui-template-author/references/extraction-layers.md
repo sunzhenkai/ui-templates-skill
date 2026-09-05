@@ -14,6 +14,18 @@ L0–L6 只是变更集合的标签，不是七层完成仪式。从源创建或
 | L5 复合组件 | page-header、list-grid、dialog 等 |
 | L6 Apply 映射 | `apply/playbook.md`、`quality.md` |
 
+## 壳展示形态（来源出现才写）
+
+L1 只记录槽位/拓扑；同一壳如何展示写在 L3 / `platforms/*.md`。来源若出现下列变化，必须用 `LAYOUT-###` / `RESP-###` 写清，**不得**用 `shrink` 或 `state_presentations.visibility` 代替：
+
+1. **形态**四选一（可多条）：在文档流展开 / 收成 rail 仍占位 / 离开布局 / 变为 overlay。
+2. **触发**分开写：断点 vs 用户开关，禁止合成一条规则。
+3. 折叠或离开后，**同一组目的地是否仍可达**；trigger 落在哪个 region。
+4. 宽度只进 `tokens.yaml`。有 sidecar 时：rail → `rail` slot，覆盖 → `overlay` + 已声明则闭合的 `header-trigger`。
+5. 来源只展示一种形态：其余标 `unsupported`；**禁止**套用其他模板的 expanded/collapsed/overlay 配方。
+
+未出现这些变化时本节不适用，不补默认三态。
+
 ## Intake
 
 本次从源导入或从源更新开始前必须冻结并报告：

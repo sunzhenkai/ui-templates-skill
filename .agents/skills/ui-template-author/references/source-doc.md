@@ -5,7 +5,7 @@
 ## 提取步骤
 
 1. 记录 `meta.sources[]`：文件/URL ref、文档版本/commit/文件 SHA-256 revision、采集时间。Markdown、PDF 或导出文档都要固定 revision。
-2. 分类：布局、chrome、断点、交互、组件规则可按原文 source 转写；颜色、字体、阴影等只有文档明确给值时才是 source。
+2. 分类：布局、chrome、断点、交互、组件规则可按原文 source 转写；颜色、字体、阴影等只有文档明确给值时才是 source。文档写了展开/折叠/隐藏/覆盖导航时，按原文转到 L3 / `platforms/*.md`，断点值进 token；没写则 `unsupported`，不发明三态矩阵。清单见 [extraction-layers.md](extraction-layers.md)。
 3. 尽量索取获授权截图或运行 URL，并分别按 image/web 指南增加独立 source；没有视觉参考时 visual coverage 使用 defaulted，overall 上限为 medium。
 4. 缺口 token 填完整 default，basis 说明文档缺失、风格/密度推理与可访问性依据。禁止留空或交给 Apply 自选。
 5. 文档冲突按更具体、更新 revision 裁决，同时保留两个 locator 与决策理由。业务实体、项目名、目录/API/技术栈内容先泛化，不进入模板。

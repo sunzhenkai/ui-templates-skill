@@ -53,7 +53,7 @@ python3 runtime/capture_repo_fidelity.py capture-request.yaml \
 python3 runtime/capture_repo_fidelity.py --init-source-graph ui-source-graph.yaml
 ```
 
-骨架 `closure_complete` 为 false 且 facts 为空，capture 仍 incomplete；补齐通用 chrome facts（`shell_variant`、有序 `slot_role`/`slot_order`）之前不得 Index。`header-trigger`、`chat-fab` 等锚点仅当本次 graph 或变更集合声明了该 role 才 required。
+骨架 `closure_complete` 为 false 且 facts 为空，capture 仍 incomplete；补齐通用 chrome facts（`shell_variant`、有序 `slot_role`/`slot_order`）之前不得 Index。`header-trigger`、`chat-fab` 等锚点仅当本次 graph 或变更集合声明了该 role 才 required。chrome-complete 只证明拓扑（variant + 有序 slots）。壳如何展开/折叠/退出布局仍按 [extraction-layers.md](extraction-layers.md) 写到 L3；graph 没出现的形态不得标 observed。
 
 Capture 从声明 scope 的 canonical theme/entry/definitions 出发，沿显式 imports 形成 usage closure，稳定输出：definitions、exports、imports、usages、exclusions、dynamic/unresolved、facts、计数、graph digest 与 closure digest。完成标准是 scope closure 完整，不再是“3–5 个代表组件”。shell usage 缺 chrome composition 时报告 `CHROME_COMPOSITION_INCOMPLETE`，closure 不得 complete。超限时 receipt 的 closure 为空并报告 `limit-exceeded`；动态表达式、歧义或同 context/slot 冲突进入 unresolved，structural Generate-from-source 必须停止。
 

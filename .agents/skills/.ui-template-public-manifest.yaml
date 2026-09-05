@@ -16,21 +16,21 @@ skills:
     - path: references/authoring-report.md
       sha256: 827997ae26df4ea99271d42a441b33b959f4f48599b77e09cb853e52aae6d93d
     - path: references/extraction-layers.md
-      sha256: b7d52e16af0722252dd778d801196298cbac67cd9e47d6ca766f48559708d2a8
+      sha256: 81c5bb76f2422af8ffe42b112f7e01d5a2ffbe58ad85d9764de933e2b08b9ab2
     - path: references/feedback-lifecycle.md
       sha256: acc71a1ebbf88f3f944868768c4ccbbe6a4377c882a88959cd343372f6c97840
     - path: references/repo-capture-format.md
       sha256: ce41dae23699ea977fbc8d102b4c24d2afadaa0e36bbff5f2c0e51b74d237bbb
     - path: references/source-doc.md
-      sha256: ddc076bc438c6bced9d724bbeb814a4b0364611a04604abfbad39def780ef684
+      sha256: b59a55379c838c4c3de544a8eda8b3ec4277ed8341d02f26d82653aabf04a927
     - path: references/source-image.md
-      sha256: c1b26a0cc5966d4d0ae0731d882d0a0fb173b234aa6188b38effc74a4244ef95
+      sha256: cdb92f91df3769e6f164e263d872193ac779907745f2ee4349fe01cf3267bbb0
     - path: references/source-repo.md
-      sha256: afe6663090960870b761eecd734684795d2879a1147b035998c7bc393d44a9ed
+      sha256: e48a114192e76fa17cdbd4f9a3c66437bc9254cd06b8984104e5aebacfdd86f5
     - path: references/source-web.md
-      sha256: 59fbf995b6bd5a5284fc948389253871921333ef6b1e949fedcd42f5ee7465b7
+      sha256: 12ebdfa3d7adea880161cc4ce712f043cc03211b2de0b99698bc7a4fa3f03f14
     - path: references/spec-format.md
-      sha256: d999253c0946437b764bbe7c0e2d4257bdf1ee1164fd696f74db6095741cf8bc
+      sha256: 612610a224740cf991c1af0885b119c7c55d8fc5f7b65a8d66fe15b1996d22ef
     - path: references/template-lifecycle.md
       sha256: 114ea989df1d5b806b2499247c2376fe7e1ed771bbab54e2794e96a418657cd2
     - path: runtime/capture_repo_fidelity.py
