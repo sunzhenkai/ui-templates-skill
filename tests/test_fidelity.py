@@ -246,7 +246,8 @@ class FidelityContractTests(unittest.TestCase):
         cases = [
             ("missing-variant", "CHROME_COMPOSITION_INCOMPLETE"),
             ("duplicate-order", "CHROME_COMPOSITION_INCOMPLETE"),
-            ("missing-anchor", "CHROME_COMPOSITION_INCOMPLETE"),
+            ("dangling-anchor-region", "CHROME_COMPOSITION_INCOMPLETE"),
+            ("declared-anchor-unclosed", "CHROME_COMPOSITION_INCOMPLETE"),
             ("evasion", "CHROME_COMPOSITION_INCOMPLETE"),
             ("layout-high", "LAYOUT_CONFIDENCE_WITHOUT_CHROME"),
         ]
@@ -266,9 +267,20 @@ class FidelityContractTests(unittest.TestCase):
                     elif kind == "duplicate-order":
                         mutated["layout_scenes"][0]["slots"][0]["order"] = 0
                         mutated["layout_scenes"][0]["slots"][1]["order"] = 0
-                    elif kind == "missing-anchor":
+                    elif kind == "dangling-anchor-region":
+                        mutated["layout_scenes"][0]["chrome_anchors"][0]["region"] = "region.shell.missing"
+                    elif kind == "declared-anchor-unclosed":
+                        mutated["layout_scenes"][0]["slots"].append(
+                            {
+                                "id": "slot.shell.header-trigger",
+                                "role": "header-trigger",
+                                "region": "region.shell.page-header",
+                                "order": 3,
+                            }
+                        )
                         mutated["layout_scenes"][0]["chrome_anchors"] = [
-                            item for item in mutated["layout_scenes"][0]["chrome_anchors"]
+                            item
+                            for item in mutated["layout_scenes"][0]["chrome_anchors"]
                             if item.get("role") != "header-trigger"
                         ]
                     else:
@@ -280,6 +292,21 @@ class FidelityContractTests(unittest.TestCase):
                     any(finding.code == expected for finding in result.findings),
                     [finding.to_dict() for finding in result.findings],
                 )
+
+    def test_shell_without_optional_anchors_is_chrome_complete(self) -> None:
+        data = yaml.safe_load((STRUCTURAL / "templates/structural-template/fidelity.yaml").read_text(encoding="utf-8"))
+        mutated = json.loads(json.dumps(data))
+        mutated["layout_scenes"][0]["chrome_anchors"] = []
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "templates"
+            shutil.copytree(STRUCTURAL / "templates", root)
+            (root / "structural-template" / "fidelity.yaml").write_text(
+                yaml.safe_dump(mutated, sort_keys=False, allow_unicode=True),
+                encoding="utf-8",
+            )
+            result = validate_paths([root], ROOT)
+            self.assertFalse(result.failed, [finding.to_dict() for finding in result.findings])
+            self.assertFalse(any(finding.code == "CHROME_COMPOSITION_INCOMPLETE" for finding in result.findings))
 
     def test_workbench_stays_legacy_baseline_without_source_root(self) -> None:
         result = validate_paths([ROOT / "templates/workbench-shell"], ROOT, index=ROOT / "templates/INDEX.md")

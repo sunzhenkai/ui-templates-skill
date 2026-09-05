@@ -28,7 +28,6 @@ class ActiveReleaseTests(unittest.TestCase):
     def test_repository_active_release_contract_passes_without_active_change(self) -> None:
         report = active.check_repository(ROOT, ROOT / "governance/scope.yaml")
         self.assertEqual("passed", report["status"], report["findings"])
-        # harden-template-lifecycle 已 archive：effective contract 只剩 base specs，无 pending overlay。
         self.assertEqual([], report["pending_overlays"])
         self.assertTrue(all(item["content_read"] is False and item["traversed"] is False for item in report["exclusions"]))
         self.assertEqual("readability-only-no-semantic-rewrite", report["immutable_history"]["policy"])

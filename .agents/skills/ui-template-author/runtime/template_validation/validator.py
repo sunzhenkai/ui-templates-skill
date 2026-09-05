@@ -776,6 +776,16 @@ class TemplateValidator:
             cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
             if len(cells) >= 4 and cells[0] not in {"名称", "---"} and not set(cells[0]) <= {"-", ":"}:
                 rows[cells[0]] = cells
+        present = {path.name for path in templates}
+        for name, cells in rows.items():
+            if len(cells) < 5:
+                self.add("INDEX_STATUS_MISSING", index, "INDEX 缺少状态列", template=name)
+                continue
+            status = cells[4]
+            if status not in {"published", "retired"}:
+                self.add("INDEX_STATUS_INVALID", index, "INDEX 状态必须是 published 或 retired", template=name, status=status)
+            if name not in present:
+                self.add("INDEX_ORPHAN_ROW", index, "INDEX 行没有对应模板目录", template=name, status=status)
         for template in templates:
             meta_path = template / "meta.yaml"
             meta = self.load(meta_path) if meta_path.is_file() else None

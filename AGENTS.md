@@ -6,15 +6,16 @@
 
 - 默认使用简体中文；代码、命令、标识符和路径保留原文。
 - 不提交凭据、私有数据或环境专属绝对路径；来源资产必须遵守许可、再分发和脱敏决定。
-- `example/workbench-shell/web-v2/**`、`example/workbench-shell/web-v3/**` 和 `docs/**` 是治理排除项。root governance 不读取或运行样例内容，也不以样例质量决定发布通过。
+- `example/workbench-shell/web/**`、`example/workbench-shell/web-v1/**`、`example/workbench-shell/web-v2/**`、`example/workbench-shell/web-v3/**` 和 `docs/**` 是治理排除项。root governance 不读取或运行样例内容，也不以样例质量决定发布通过。生成 web 不是修复面。
+- 现行功能闭环与目标见 [`governance/FUNCTIONAL-LOOP.md`](governance/FUNCTIONAL-LOOP.md)。`docs/functional-loop-review.md` 已 superseded。
 - `openspec/changes/archive/**`、`skills/**/patches/**`、`skills/**/experience/**` 是 immutable history：只按档案策略分类/检查可读性，不做当前术语重写。
 
 ## 产品与事实源
 
 本仓库发布两个必须配套安装的 public skills：
 
-- `skills/ui-template-author/`：Template Authoring、schema v2 格式语义、迁移/验证/反馈消费和模板索引流程。
-- `skills/ui-template-apply/`：消费已有模板的 Phase 0–9、checkpoint、current-build 浏览器证据、review 与 feedback。
+- `skills/ui-template-author/`：Template Authoring、schema v2 格式语义、分层抽取、迁移/验证/反馈消费和模板库生命周期（创建/更新/浏览/退役/删除）。
+- `skills/ui-template-apply/`：消费已发布 published 模板的 Phase 0–9、checkpoint、current-build 浏览器证据、可选原版对照、review 与 feedback。
 
 `.agents/skills/ui-template-manager/` 是 repository-only 路由薄封装；不得把它当作公开产品源码。生产正文唯一源码是 `skills/`，`.agents/skills/{ui-template-author,ui-template-apply}` 是 allowlist 生成镜像。
 
@@ -23,10 +24,11 @@
 1. `schemas/template/v2/`：core 字段、类型和闭集枚举。
 2. `schemas/template/fidelity/v1/`：可选 `fidelity.yaml` sidecar 的独立 profile schema。
 3. `skills/ui-template-author/references/spec-format.md`：模板字段语义、所有权和 Authoring 行为。
-4. active OpenSpec：对外可观察要求。`harden-template-lifecycle` 尚未 archive 时，effective contract 是 `openspec/specs/` base（含已合入的 structural fidelity requirements）加 `openspec/changes/harden-template-lifecycle/specs/` delta；不得为消除该 overlay 修改 base。
+4. active OpenSpec：对外可观察要求。`harden-template-lifecycle` 与 `close-functional-loops` 已 archive 并合入 `openspec/specs/`；当前无 pending overlay。
 5. `scripts/template_validation/`：上述契约的可执行实现（含 portable profile 与 session-source replay）。
 6. `governance/release/`：bundle 2.0.0、兼容、迁移、回滚与分发 allowlist。
-7. `README.md`、本文件和发布说明是派生入口；冲突必须修复，不能选择性忽略。
+7. `governance/FUNCTIONAL-LOOP.md`：现行功能闭环与目标；与 1–6 冲突必须先修复。
+8. `README.md`、本文件和发布说明是派生入口；冲突必须修复，不能选择性忽略。
 
 ## 模板契约
 
@@ -75,6 +77,15 @@ make install
 ```
 
 迁移器只写候选目录；未知 schema、未解决 migration 项或任何 validator/eval error 都不能进入索引或发布。
+
+## 闭环规约
+
+只认 [`governance/FUNCTIONAL-LOOP.md`](governance/FUNCTIONAL-LOOP.md) 的四条不变量：
+
+- 生成物不是修复面。
+- Apply 零原版、零历史 web。
+- INDEX 是唯一目录（`published` 才可新消费）。
+- 未声明的变更保持原字节。
 
 ## 修改规则
 

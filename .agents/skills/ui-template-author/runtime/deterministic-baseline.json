@@ -3,15 +3,27 @@
   "runner_version": "1.0.0",
   "cases": {
     "apply-chrome-unavailable": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
+      "status": "passed"
+    },
+    "apply-fidelity-compare-mode": {
+      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
       "status": "passed"
     },
     "apply-fidelity-facet-recovery": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "apply-fidelity-projections": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
+      "status": "passed"
+    },
+    "apply-no-patch-generated-web": {
+      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
+      "status": "passed"
+    },
+    "apply-no-source-checkout": {
+      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
       "status": "passed"
     },
     "apply-out-of-scope-rejected": {
@@ -22,8 +34,16 @@
       "fixture_sha256": "fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c",
       "status": "passed"
     },
+    "apply-retired-template-rejected": {
+      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
+      "status": "passed"
+    },
     "apply-token-freeze": {
       "fixture_sha256": "fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c",
+      "status": "passed"
+    },
+    "authoring-layered-extraction": {
+      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
       "status": "passed"
     },
     "authoring-normalizes-and-fills-defaults": {
@@ -32,6 +52,10 @@
     },
     "authoring-out-of-scope-rejected": {
       "fixture_sha256": "fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c",
+      "status": "passed"
+    },
+    "authoring-template-lifecycle-verbs": {
+      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
       "status": "passed"
     },
     "authoring-updates-index": {
@@ -47,47 +71,51 @@
       "status": "passed"
     },
     "fidelity-canonical-stable": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "fidelity-capture-chrome-incomplete": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "fidelity-capture-no-graph": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "fidelity-capture-reproducibility": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "fidelity-chrome-incomplete": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
+      "status": "passed"
+    },
+    "fidelity-chrome-optional-anchors": {
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "fidelity-example-exclusion": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "fidelity-layout-high-without-chrome": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "fidelity-legacy-baseline": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "fidelity-negative-mutations": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "fidelity-portable-structural": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "fidelity-unknown-fail-closed": {
-      "fixture_sha256": "614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef",
+      "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
     },
     "no-apply-handoff-after-authoring": {

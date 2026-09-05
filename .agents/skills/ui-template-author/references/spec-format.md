@@ -2,9 +2,12 @@
 
 本文是 `ui-template-author` 对 `templates/<name>/` 公开数据契约的 prose 权威；机器结构以 `schemas/template/v2/*.schema.json` 为准。两者冲突时不得任选其一发布，必须先修复漂移。Apply 只消费本契约，不反向定义格式。
 
+生产库目录 `templates/INDEX.md` 是唯一目录，表头必须为「名称 | 风格描述 | 来源类型 | 采集日期 | 状态」。状态闭集：`published | retired`。前四列必须与 `meta.yaml` 一致。库动词见 [template-lifecycle.md](template-lifecycle.md)；分层抽取见 [extraction-layers.md](extraction-layers.md)。
+
 ## 目录与所有权
 
 ```text
+templates/INDEX.md          # 唯一目录：name / description / source.type / captured_at / status
 templates/<name>/
 ├── spec.md                 # 设计规则入口，开篇为 Non-negotiables
 ├── tokens.yaml             # 精确值唯一载体
@@ -136,7 +139,7 @@ entries:
 
 权威按职责分区，而非互相复制：`spec.md` 定义设计意图、Non-negotiables 与稳定 rule identity；`tokens.yaml` 唯一携带精确值；`fidelity.yaml` 定义 scene/component slot/context/state 中的 token usage、关系、status、negative facts 与 direct provenance；split docs 只做人类解释并引用 rule/profile record IDs；`apply/` 只定义 Phase 0–9 映射、取证方法和通过条件。跨职责悬空或越权即失败，不由 Apply 按 prose 优先级猜测。
 
-repo 新建/更新默认 structural；用户明确 style-only 时 sidecar 记录理由且三类 records 为空。合法 core v2 无 sidecar 是 `legacy-baseline`，并非 style-only；未知 schema/profile fail closed。`confidence.layout: high` 仅当存在 chrome-complete structural sidecar；无 sidecar 时 layout 最高 `medium`。A–E 等 page-mode 分类只作 Apply 映射，不得替代来源壳拓扑；双源时 repo 壳拓扑优先。profile canonical semantics 纳入 template identity。已发布模板的 `meta.sources[]` 只证明出处，不要求原仓库仍在本地；无 session source 时不得为补 sidecar 向用户索要历史路径。
+repo 新建/更新默认 structural；用户明确 style-only 时 sidecar 记录理由且三类 records 为空。合法 core v2 无 sidecar 是 `legacy-baseline`，并非 style-only；未知 schema/profile fail closed。`confidence.layout: high` 仅当存在 chrome-complete structural sidecar；无 sidecar 时 layout 最高 `medium`。page mode 取值以该模板 `coverage.page_modes` 为准，分类学不得替换来源壳拓扑；双源时 repo 壳拓扑优先。通用 skill 不要求 `chat-fab`、A–E 或 Board。profile canonical semantics 纳入 template identity。已发布模板的 `meta.sources[]` 只证明出处，不要求原仓库仍在本地；无 session source 时不得为补 sidecar 向用户索要历史路径。
 
 **Profile v1 Non-Goals：**不发布完整 AST/call graph/source snapshot，不成为通用 UI/component DSL，不规定 React/Vue/Tailwind、组件库、DOM、CSS class、工程目录、依赖、API/data/state 或 runnable starter，不要求目标源码/DOM 同构。所有精确数值仍只在 `tokens.yaml`。
 

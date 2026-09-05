@@ -8,7 +8,7 @@ cases:
     description: Phase 2/4/8 从 structural profile 派生稳定 constraint 与 scenario IDs，不要求 DOM 同构。
     given: 消费含 Board/master-detail/Dialog/link contexts 的 structural fixture
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#apply-fidelity-projections
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -23,7 +23,7 @@ cases:
     description: layout 语义变化从 Phase 2 重开，geometry/state 从 Phase 4 重开。
     given: 已有 checkpoint 的模板 fidelity layout wrap 或 text_decoration 发生变化
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#apply-fidelity-facet-recovery
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -38,7 +38,7 @@ cases:
     description: 无 structural chrome sidecar 时不生成 chrome scenario，且不得标 profile-verified。
     given: style-only fidelity fixture
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#apply-chrome-unavailable
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:

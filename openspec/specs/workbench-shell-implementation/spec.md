@@ -287,3 +287,10 @@ Board non-wrap/non-shrink、主从独立滚动、overlay scope、Dialog 四向 p
 #### Scenario: 只提供整页截图
 - **WHEN** consumer 用截图声称结构细节通过但没有 computed/geometry/scroll evidence
 - **THEN** 若当时没有 structural records，不得把截图升级为 profile-verified；有 records 时相关 gate 保持 failed，直到提供绑定 current build 的 expected/actual
+
+### Requirement: 实例附录边界
+本规格 SHALL 只作为 `workbench-shell` 的实例附录。通用 skill 与其他模板 SHALL 不把它当作产品级必选契约。对该模板的保真修复 SHALL 走 Authoring/Apply/模板回写与重生，SHALL NOT 特例化修改生成 web。无 sidecar 时 `confidence.components` SHALL 不高于与 defaulted 覆盖诚实匹配的取值。
+
+#### Scenario: 生成页面与原版不一致
+- **WHEN** 对照可部署原版发现壳或组件差异
+- **THEN** 更新 workbench-shell 模板或对应 skill，并用干净 Apply 重生验证，不得直接改 example web

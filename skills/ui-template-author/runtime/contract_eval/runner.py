@@ -38,6 +38,7 @@ RESOURCE_MAPPINGS = (
     ("scripts/contract_eval/runner.py", "contract_eval/runner.py"),
     ("scripts/validate_templates.py", "validate_templates.py"),
     ("scripts/capture_repo_fidelity.py", "capture_repo_fidelity.py"),
+    ("scripts/manage_template_index.py", "manage_template_index.py"),
 )
 COMMAND_PROGRAMS = {
     "validate_templates": "scripts/validate_templates.py",
@@ -52,6 +53,8 @@ PYTHON_OPERATIONS = frozenset({
     "project_ids",
     "facet_recovery",
     "example_path_rejected",
+    "index_require_published",
+    "changeset_undeclared_stable",
 })
 
 
@@ -435,6 +438,62 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "layout_phase": facet_change_phase(data, layout_changed),
             "state_phase": facet_change_phase(data, state_changed),
             "chrome_phase": facet_change_phase(data, chrome_changed),
+        }
+    if operation == "index_require_published":
+        import importlib.util
+        import tempfile
+
+        module_path = resource_path(root, "scripts/manage_template_index.py")
+        spec = importlib.util.spec_from_file_location("manage_template_index", module_path)
+        if spec is None or spec.loader is None:
+            raise EvalFailure("MANAGE_TEMPLATE_INDEX_UNIMPORTABLE")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        published = (
+            "# 模板索引\n\n| 名称 | 风格描述 | 来源类型 | 采集日期 | 状态 |\n"
+            "| --- | --- | --- | --- | --- |\n| demo | d | doc | 2026-09-03 | published |\n"
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            pub = Path(temp) / "published.md"
+            ret = Path(temp) / "retired.md"
+            pub.write_text(published, encoding="utf-8")
+            ret.write_text(published.replace("published", "retired"), encoding="utf-8")
+            ok = module.require_published(pub, "demo")
+            blocked = module.require_published(ret, "demo")
+            missing = module.require_published(pub, "missing")
+        return {
+            "missing_blocked": not missing["ok"],
+            "published_ok": ok["ok"],
+            "retired_blocked": not blocked["ok"],
+            "retired_code": blocked["code"],
+        }
+    if operation == "changeset_undeclared_stable":
+        import importlib.util
+        import tempfile
+
+        module_path = resource_path(root, "scripts/manage_template_index.py")
+        spec = importlib.util.spec_from_file_location("manage_template_index", module_path)
+        if spec is None or spec.loader is None:
+            raise EvalFailure("MANAGE_TEMPLATE_INDEX_UNIMPORTABLE")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as temp:
+            before = Path(temp) / "before" / "tmpl"
+            allowed = Path(temp) / "allowed" / "tmpl"
+            undeclared = Path(temp) / "undeclared" / "tmpl"
+            for directory in (before, allowed, undeclared):
+                directory.mkdir(parents=True)
+                (directory / "tokens.yaml").write_text("a: 1\n", encoding="utf-8")
+                (directory / "spec.md").write_text("old\n", encoding="utf-8")
+            (allowed / "spec.md").write_text("new\n", encoding="utf-8")
+            (undeclared / "spec.md").write_text("new\n", encoding="utf-8")
+            (undeclared / "tokens.yaml").write_text("a: 2\n", encoding="utf-8")
+            ok = module.check_changeset(before.parent, allowed.parent, ["tmpl/spec.md"])
+            bad = module.check_changeset(before.parent, undeclared.parent, ["tmpl/spec.md"])
+        return {
+            "allowed_ok": ok["ok"],
+            "undeclared": bad["undeclared"],
+            "undeclared_blocked": not bad["ok"],
         }
     from template_validation.validator import validate_paths
 

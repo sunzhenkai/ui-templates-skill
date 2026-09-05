@@ -186,15 +186,19 @@ Validator/runtime SHALL 提供显式 source replay 模式，将 profile source I
 - **THEN** portable 模式完成内部检查；SHALL NOT 失败于缺失历史 source root
 
 ### Requirement: Chrome composition 机器校验
-Validator 与 capture runtime SHALL 校验 included shell scene 的 `shell_variant` 闭集、slots 稳定 ID/role/region、同级顺序、header-trigger 与 chat-fab 锚点，以及这些字段对 token/rule 的引用形状。缺字段、未知 role、顺序冲突、锚点 region 不存在或 variant 非 `inset|flush` SHALL 产出稳定 issue code 并使候选失败。literal graph 缺失、非 `repo-literal-graph-v1`、或 shell usage 无 chrome facts 时，structural capture SHALL `unsupported` 或 `incomplete`，不得生成部分 observed shell record。
+Validator 与 capture runtime SHALL 校验 included shell scene 的 `shell_variant` 闭集、slots 稳定 ID/role/region、同级顺序，以及**已声明**锚点的 role/region。`header-trigger` 与 `chat-fab` 仅当 slot 或 graph 声明了该 role 才必填。缺字段、未知 role、顺序冲突、已出现锚点的 region 不存在或 variant 非 `inset|flush` SHALL 产出稳定 issue code 并使候选失败。literal graph 缺失、非 `repo-literal-graph-v1`、或 shell usage 无 chrome facts 时，structural capture SHALL `unsupported` 或 `incomplete`，不得生成部分 observed shell record。
 
 #### Scenario: 正向 inset 槽位图
-- **WHEN** fixture graph 为 shell 声明 inset、有序 workspace-switcher/search/compose，且 header-trigger 锚在 page-header
+- **WHEN** fixture graph 为 shell 声明 inset 与有序 slots，可选锚点若出现则 region 存在
 - **THEN** portable validation 通过，并输出 chrome/slot/variant 的非零计数
 
-#### Scenario: header-trigger 锚到画布
-- **WHEN** profile 将 `header-trigger` 锚在 `page-canvas` 而 page-header region 存在
+#### Scenario: 已声明锚点 region 不存在
+- **WHEN** profile 写出某个锚点但其 region 不在该 scene 的 regions 中
 - **THEN** validator 报告锚点 finding 并失败
+
+#### Scenario: 空 chrome_anchors 仍完整
+- **WHEN** included shell 有 variant 与有序 slots，且 slots 未声明锚点 role，`chrome_anchors` 为空
+- **THEN** chrome composition 通过，不得报 `CHROME_COMPOSITION_INCOMPLETE`
 
 #### Scenario: 无 graph 文件
 - **WHEN** structural capture request 指向不存在或非 closed YAML/JSON 的 graph_path
@@ -212,7 +216,7 @@ Portable validator SHALL 检查 `meta.confidence.layout` 与 chrome-complete sid
 - **THEN** validator 非零退出并报告稳定 code
 
 ### Requirement: Structural fixtures 与机器回归
-仓库 SHALL 提供不依赖 `example/**` 的正向、负向、mutation 和固定 repo fixtures，覆盖非换行横向 Board、嵌套 scroll domains、navigation/entity-row/button-link context、Dialog 逻辑方向 padding、overlay scope、shell chrome composition（inset vs flush、有序槽位、header-trigger/chat-fab 锚点）、source replay、unknown profile 和 semantic reproducibility。机器结果 SHALL 稳定排序且失败退出码与 findings 一致。
+仓库 SHALL 提供不依赖 `example/**` 的正向、负向、mutation 和固定 repo fixtures，覆盖非换行横向 Board、嵌套 scroll domains、navigation/entity-row/button-link context、Dialog 逻辑方向 padding、overlay scope、shell chrome composition（inset vs flush、有序槽位、已声明则闭合的锚点）、source replay、unknown profile 和 semantic reproducibility。机器结果 SHALL 稳定排序且失败退出码与 findings 一致。
 
 #### Scenario: Negative facts mutation
 - **WHEN** fixture 将 navigation link 的 `text_decoration: none` 改为 underline 或删除 Dialog `padding_block_start`
@@ -229,3 +233,18 @@ Portable validator SHALL 检查 `meta.confidence.layout` 与 chrome-complete sid
 #### Scenario: Chrome composition mutation
 - **WHEN** fixture 将 `shell_variant` 从 inset 改为 flush，或交换 workspace-switcher 与 compose 的顺序，或把 header-trigger 改锚到 page-canvas
 - **THEN** 对应 chrome finding 稳定出现且命令非零退出
+
+### Requirement: INDEX 生命周期状态
+validator SHALL 解析 `templates/INDEX.md` 的名称、风格描述、来源类型、采集日期与状态。状态 SHALL 仅为 `published` 或 `retired`。前四列 SHALL 与对应 `meta.yaml` 一致。INDEX 中的每一行 SHALL 有同名模板目录；每个被校验的模板目录 SHALL 有 INDEX 行。
+
+#### Scenario: published 行列齐全
+- **WHEN** INDEX 行为五列且状态 published，目录与 meta 一致
+- **THEN** 索引校验通过
+
+#### Scenario: 非法状态
+- **WHEN** INDEX 状态不是 published 或 retired，或缺少状态列
+- **THEN** validator 以稳定 issue code 失败
+
+#### Scenario: 孤儿 published 行
+- **WHEN** INDEX 列出 published 模板但目录不存在
+- **THEN** validator 报告 orphan 并失败

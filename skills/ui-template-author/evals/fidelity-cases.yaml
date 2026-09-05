@@ -8,7 +8,7 @@ cases:
     description: 受支持 structural sidecar 的 portable 校验通过，replay 为 not-run，且报告排除 example/**。
     given: 合法 v2 模板附带 repo-structural-v1 fidelity.yaml，调用方未提供 session source
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-portable-structural
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -25,7 +25,7 @@ cases:
     description: 合法 v2 无 sidecar 模板按 legacy-baseline 消费。
     given: 删除 structural fixture 的 fidelity.yaml 后只保留 core v2
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-legacy-baseline
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -40,7 +40,7 @@ cases:
     description: 未知 fidelity profile 必须 fail closed。
     given: sidecar 声明不受支持的 profile 名称
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-unknown-fail-closed
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -55,7 +55,7 @@ cases:
     description: canonical digest 忽略 description 与 locator 行号噪声。
     given: 同一 profile 仅改变 prose/行号/无序集合顺序
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-canonical-stable
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -69,7 +69,7 @@ cases:
     description: Dialog padding、navigation underline、scroll owner 与悬空 token 的负向 mutation 产生稳定 finding。
     given: 对 structural fixture 分别删除 padding_block_start、加入 underline 冲突、重复 scroll owner、写入悬空 token
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-negative-mutations
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -84,7 +84,7 @@ cases:
     description: 固定 revision/scope 的 repo capture 重复运行产生相同 profile digest。
     given: 非 example 固定 literal source graph fixture
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-capture-reproducibility
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -100,7 +100,7 @@ cases:
     description: validator/eval 输入包含 example/ 前缀时立即失败且不把该路径当作通过证据。
     given: 校验路径为 example/workbench-shell/web-v3
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-example-exclusion
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -112,10 +112,10 @@ cases:
   - id: fidelity-chrome-incomplete
     skill: ui-template-author
     category: validation-gate
-    description: shell chrome 缺 variant、锚点或标 other 逃避时产生 CHROME_COMPOSITION_INCOMPLETE。
-    given: 对 structural fixture 删除 shell_variant、去掉 header-trigger 或把 scene_kind 改为 other
+    description: shell chrome 缺 variant、已声明锚点 region 无效或标 other 逃避时产生 CHROME_COMPOSITION_INCOMPLETE。
+    given: 对 structural fixture 删除 shell_variant、把锚点 region 改成不存在或把 scene_kind 改为 other
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-chrome-incomplete
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -124,13 +124,27 @@ cases:
       must_not:
         - 生成部分 observed shell 并通过
     revision: add-structural-fidelity-profile-eval-v1
+  - id: fidelity-chrome-optional-anchors
+    skill: ui-template-author
+    category: validation-gate
+    description: 未声明 header-trigger/chat-fab 时，空 chrome_anchors 仍是 chrome-complete。
+    given: 对 structural fixture 清空 chrome_anchors，slots 不含锚点 role
+    fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-chrome-optional-anchors
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
+    judge: script
+    expect:
+      must:
+        - portable validation 通过
+      must_not:
+        - 因缺少 chat-fab 或 header-trigger 报 CHROME_COMPOSITION_INCOMPLETE
+    revision: add-structural-fidelity-profile-eval-v1
   - id: fidelity-layout-high-without-chrome
     skill: ui-template-author
     category: validation-gate
     description: 无 chrome-complete sidecar 时 confidence.layout high 失败。
     given: 删除 structural fixture 的 fidelity.yaml 并保留 layout high
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-layout-high-without-chrome
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -144,7 +158,7 @@ cases:
     description: 缺 literal graph 时 capture fail closed。
     given: 非 example session source 中没有 ui-source-graph
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-capture-no-graph
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:
@@ -158,7 +172,7 @@ cases:
     description: shell usage 缺 chrome facts 时 closure 不得 complete。
     given: literal graph 仅保留 root_scroll 与 arrangement
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-capture-chrome-incomplete
-    fixture_sha256: 614e52787a9419e4f7013bd1957f962d6b09aca615db72f31fd7165dcba6bdef
+    fixture_sha256: b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02
     judge: script
     expect:
       must:

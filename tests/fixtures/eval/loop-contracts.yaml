@@ -1,0 +1,40 @@
+schema_version: 1
+cases:
+  authoring-template-lifecycle-verbs:
+    assertions:
+      - type: path_exists
+        path: scripts/manage_template_index.py
+      - type: path_exists
+        path: skills/ui-template-author/references/template-lifecycle.md
+  authoring-layered-extraction:
+    assertions:
+      - type: python_call
+        operation: changeset_undeclared_stable
+        json_path_equals:
+          - path: [allowed_ok]
+            value: true
+          - path: [undeclared_blocked]
+            value: true
+  apply-no-patch-generated-web:
+    assertions:
+      - type: path_exists
+        path: skills/ui-template-apply/references/fidelity-compare.md
+  apply-retired-template-rejected:
+    assertions:
+      - type: python_call
+        operation: index_require_published
+        json_path_equals:
+          - path: [published_ok]
+            value: true
+          - path: [retired_blocked]
+            value: true
+          - path: [retired_code]
+            value: INDEX_NOT_PUBLISHED
+  apply-fidelity-compare-mode:
+    assertions:
+      - type: path_exists
+        path: skills/ui-template-apply/references/fidelity-compare.md
+  apply-no-source-checkout:
+    assertions:
+      - type: path_exists
+        path: skills/ui-template-apply/SKILL.md

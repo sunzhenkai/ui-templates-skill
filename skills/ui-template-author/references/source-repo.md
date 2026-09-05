@@ -25,10 +25,11 @@
 - 用户为本会话提供的可读 session source，以及将写入 `meta.sources[]` 的 source ID；
 - 完整 Git commit 或等价不可变 content digest `revision`，不得用 branch/HEAD 字样代替；
 - `platform`、included scenes、components、interaction contexts；
+- **本次变更集合**（路径/组件，可用 L0–L6 标签），见 [extraction-layers.md](extraction-layers.md)；未声明文件保持原字节；
 - conformance：默认 `structural`；`style-only` 仅接受用户明确选择及非空理由；
 - 确定性 limits：graph bytes、definitions、imports、usages、facts。
 
-structural Intake 未固定上述字段时不得开始 **Generate-from-source**。对已发布模板做校验、改文档、消费反馈等不含从源采集的操作，跳过本节，不索取 source root。
+structural Intake 未固定上述字段或变更集合时不得开始 **Generate-from-source**。对已发布模板做校验、改文档、消费反馈、退役或删除等不含从源采集的操作，跳过本节，不索取 source root。
 
 多个 theme、entry 或 canonical definition 未能由既有规则/显式 decision 唯一裁决时保持 unresolved，不做多数表决或“常见默认”推断。
 
@@ -52,7 +53,7 @@ python3 runtime/capture_repo_fidelity.py capture-request.yaml \
 python3 runtime/capture_repo_fidelity.py --init-source-graph ui-source-graph.yaml
 ```
 
-骨架 `closure_complete` 为 false 且 facts 为空，capture 仍 incomplete；补齐 chrome facts（`shell_variant`、有序 `slot_role`/`slot_order`、`header-trigger` 与 `chat-fab`）之前不得 Index。
+骨架 `closure_complete` 为 false 且 facts 为空，capture 仍 incomplete；补齐通用 chrome facts（`shell_variant`、有序 `slot_role`/`slot_order`）之前不得 Index。`header-trigger`、`chat-fab` 等锚点仅当本次 graph 或变更集合声明了该 role 才 required。
 
 Capture 从声明 scope 的 canonical theme/entry/definitions 出发，沿显式 imports 形成 usage closure，稳定输出：definitions、exports、imports、usages、exclusions、dynamic/unresolved、facts、计数、graph digest 与 closure digest。完成标准是 scope closure 完整，不再是“3–5 个代表组件”。shell usage 缺 chrome composition 时报告 `CHROME_COMPOSITION_INCOMPLETE`，closure 不得 complete。超限时 receipt 的 closure 为空并报告 `limit-exceeded`；动态表达式、歧义或同 context/slot 冲突进入 unresolved，structural Generate-from-source 必须停止。
 

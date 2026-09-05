@@ -23,6 +23,7 @@ immutable_history:
   - skills/**/patches/**
   - skills/**/experience/**
 exclusions:
+  - example/workbench-shell/web/**
   - example/workbench-shell/web-v1/**
   - example/workbench-shell/web-v2/**
   - docs/**
@@ -32,6 +33,7 @@ checks:
   documents:
     - README.md
     - AGENTS.md
+    - governance/FUNCTIONAL-LOOP.md
     - governance/release/**
     - skills/ui-template-author/SKILL.md
     - skills/ui-template-author/references/**
@@ -46,3 +48,4 @@ checks:
   mirror_target: .agents/skills
   openspec:
     base: openspec/specs
+    overlay: ""

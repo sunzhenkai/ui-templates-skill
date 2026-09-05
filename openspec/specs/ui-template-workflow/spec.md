@@ -155,33 +155,37 @@ Repo Authoring SHALL 在归一前保留来源 context，并 SHALL 只在全局�
 - **THEN** Authoring 可完成 baseline 模板，但 Report 必须说明未提供 structural fidelity，不得报告 layout/geometry/state replay 通过
 
 ### Requirement: Structural 导入必须提交 chrome-complete literal graph
-本次 structural Generate-from-source SHALL 在 session source 内提供符合 `repo-literal-graph-v1` 的 closed graph，并由 capture 产出含 included shell chrome composition 的 receipt。Authoring SHALL NOT 解析或执行来源 TSX/JS，SHALL NOT 用散文 `spec.md`/`tokens.yaml` 代替 graph。缺 graph、graph `unsupported`、shell chrome 不完整或 capture 有 unresolved blocker 时 SHALL 停在 Generate/Validate，生产 INDEX 不变，也不得宣称 structural 完成。style-only 路径不受本条约束，但 SHALL NOT 报告 layout replay 通过。
+本次 structural Generate-from-source SHALL 在 session source 内提供符合 `repo-literal-graph-v1` 的 closed graph，并由 capture 产出含 included shell chrome composition 的 receipt。chrome-complete 的最小集是 `shell_variant` 与有序 slots；`header-trigger`、`chat-fab` 等锚点仅当 graph 已声明该 role 才 required。通用 Authoring skill SHALL NOT 要求每个模板都有 `chat-fab`、A–E 或 Board。Authoring SHALL NOT 解析或执行来源 TSX/JS，SHALL NOT 用散文 `spec.md`/`tokens.yaml` 代替 graph。缺 graph、graph `unsupported`、shell chrome 不完整或 capture 有 unresolved blocker 时 SHALL 停在 Generate/Validate，生产 INDEX 不变，也不得宣称 structural 完成。style-only 路径不受本条约束，但 SHALL NOT 报告 layout replay 通过。
 
 #### Scenario: 无 graph 的 repo 导入
 - **WHEN** 用户要求从仓库 structural 导入，且 session source 中没有 closed literal graph
 - **THEN** Authoring 失败并报告稳定 issue code；不得写入生产 INDEX，也不得用抽样阅读源码生成的散文布局冒充 observed
 
 #### Scenario: graph 有 shell 但缺槽位顺序
-- **WHEN** capture 得到 shell scene 但缺少 `shell_variant`、有序 slots 或 header-trigger/chat-fab 锚点
+- **WHEN** capture 得到 shell scene 但缺少 `shell_variant`、有序 slots，或已声明却未闭合的锚点
 - **THEN** receipt 不得标 closure complete；Generate-from-source 停止
+
+#### Scenario: 无可选锚点的 chrome-complete
+- **WHEN** graph 声明 `shell_variant` 与有序 slots，且未声明 `header-trigger`/`chat-fab`
+- **THEN** capture 可通过；不得因缺少这些实例锚点而 incomplete
 
 #### Scenario: 用户明确 style-only
 - **WHEN** 用户选择 style-only 且给出理由
 - **THEN** Authoring 可在无 chrome records 时完成 baseline，Report 必须说明未提供 shell chrome fidelity
 
 ### Requirement: 来源 IA 不得被页面模式分类学替换
-Repo Authoring SHALL 将来源导航分组、scene 名称和 chrome 槽位作为一等 observed 结构写入 profile 与设计文档。`meta.coverage.page_modes` 的 A–E 取值 SHALL 只作为 Apply 验收映射，SHALL NOT 在导入时替换来源 IA 或壳配方。每个 included 来源 scene SHALL 能追溯到唯一 page-mode 映射或显式 excluded，映射失败时 unresolved，不得发明第六种模式，也不得把来源分组改名为通用「个人区/运维区/配置区」一类分类学标签后当作 observed。
+Repo Authoring SHALL 将来源导航分组、scene 名称和 chrome 槽位作为一等 observed 结构写入 profile 与设计文档。`meta.coverage.page_modes` 取值 SHALL 只作为该模板的 Apply 验收映射，SHALL NOT 在导入时替换来源 IA 或壳配方。每个 included 来源 scene SHALL 能追溯到该模板已声明 page mode 的唯一映射或显式 excluded，映射失败时 unresolved，不得发明 coverage 之外的模式，也不得把来源分组改名为通用分类学标签后当作 observed。
 
 #### Scenario: 来源有具名导航分组
 - **WHEN** session source 声明 Inbox/Chat/Issues 等具名目的地与分组
-- **THEN** 模板保留这些 scene/slot 身份，并另写 A–E 映射；不得只留下 A 常驻集合之类的抽象壳
+- **THEN** 模板保留这些 scene/slot 身份，并另写该模板 `coverage.page_modes` 映射；不得只留下抽象页面模式壳
 
-#### Scenario: 只用 A–E 描述壳
-- **WHEN** 候选 `routes-and-layouts.md` 或 profile 把 App Shell 写成仅有 A–E 槽位、没有来源 chrome 顺序
+#### Scenario: 只用页面模式分类学描述壳
+- **WHEN** 候选 `routes-and-layouts.md` 或 profile 把 App Shell 写成仅有 page-mode 槽位、没有来源 chrome 顺序
 - **THEN** structural Generate-from-source 失败，不得 Index
 
 ### Requirement: 双源时 repo 壳拓扑优先
-当同一模板同时声明 repo 与设计文档来源时，shell variant、槽位顺序、trigger/FAB 锚点和导航分组 SHALL 以 repo session source 的 observed chrome 为准。设计文档只可贡献文档中明确给出的 token 或规则；文档泛化或业务脱敏 SHALL NOT 覆盖 repo 已观察的壳拓扑。冲突未裁决时 SHALL unresolved，不得静默采用更通用的文档描述。
+当同一模板同时声明 repo 与设计文档来源时，shell variant、槽位顺序、已声明锚点和导航分组 SHALL 以 repo session source 的 observed chrome 为准。设计文档只可贡献文档中明确给出的 token 或规则；文档泛化或业务脱敏 SHALL NOT 覆盖 repo 已观察的壳拓扑。冲突未裁决时 SHALL unresolved，不得静默采用更通用的文档描述。
 
 #### Scenario: 文档泛化了侧栏分组
 - **WHEN** 仓库源展示具名分组与 inset 壳，而并列 Markdown 将其写成通用工作区导航
@@ -201,3 +205,29 @@ Repo Authoring SHALL 将来源导航分组、scene 名称和 chrome 槽位作为
 #### Scenario: legacy-baseline 诚实降级
 - **WHEN** 已发布模板保持无 sidecar 的 baseline
 - **THEN** `confidence.layout` 必须为 medium 或更低，portable 校验可通过
+
+### Requirement: 变更集合更新
+`ui-template-author` SHALL 在从源创建或更新时冻结本次变更集合（路径和/或组件名单；L0–L6 仅作标签）。未纳入集合的文件 SHALL 保持原字节。抽样“代表组件”不得作为完成标准。声称常用组件已覆盖时，这些组件 SHALL 为 observed 或 unsupported，不得仅靠 defaulted 宣称高度一致。
+
+#### Scenario: 只更新声明的组件文件
+- **WHEN** 用户声明本次只改 `components.md` 且给出 session source
+- **THEN** Authoring 可改该文件与对应 coverage/evidence，不得重写未声明的 chrome sidecar 或 token 精确值
+
+#### Scenario: 未冻结变更集合
+- **WHEN** 用户要求从源更新但未声明路径或组件集合
+- **THEN** Authoring 停在 Intake，不进入 Generate-from-source
+
+### Requirement: 模板库生命周期
+`ui-template-author` SHALL 提供创建、从源更新、反馈更新、portable 更新、浏览、退役与删除。生产 INDEX 每行 SHALL 包含状态 `published` 或 `retired`。draft 是未进 INDEX 的候选目录，不是 INDEX 状态。`retired` 模板 SHALL 保留目录直到删除。删除 SHALL 同时移除 INDEX 行与模板目录，且只允许 draft 或已 retired 模板。
+
+#### Scenario: 退役已发布模板
+- **WHEN** 用户要求 retire 某个 published 模板
+- **THEN** INDEX 状态变为 retired，目录保留，Authoring 报告成功且生产 INDEX 与 meta 前四列仍一致
+
+#### Scenario: 直接删除 published 模板
+- **WHEN** 用户要求 delete 一个仍为 published 的模板
+- **THEN** 操作失败，要求先 retire
+
+#### Scenario: 删除已退役模板
+- **WHEN** 用户 delete 一个 retired 模板
+- **THEN** INDEX 行与 `templates/<name>/` 都被移除，随后 portable validate 通过

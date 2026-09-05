@@ -157,6 +157,7 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertIn("skills/ui-template-author/runtime/template_authoring/profile.py", paths)
         self.assertIn("skills/ui-template-author/runtime/template_validation/fidelity.py", paths)
         self.assertIn("skills/ui-template-author/runtime/template_apply_state/fidelity.py", paths)
+        self.assertIn("skills/ui-template-author/runtime/manage_template_index.py", paths)
         self.assertIn("skills/ui-template-apply/SKILL.md", paths)
         with tarfile.open(first.artifact, "r:gz") as archive:
             members = archive.getmembers()
@@ -353,7 +354,7 @@ class SkillDistributionTests(unittest.TestCase):
         )
         self.assertEqual(0, eval_proc.returncode, eval_proc.stderr + eval_proc.stdout)
         report = json.loads(eval_proc.stdout)
-        self.assertEqual({"declared": 31, "parsed": 31, "executed": 31, "script": 29, "llm": 2}, report["counts"])
+        self.assertEqual({"declared": 38, "parsed": 38, "executed": 38, "script": 36, "llm": 2}, report["counts"])
         self.assertTrue(report["discovery"]["example_excluded"])
         self.assertIn("example/**", report["discovery"]["exclusions"])
         portable_templates = self.base / "project/templates"

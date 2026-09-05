@@ -179,10 +179,10 @@ cases:
             kind: delete
             path: [layout_scenes, 0, shell_variant]
             finding: CHROME_COMPOSITION_INCOMPLETE
-          - id: missing-anchor
+          - id: dangling-anchor-region
             kind: set
-            path: [layout_scenes, 0, chrome_anchors]
-            value: [{id: anchor.shell.chat-fab, role: chat-fab, region: region.shell.canvas}]
+            path: [layout_scenes, 0, chrome_anchors, 0, region]
+            value: region.shell.missing
             finding: CHROME_COMPOSITION_INCOMPLETE
           - id: evasion
             kind: set
@@ -192,6 +192,19 @@ cases:
         json_path_equals:
           - path: [all_failed]
             value: true
+  fidelity-chrome-optional-anchors:
+    assertions:
+      - type: python_call
+        operation: validate_mutated_profile
+        path: tests/fixtures/fidelity/structural/templates
+        mutations:
+          - id: empty-optional-anchors
+            kind: set
+            path: [layout_scenes, 0, chrome_anchors]
+            value: []
+        json_path_equals:
+          - path: [results, 0, failed]
+            value: false
   fidelity-layout-high-without-chrome:
     assertions:
       - type: python_call

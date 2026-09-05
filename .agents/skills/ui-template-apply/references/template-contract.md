@@ -4,7 +4,7 @@
 
 ## 启动前 fail-closed 检查
 
-1. 必须存在 `spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml`。
+1. 必须存在 `spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml`。若模板位于带 `INDEX.md` 的集合中，该模板 INDEX 状态必须是 `published`；`retired` 或缺行立即停止。
 2. `meta.yaml`、`tokens.yaml`、`evidence.yaml` 必须都声明 `schema_version: 2`；`meta.template_version` 必须可解析。缺失或未知版本立即停止并要求显式迁移，禁止按 v1 猜测。
 3. 每个 token leaf 必须是含 `value`、适用 `unit` 与 origin 的 record。origin 只接受 `source | computed | estimated | default`；出现 `observed` 或任意未知值即拒绝开始。
 4. checker 必须确认 token/evidence、coverage、rule ID、链接和 required contrast 可解析。验证失败的模板不得进入 Phase 0 complete。

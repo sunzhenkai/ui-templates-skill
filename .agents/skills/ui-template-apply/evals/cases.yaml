@@ -128,3 +128,62 @@ cases:
       must_not:
         - 强行套用 Apply 工作流
     revision: harden-template-lifecycle-eval-v1
+  - id: apply-no-patch-generated-web
+    skill: ui-template-apply
+    category: feedback
+    description: 保真差异不得通过修改生成 web 闭合。
+    given: 对照原版发现视觉差异
+    fixture: tests/fixtures/eval/loop-contracts.yaml#apply-no-patch-generated-web
+    fixture_sha256: 200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b
+    judge: script
+    expect:
+      must:
+        - 差异回写 skill 或模板后重生
+        - 生成物不是修复面
+      must_not:
+        - 直接修改 example/workbench-shell/web/src
+    revision: harden-template-lifecycle-eval-v1
+  - id: apply-retired-template-rejected
+    skill: ui-template-apply
+    category: routing
+    description: retired 模板不得进入新的 Apply Intake。
+    given: 用户要求用 INDEX 状态为 retired 的模板实现页面
+    fixture: tests/fixtures/eval/loop-contracts.yaml#apply-retired-template-rejected
+    fixture_sha256: 200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b
+    judge: script
+    expect:
+      must:
+        - Intake 检查 INDEX 状态
+        - retired 时停止
+      must_not:
+        - 继续 Phase 1
+    revision: harden-template-lifecycle-eval-v1
+  - id: apply-fidelity-compare-mode
+    skill: ui-template-apply
+    category: validation-gate
+    description: 对齐原版时使用模式 B 对照记录，不新增 phase。
+    given: 用户明确要求生成页面与可部署原版对齐
+    fixture: tests/fixtures/eval/loop-contracts.yaml#apply-fidelity-compare-mode
+    fixture_sha256: 200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b
+    judge: script
+    expect:
+      must:
+        - 区分干净实现与保真对照
+        - 对照写入 source-compare.yaml
+      must_not:
+        - 把对照当作 Phase 10
+    revision: harden-template-lifecycle-eval-v1
+  - id: apply-no-source-checkout
+    skill: ui-template-apply
+    category: routing
+    description: Apply 实现时不得读取原版 checkout 或历史生成 web。
+    given: 工作区同时存在模板 provenance 与 example web
+    fixture: tests/fixtures/eval/loop-contracts.yaml#apply-no-source-checkout
+    fixture_sha256: 200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b
+    judge: script
+    expect:
+      must:
+        - 禁止原版 checkout 与历史 web 作为实现输入
+      must_not:
+        - 按 meta.sources[] 打开本地绝对路径
+    revision: harden-template-lifecycle-eval-v1

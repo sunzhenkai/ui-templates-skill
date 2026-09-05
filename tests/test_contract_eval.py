@@ -33,8 +33,10 @@ class ContractEvalTests(unittest.TestCase):
             "skills/ui-template-apply/evals/cases.yaml",
             "scripts/check_template_apply_state.py",
             "scripts/contract_eval/runner.py",
+            "scripts/manage_template_index.py",
             "tests/fixtures/eval/script-contracts.yaml",
             "tests/fixtures/eval/llm-contracts.yaml",
+            "tests/fixtures/eval/loop-contracts.yaml",
             "governance/eval/deterministic-baseline.json",
         ]
         files.extend(
@@ -79,7 +81,11 @@ class ContractEvalTests(unittest.TestCase):
             path = self.root / relative
             text = path.read_text(encoding="utf-8")
             document = yaml.safe_load(text)
-            old_hashes = {case["fixture_sha256"] for case in document["cases"] if case["judge"] == "script"}
+            old_hashes = {
+                case["fixture_sha256"]
+                for case in document["cases"]
+                if case["judge"] == "script" and "script-contracts.yaml" in str(case.get("fixture", ""))
+            }
             self.assertEqual(1, len(old_hashes))
             path.write_text(text.replace(old_hashes.pop(), digest), encoding="utf-8")
         return digest
@@ -96,10 +102,14 @@ class ContractEvalTests(unittest.TestCase):
             "apply-requires-reference-reading", "no-apply-without-template", "no-phase-skipping",
             "browser-verification-evidence", "spec-wins-over-apply", "routing-semantics-enforced",
             "apply-token-freeze", "apply-out-of-scope-rejected",
+            "authoring-template-lifecycle-verbs", "authoring-layered-extraction",
+            "apply-no-patch-generated-web", "apply-retired-template-rejected",
+            "apply-fidelity-compare-mode", "apply-no-source-checkout",
             "fidelity-portable-structural", "fidelity-legacy-baseline", "fidelity-unknown-fail-closed",
             "fidelity-canonical-stable", "fidelity-negative-mutations", "fidelity-capture-reproducibility",
             "fidelity-example-exclusion", "apply-fidelity-projections", "apply-fidelity-facet-recovery",
-            "fidelity-chrome-incomplete", "fidelity-layout-high-without-chrome",
+            "fidelity-chrome-incomplete", "fidelity-chrome-optional-anchors",
+            "fidelity-layout-high-without-chrome",
             "fidelity-capture-no-graph", "fidelity-capture-chrome-incomplete", "apply-chrome-unavailable",
         }
         actual_ids: set[str] = set()
@@ -116,7 +126,7 @@ class ContractEvalTests(unittest.TestCase):
                 actual_ids.add(case["id"])
                 judges[case["judge"]] += 1
         self.assertEqual(expected_ids, actual_ids)
-        self.assertEqual({"script": 29, "llm": 2}, judges)
+        self.assertEqual({"script": 36, "llm": 2}, judges)
         self.assertEqual(
             {
                 "skills/ui-template-author/evals/cases.yaml",
@@ -131,7 +141,7 @@ class ContractEvalTests(unittest.TestCase):
         first = run(ROOT)
         second = run(ROOT)
         self.assertEqual("passed", first["status"])
-        self.assertEqual({"declared": 31, "parsed": 31, "executed": 31, "script": 29, "llm": 2}, first["counts"])
+        self.assertEqual({"declared": 38, "parsed": 38, "executed": 38, "script": 36, "llm": 2}, first["counts"])
         self.assertEqual("matched", first["baseline"]["status"])
         self.assertEqual({"added": [], "removed": [], "changed": []}, first["baseline"]["diff"])
         self.assertEqual(first, second)

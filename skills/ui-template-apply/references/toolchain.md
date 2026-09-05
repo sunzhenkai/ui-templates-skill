@@ -27,11 +27,11 @@
 建议记录结构：
 
 ```yaml
-intent: dense-workbench-style
+intent: dense-ops-console
 mode: design-system
-terms: [workbench, dense, operational]
+terms: [console, dense, operational]
 attempts: 1 # 最大 2
-query: "workbench dense operational"
+query: "console dense operational"
 top_identity: {id: "...", name: "...", source: "...", platform: web}
 verified: true
 selected: false

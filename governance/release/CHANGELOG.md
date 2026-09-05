@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Unreleased
+
+- 增加现行功能闭环文档 `governance/FUNCTIONAL-LOOP.md`。
+- Authoring 补齐分层抽取与模板库生命周期（published/retired、retire/delete）。
+- Apply 区分干净实现与保真对照；拒绝 retired 模板；禁止读原版源码或历史生成 web。
+- 生产 INDEX 增加状态列；治理排除当前 `example/workbench-shell/web/**`。
+- 收束闭环规约为四条不变量；分层改为变更集合；模式 B 分类合并为 spec/apply/prompt-or-accept。
+- `manage_template_index.py` 进入 Authoring runtime，并提供 `require-published` 与 `check-changeset`。
+- workbench-shell `confidence.components` 降为 medium，与 defaulted 覆盖诚实对齐。
+- chrome-complete 最小集改为 `shell_variant` + 有序 slots；`header-trigger`/`chat-fab` 仅当已声明才 required。Apply Phase 2/7/8 只投影本次 sidecar 已声明的 record。通用 skill 正文不再把 A–E、Board 或本仓 `web-v*` 写成完成条件。
+
 ## 2.0.0 — 2026-09-04
 
 首个双 public skill 分发基线，属于破坏性版本：

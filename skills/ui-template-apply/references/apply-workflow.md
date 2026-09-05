@@ -19,6 +19,7 @@
 ├── 08-verification.json
 ├── evidence/
 ├── 09-review.md
+├── source-compare.yaml      # 仅模式 B
 └── feedback/
 ```
 
@@ -26,7 +27,7 @@
 
 ## Phase 0 — Intake（`00-intake.md`）
 
-记录模板 name/version/digest、平台/技术栈/既有约束、成功流程，以及 `included/deferred/excluded` 范围。对 coverage 的 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。检测 `fidelity.yaml`：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。Gate：schema/origin/checker 通过，范围与非目标经确认。profile digest 纳入现有 template identity，不新增 checkpoint 字段。
+记录模板 name/version/digest、平台/技术栈/既有约束、成功流程，以及 `included/deferred/excluded` 范围。若存在集合 `INDEX.md`，先运行 `manage_template_index.py require-published <name> --index <INDEX.md>`；非 0（`retired` 或缺行）停止。生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。对 coverage 的 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。检测 `fidelity.yaml`：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。Gate：schema/origin/checker 通过，范围与非目标经确认。profile digest 纳入现有 template identity，不新增 checkpoint 字段。不得把原版源码或已有生成物写入 intake 作为实现输入。用户要求对齐原版时只记录 oracle 身份，对照手续见 [fidelity-compare.md](fidelity-compare.md)。
 
 ## Phase 1 — Design direction & token freeze
 
@@ -37,7 +38,7 @@ Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题�
 
 ## Phase 2 — IA/layout/routes（`02-routes.yaml`）
 
-记录 route、页面模式、入口/主要动作、URL params、shell/scroll owner、响应式矩阵及无效状态；跨页目的地为 link。将 included layout scene 投影为稳定 constraint IDs（region/arrangement/fill/shrink/wrap/scroll/overlay/responsive、`shell_variant`、`slot:<role>:<order>`、`anchor:<role>→<region>`），不要求目标 DOM 或技术栈同构。inset 不得改 flush；header-trigger 不得改画布悬浮。Gate：每个 included route 与 coverage/page mode 有确定映射；Board non-wrap 与独立 scroll owners 不得被根滚动或自动换行替代。
+记录 route、页面模式、入口/主要动作、URL params、shell/scroll owner、响应式矩阵及无效状态；跨页目的地为 link。只把本次模板 `fidelity.yaml` 已声明的 layout/chrome record 投影为稳定 constraint IDs（region/arrangement/fill/shrink/wrap/scroll/overlay/responsive、以及已声明的 `shell_variant` / `slot:<role>:<order>` / `anchor:<role>→<region>`），不要求目标 DOM 或技术栈同构。无 sidecar 时这些几何 gate 为 unavailable，不得标 profile-verified，也不得用未声明的壳默认值去补。Gate：每个 included route 与该模板 `coverage.page_modes` 有确定映射；已声明的 wrap/scroll record 不得被根滚动或自动换行替代。
 
 ## Phase 3 — Project structure（`03-structure.md`）
 
@@ -51,7 +52,7 @@ Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题�
 
 - Phase 5：一个端到端代表切片，覆盖 shell、数据区、loading/empty/error、URL 恢复、窄屏、键盘与 computed style。
 - Phase 6：完成所有 included page modes；deferred/excluded 不伪造证据。
-- Phase 7：完成 scope 所需全局搜索/创建/确认/通知/进度/错误/FAB 等系统。
+- Phase 7：完成 Intake included 的全局系统（如搜索、创建、通知；仅当模板声明了 FAB 再验 FAB）。
 
 共享 artifact 按 phase 分节，记录 route、状态、rule IDs、source revision、测试/浏览器 evidence refs。每阶段在 checkpoint 分别声明同一 artifact 的当前 digest。
 
@@ -59,7 +60,7 @@ Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题�
 
 记录必须符合 schema v2 `verification.schema.json`，`kind: phase-8-verification`，顶层绑定当前 template digest、source identity、build identity、browser identity。每条 UUID record 必含：rule ID、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。evidence 文件放 `evidence/`；截图、trace、AX、console、computed-style 或脚本输出必须可定位。
 
-按模板 coverage、included route 和 fidelity records 确定性生成 required scenario IDs，不使用固定“三视口/十项”等数量代替模板声明。chrome composition scenario（inset 画布几何、header-trigger bounding box、槽位顺序）只从 structural sidecar 派生；无 sidecar 时这些 scenario unavailable，且不得标 profile-verified。每条 UUID record 必含：rule ID、profile record ID（若有）、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
+按模板 coverage、included route 和 fidelity records 确定性生成 required scenario IDs，不使用固定“三视口/十项”等数量代替模板声明。chrome composition scenario 只从 structural sidecar 已声明的 variant/slot/anchor 派生；无 sidecar 时这些 scenario unavailable，且不得标 profile-verified。通用 skill 不要求 `chat-fab`、A–E 或 Board。每条 UUID record 必含：rule ID、profile record ID（若有）、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
 
 ## Phase 9 — Review & feedback（`09-review.md`, `feedback/`）
 

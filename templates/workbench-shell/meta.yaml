@@ -33,7 +33,7 @@ confidence:
   overall: medium
   layout: medium
   visual: high
-  components: high
+  components: medium
 coverage:
   platforms:
     declared:

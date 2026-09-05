@@ -160,6 +160,23 @@ class RepoCaptureTests(unittest.TestCase):
                 capture_from_files(request_path, source)
             self.assertEqual("CHROME_COMPOSITION_INCOMPLETE", raised.exception.code)
 
+    def test_shell_without_optional_anchor_facts_completes(self) -> None:
+        def drop_optional_anchors(graph):
+            usage = next(item for item in graph["usages"] if item["id"] == "usage.shell")
+            usage["facts"] = [
+                item for item in usage["facts"] if item.get("property") != "anchor_role"
+            ]
+
+        with tempfile.TemporaryDirectory() as temp:
+            source, request_path, _ = self.materialize(temp, drop_optional_anchors)
+            receipt = capture_from_files(request_path, source)
+            self.assertEqual("captured", receipt["status"])
+            self.assertEqual([], receipt["unresolved"])
+            shell_facts = [item for item in receipt["facts"] if item.get("subject") == "shell"]
+            self.assertFalse(any(item.get("property") == "anchor_role" for item in shell_facts))
+            self.assertTrue(any(item.get("property") == "shell_variant" for item in shell_facts))
+            self.assertTrue(any(item.get("property") == "slot_role" for item in shell_facts))
+
     def test_missing_graph_stays_unsupported_or_missing(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             source, request_path, _ = self.materialize(temp)
@@ -339,6 +356,7 @@ class RepoCaptureTests(unittest.TestCase):
             ("scripts/template_validation/validator.py", "skills/ui-template-author/runtime/template_validation/validator.py"),
             ("scripts/template_apply_state/fidelity.py", "skills/ui-template-author/runtime/template_apply_state/fidelity.py"),
             ("scripts/contract_eval/runner.py", "skills/ui-template-author/runtime/contract_eval/runner.py"),
+            ("scripts/manage_template_index.py", "skills/ui-template-author/runtime/manage_template_index.py"),
         )
         for source, runtime in pairs:
             with self.subTest(source=source):

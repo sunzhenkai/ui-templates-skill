@@ -19,6 +19,7 @@ SLOT_ROLES = (
     "page-toolbar",
     "page-canvas",
 )
+# Allowlist of optional chrome anchors; not a required set.
 ANCHOR_ROLES = ("header-trigger", "chat-fab")
 CHROME_FACT_PROPERTIES = ("shell_variant", "slot_role", "slot_order", "anchor_role")
 SLOT_ORDER_SEMANTICS = tuple(str(index) for index in range(33))
@@ -91,9 +92,13 @@ def chrome_fact_gaps(facts: list[dict[str, Any]]) -> list[str]:
             order_values.append(orders[slot])
     if order_values and len(order_values) != len(set(order_values)):
         gaps.append("slot_order_unique")
-    missing_anchors = [role for role in ANCHOR_ROLES if role not in anchors]
-    if missing_anchors:
-        gaps.extend(f"anchor:{role}" for role in missing_anchors)
+    for role in anchors:
+        if role not in ANCHOR_ROLES:
+            gaps.append(f"anchor_role:{role}")
+    declared_anchors = {role for _slot, role in slots if role in ANCHOR_ROLES}
+    for role in declared_anchors:
+        if role not in anchors:
+            gaps.append(f"anchor:{role}")
     return sorted(set(gaps))
 
 
@@ -139,7 +144,8 @@ def chrome_record_gaps(record: dict[str, Any]) -> list[str]:
         gaps.append("slot_order_unique")
     anchors = [item for item in record.get("chrome_anchors") or [] if isinstance(item, dict)]
     present_anchors = {item.get("role") for item in anchors}
-    for role in ANCHOR_ROLES:
+    declared_anchors = {slot.get("role") for slot in slots if slot.get("role") in ANCHOR_ROLES}
+    for role in declared_anchors:
         if role not in present_anchors:
             gaps.append(f"anchor:{role}")
     for anchor in anchors:

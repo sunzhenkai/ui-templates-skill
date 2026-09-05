@@ -209,7 +209,7 @@ Apply SHALL 在消费项目中维护机器可读 checkpoint，至少记录模板
 - **THEN** Apply 停止并报告兼容升级，不忽略 sidecar 后继续猜测
 
 ### Requirement: Phase 2 layout topology consumption
-Phase 2 SHALL 将每个 included layout scene 的 regions、arrangement、fill/shrink/wrap、scroll domains、overlay scope/anchor、responsive modes 与 **shell chrome composition**（`shell_variant`、有序 slots、header-trigger/chat-fab 锚点）映射到稳定约束 identity。消费项目 MAY 使用任意技术栈和 DOM，只要 current-build evidence 证明相同可观察关系。Apply SHALL NOT 在 profile 声明 `inset` 时改用左右硬切 flush 壳，SHALL NOT 把 `header-trigger` 从 page-header 挪到画布悬浮控件，SHALL NOT 重排已观察的 chrome 槽位顺序。无 sidecar 的 baseline 模板 SHALL 明确 structural chrome unavailable，不得把自行发明的壳标为 profile-verified。
+Phase 2 SHALL 只把本次模板 `fidelity.yaml` **已声明**的 layout/chrome record（regions、arrangement、fill/shrink/wrap、scroll domains、overlay scope/anchor、responsive modes，以及已声明的 `shell_variant`、有序 slots、锚点）映射到稳定约束 identity。消费项目 MAY 使用任意技术栈和 DOM，只要 current-build evidence 证明相同可观察关系。Apply SHALL NOT 改写已声明的 variant/slot/anchor；通用 Apply skill SHALL NOT 要求未声明的 `chat-fab`、A–E 或 Board。无 sidecar 的 baseline 模板 SHALL 明确 structural chrome unavailable，这些几何 gate 为 unavailable，不得把自行发明的壳标为 profile-verified。
 
 #### Scenario: Board structural scene
 - **WHEN** included scene 声明横向 non-wrapping Board、non-shrinking columns 和内部 inline scroll owner
@@ -219,9 +219,9 @@ Phase 2 SHALL 将每个 included layout scene 的 regions、arrangement、fill/s
 - **WHEN** profile 分别声明 master/detail block scroll owners
 - **THEN** Phase 2 生成两个 domain identity，不将根页面或错误 region 作为统一 scroll owner
 
-#### Scenario: inset 壳不得改成硬切
-- **WHEN** included shell scene 声明 `shell_variant: inset` 且 header-trigger 锚在 page-header
-- **THEN** Phase 2 约束保留 inset 画布与页头 trigger；实现用 flush 分栏或画布角汉堡菜单替代时 Phase 8 对应 scenario 失败
+#### Scenario: 已声明 inset 不得改成硬切
+- **WHEN** included shell scene 声明 `shell_variant: inset`，且声明了锚在 page-header 的 header-trigger
+- **THEN** Phase 2 约束保留这些已声明 record；实现改写它们时 Phase 8 对应 scenario 失败
 
 #### Scenario: 有序槽位被重排
 - **WHEN** profile 顺序为 workspace-switcher、search、compose
@@ -247,7 +247,7 @@ Phase 4 SHALL 将 included component/slot geometry 和 subject/context/state pre
 - **THEN**该 decoration 只适用于对应 context，不传播到 entity-row、navigation 或 card-link
 
 ### Requirement: Structural current-build browser evidence
-Phase 8 SHALL 从 included structural records 确定性生成 required scenario IDs，并以 current-build computed style、bounding geometry、scroll owner、overflow、state transition、overlay scope、**shell variant / 槽位顺序 / trigger 锚点** 和 Accessibility tree 证明 expected/actual。截图 MAY 作为辅助证据，但不得替代可解析结构与 computed evidence。
+Phase 8 SHALL 从 included structural records 确定性生成 required scenario IDs，并以 current-build computed style、bounding geometry、scroll owner、overflow、state transition、overlay scope、**已声明的 shell variant / 槽位顺序 / 锚点** 和 Accessibility tree 证明 expected/actual。截图 MAY 作为辅助证据，但不得替代可解析结构与 computed evidence。未声明的 chrome record SHALL NOT 进入 required scenario。
 
 #### Scenario: 检查 Dialog 顶部 padding
 - **WHEN** 浏览器打开 included Dialog
@@ -261,9 +261,9 @@ Phase 8 SHALL 从 included structural records 确定性生成 required scenario 
 - **WHEN** 浏览器在声明 viewport/mode 渲染 Board、主从或 overlay scene
 - **THEN** evidence 证明指定 region 承担对应轴滚动、非 owner 不意外滚动、non-wrap/non-shrink 与 overlay scope 成立
 
-#### Scenario: 检查 shell chrome
-- **WHEN** 浏览器在声明 viewport 渲染 included inset shell
-- **THEN** evidence 证明画布相对壳内缩（非左右硬切）、header-trigger 位于 page-header 几何内、槽位顺序与 profile slots 一致；flush 替代或画布角汉堡使该 scenario failed
+#### Scenario: 检查已声明 shell chrome
+- **WHEN** 浏览器在声明 viewport 渲染 included shell，且 profile 声明了 variant/slots/anchors
+- **THEN** evidence 只证明这些已声明 record；未声明的 FAB、Board 或页面模式不得成为失败理由
 
 ### Requirement: Profile 变化恢复与反馈
 Structural profile canonical semantics 的变化 SHALL 使受影响 Phase 2/4/8 产物和证据过期，并从最早受影响 phase 恢复。若 current build 无法满足可复用 profile record，Apply SHALL 产出引用 record/rule/current-build evidence 的 feedback；仅属目标技术栈的问题 SHALL 留在消费项目。
@@ -273,9 +273,31 @@ Structural profile canonical semantics 的变化 SHALL 使受影响 Phase 2/4/8 
 - **THEN** Apply 至少重开 Phase 4 与 Phase 8，并保留仍有效的 Phase 2 artifact
 
 #### Scenario: Layout record 变化
-- **WHEN** scroll owner、region relation、responsive mode 或 shell chrome composition（variant、槽位顺序、trigger/FAB 锚点）变化
+- **WHEN** scroll owner、region relation、responsive mode 或已声明的 shell chrome composition（variant、槽位顺序、锚点）变化
 - **THEN** Apply 从 Phase 2 重开，并使依赖的 component 和 browser evidence 过期
 
 #### Scenario: 不同技术栈实现相同 contract
 - **WHEN** 两个目标项目使用不同框架或组件库但通过相同 structural scenario IDs
 - **THEN** Apply 接受两者，不要求源码目录、组件名、CSS class 或 DOM 同构
+
+### Requirement: 拒绝退役模板
+`ui-template-apply` SHALL 在 Intake 用 `manage_template_index.py require-published` 读取模板集合 INDEX。若目标模板状态为 `retired` 或不存在 INDEX 行，SHALL 以非 0 停止且不得进入 Phase 1。
+
+#### Scenario: 消费 retired 模板
+- **WHEN** 用户要求用 INDEX 中 status=retired 的模板实现页面
+- **THEN** Apply 拒绝开始并提示先由 Authoring 恢复 published 或另选模板
+
+### Requirement: 干净实现与保真对照分离
+Apply 默认只消费模板与用户需求，SHALL NOT 读取原版 checkout、`meta.sources[]` 路径或工作区已有生成物。当用户明确要求对齐原版时，Apply SHALL 把可部署原版仅当作视觉 oracle，将差异分类为 spec / apply / prompt-or-accept，并写入 `.ui-template-apply/source-compare.yaml`。对照失败 SHALL NOT 通过修改生成物闭合；SHALL 回写对应 skill 或模板后丢弃生成物并至少重生一次。
+
+#### Scenario: 干净实现
+- **WHEN** 用户用 published 模板实现 prompts 中的页面且未要求对齐原版
+- **THEN** Apply 只读模板与 prompts，完成 Phase 0–9，不打开原版源码
+
+#### Scenario: 对照差异出现在壳几何
+- **WHEN** 模式 B 发现 inset/槽位与可部署原版不一致
+- **THEN** 记录 spec 分类，不得改生成 CSS/组件来消除差异
+
+#### Scenario: 参考已有生成物
+- **WHEN** 工作区存在历史输出目录或未跟踪 WIP
+- **THEN** Apply 仍不得把它们当作实现或对照参考

@@ -139,3 +139,33 @@ cases:
       must_not:
         - 强行套用 Authoring 工作流
     revision: harden-template-lifecycle-eval-v1
+  - id: authoring-template-lifecycle-verbs
+    skill: ui-template-author
+    category: routing
+    description: Authoring 必须提供浏览、退役与删除手续，INDEX 带 published/retired。
+    given: 用户要求退役或删除已发布模板
+    fixture: tests/fixtures/eval/loop-contracts.yaml#authoring-template-lifecycle-verbs
+    fixture_sha256: 200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b
+    judge: script
+    expect:
+      must:
+        - 提供 retire/delete 动词与 INDEX 状态列
+        - 通过 manage_template_index.py 变更生产 INDEX
+      must_not:
+        - 直接删除 published 模板而不先退役
+    revision: harden-template-lifecycle-eval-v1
+  - id: authoring-layered-extraction
+    skill: ui-template-author
+    category: routing
+    description: 从源更新必须冻结变更集合，未声明文件保持原字节。
+    given: 用户要求从源更新模板的部分组件
+    fixture: tests/fixtures/eval/loop-contracts.yaml#authoring-layered-extraction
+    fixture_sha256: 200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b
+    judge: script
+    expect:
+      must:
+        - Intake 冻结本次变更集合
+        - 未纳入集合的文件保持原字节
+      must_not:
+        - 用 3–5 个代表组件冒充完整 coverage
+    revision: harden-template-lifecycle-eval-v1

@@ -5,7 +5,7 @@ description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 
 
 # ui-template-author — Template Authoring
 
-本 skill 只创建、迁移、更新和索引 UI 模板，不实现消费项目页面。公开格式由 [references/spec-format.md](references/spec-format.md) 唯一定义；Apply 通过该契约解耦消费。
+本 skill 只创建、迁移、更新和索引 UI 模板，不实现消费项目页面。浏览、退役与删除同样由本 skill 执行，手续见 [template-lifecycle.md](references/template-lifecycle.md)。公开格式由 [references/spec-format.md](references/spec-format.md) 唯一定义；分层抽取见 [extraction-layers.md](references/extraction-layers.md)。Apply 通过该契约解耦消费。现行闭环目标见仓库 `governance/FUNCTIONAL-LOOP.md`（安装环境可只读本 skill 引用）。
 
 ## 路由
 
@@ -13,6 +13,7 @@ description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 
 - 代码仓库 → [source-repo.md](references/source-repo.md)
 - 图片/截图 → [source-image.md](references/source-image.md)
 - Markdown/PDF 设计文档 → [source-doc.md](references/source-doc.md)
+- 浏览 / 退役 / 删除模板 → [template-lifecycle.md](references/template-lifecycle.md)
 - “用模板实现页面/搭后台” → 停止 Authoring，移交 `ui-template-apply`。
 
 ## 不变量
@@ -31,13 +32,13 @@ description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 
 
 ### 0. Intake 与 feedback discovery
 
-确认模板名、更新或新建、授权和范围。先分清 **session source**（用户本会话给出的可读仓库/文档）与 **provenance**（已写入 `meta.sources[]` 的出处身份）。只有新建导入或从源更新才需要 session source；已发布模板的 provenance 不得当成「请提供本地绝对路径」的理由。
+确认模板名、更新或新建、授权和范围，以及库动词（create / update-from-source / update-from-feedback / update-portable / validate / retire / delete）。先分清 **session source**（用户本会话给出的可读仓库/文档）与 **provenance**（已写入 `meta.sources[]` 的出处身份）。只有新建导入或从源更新才需要 session source；已发布模板的 provenance 不得当成「请提供本地绝对路径」的理由。
 
-本次从源导入时：固定 session source、将写入 meta 的 source ID、完整 revision、platform、scenes/components/contexts、limits 与 conformance；默认 structural，只有用户明确要求仅视觉语言时才是有理由的 style-only。对已发布模板做校验/改文档/消费反馈时跳过 session-source Intake。
+本次从源导入或从源更新时：固定 session source、将写入 meta 的 source ID、完整 revision、platform、**本次变更集合（路径/组件，可用 L0–L6 标签）**、scenes/components/contexts、limits 与 conformance；默认 structural，只有用户明确要求仅视觉语言时才是有理由的 style-only。未冻结变更集合不得 Generate-from-source；未声明文件保持原字节。对已发布模板做校验/改文档/消费反馈/退役/删除时跳过 session-source Intake。retired 模板不得被汇报为可被 Apply 新消费。
 
 更新前按 [feedback-lifecycle.md](references/feedback-lifecycle.md) 扫描显式路径及已授权消费项目 `.ui-template-apply/feedback/`，按 UUID/fingerprint 幂等处置。未知 schema 或非法状态记录先修复，不跳过。
 
-repo capture 仅在已有 session source 时运行，且只接受 [repo-capture-format.md](references/repo-capture-format.md) 的 closed JSON/YAML literal source graph。不得执行来源代码、用 regex 冒充 TSX/JS parser、以“3–5 个代表组件”静默抽样，也不得为补 source 而按 provenance 自行联网 clone。用户把 Git 地址作为**本会话导入输入**时，读取该地址是 session source，不是补取。歧义、动态表达式、同 context/slot 冲突和 limit 超限均 unresolved；先请求收窄 scope 或显式 decision。structural 导入需要 chrome-complete graph；缺 graph、chrome incomplete 或用 A–E 覆盖来源壳 IA 时不得 Index。`confidence.layout: high` 需要 chrome-complete sidecar。
+repo capture 仅在已有 session source 时运行，且只接受 [repo-capture-format.md](references/repo-capture-format.md) 的 closed JSON/YAML literal source graph。不得执行来源代码、用 regex 冒充 TSX/JS parser、以“3–5 个代表组件”静默抽样，也不得为补 source 而按 provenance 自行联网 clone。用户把 Git 地址作为**本会话导入输入**时，读取该地址是 session source，不是补取。歧义、动态表达式、同 context/slot 冲突和 limit 超限均 unresolved；先请求收窄 scope 或显式 decision。structural 导入需要 chrome-complete graph（`shell_variant` + 有序 slots；已声明的锚点必须闭合）。缺 graph、chrome incomplete 或用页面模式分类学覆盖来源壳 IA 时不得 Index。`confidence.layout: high` 需要 chrome-complete sidecar。
 
 ### 1. Generate
 

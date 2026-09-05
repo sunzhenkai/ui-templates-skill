@@ -1,6 +1,6 @@
 # Authoring Contract Evals
 
-本清单是 `ui-template-author` 当前 revision 的 9 条机器 case；历史 patches/results/experience 不在 runner 发现范围内，也不会被改写或混计。
+本清单是 `ui-template-author` 当前 revision 的机器 case；历史 patches/results/experience 不在 runner 发现范围内，也不会被改写或混计。
 
 仓库内统一入口：
 

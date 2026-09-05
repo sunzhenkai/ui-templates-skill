@@ -5,7 +5,7 @@
 - **`ui-template-author`**：从获授权的 Web、代码仓库、图片或设计文档提取设计规则，创建、迁移、更新 schema v2 模板并维护索引。
 - **`ui-template-apply`**：消费已验证模板，按 Phase 0–9 在目标项目实现 UI，维护 checkpoint、current-build 浏览器证据、review 与 feedback。
 
-完整能力必须同时安装两个 skill。仓库内 `.agents/skills/ui-template-manager/` 只是项目级路由薄封装，不进入公开 bundle。
+完整能力必须同时安装两个 skill。仓库内 `.agents/skills/ui-template-manager/` 只是项目级路由薄封装，不进入公开 bundle。现行功能闭环、模板生命周期与防回退规约见 [`governance/FUNCTIONAL-LOOP.md`](governance/FUNCTIONAL-LOOP.md)。
 
 ## 模板契约
 
@@ -37,7 +37,7 @@ make install
 ```bash
 make validate       # root governance gate；显式排除 web-v2/web-v3 样例路径
 make test           # 全部 Python unittest
-make eval           # 当前 26 个 Authoring/Apply contract eval，输出 JSON/JUnit
+make eval           # Authoring/Apply contract eval，输出 JSON/JUnit
 make mirror-check   # 检查 .agents/skills 中双 public skill 生产镜像
 make mirror-write   # 以 allowlist 原子重建受管镜像，不触碰其他 skills
 ```
