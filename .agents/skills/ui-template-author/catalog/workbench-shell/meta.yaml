@@ -1,0 +1,193 @@
+schema_version: 2
+template_version: 2.0.0
+name: workbench-shell
+description: 中性浅暗双主题的工作台 App Shell：外壳安静、画布承载内容、紧凑 14px 界面、1px 分区分隔、蓝色品牌色克制出现。
+sources:
+- id: source-001
+  type: repo
+  ref: https://github.com/multica-ai/multica @ 879d0de9166261c26ec35b69f5cec9382191eda1
+  revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  captured_at: '2026-09-03T00:00:00Z'
+- id: source-002
+  type: doc
+  ref: 用户提供的 Markdown 布局设计文档（原始项目出处已按要求抹除，业务实体已泛化）
+  revision: 0aedb680ecdf61aa8eafdb5d80e6b58edba63df5
+  captured_at: '2026-08-30T00:00:00Z'
+captured_at: '2026-09-03'
+tokens: tokens.yaml
+evidence: evidence.yaml
+platforms:
+- web
+- mobile
+- desktop
+tags:
+- workbench
+- dashboard
+- app-shell
+- compact
+- dual-theme
+- neutral
+- blue
+- responsive
+confidence:
+  overall: medium
+  layout: medium
+  visual: high
+  components: medium
+coverage:
+  platforms:
+    declared:
+    - desktop
+    - mobile
+    - web
+    observed:
+    - desktop
+    - mobile
+    - web
+    defaulted: []
+    unsupported: []
+  viewports:
+    declared:
+    - desktop
+    - mobile
+    - tablet
+    observed:
+    - desktop
+    - mobile
+    - tablet
+    defaulted: []
+    unsupported: []
+  themes:
+    declared:
+    - dark
+    - light
+    observed:
+    - dark
+    - light
+    defaulted: []
+    unsupported: []
+  page_modes:
+    declared:
+    - A
+    - B
+    - C
+    - D
+    - E
+    observed:
+    - A
+    - B
+    - C
+    - D
+    - E
+    defaulted: []
+    unsupported: []
+  components:
+    declared:
+    - app-shell
+    - avatar
+    - badge
+    - board
+    - breadcrumb
+    - button
+    - calendar
+    - card
+    - checkbox
+    - collection-header
+    - combobox
+    - command-palette
+    - date-picker
+    - dialog
+    - empty-state
+    - floating-chat-fab
+    - icon-button
+    - input
+    - list-grid
+    - metric-card
+    - native-table
+    - navigation-progress
+    - page-header
+    - pagination
+    - popover
+    - progress
+    - select
+    - sheet
+    - sidebar
+    - skeleton
+    - slider
+    - swimlane
+    - switch
+    - tabs
+    - toast
+    - toolbar
+    - tooltip
+    observed:
+    - app-shell
+    - badge
+    - board
+    - breadcrumb
+    - button
+    - card
+    - collection-header
+    - dialog
+    - empty-state
+    - floating-chat-fab
+    - icon-button
+    - input
+    - list-grid
+    - native-table
+    - navigation-progress
+    - page-header
+    - popover
+    - sheet
+    - sidebar
+    - skeleton
+    - swimlane
+    - tabs
+    - toolbar
+    - tooltip
+    defaulted:
+    - avatar
+    - calendar
+    - checkbox
+    - combobox
+    - command-palette
+    - date-picker
+    - metric-card
+    - pagination
+    - progress
+    - select
+    - slider
+    - switch
+    - toast
+    unsupported: []
+  states:
+    declared:
+    - active
+    - default
+    - disabled
+    - dragging
+    - empty
+    - error
+    - focus-visible
+    - hover
+    - invalid
+    - loading
+    - read-only
+    - resized
+    - selected
+    observed:
+    - active
+    - default
+    - disabled
+    - empty
+    - error
+    - focus-visible
+    - hover
+    - loading
+    - selected
+    defaulted:
+    - dragging
+    - invalid
+    - read-only
+    - resized
+    unsupported: []

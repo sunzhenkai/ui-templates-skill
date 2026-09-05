@@ -7,12 +7,20 @@ description: 使用已有 schema v2 UI 模板按 Phase 0–9 实现真实页面�
 
 本 skill 只消费已有模板，不创建、迁移或索引模板。Authoring 由 `ui-template-author` 所有。干净实现与保真对照见 [fidelity-compare.md](references/fidelity-compare.md)。
 
+成对安装，不要用 `--all`：
+
+```bash
+npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-template-apply
+```
+
+治理回滚用 `make bundle` / `make install`。项目库缺目标 published 行时，先从已安装 `ui-template-author/catalog/` 播种。
+
 ## 启动边界
 
 - 已选 **published** 模板并要求实现页面 → 进入本流程（默认模式 A：干净实现）。
 - 用户明确要求对齐原版视觉 → 仍只读模板实现，另按模式 B 对照可部署 oracle；差异回写 skill/模板后重生，不得改生成物。
 - “做成模板/提取风格/导入模板/退役或删除模板” → 移交 `ui-template-author`。
-- 没有模板、INDEX 状态为 `retired`、schema 不支持、origin 未知或模板 validation 失败 → 停止；先迁移/修复，禁止猜测。Intake 先运行 `manage_template_index.py require-published`，非 0 不得进入 Phase 1。
+- 项目库缺少目标 published 行时，先从已安装 `ui-template-author/catalog/` 播种再 `require-published`。只有项目库与 catalog 都没有该 published 模板时才报没有模板、停止并移交 Authoring，禁止猜测。项目 `retired` 行不得被 catalog 覆盖。Intake 运行 `manage_template_index.py require-published`（默认播种），非 0 不得进入 Phase 1。
 - MUST NOT 读取原版 checkout、`meta.sources[]` 路径或工作区已有生成物作为实现参考。生成目录是本次约定的空目录或当前输出目录，不得把历史输出当参考。
 
 ## 必读契约

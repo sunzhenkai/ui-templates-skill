@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- 现行治理/规格不再把上游产品名写成对齐目标或本机依赖；`check_active_release.py` 从已发布模板 `meta.sources[].ref` 提取名称并拒绝泄漏。
+
+## 2.1.0 — 2026-09-05
+
+兼容版本：官方 published 模板随 Author skill 的只读 `catalog/` 分发。
+
+- 对外安装入口改为成对 `npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-template-apply`；禁止把 `--all` 写成官方步骤。
+- `make bundle` / `make install` 仍是治理、checksum 与回滚通道。
+- 空项目从 catalog 播种 `workbench-shell`；已有同名行/目录不覆盖，retired 不救回。
+- `ui-template-manager` 与本仓 OpenSpec skill 标 `metadata.internal: true`。
+- `workbench-shell` 的 `template_version` 不因搬家上涨。
 - 增加现行功能闭环文档 `governance/FUNCTIONAL-LOOP.md`。
 - Authoring 补齐分层抽取与模板库生命周期（published/retired、retire/delete）。
 - Apply 区分干净实现与保真对照；拒绝 retired 模板；禁止读原版源码或历史生成 web。

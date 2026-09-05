@@ -2,6 +2,10 @@
   "schema_version": 1,
   "runner_version": "1.0.0",
   "cases": {
+    "apply-catalog-seed-from-empty-project": {
+      "fixture_sha256": "e0031cd424d9733e22785fc97d311b451d850790e0dd3745520ce146d8335f83",
+      "status": "passed"
+    },
     "apply-chrome-unavailable": {
       "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
       "status": "passed"
@@ -16,6 +20,10 @@
     },
     "apply-fidelity-projections": {
       "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
+      "status": "passed"
+    },
+    "apply-no-template-only-when-absent-from-catalog": {
+      "fixture_sha256": "e0031cd424d9733e22785fc97d311b451d850790e0dd3745520ce146d8335f83",
       "status": "passed"
     },
     "apply-no-patch-generated-web": {
@@ -40,6 +48,10 @@
     },
     "apply-token-freeze": {
       "fixture_sha256": "fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c",
+      "status": "passed"
+    },
+    "authoring-catalog-zero-drift": {
+      "fixture_sha256": "e0031cd424d9733e22785fc97d311b451d850790e0dd3745520ce146d8335f83",
       "status": "passed"
     },
     "authoring-layered-extraction": {

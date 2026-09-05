@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
-"""生产 templates/INDEX.md 的 list/show/retire/delete，以及 Apply Intake 的 published 检查。"""
+"""生产 templates/INDEX.md 的 list/show/retire/delete/seed，以及 Apply Intake 的 published 检查。"""
 from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-
 HEADER = ["名称", "风格描述", "来源类型", "采集日期", "状态"]
 STATUSES = {"published", "retired"}
+AUTHOR_SKILL = "ui-template-author"
+
+
+def project_templates() -> Path:
+    return Path.cwd() / "templates"
+
+
+def project_index() -> Path:
+    return project_templates() / "INDEX.md"
 
 
 def parse_index(path: Path) -> tuple[list[str], dict[str, list[str]]]:
@@ -31,6 +39,12 @@ def parse_index(path: Path) -> tuple[list[str], dict[str, list[str]]]:
     return lines, rows
 
 
+def try_parse_index(path: Path) -> dict[str, list[str]]:
+    if not path.is_file():
+        return {}
+    return parse_index(path)[1]
+
+
 def render_index(rows: dict[str, list[str]]) -> str:
     body = [
         "# 模板索引",
@@ -44,12 +58,41 @@ def render_index(rows: dict[str, list[str]]) -> str:
 
 
 def write_index(path: Path, rows: dict[str, list[str]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(render_index(rows), encoding="utf-8")
     tmp.replace(path)
 
 
+def discover_catalog(explicit: Path | None = None) -> Path | None:
+    if explicit is not None:
+        return explicit
+    here = Path(__file__).resolve()
+    cwd = Path.cwd()
+    candidates = [
+        here.parents[1] / "catalog",
+        here.parents[1].parent / AUTHOR_SKILL / "catalog",
+        cwd / AUTHOR_SKILL / "catalog",
+        cwd / "skills" / AUTHOR_SKILL / "catalog",
+        cwd.parent / AUTHOR_SKILL / "catalog",
+    ]
+    if here.parent.name == "runtime":
+        candidates.insert(0, here.parents[1] / "catalog")
+        candidates.insert(1, here.parents[2] / AUTHOR_SKILL / "catalog")
+    seen: set[str] = set()
+    for candidate in candidates:
+        key = str(candidate)
+        if key in seen:
+            continue
+        seen.add(key)
+        if (candidate / "INDEX.md").is_file():
+            return candidate
+    return None
+
+
 def require_published(index: Path, name: str) -> dict[str, object]:
+    if not index.is_file():
+        return {"ok": False, "code": "INDEX_MISSING", "name": name, "status": None}
     _, rows = parse_index(index)
     if name not in rows:
         return {"ok": False, "code": "INDEX_ROW_MISSING", "name": name, "status": None}
@@ -57,6 +100,75 @@ def require_published(index: Path, name: str) -> dict[str, object]:
     if status != "published":
         return {"ok": False, "code": "INDEX_NOT_PUBLISHED", "name": name, "status": status}
     return {"ok": True, "code": "INDEX_PUBLISHED", "name": name, "status": status}
+
+
+def seed_from_catalog(
+    catalog: Path,
+    index: Path,
+    templates: Path,
+    names: list[str] | None = None,
+) -> dict[str, object]:
+    catalog_index = catalog / "INDEX.md"
+    if not catalog_index.is_file():
+        return {"ok": False, "code": "CATALOG_MISSING", "seeded": [], "skipped": [], "missing": names or []}
+    catalog_rows = parse_index(catalog_index)[1]
+    project_rows = try_parse_index(index)
+    wanted = list(names) if names else [name for name, cells in catalog_rows.items() if cells[4] == "published"]
+    seeded: list[str] = []
+    skipped: list[dict[str, object]] = []
+    missing: list[dict[str, str]] = []
+    for name in wanted:
+        cells = catalog_rows.get(name)
+        if cells is None or cells[4] != "published":
+            missing.append({"name": name, "code": "CATALOG_NOT_PUBLISHED" if cells else "CATALOG_ROW_MISSING"})
+            continue
+        dest = templates / name
+        if name in project_rows or dest.exists():
+            skipped.append({
+                "name": name,
+                "code": "SEED_SKIPPED_EXISTS",
+                "status": project_rows[name][4] if name in project_rows else None,
+            })
+            continue
+        source = catalog / name
+        if not source.is_dir():
+            missing.append({"name": name, "code": "CATALOG_TEMPLATE_MISSING"})
+            continue
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(source, dest)
+        project_rows[name] = cells[:5]
+        seeded.append(name)
+    if seeded:
+        write_index(index, project_rows)
+    return {
+        "ok": not missing,
+        "code": "SEED_OK" if not missing else "SEED_INCOMPLETE",
+        "seeded": seeded,
+        "skipped": skipped,
+        "missing": missing,
+    }
+
+
+def ensure_published(
+    index: Path,
+    templates: Path,
+    name: str,
+    catalog: Path | None = None,
+) -> dict[str, object]:
+    current = require_published(index, name)
+    if current["ok"]:
+        return current
+    if current["code"] == "INDEX_NOT_PUBLISHED":
+        return current
+    resolved = discover_catalog(catalog)
+    if resolved is None:
+        return {"ok": False, "code": "TEMPLATE_NOT_IN_CATALOG", "name": name, "status": None}
+    seeded = seed_from_catalog(resolved, index, templates, [name])
+    if name in {item["name"] for item in seeded.get("skipped", [])}:  # type: ignore[arg-type]
+        return require_published(index, name)
+    if name not in seeded["seeded"]:
+        return {"ok": False, "code": "TEMPLATE_NOT_IN_CATALOG", "name": name, "status": None}
+    return require_published(index, name)
 
 
 def _tree_bytes(root: Path) -> dict[str, bytes]:
@@ -139,14 +251,37 @@ def cmd_delete(index: Path, templates: Path, name: str) -> int:
     del rows[name]
     write_index(index, rows)
     if directory.is_dir():
-        import shutil
         shutil.rmtree(directory)
     print(f"{name}\tdeleted")
     return 0
 
 
-def cmd_require_published(index: Path, name: str, as_json: bool) -> int:
-    payload = require_published(index, name)
+def cmd_seed(index: Path, templates: Path, catalog: Path | None, names: list[str], as_json: bool) -> int:
+    resolved = discover_catalog(catalog)
+    if resolved is None:
+        payload = {"ok": False, "code": "CATALOG_MISSING", "seeded": [], "skipped": [], "missing": names}
+        if as_json:
+            _print_json(payload)
+        else:
+            print(payload["code"], file=sys.stderr)
+        return 1
+    payload = seed_from_catalog(resolved, index, templates, names or None)
+    if as_json:
+        _print_json(payload)
+    else:
+        print(f"{payload['code']}\tseeded={payload['seeded']}\tskipped={len(payload['skipped'])}")
+    return 0 if payload["ok"] else 1
+
+
+def cmd_require_published(
+    index: Path,
+    templates: Path,
+    name: str,
+    catalog: Path | None,
+    as_json: bool,
+    seed: bool,
+) -> int:
+    payload = ensure_published(index, templates, name, catalog) if seed else require_published(index, name)
     if as_json:
         _print_json(payload)
     else:
@@ -164,8 +299,14 @@ def cmd_check_changeset(before: Path, after: Path, allowed: list[str], as_json: 
 
 
 def _add_common(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--index", type=Path, default=ROOT / "templates/INDEX.md")
-    parser.add_argument("--templates", type=Path, default=ROOT / "templates")
+    parser.add_argument("--index", type=Path, default=None)
+    parser.add_argument("--templates", type=Path, default=None)
+
+
+def _resolve_library(args: argparse.Namespace) -> tuple[Path, Path]:
+    templates = args.templates if args.templates is not None else project_templates()
+    index = args.index if args.index is not None else templates / "INDEX.md"
+    return index, templates
 
 
 def main() -> int:
@@ -183,9 +324,16 @@ def main() -> int:
     delete = sub.add_parser("delete")
     delete.add_argument("name")
     _add_common(delete)
+    seed = sub.add_parser("seed")
+    seed.add_argument("names", nargs="*")
+    seed.add_argument("--catalog", type=Path)
+    seed.add_argument("--json", action="store_true")
+    _add_common(seed)
     require_cmd = sub.add_parser("require-published")
     require_cmd.add_argument("name")
+    require_cmd.add_argument("--catalog", type=Path)
     require_cmd.add_argument("--json", action="store_true")
+    require_cmd.add_argument("--no-seed", action="store_true")
     _add_common(require_cmd)
     changeset = sub.add_parser("check-changeset")
     changeset.add_argument("--before", type=Path, required=True)
@@ -193,18 +341,21 @@ def main() -> int:
     changeset.add_argument("--allow", action="append", default=[], dest="allowed")
     changeset.add_argument("--json", action="store_true")
     args = parser.parse_args()
-    if args.command == "list":
-        return cmd_list(args.index)
-    if args.command == "show":
-        return cmd_show(args.index, args.templates, args.name)
-    if args.command == "retire":
-        return cmd_retire(args.index, args.name, args.reason)
-    if args.command == "delete":
-        return cmd_delete(args.index, args.templates, args.name)
-    if args.command == "require-published":
-        return cmd_require_published(args.index, args.name, args.json)
     if args.command == "check-changeset":
         return cmd_check_changeset(args.before, args.after, args.allowed, args.json)
+    index, templates = _resolve_library(args)
+    if args.command == "list":
+        return cmd_list(index)
+    if args.command == "show":
+        return cmd_show(index, templates, args.name)
+    if args.command == "retire":
+        return cmd_retire(index, args.name, args.reason)
+    if args.command == "delete":
+        return cmd_delete(index, templates, args.name)
+    if args.command == "seed":
+        return cmd_seed(index, templates, args.catalog, args.names, args.json)
+    if args.command == "require-published":
+        return cmd_require_published(index, templates, args.name, args.catalog, args.json, seed=not args.no_seed)
     return 2
 
 

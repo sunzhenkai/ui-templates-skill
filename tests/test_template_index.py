@@ -113,6 +113,35 @@ class TemplateIndexTests(unittest.TestCase):
             self.assertFalse(blocked["ok"])
             self.assertEqual(["tokens.yaml"], blocked["undeclared"])
 
+    def test_seed_skips_existing_and_does_not_rescue_retired(self) -> None:
+        from manage_template_index import ensure_published, seed_from_catalog
+
+        catalog = ROOT / "skills/ui-template-author/catalog"
+        with tempfile.TemporaryDirectory() as temp:
+            empty = Path(temp) / "empty"
+            empty_index = empty / "INDEX.md"
+            first = ensure_published(empty_index, empty, "workbench-shell", catalog)
+            self.assertTrue(first["ok"], first)
+            self.assertTrue((empty / "workbench-shell/spec.md").is_file())
+            (empty / "workbench-shell/spec.md").write_text("owned\n", encoding="utf-8")
+            skipped = seed_from_catalog(catalog, empty_index, empty, ["workbench-shell"])
+            self.assertEqual("owned\n", (empty / "workbench-shell/spec.md").read_text(encoding="utf-8"))
+            self.assertEqual(["workbench-shell"], [item["name"] for item in skipped["skipped"]])
+            retired_root = Path(temp) / "retired"
+            retired_index = retired_root / "INDEX.md"
+            retired_index.parent.mkdir(parents=True)
+            retired_index.write_text(
+                empty_index.read_text(encoding="utf-8").replace("published", "retired"),
+                encoding="utf-8",
+            )
+            shutil.copytree(empty / "workbench-shell", retired_root / "workbench-shell")
+            blocked = ensure_published(retired_index, retired_root, "workbench-shell", catalog)
+            self.assertFalse(blocked["ok"])
+            self.assertEqual("INDEX_NOT_PUBLISHED", blocked["code"])
+            missing = ensure_published(empty_index, empty, "no-such-template", catalog)
+            self.assertFalse(missing["ok"])
+            self.assertEqual("TEMPLATE_NOT_IN_CATALOG", missing["code"])
+
 
 if __name__ == "__main__":
     unittest.main()

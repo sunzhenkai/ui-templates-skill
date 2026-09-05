@@ -169,3 +169,18 @@ cases:
       must_not:
         - 用 3–5 个代表组件冒充完整 coverage
     revision: harden-template-lifecycle-eval-v1
+  - id: authoring-catalog-zero-drift
+    skill: ui-template-author
+    category: validation-gate
+    description: 官方 catalog 必须与仓库根 published 生产库零漂移。
+    given: 维护者改了 templates/ 或 catalog/
+    fixture: tests/fixtures/eval/catalog-contracts.yaml#authoring-catalog-zero-drift
+    fixture_sha256: e0031cd424d9733e22785fc97d311b451d850790e0dd3745520ce146d8335f83
+    judge: script
+    expect:
+      must:
+        - catalog 含 published 模板必备文件
+        - 与根 templates/ published 集合 digest 一致
+      must_not:
+        - 手改 catalog 当第二真相
+    revision: harden-template-lifecycle-eval-v1

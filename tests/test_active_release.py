@@ -77,6 +77,36 @@ class ActiveReleaseTests(unittest.TestCase):
             findings = check_mirror(ROOT, mirror)
         self.assertTrue(any(item.startswith(self.expected["production-mirror-drift"]) for item in findings))
 
+    def test_source_product_name_outside_provenance_is_rejected(self) -> None:
+        terms = active.source_product_terms_from_ref("https://github.com/acme-labs/acme @ abc")
+        self.assertEqual({"acme-labs", "acme"}, terms)
+        findings = active.check_source_product_names(
+            "governance/FUNCTIONAL-LOOP.md",
+            "从首个模板 / acme 特例归纳更新协议",
+            terms,
+        )
+        self.assertIn(self.expected["source-product-name-leak"], {item.code for item in findings})
+        self.assertEqual(
+            [],
+            active.check_source_product_names("AGENTS.md", "公开 acme-labs/acme 仓库源码", terms),
+        )
+        self.assertEqual(
+            [],
+            active.check_source_product_names("governance/FUNCTIONAL-LOOP.md", "只对照可部署原版", terms),
+        )
+
+    def test_published_template_meta_supplies_source_product_terms(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            meta = root / "templates" / "demo-shell" / "meta.yaml"
+            meta.parent.mkdir(parents=True)
+            meta.write_text("sources:\n- ref: https://github.com/acme-labs/acme @ abc\n", encoding="utf-8")
+            terms = active.collect_source_product_terms(
+                root,
+                {"templates/demo-shell/meta.yaml", "tests/fixtures/x/templates/x/meta.yaml"},
+            )
+        self.assertEqual({"acme-labs", "acme"}, terms)
+
     def test_archived_overlay_requirements_live_in_base_specs(self) -> None:
         # harden-template-lifecycle archive 时已把 delta 合入 base specs；
         # 归档后不再有 overlay，合并结果必须仍留在 base specs 中。

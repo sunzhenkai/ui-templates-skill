@@ -1,8 +1,8 @@
 schema_version: 1
-bundle_version: 2.0.0
+bundle_version: 2.1.0
 public_skills:
-  ui-template-author: 2.0.0
-  ui-template-apply: 2.0.0
+  ui-template-author: 2.1.0
+  ui-template-apply: 2.1.0
 template_schema:
   minimum: 2
   maximum: 2

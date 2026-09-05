@@ -1,12 +1,12 @@
 schema_version: 1
 bundle:
-  version: 2.0.0
+  version: 2.1.0
   template_schema:
     minimum: 2
     maximum: 2
 public_skills:
   ui-template-author:
-    version: 2.0.0
+    version: 2.1.0
     include:
       - SKILL.md
       - references/*.md
@@ -24,8 +24,10 @@ public_skills:
       - runtime/fixtures/repo-capture/**/*
       - runtime/template_authoring/*.py
       - runtime/deterministic-baseline.json
+      - catalog/INDEX.md
+      - catalog/**/*
   ui-template-apply:
-    version: 2.0.0
+    version: 2.1.0
     include:
       - SKILL.md
       - references/*.md
@@ -64,7 +66,6 @@ archive_directories:
 forbidden_path_terms:
   - ui-ux-pro-max
   - master
-  - catalog
 generator:
   name: skill-distribution
   version: 1.0.0

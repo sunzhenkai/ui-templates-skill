@@ -1,6 +1,8 @@
 ---
 name: ui-template-manager
 description: 本仓库 templates/ 的项目级薄路由。创建/导入/更新 schema v2 模板时转到 skills/ui-template-author；使用已有模板实现页面时转到 skills/ui-template-apply。仅用于 ui-templates-skill 仓库，不属于公开 bundle。
+metadata:
+  internal: true
 ---
 
 # ui-template-manager
@@ -10,8 +12,8 @@ description: 本仓库 templates/ 的项目级薄路由。创建/导入/更新 s
 ## 路由
 
 - “做成模板 / 提取风格 / 导入、更新、浏览、退役或删除模板” → 读取并执行 `skills/ui-template-author/SKILL.md`；格式权威是其 `references/spec-format.md`，库动词见其 `references/template-lifecycle.md`。
-- “用已有模板做页面 / 按模板实现 UI / 搭后台” → 读取并执行 `skills/ui-template-apply/SKILL.md`。
-- 尚无模板却要求实现 → 先由 Authoring 完成 schema v2 模板全部 gate，再移交 Apply。
+- “用已有模板做页面 / 按模板实现 UI / 搭后台” → 读取并执行 `skills/ui-template-apply/SKILL.md`。catalog 已有 published 官方模板时先播种再 Apply；都没有才先 Authoring。
+- 本仓库生产库是根 `templates/`；公开安装带走只读 `ui-template-author/catalog/`。
 
 ## 本仓库补充约定
 

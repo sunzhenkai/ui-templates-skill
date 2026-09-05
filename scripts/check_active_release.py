@@ -30,6 +30,12 @@ POSITIVE_IMPLEMENTATION = re.compile(
     r"`implementation/`\s*(?:playbook|目录|adapter|适配))",
     re.IGNORECASE,
 )
+SOURCE_HOST_REF = re.compile(
+    r"https?://(?:www\.)?(?:github\.com|gitlab\.com)/([^/\s#]+)(?:/([^/\s@#]+))?",
+    re.IGNORECASE,
+)
+GENERIC_SOURCE_SLUGS = frozenset({"github", "gitlab", "users", "org", "repo", "source", "docs", "www"})
+SOURCE_PRODUCT_NAME_ALLOWLIST = frozenset({"AGENTS.md"})
 
 
 @dataclass(frozen=True)
@@ -243,10 +249,58 @@ def effective_openspec(
     return effective, pending, findings, read_paths
 
 
+def source_product_terms_from_ref(ref: str) -> set[str]:
+    terms: set[str] = set()
+    for match in SOURCE_HOST_REF.finditer(ref or ""):
+        for part in match.groups():
+            if not part:
+                continue
+            slug = part.strip().casefold()
+            if len(slug) < 4 or slug in GENERIC_SOURCE_SLUGS:
+                continue
+            terms.add(slug)
+    return terms
+
+
+def collect_source_product_terms(root: Path, paths: set[str]) -> set[str]:
+    terms: set[str] = set()
+    for relative in paths:
+        parts = PurePosixPath(relative).parts
+        if len(parts) != 3 or parts[0] != "templates" or parts[2] != "meta.yaml":
+            continue
+        try:
+            data = load_yaml(root / relative)
+        except (OSError, UnicodeError, ValueError, yaml.YAMLError):
+            continue
+        sources = data.get("sources") if isinstance(data, dict) else None
+        if not isinstance(sources, list):
+            continue
+        for source in sources:
+            if isinstance(source, dict):
+                terms.update(source_product_terms_from_ref(str(source.get("ref") or "")))
+    return terms
+
+
+def check_source_product_names(path: str, text: str, terms: set[str]) -> list[Finding]:
+    if path in SOURCE_PRODUCT_NAME_ALLOWLIST or not terms:
+        return []
+    findings: list[Finding] = []
+    for term in sorted(terms):
+        pattern = re.compile(rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])", re.IGNORECASE)
+        if pattern.search(text):
+            findings.append(Finding(
+                "SOURCE_PRODUCT_NAME_LEAK",
+                path,
+                f"source product name {term!r} belongs in meta.sources[] / AGENTS.md provenance only",
+            ))
+    return findings
+
+
 def check_document_contract(path: str, text: str) -> list[Finding]:
     requirements: dict[str, tuple[str, ...]] = {
         "README.md": (
-            "ui-template-author", "ui-template-apply", "2.0.0", "schema v2", "apply/",
+            "ui-template-author", "ui-template-apply", "2.1.0", "schema v2", "apply/",
+            "npx skills", "-s ui-template-author", "-s ui-template-apply",
             "make validate", "make eval", "migrate_template.py", "ROLLBACK.md",
         ),
         "AGENTS.md": (
@@ -254,6 +308,7 @@ def check_document_contract(path: str, text: str) -> list[Finding]:
             "harden-template-lifecycle", "make validate", "openspec validate --all --strict",
             "879d0de9166261c26ec35b69f5cec9382191eda1",
             "0aedb680ecdf61aa8eafdb5d80e6b58edba63df5",
+            "不得把来源产品写成对齐目标",
         ),
     }
     findings: list[Finding] = []
@@ -335,6 +390,14 @@ def check_repository(root: Path, scope_path: Path) -> dict:
     findings.extend(openspec_findings)
     read_paths.update(openspec_reads)
     document_paths.update(openspec_reads)
+    source_terms = collect_source_product_terms(root, paths)
+    leak_paths = {
+        relative
+        for relative in (domains["active_release"] | document_paths)
+        if relative.endswith(".md")
+        and relative not in domains["exclusions"]
+        and relative not in domains["immutable_history"]
+    }
 
     for relative in sorted(document_paths):
         if not relative.endswith(".md"):
@@ -346,9 +409,19 @@ def check_repository(root: Path, scope_path: Path) -> dict:
             findings.append(Finding("ACTIVE_DOCUMENT_UNREADABLE", relative, str(exc)))
             continue
         findings.extend(check_markdown_links(root, relative, text, paths, domains["exclusions"]))
+        findings.extend(check_source_product_names(relative, text, source_terms))
         if relative not in openspec_reads:
             findings.extend(check_active_semantics(relative, text))
             findings.extend(check_document_contract(relative, text))
+
+    for relative in sorted(leak_paths - read_paths):
+        try:
+            text = _safe_text(root, relative)
+            read_paths.add(relative)
+        except (OSError, UnicodeError) as exc:
+            findings.append(Finding("ACTIVE_DOCUMENT_UNREADABLE", relative, str(exc)))
+            continue
+        findings.extend(check_source_product_names(relative, text, source_terms))
 
     for relative in sorted(domains["active_release"]):
         if "/implementation/" in f"/{relative}/" or relative.endswith("/implementation"):

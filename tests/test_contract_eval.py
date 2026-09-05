@@ -37,6 +37,7 @@ class ContractEvalTests(unittest.TestCase):
             "tests/fixtures/eval/script-contracts.yaml",
             "tests/fixtures/eval/llm-contracts.yaml",
             "tests/fixtures/eval/loop-contracts.yaml",
+            "tests/fixtures/eval/catalog-contracts.yaml",
             "governance/eval/deterministic-baseline.json",
         ]
         files.extend(
@@ -111,6 +112,8 @@ class ContractEvalTests(unittest.TestCase):
             "fidelity-chrome-incomplete", "fidelity-chrome-optional-anchors",
             "fidelity-layout-high-without-chrome",
             "fidelity-capture-no-graph", "fidelity-capture-chrome-incomplete", "apply-chrome-unavailable",
+            "authoring-catalog-zero-drift", "apply-catalog-seed-from-empty-project",
+            "apply-no-template-only-when-absent-from-catalog",
         }
         actual_ids: set[str] = set()
         judges: dict[str, int] = {"script": 0, "llm": 0}
@@ -126,7 +129,7 @@ class ContractEvalTests(unittest.TestCase):
                 actual_ids.add(case["id"])
                 judges[case["judge"]] += 1
         self.assertEqual(expected_ids, actual_ids)
-        self.assertEqual({"script": 36, "llm": 2}, judges)
+        self.assertEqual({"script": 39, "llm": 2}, judges)
         self.assertEqual(
             {
                 "skills/ui-template-author/evals/cases.yaml",
@@ -141,7 +144,7 @@ class ContractEvalTests(unittest.TestCase):
         first = run(ROOT)
         second = run(ROOT)
         self.assertEqual("passed", first["status"])
-        self.assertEqual({"declared": 38, "parsed": 38, "executed": 38, "script": 36, "llm": 2}, first["counts"])
+        self.assertEqual({"declared": 41, "parsed": 41, "executed": 41, "script": 39, "llm": 2}, first["counts"])
         self.assertEqual("matched", first["baseline"]["status"])
         self.assertEqual({"added": [], "removed": [], "changed": []}, first["baseline"]["diff"])
         self.assertEqual(first, second)

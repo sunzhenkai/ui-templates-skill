@@ -98,8 +98,8 @@ class SkillDistributionTests(unittest.TestCase):
 
     def test_versioned_allowlist_and_explicit_exclusions(self) -> None:
         config = load_config(self.repo)
-        self.assertEqual("2.0.0", config.bundle_version)
-        self.assertEqual({"ui-template-author": "2.0.0", "ui-template-apply": "2.0.0"}, config.skill_versions)
+        self.assertEqual("2.1.0", config.bundle_version)
+        self.assertEqual({"ui-template-author": "2.1.0", "ui-template-apply": "2.1.0"}, config.skill_versions)
         self.assertEqual((2, 2), (config.template_schema_minimum, config.template_schema_maximum))
         exclusions = set(config.exclusions)
         for required in (
@@ -158,12 +158,19 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertIn("skills/ui-template-author/runtime/template_validation/fidelity.py", paths)
         self.assertIn("skills/ui-template-author/runtime/template_apply_state/fidelity.py", paths)
         self.assertIn("skills/ui-template-author/runtime/manage_template_index.py", paths)
+        self.assertIn("skills/ui-template-author/catalog/INDEX.md", paths)
+        self.assertIn("skills/ui-template-author/catalog/workbench-shell/spec.md", paths)
         self.assertIn("skills/ui-template-apply/SKILL.md", paths)
         with tarfile.open(first.artifact, "r:gz") as archive:
             members = archive.getmembers()
             self.assertEqual(sorted(item.name for item in members), [item.name for item in members])
             expected_mtime = first.manifest["generator"]["revision_time"]
             self.assertTrue(all((item.mtime, item.uid, item.gid) == (expected_mtime, 0, 0) for item in members))
+        catalog = self.repo / "skills/ui-template-author/catalog"
+        shutil.rmtree(catalog)
+        with self.assertRaisesRegex(DistributionError, "ALLOWLIST_PATTERN_EMPTY"):
+            self.build("missing-catalog")
+        shutil.copytree(ROOT / "skills/ui-template-author/catalog", catalog)
         injected = self.repo / "skills/ui-template-author/data/ui-ux-pro-max/catalog.json"
         injected.parent.mkdir(parents=True)
         injected.write_text("{}", encoding="utf-8")
@@ -184,9 +191,25 @@ class SkillDistributionTests(unittest.TestCase):
         unrelated.parent.mkdir(parents=True)
         unrelated.write_text("keep", encoding="utf-8")
         result = install_bundle(built.artifact, target)
-        self.assertEqual("2.0.0", result["bundle_version"])
+        self.assertEqual("2.1.0", result["bundle_version"])
         self.assertTrue((target / "ui-template-author/SKILL.md").is_file())
         self.assertTrue((target / "ui-template-apply/SKILL.md").is_file())
+        self.assertTrue((target / "ui-template-author/catalog/INDEX.md").is_file())
+        self.assertTrue((target / "ui-template-author/catalog/workbench-shell/spec.md").is_file())
+        project = target.parent.parent
+        seeded = subprocess.run(
+            [
+                sys.executable, str(target / "ui-template-author/runtime/manage_template_index.py"),
+                "require-published", "workbench-shell", "--json",
+                "--catalog", str(target / "ui-template-author/catalog"),
+                "--index", str(project / "templates/INDEX.md"),
+                "--templates", str(project / "templates"),
+            ],
+            text=True, capture_output=True, check=False, cwd=project,
+        )
+        self.assertEqual(0, seeded.returncode, seeded.stderr + seeded.stdout)
+        self.assertTrue(json.loads(seeded.stdout)["ok"])
+        self.assertTrue((project / "templates/workbench-shell/spec.md").is_file())
         self.assertEqual("keep", unrelated.read_text(encoding="utf-8"))
         stale = target / "ui-template-author/references/stale-managed.md"
         stale.write_text("stale", encoding="utf-8")
@@ -354,7 +377,7 @@ class SkillDistributionTests(unittest.TestCase):
         )
         self.assertEqual(0, eval_proc.returncode, eval_proc.stderr + eval_proc.stdout)
         report = json.loads(eval_proc.stdout)
-        self.assertEqual({"declared": 38, "parsed": 38, "executed": 38, "script": 36, "llm": 2}, report["counts"])
+        self.assertEqual({"declared": 41, "parsed": 41, "executed": 41, "script": 39, "llm": 2}, report["counts"])
         self.assertTrue(report["discovery"]["example_excluded"])
         self.assertIn("example/**", report["discovery"]["exclusions"])
         portable_templates = self.base / "project/templates"

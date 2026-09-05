@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from .builder import build_bundle
+from .catalog import check_catalog, write_catalog
 from .config import DistributionError
 from .installer import install_bundle
 from .mirror import check_mirror, write_mirror
@@ -26,6 +27,10 @@ def parser() -> argparse.ArgumentParser:
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--write", action="store_true")
     mirror.add_argument("--target", type=Path, default=Path(".agents/skills"))
+    catalog = sub.add_parser("catalog")
+    catalog_mode = catalog.add_mutually_exclusive_group(required=True)
+    catalog_mode.add_argument("--check", action="store_true")
+    catalog_mode.add_argument("--write", action="store_true")
     return result
 
 
@@ -44,11 +49,20 @@ def main(argv: list[str] | None = None) -> int:
             }
         elif args.command == "install":
             payload = install_bundle(args.artifact, args.target, checksum_file=args.checksum)
+        elif args.command == "catalog":
+            if args.write:
+                payload = write_catalog(root)
+            else:
+                findings = check_catalog(root)
+                payload = {"status": "failed" if findings else "passed", "findings": findings}
+                print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
+                return 1 if findings else 0
         elif args.write:
+            write_catalog(root)
             payload = write_mirror(root, (root / args.target) if not args.target.is_absolute() else args.target)
         else:
             target = (root / args.target) if not args.target.is_absolute() else args.target
-            findings = check_mirror(root, target)
+            findings = check_catalog(root) + check_mirror(root, target)
             payload = {"status": "failed" if findings else "passed", "findings": findings, "target": str(target)}
             print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
             return 1 if findings else 0

@@ -43,11 +43,13 @@ draft → published → retired → deleted
 退役与删除使用仓库脚本（失败不得改 INDEX）：
 
 ```bash
-python3 scripts/manage_template_index.py list --index templates/INDEX.md
-python3 scripts/manage_template_index.py show <name> --index templates/INDEX.md --templates templates
-python3 scripts/manage_template_index.py retire <name> --index templates/INDEX.md --reason "<reason>"
-python3 scripts/manage_template_index.py delete <name> --index templates/INDEX.md --templates templates
-python3 scripts/manage_template_index.py require-published <name> --index templates/INDEX.md
+python3 scripts/manage_template_index.py list
+python3 scripts/manage_template_index.py show <name>
+python3 scripts/manage_template_index.py seed
+python3 scripts/manage_template_index.py seed <name>
+python3 scripts/manage_template_index.py retire <name> --reason "<reason>"
+python3 scripts/manage_template_index.py delete <name>
+python3 scripts/manage_template_index.py require-published <name>
 ```
 
-安装环境把 `scripts/manage_template_index.py` 换成 `ui-template-author/runtime/manage_template_index.py`；不得手改 INDEX 绕过校验。delete 前必须已 retired（draft 从未 Index 则可直接删候选目录）。成功后立刻对剩余 `templates/` 跑 portable validator。
+未传 `--index` / `--templates` 时使用当前工作目录的 `templates/`，不是 skill 根。`seed` 与默认 `require-published` 从 `--catalog` 或已安装 `ui-template-author/catalog/` 拷贝缺失的 published 模板；已有同名行或目录不覆盖，retired 行不救回。安装环境把 `scripts/manage_template_index.py` 换成 `ui-template-author/runtime/manage_template_index.py`。Authoring 的 create/update/retire/delete 只写项目库，不得改 catalog。delete 前必须已 retired。成功后立刻对剩余项目 `templates/` 跑 portable validator。

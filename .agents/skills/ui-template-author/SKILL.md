@@ -7,6 +7,14 @@ description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 
 
 本 skill 只创建、迁移、更新和索引 UI 模板，不实现消费项目页面。浏览、退役与删除同样由本 skill 执行，手续见 [template-lifecycle.md](references/template-lifecycle.md)。公开格式由 [references/spec-format.md](references/spec-format.md) 唯一定义；分层抽取见 [extraction-layers.md](references/extraction-layers.md)。Apply 通过该契约解耦消费。现行闭环目标见仓库 `governance/FUNCTIONAL-LOOP.md`（安装环境可只读本 skill 引用）。
 
+成对安装，不要用 `--all`：
+
+```bash
+npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-template-apply
+```
+
+治理、checksum 与回滚仍用 `make bundle` / `make install`。官方 published 模板在本 skill 只读 `catalog/`；项目可写库是项目根 `templates/`。
+
 ## 路由
 
 - URL → [source-web.md](references/source-web.md)
@@ -15,6 +23,7 @@ description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 
 - Markdown/PDF 设计文档 → [source-doc.md](references/source-doc.md)
 - 浏览 / 退役 / 删除模板 → [template-lifecycle.md](references/template-lifecycle.md)
 - “用模板实现页面/搭后台” → 停止 Authoring，移交 `ui-template-apply`。
+- 官方 published 模板在本 skill 的只读 `catalog/`；消费项目可写库是项目根 `templates/`。项目库没有同名 published 行时，先从 catalog 播种，不得声称“没有模板”。
 
 ## 不变量
 
@@ -25,6 +34,7 @@ description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 
 - Non-negotiables 与跨文档规则使用稳定 rule ID；coverage 对声明项作 observed/defaulted/unsupported 完整互斥分类。
 - 来源、locator、revision、confidence、asset license/redistribution/privacy 与 default basis 都进入 evidence。
 - `meta.sources[]` 是出处身份，不是文件系统绑定。Session source 只存在于本次用户明确给出的导入/从源更新；已发布模板缺 checkout 时走 portable 校验，禁止向用户索要历史本地路径、扫描 sibling/`/tmp`/`example/**` 或按 ref clone。
+- 项目库与 catalog 都没有可用 published 模板时，才引导从源创建；catalog 已有官方模板时不得报“没有模板”。
 
 ## 强制工作流：Generate → Validate → Eval → Index → Report
 

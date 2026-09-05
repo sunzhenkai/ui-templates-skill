@@ -55,6 +55,8 @@ PYTHON_OPERATIONS = frozenset({
     "example_path_rejected",
     "index_require_published",
     "changeset_undeclared_stable",
+    "catalog_zero_drift",
+    "catalog_seed_contracts",
 })
 
 
@@ -466,6 +468,82 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "published_ok": ok["ok"],
             "retired_blocked": not blocked["ok"],
             "retired_code": blocked["code"],
+        }
+    if operation == "catalog_zero_drift":
+        import importlib.util
+        import tempfile
+
+        module_path = resource_path(root, "scripts/manage_template_index.py")
+        spec = importlib.util.spec_from_file_location("manage_template_index", module_path)
+        if spec is None or spec.loader is None:
+            raise EvalFailure("MANAGE_TEMPLATE_INDEX_UNIMPORTABLE")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        core = {
+            "spec.md": "# demo\n",
+            "tokens.yaml": "schema_version: 2\n",
+            "meta.yaml": "schema_version: 2\nname: demo\n",
+            "evidence.yaml": "schema_version: 2\nentries: []\n",
+        }
+        index_text = (
+            "# 模板索引\n\n| 名称 | 风格描述 | 来源类型 | 采集日期 | 状态 |\n"
+            "| --- | --- | --- | --- | --- |\n| demo | d | doc | 2026-09-03 | published |\n"
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            repo = Path(temp) / "repo"
+            production = repo / "templates/demo"
+            catalog = repo / "skills/ui-template-author/catalog/demo"
+            production.mkdir(parents=True)
+            catalog.mkdir(parents=True)
+            (repo / "templates/INDEX.md").write_text(index_text, encoding="utf-8")
+            (repo / "skills/ui-template-author/catalog/INDEX.md").write_text(index_text, encoding="utf-8")
+            for name, value in core.items():
+                (production / name).write_text(value, encoding="utf-8")
+                (catalog / name).write_text(value, encoding="utf-8")
+            matched = module._tree_bytes(production) == module._tree_bytes(catalog)
+            (catalog / "spec.md").write_text("# drifted\n", encoding="utf-8")
+            drifted = module._tree_bytes(production) != module._tree_bytes(catalog)
+        return {"matched": matched, "drift_detected": drifted}
+    if operation == "catalog_seed_contracts":
+        import importlib.util
+        import tempfile
+
+        module_path = resource_path(root, "scripts/manage_template_index.py")
+        spec = importlib.util.spec_from_file_location("manage_template_index", module_path)
+        if spec is None or spec.loader is None:
+            raise EvalFailure("MANAGE_TEMPLATE_INDEX_UNIMPORTABLE")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        index_text = (
+            "# 模板索引\n\n| 名称 | 风格描述 | 来源类型 | 采集日期 | 状态 |\n"
+            "| --- | --- | --- | --- | --- |\n| demo | d | doc | 2026-09-03 | published |\n"
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            catalog = Path(temp) / "catalog"
+            (catalog / "demo").mkdir(parents=True)
+            (catalog / "INDEX.md").write_text(index_text, encoding="utf-8")
+            for name in ("spec.md", "tokens.yaml", "meta.yaml", "evidence.yaml"):
+                (catalog / "demo" / name).write_text(f"{name}\n", encoding="utf-8")
+            empty = Path(temp) / "empty"
+            empty_index = empty / "INDEX.md"
+            first = module.ensure_published(empty_index, empty, "demo", catalog)
+            again = module.seed_from_catalog(catalog, empty_index, empty, ["demo"])
+            (empty / "demo" / "spec.md").write_text("user-owned\n", encoding="utf-8")
+            after_skip = (empty / "demo" / "spec.md").read_text(encoding="utf-8")
+            retired_root = Path(temp) / "retired"
+            retired_index = retired_root / "INDEX.md"
+            retired_index.parent.mkdir(parents=True)
+            retired_index.write_text(index_text.replace("published", "retired"), encoding="utf-8")
+            (retired_root / "demo").mkdir()
+            (retired_root / "demo" / "spec.md").write_text("retired-copy\n", encoding="utf-8")
+            retired = module.ensure_published(retired_index, retired_root, "demo", catalog)
+            missing = module.ensure_published(empty_index, empty, "missing", catalog)
+        return {
+            "empty_seeded": first["ok"] and first["code"] == "INDEX_PUBLISHED",
+            "second_seed_skipped": "demo" in {item["name"] for item in again["skipped"]},
+            "existing_not_overwritten": after_skip == "user-owned\n",
+            "retired_blocked": (not retired["ok"]) and retired["code"] == "INDEX_NOT_PUBLISHED",
+            "missing_handoff": (not missing["ok"]) and missing["code"] == "TEMPLATE_NOT_IN_CATALOG",
         }
     if operation == "changeset_undeclared_stable":
         import importlib.util

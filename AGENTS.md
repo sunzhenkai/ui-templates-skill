@@ -26,7 +26,7 @@
 3. `skills/ui-template-author/references/spec-format.md`：模板字段语义、所有权和 Authoring 行为。
 4. active OpenSpec：对外可观察要求。`harden-template-lifecycle` 与 `close-functional-loops` 已 archive 并合入 `openspec/specs/`；当前无 pending overlay。
 5. `scripts/template_validation/`：上述契约的可执行实现（含 portable profile 与 session-source replay）。
-6. `governance/release/`：bundle 2.0.0、兼容、迁移、回滚与分发 allowlist。
+6. `governance/release/`：bundle 2.1.0、兼容、迁移、回滚与分发 allowlist。对外入口是成对 `npx skills add`；`make bundle` / `make install` 是治理通道。官方模板副本在 `skills/ui-template-author/catalog/`。
 7. `governance/FUNCTIONAL-LOOP.md`：现行功能闭环与目标；与 1–6 冲突必须先修复。
 8. `README.md`、本文件和发布说明是派生入口；冲突必须修复，不能选择性忽略。
 
@@ -34,7 +34,7 @@
 
 schema v2 必备 `spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml`，可含拆分设计文档、可选 `fidelity.yaml` 和技术栈无关的 `apply/`。`tokens.yaml` 是精确值唯一载体；origin 只允许 `source | computed | estimated | default`。`fidelity.yaml` 使用独立 schema family `repo-structural-v1`，只引用 token path/rule ID/闭集 semantic，不复制精确值。模板禁止 `implementation/`、stack adapter、工程目录、依赖、API/mock/data 分层、状态库选型和 runnable starter。已发布无 sidecar 模板是 `legacy-baseline`，layout 不得为 high；未知 profile fail closed。structural 导入需要 chrome-complete literal graph。`--source-root` / `--require-source-replay` 只用于本会话 Generate-from-source，不得因 provenance 向用户索要历史路径。测试与治理资产不得放在 `example/**`。
 
-`templates/workbench-shell/` 的来源是两项并列来源：固定 revision `879d0de9166261c26ec35b69f5cec9382191eda1` 的公开 `multica-ai/multica` 仓库源码，以及 revision `0aedb680ecdf61aa8eafdb5d80e6b58edba63df5` 的用户 Markdown 布局设计文档（出处已抹除、业务实体已泛化）。准确身份见 `templates/workbench-shell/meta.yaml`，token/default provenance 见 `evidence.yaml`；不得从被排除样例反推模板决定。`meta.sources[]` 只是出处身份，不是本地 checkout 绑定；无本会话 source 时保持 `legacy-baseline` 并做 portable 校验，禁止向用户索要这两条来源的本地绝对路径。
+`templates/workbench-shell/` 的来源是两项并列来源：固定 revision `879d0de9166261c26ec35b69f5cec9382191eda1` 的公开 `multica-ai/multica` 仓库源码，以及 revision `0aedb680ecdf61aa8eafdb5d80e6b58edba63df5` 的用户 Markdown 布局设计文档（出处已抹除、业务实体已泛化）。准确身份见 `templates/workbench-shell/meta.yaml`，token/default provenance 见 `evidence.yaml`；不得从被排除样例反推模板决定。`meta.sources[]` 只是出处身份，不是本地 checkout 绑定；无本会话 source 时保持 `legacy-baseline` 并做 portable 校验，禁止向用户索要这两条来源的本地绝对路径。上游仓库/产品名只允许出现在该模板 `meta.sources[].ref`、本段出处说明，以及 immutable archive。现行治理、OpenSpec base、公开 skill 正文和模板 prose 必须用「原版 / session source / provenance」，不得把来源产品写成对齐目标、本机依赖或更新协议主语。
 
 ## 固定环境与精确命令
 
@@ -62,15 +62,21 @@ python3 -m venv /tmp/ui-template-governance-venv
 openspec validate --all --strict
 ```
 
-安装/升级必须通过双-skill installer，目标是 skills 父目录：
+对外安装入口是成对 `npx skills`（不要用 `--all`）：
 
 ```bash
-ARTIFACT=dist/ui-templates-skill-2.0.0.tar.gz \
+npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-template-apply
+```
+
+治理/checksum/回滚仍通过双-skill installer，目标是 skills 父目录：
+
+```bash
+ARTIFACT=dist/ui-templates-skill-2.1.0.tar.gz \
 INSTALL_TARGET=/path/to/project/.agents/skills \
 make install
 ```
 
-不得恢复旧 `cp -r skills/ui-template-author ...` 入口。installer 只替换两个 public skill，保留其他 skills 与独立历史档案。v1 迁移使用：
+不得恢复旧 `cp -r skills/ui-template-author ...` 入口。installer 只替换两个 public skill，保留其他 skills 与独立历史档案。官方 catalog 随 Author skill 安装；项目可写库是项目根 `templates/`。v1 迁移使用：
 
 ```bash
 /tmp/ui-template-governance-venv/bin/python scripts/migrate_template.py SOURCE CANDIDATE
@@ -96,3 +102,4 @@ make install
 - 新增治理依赖必须精确固定版本，并更新 `governance/DEPENDENCIES.md` 与许可用途。
 - `governance-reports/` 由 `.gitignore` 排除，不入库；命令仍通过 `REPORT_DIR` / `--json-out` 指定输出路径，不以本地报告当作发布证据。
 - 不自动 publish、tag、archive OpenSpec change 或 promote 样例；这些动作需要单独请求。
+- 现行文档不得把 `meta.sources[].ref` 中的上游产品名写成特例主语；`check_active_release.py` 从已发布模板 meta 提取名称并拒绝泄漏。archive 与出处段不重写。

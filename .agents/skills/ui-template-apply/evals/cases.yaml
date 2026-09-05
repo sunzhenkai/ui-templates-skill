@@ -187,3 +187,34 @@ cases:
       must_not:
         - 按 meta.sources[] 打开本地绝对路径
     revision: harden-template-lifecycle-eval-v1
+  - id: apply-catalog-seed-from-empty-project
+    skill: ui-template-apply
+    category: routing
+    description: 空项目从 Author catalog 播种 published 模板后可 require-published；已有行不覆盖，retired 不救回。
+    given: 新项目安装双 skill 且本地 templates/ 为空
+    fixture: tests/fixtures/eval/catalog-contracts.yaml#apply-catalog-seed-from-empty-project
+    fixture_sha256: e0031cd424d9733e22785fc97d311b451d850790e0dd3745520ce146d8335f83
+    judge: script
+    expect:
+      must:
+        - 从 catalog 播种 workbench-shell 或等价 published 模板
+        - 已有同名行或目录不覆盖
+        - 项目 retired 行保持 retired
+      must_not:
+        - 把空项目当成没有模板
+    revision: harden-template-lifecycle-eval-v1
+  - id: apply-no-template-only-when-absent-from-catalog
+    skill: ui-template-apply
+    category: routing
+    description: 只有项目库与 catalog 都没有目标 published 模板时才报没有模板并移交 Authoring。
+    given: 用户要求用一个 catalog 与项目库都不存在的模板名
+    fixture: tests/fixtures/eval/catalog-contracts.yaml#apply-no-template-only-when-absent-from-catalog
+    fixture_sha256: e0031cd424d9733e22785fc97d311b451d850790e0dd3745520ce146d8335f83
+    judge: script
+    expect:
+      must:
+        - 报 TEMPLATE_NOT_IN_CATALOG 或等价“没有模板”
+        - 移交 ui-template-author
+      must_not:
+        - catalog 已有官方模板时停止并声称没有模板
+    revision: harden-template-lifecycle-eval-v1

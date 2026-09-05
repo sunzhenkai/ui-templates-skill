@@ -4,6 +4,7 @@
     {"id": "broken-active-link", "expected_code": "ACTIVE_LINK_MISSING"},
     {"id": "active-implementation-claim", "expected_code": "ACTIVE_IMPLEMENTATION_SEMANTIC"},
     {"id": "missing-public-skill", "expected_code": "PUBLIC_SKILL_MISSING"},
-    {"id": "production-mirror-drift", "expected_code": "MIRROR_FILE_CHANGED"}
+    {"id": "production-mirror-drift", "expected_code": "MIRROR_FILE_CHANGED"},
+    {"id": "source-product-name-leak", "expected_code": "SOURCE_PRODUCT_NAME_LEAK"}
   ]
 }

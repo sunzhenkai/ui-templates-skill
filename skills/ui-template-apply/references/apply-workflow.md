@@ -27,7 +27,7 @@
 
 ## Phase 0 — Intake（`00-intake.md`）
 
-记录模板 name/version/digest、平台/技术栈/既有约束、成功流程，以及 `included/deferred/excluded` 范围。若存在集合 `INDEX.md`，先运行 `manage_template_index.py require-published <name> --index <INDEX.md>`；非 0（`retired` 或缺行）停止。生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。对 coverage 的 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。检测 `fidelity.yaml`：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。Gate：schema/origin/checker 通过，范围与非目标经确认。profile digest 纳入现有 template identity，不新增 checkpoint 字段。不得把原版源码或已有生成物写入 intake 作为实现输入。用户要求对齐原版时只记录 oracle 身份，对照手续见 [fidelity-compare.md](fidelity-compare.md)。
+记录模板 name/version/digest、平台/技术栈/既有约束、成功流程，以及 `included/deferred/excluded` 范围。先对项目 `templates/INDEX.md` 运行 `ui-template-author/runtime/manage_template_index.py require-published <name>`（默认从兄弟目录 `ui-template-author/catalog/` 播种缺失的 published 模板）。项目已有 `retired` 行不得覆盖。仅当项目库与 catalog 都没有该 published 模板时停止并移交 Authoring。生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。对 coverage 的 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。检测 `fidelity.yaml`：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。Gate：schema/origin/checker 通过，范围与非目标经确认。profile digest 纳入现有 template identity，不新增 checkpoint 字段。不得把原版源码或已有生成物写入 intake 作为实现输入。用户要求对齐原版时只记录 oracle 身份，对照手续见 [fidelity-compare.md](fidelity-compare.md)。
 
 ## Phase 1 — Design direction & token freeze
 

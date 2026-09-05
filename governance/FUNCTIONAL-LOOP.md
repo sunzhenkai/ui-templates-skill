@@ -9,7 +9,7 @@
 1. **Skill 功能闭环**：创建、分层抽取、应用模板可独立完成，且互相移交。
 2. **模板管理闭环**：创建、更新、浏览、退役、删除有门禁，INDEX 是唯一目录。
 3. **项目规约**：迭代不得靠改生成物、读原版源码或绕过 gate 来“过关”。
-4. **更新协议**：从 workbench-shell / multica 特例归纳出可复用的分层更新与重生对照，而不是一次性修页面。
+4. **更新协议**：从首个真实模板归纳出可复用的分层更新与重生对照，而不是一次性修页面。现行文档只写原版 / session source，不把某个上游产品写成协议主语。
 
 ## 2. 产品边界
 
@@ -43,7 +43,7 @@
 两次干净重生稳定，才算闭环完成
 ```
 
-七条不变量：
+不变量：
 
 1. **生成物不是修复面。** 视觉差回写 Authoring、Apply 或模板。
 2. **Apply 零原版依赖。** 实现时禁止打开原版 checkout、历史 `web/`、`web-v*`。
@@ -52,6 +52,7 @@
 5. **分层抽取。** chrome → tokens → scene → 原子组件 → 复合组件，禁止抽样冒充完整。
 6. **模板自包含。** Apply 不看原版也能消费常用组件规格。
 7. **历史生成物不是参考。** 对照物只有当前模板、当前 skill、本会话原版部署。
+8. **现行文档不点名上游产品。** 出处只留在 `meta.sources[]` 与 `AGENTS.md` 出处段；对齐与更新协议只写原版 / session source。
 
 ## 4. Skill 功能闭环
 
@@ -83,8 +84,9 @@ L0–L6 只是变更集合标签。Intake 必须冻结**本次改哪些路径/�
 
 - “做成模板 / 更新模板 / 退役模板” → Authoring。
 - “用模板做页面” → Apply。
-- 尚无模板 → 先 Author 声明变更集合过 gate，再 Apply。
-- 没有模板、schema 不支持、origin 未知、`retired`、validation 失败 → Apply 停止。
+- 项目库缺 published 行但 Author catalog 已有官方模板 → Apply 先播种再消费。
+- 项目库与 catalog 都没有目标 published 模板 → 先 Author 声明变更集合过 gate，再 Apply。
+- schema 不支持、origin 未知、项目 `retired`、validation 失败 → Apply 停止。catalog 不得救回 retired 行。
 
 ## 5. 模板管理闭环
 
@@ -113,9 +115,9 @@ draft（候选目录，不是 INDEX 状态，未进 INDEX）
 
 INDEX 表头固定为：名称、风格描述、来源类型、采集日期、状态。状态闭集：`published` | `retired`。前四列必须与 `meta.yaml` 一致。
 
-## 6. 从 workbench-shell 特例归纳的更新协议
+## 6. 对齐原版的更新协议
 
-特例要求（对任意“对齐原版”任务都成立）：
+要求（对任意“对齐原版”任务都成立）：
 
 - 必须通过更新 Authoring / Apply / 模板来修差异，**MUST NOT** 特例化修复生成 web。
 - 必须从 skill 与模板的生成稳定性出发。
@@ -148,8 +150,9 @@ INDEX 表头固定为：名称、风格描述、来源类型、采集日期、�
 
 ```text
 skills/                    生产 skill 正文
+skills/ui-template-author/catalog/  只读官方 published 副本
 schemas/                   机器契约
-templates/INDEX.md         唯一目录（含 status）
+templates/INDEX.md         本仓可写唯一目录（含 status）
 templates/<name>/          published 或 retired 模板
 scripts/ tests/ governance 门禁
 openspec/specs/            通用产品契约
@@ -167,7 +170,7 @@ example/<name>/web*/       生成物，治理排除
 2. Apply 能只靠 published 模板完成 Phase 0–9；`require-published` 拒绝 retired。
 3. retire / delete 有机器校验与 skill 手续。
 4. 保真差异只能回写 skill/模板/prompts，且至少重生一次。
-5. `example/workbench-shell/web/**` 不决定治理通过。
+5. `example/**/web*` 不决定治理通过。
 6. 相关 contract eval 与模板 validator 通过。
 
-workbench-shell 相对 multica 的视觉对齐是**使用本闭环的一次任务**，不是本文的发布门禁。无 session source 时它保持 `legacy-baseline`。
+已发布模板相对可部署原版的视觉对齐是**使用本闭环的一次可选任务**，不是本文的发布门禁。无 session source 时已发布 repo 来源模板保持 `legacy-baseline`。

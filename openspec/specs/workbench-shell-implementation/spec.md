@@ -267,7 +267,7 @@ Board non-wrap/non-shrink、主从独立滚动、overlay scope、Dialog 四向 p
 
 #### Scenario: Fixture 覆盖非常规 layout
 - **WHEN** contract eval 运行 repo-capture fixture
-- **THEN** Board 横向 non-wrap、主从独立 scroll owner、overlay scope 与 inset chrome 槽位图作为 fixture records 可重复，而不要求本机存在 multica checkout
+- **THEN** Board 横向 non-wrap、主从独立 scroll owner、overlay scope 与 inset chrome 槽位图作为 fixture records 可重复，而不要求本机存在上游 checkout
 
 #### Scenario: 后续会话才允许 source-direct sidecar
 - **WHEN** 用户为本会话提供与声明 revision 一致的可读 session source

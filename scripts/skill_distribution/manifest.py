@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import posixpath
 import re
 from pathlib import Path, PurePosixPath
 from typing import Any, Mapping
@@ -156,7 +157,7 @@ def validate_manifest_payload(document: Mapping[str, Any], payload: Mapping[str,
         or "/openspec-" in f"/{path}/"
         or "ui-ux-pro-max" in path.casefold()
         or "master" in PurePosixPath(path).name.casefold()
-        or "catalog" in PurePosixPath(path).name.casefold()
+        or PurePosixPath(path).name.casefold() in {"catalog.json", "catalog"}
     ]
     if forbidden:
         raise DistributionError(f"NON_PUBLIC_CONTENT: {sorted(forbidden)}")
@@ -177,7 +178,7 @@ def validate_references(payload: Mapping[str, bytes]) -> None:
             target = raw_target.strip().split("#", 1)[0]
             if not target or "://" in target or target.startswith(("mailto:", "/", "#")):
                 continue
-            destination = (PurePosixPath(path).parent / target).as_posix()
+            destination = posixpath.normpath((PurePosixPath(path).parent / target).as_posix())
             if not _safe_member(destination) or destination not in payload:
                 missing.append(f"{path} -> {raw_target}")
     if missing:

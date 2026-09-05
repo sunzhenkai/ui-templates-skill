@@ -1,6 +1,6 @@
 # workbench-shell web — 软件交付与运维事件协作中心
 
-基于本仓库 `templates/workbench-shell`（schema v2）通过 `ui-template-apply` Phase 0–9 流程从零生成的前端站点，用于验证模板的视觉还原与生成稳定性。视觉基准为本会话部署的 multica（revision 879d0de9）本地实例；业务内容为运维事件协作域，不复制 multica 业务数据。
+基于本仓库 `templates/workbench-shell`（schema v2）通过 `ui-template-apply` Phase 0–9 流程从零生成的前端站点，用于验证模板消费与生成稳定性。业务内容为运维事件协作域。
 
 ## 运行
 
