@@ -37,18 +37,18 @@ class CatalogAndDiscoveryTests(unittest.TestCase):
 
     def test_internal_skills_are_hidden_from_default_npx_list(self) -> None:
         public = {"ui-template-author", "ui-template-apply"}
-        internal = {
-            "ui-template-manager",
+        required_internal = {"ui-template-manager"}
+        optional_internal = {
             "openspec-explore",
             "openspec-propose",
             "openspec-apply-change",
             "openspec-archive-change",
         }
         discovered: dict[str, bool] = {}
+        # `.kiro/skills` 被 gitignore，只是本机安装目标，不能当发现源，否则会掩盖仓库缺 skill。
         for skill_md in sorted(
             list((ROOT / "skills").glob("*/SKILL.md"))
             + list((ROOT / ".agents/skills").glob("*/SKILL.md"))
-            + list((ROOT / ".kiro/skills").glob("*/SKILL.md"))
         ):
             meta = _frontmatter(skill_md)
             name = meta.get("name")
@@ -61,8 +61,11 @@ class CatalogAndDiscoveryTests(unittest.TestCase):
         self.assertTrue(public <= set(discovered))
         for name in public:
             self.assertFalse(discovered[name], name)
-        for name in internal:
+        for name in required_internal:
             self.assertTrue(discovered.get(name), name)
+        for name in optional_internal:
+            if name in discovered:
+                self.assertTrue(discovered[name], name)
         env = {key: value for key, value in os.environ.items() if key != "INSTALL_INTERNAL_SKILLS"}
         proc = subprocess.run(
             ["npx", "--yes", "skills", "add", ".", "--list"],
@@ -77,7 +80,7 @@ class CatalogAndDiscoveryTests(unittest.TestCase):
         self.assertIn("Found 2 skills", text)
         for name in public:
             self.assertIsNotNone(re.search(rf"[│|]\s+{re.escape(name)}\s*$", text, re.M), text)
-        for name in internal:
+        for name in required_internal | optional_internal:
             self.assertIsNone(re.search(rf"[│|]\s+{re.escape(name)}\s*$", text, re.M), text)
 
 
