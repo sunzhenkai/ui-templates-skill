@@ -34,6 +34,8 @@ jobs:
           cache-dependency-path: governance/requirements-governance.txt
       - name: Bootstrap pinned governance environment
         run: make bootstrap PYTHON=python3
+      - name: Install pinned openspec CLI
+        run: npm install -g @fission-ai/openspec@1.8.0
       - name: Root governance validation (sample exclusions are not read or executed)
         run: make validate
       - name: Retain machine-readable governance evidence
