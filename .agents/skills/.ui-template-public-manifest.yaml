@@ -10,7 +10,7 @@ skills:
     - path: catalog/INDEX.md
       sha256: db3624a8be6b8c8cc64857da2e5dc2187167dd9882443251944d7633a9b7c89f
     - path: catalog/workbench-shell/apply/playbook.md
-      sha256: da3ef0bc113270ffec0b2f8e57ddee967ea9326bfa28c00b0d202d062663d7c3
+      sha256: 738b925f3625c216b57d1b6d5e1cbebb252c8c9d445ad1be83b9d67b59c67740
     - path: catalog/workbench-shell/apply/quality.md
       sha256: ef5aa676e2fedf8bce49482cb11c03b4baf173d399fc57c3c497895f2e458650
     - path: catalog/workbench-shell/components.md
@@ -18,15 +18,15 @@ skills:
     - path: catalog/workbench-shell/evidence.yaml
       sha256: 540f628051c87829c24eb7829fe5f421eb1eea149ae9b1d7f6b1575dd918d265
     - path: catalog/workbench-shell/meta.yaml
-      sha256: 5ffa0d75178bdfe7c85111fca7a8239f1398b7590ec00a6be4802672a619aa58
+      sha256: 8961bcd061a97d0c2bcc2095de98038be9fa5a38591f955b244fffeca8626bdb
     - path: catalog/workbench-shell/platforms/desktop.md
-      sha256: 5eb2f875aa43d2f240a846ef77dd68cf8a2a295aebf1a154bcec067351936718
+      sha256: 8cd998e92ae8163bf4e367667932c7548720949b5faab64df1b4f7da6a6d1588
     - path: catalog/workbench-shell/platforms/mobile.md
-      sha256: fe74cad0ad05d9ba19e51f7ea001035f6b86e7f5b2b858ce6a66325a3549de57
+      sha256: 4c27a57e8faa0ab5d36b6a5ec01834293a10eddb112bee6d28e165a8ea5dac79
     - path: catalog/workbench-shell/platforms/web.md
-      sha256: 11f2f4bba32bfd03a0b9fdd066b18d647edfa8390d0f74584ba8c1a4e3cd0e48
+      sha256: c81403aca299d0f932dfc56f13c47abde87fb1d403761cbce212e390becfb8fd
     - path: catalog/workbench-shell/routes-and-layouts.md
-      sha256: 2369fd3cb29a309dafd663eaaee037aa5b30028bda98e3d6622dfbdf3be0a5ff
+      sha256: bcec20ebbef7aa6646823688b8242c094a7d3dfb3f27c42a1817acab695baa67
     - path: catalog/workbench-shell/spec.md
       sha256: 580eb9e0d6d303cca4b0babb29c2ff155237fc54299f3c326684e7dd2c43b28f
     - path: catalog/workbench-shell/tokens.yaml

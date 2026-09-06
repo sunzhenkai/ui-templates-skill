@@ -22,11 +22,12 @@ browser viewport（root-height / overflow hidden）
 
 ## 响应
 
-断点值由 `responsive.web.*` token 携带，行为统一引用 @RESP-001：
+断点值由 `responsive.web.*` token 携带，行为统一引用 @RESP-001。本地名与 Authoring 壳形态闭集对照如下；触发一律是 Web viewport 断点，不与 Desktop 的用户/窗口开关混用。本模板无 `fidelity.yaml`，下表是设计规则，不得标 profile-verified。
 
-- expanded：viewport 不小于 `responsive.web.expanded-min`，展开常驻导航。
-- collapsed：viewport 不小于 `responsive.web.collapsed-min` 且小于 `responsive.web.expanded-min`，折叠导航常驻，核心目的地仍可达。
-- overlay：viewport 小于 `responsive.web.collapsed-min`，常驻导航退出布局，PageHeader 提供 accessible trigger 与可关闭覆盖导航。
+- expanded（在文档流中展开）：viewport 不小于 `responsive.web.expanded-min`，展开常驻导航。
+- collapsed（收成 rail 且仍占位）：viewport 不小于 `responsive.web.collapsed-min` 且小于 `responsive.web.expanded-min`，折叠导航常驻占位，核心目的地仍可达。
+- overlay（离开布局并变为 overlay）：viewport 小于 `responsive.web.collapsed-min`，常驻导航退出布局，PageHeader 提供 accessible trigger 与可关闭覆盖导航，Sheet 宽度读取 `layout.sidebar-mobile-width`。
+- 只离开布局、不变为 overlay 的第四种形态本模板未观察到，按 unsupported 处理，不得作为验收目标。
 - viewport 小于 `responsive.web.narrow-content-threshold` 仍是 Web overlay；只收缩 actions、A–E 内容和输入布局，不切换为 [`mobile.md`](mobile.md) 的原生 bottom-tab / navigation-stack shell。
 
 ## Web 专属规则

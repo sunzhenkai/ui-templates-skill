@@ -46,13 +46,14 @@ root（token 驱动的视口高度，overflow hidden）
 
 ## 4. Web 响应矩阵与容器规则
 
-断点精确值由 `responsive.web.*` token 唯一携带；expanded、collapsed 与 overlay 只按下表的 token 关系解释。
+断点精确值由 `responsive.web.*` token 唯一携带；expanded、collapsed 与 overlay 只按下表映射到 Authoring 壳形态闭集，形态与触发条件分开解释。本模板无 `fidelity.yaml`：下表是设计规则而非 structural profile evidence，不得标 profile-verified。
 
-| Web 路径 | viewport 条件 | Shell 行为 |
-| --- | --- | --- |
-| expanded | `>= responsive.web.expanded-min` | 展开常驻导航，页面模式保持内部滚动。 |
-| collapsed | `>= responsive.web.collapsed-min` 且 `< responsive.web.expanded-min` | 折叠导航常驻，主要目的地和触发器可达。 |
-| overlay | `< responsive.web.collapsed-min` | 常驻导航退出布局，PageHeader 提供可访问的覆盖导航触发器。 |
+| 本地名 | Authoring 闭集形态 | 触发 | Shell 行为 |
+| --- | --- | --- | --- |
+| expanded | 在文档流中展开 | Web 断点：`>= responsive.web.expanded-min` | 展开常驻导航，页面模式保持内部滚动。 |
+| collapsed | 收成 rail 且仍占位 | Web 断点：`>= responsive.web.collapsed-min` 且 `< responsive.web.expanded-min` | 折叠导航常驻占位，主要目的地和触发器可达。 |
+| overlay | 离开布局并变为 overlay | Web 断点：`< responsive.web.collapsed-min` | 常驻导航退出文档流，PageHeader 提供可访问的覆盖导航触发器，Sheet 宽度读取 `layout.sidebar-mobile-width`。 |
+| —（unsupported） | 只离开布局、不变为 overlay | 本模板未观察到 | 不得作为本模板验收目标，也不得把三态配方发明成其他模板的默认完成条件。 |
 
 - [RESP-001] 所有 Web route 使用同一 expanded/collapsed/overlay shell 矩阵；viewport `< responsive.web.narrow-content-threshold` 仍属于 Web overlay，只进一步收缩动作和模式内容，不得与原生 Mobile 平台混同。Desktop 的外层触发器只适用于独立 Desktop 平台。
 - [RESP-002] Toolbar 动作在不足宽度下按优先级收缩为 icon-only，并保留 accessible name。

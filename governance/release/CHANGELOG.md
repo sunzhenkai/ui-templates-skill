@@ -3,6 +3,7 @@
 ## Unreleased
 
 - 现行治理/规格不再把上游产品名写成对齐目标或本机依赖；`check_active_release.py` 从已发布模板 `meta.sources[].ref` 提取名称并拒绝泄漏。
+- `workbench-shell` published 正文 portable 对齐至 2.0.1：壳形态映射 Authoring 四态闭集并拆开 Web 断点与 Desktop 用户开关，Phase 0 明确 `legacy-baseline` / structural fidelity unavailable；精确值仍只在 `tokens.yaml`。进行中的 Apply checkpoint 因 `template_version` 变化需从 Phase 0 重开。
 
 ## 2.1.0 — 2026-09-05
 

@@ -7,7 +7,7 @@ Mobile 是独立原生平台路径，不是 Web 小 viewport 的别名。它遵�
 - [TOKEN-008] 来源 Mobile 使用不同颜色表示法，但模板只保留语义映射：background/foreground、surface、brand 与状态角色均映射到当前主题 token，不在平台 prose 维护第二套精确颜色。
 - [TOKEN-009] 原生 elevation 以 surface 层级表达；嵌套表面提升一级，具体颜色、边界、radius 与 shadow 从当前 token map 读取。
 - [TOKEN-010] 原生 Sheet 与普通控件使用不同 radius 语义，但精确值只由当前 `radius` token 映射。
-- [TOKEN-011] Mobile 不直接复用 Web shell 或 Web breakpoint；跨平台只共享语义角色和稳定 rule IDs，不混用未归一的来源值。
+- [TOKEN-011] Mobile 不直接复用 Web shell、Web breakpoint，也不套用 Web expanded/collapsed/overlay 三态；跨平台只共享语义角色和稳定 rule IDs，不混用未归一的来源值。
 
 ## 布局
 

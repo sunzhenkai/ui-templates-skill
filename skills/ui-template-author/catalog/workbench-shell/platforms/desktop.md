@@ -18,7 +18,7 @@ native window（root-height / overflow hidden / app-shell）
 ## 窗口工具栏
 
 - [LAYOUT-012] WindowToolbar 高度映射 shared chrome token；window controls、drag region 与 navigation controls 保持独立 hit region。
-- [AX-070] window controls 后依次是 sidebar trigger、back/forward；button、icon 与 hover 使用当前 token scale 和 sidebar 角色。
+- [AX-070] window controls 后依次是 sidebar trigger、back/forward；button、icon 与 hover 使用当前 token scale 和 sidebar 角色。sidebar trigger 是用户/窗口开关，不是 Web `responsive.web.*` 断点触发，也不复制 Web 三态。
 - [AX-071] drag region 可拖动窗口，内部 buttons 明确排除拖动。
 - [AX-072] 外层 toolbar 已提供 sidebar trigger 时，PageHeader 不渲染第二个 trigger。
 
@@ -31,7 +31,7 @@ native window（root-height / overflow hidden / app-shell）
 
 ## 画布与导航
 
-- [LAYOUT-014] canvas inset 随 sidebar expanded/collapsed 状态变化，但值只从当前 layout/spacing token 映射。
+- [LAYOUT-014] canvas inset 随 sidebar expanded/collapsed 状态变化，但值只从当前 layout/spacing token 映射；该状态由 Desktop 用户/窗口开关驱动，与 Web 断点触发相互独立。
 - [LAYOUT-015] canvas radius、ring、shadow 和 overflow 使用当前 token map，不在平台 prose 复制值。
 - [ROUTE-014] tab、route 与 workspace switch 支持 back/forward、keyboard shortcut 和 native gesture；destination 未解析前显示结构化 loading。
 - [ROUTE-015] 跨 workspace notification/link 切换到正确 workspace，不把 destination 挂到当前 tab group。
