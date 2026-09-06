@@ -12,7 +12,7 @@
   {"id": "illegal-transition", "schema": "feedback", "base": "feedback", "set": ["status_history.1.to", "verified"], "expected_semantic": "FEEDBACK_TRANSITION_ILLEGAL"},
   {"id": "checkpoint-duplicate-phase", "schema": "checkpoint", "base": "checkpoint", "set": ["phases.1.id", 0], "expected_path": "phases.1"},
   {"id": "manifest-missing-skill", "schema": "skills-manifest", "base": "skills-manifest", "delete": "skills.ui-template-apply", "expected_path": "skills"},
-  {"id": "manifest-traversal", "schema": "skills-manifest", "base": "skills-manifest", "set": ["files.0.path", "skills/ui-template/../../outside.txt"], "expected_path": "files.0.path"},
+  {"id": "manifest-traversal", "schema": "skills-manifest", "base": "skills-manifest", "set": ["files.0.path", "skills/ui-template-author/../../outside.txt"], "expected_path": "files.0.path"},
   {"id": "manifest-manager-path", "schema": "skills-manifest", "base": "skills-manifest", "set": ["files.0.path", "skills/ui-template-manager/SKILL.md"], "expected_path": "files.0.path"},
-  {"id": "manifest-duplicate-path", "schema": "skills-manifest", "base": "skills-manifest", "set": ["files.1.path", "skills/ui-template/SKILL.md"], "expected_path": "files.1.path"}
+  {"id": "manifest-duplicate-path", "schema": "skills-manifest", "base": "skills-manifest", "set": ["files.1.path", "skills/ui-template-author/SKILL.md"], "expected_path": "files.1.path"}
 ]

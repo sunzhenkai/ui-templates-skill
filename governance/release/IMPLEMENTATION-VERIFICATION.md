@@ -11,7 +11,7 @@
 | 项目 | 验证值 |
 | --- | --- |
 | bundle | `2.0.0` |
-| `ui-template` | `2.0.0` |
+| `ui-template-author` | `2.0.0` |
 | `ui-template-apply` | `2.0.0` |
 | template schema | `2`（minimum = maximum = 2） |
 | Python | `3.13.12` |
@@ -58,8 +58,8 @@ openspec validate harden-template-lifecycle --strict
 /tmp/ui-template-governance-venv/bin/python scripts/manage_skill_distribution.py build --output-dir <output-a>
 /tmp/ui-template-governance-venv/bin/python scripts/manage_skill_distribution.py build --output-dir <output-b>
 /tmp/ui-template-governance-venv/bin/python scripts/manage_skill_distribution.py install <artifact> --target <empty-project>/.agents/skills
-<empty-project>/.agents/skills/ui-template/runtime/run_contract_evals.py --no-baseline
-<empty-project>/.agents/skills/ui-template/runtime/validate_templates.py <fixture> --index <INDEX.md> --json
+<empty-project>/.agents/skills/ui-template-author/runtime/run_contract_evals.py --no-baseline
+<empty-project>/.agents/skills/ui-template-author/runtime/validate_templates.py <fixture> --index <INDEX.md> --json
 ```
 
 结果：两个独立输出目录的 artifact bytes、SHA-256 sidecar 和 checksum 完全相同，artifact SHA-256 为 `d1a8da0a716cc406b85b585fafc3206c9bd0bdb90b1cc05c7b358b068a711d7a`；空项目安装同时得到两个 public skills，44 个 trigger/resource payload 文件验证通过；portable eval 为 declared=parsed=executed=17，portable validator exit=0。损坏 artifact checksum 与损坏 manifest 都在替换前被拒绝，已有双 skill tree digest 不变；`install_bundle(..., fail_after_skill="ui-template-apply")` 故障注入后两个 skill 均恢复原 digest。证据：[`verification/11.4-summary.json`](verification/11.4-summary.json)。

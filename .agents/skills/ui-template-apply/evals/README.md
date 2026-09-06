@@ -1,6 +1,6 @@
 # Apply Contract Evals
 
-本清单是 `ui-template-apply` 当前 revision 的 8 条机器 case；runner 只读取当前两份生产清单，不扫描历史 patches/results/experience。
+本清单是 `ui-template-apply` 当前 revision 的机器 case；runner 只读取当前两份生产清单，不扫描历史 patches/results/experience。
 
 仓库内统一入口：
 

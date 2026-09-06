@@ -8,7 +8,7 @@ cases:
     given: 在本仓库创建、导入或更新一个 UI 设计规范模板。
     expect:
       must:
-        - 执行前已读取 skills/ui-template/SKILL.md 及其引用的 references
+        - 执行前已读取 skills/ui-template-author/SKILL.md 及其引用的 references
         - 模板位于 templates/<name>/ 目录
         - templates/INDEX.md 包含对应的索引行且与实际模板一致
       must_not:
@@ -61,7 +61,7 @@ cases:
     given: 需要修改通用工作流、spec 格式或质量门禁。
     expect:
       must:
-        - 修改 skills/ui-template/ 下的对应文件
+        - 修改 skills/ui-template-author/ 下的对应文件
       must_not:
         - 只修改 .agents/skills/ui-template-manager/SKILL.md 来改变通用流程
 

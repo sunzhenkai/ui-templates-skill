@@ -8,6 +8,7 @@ metadata:
   author: openspec
   version: "1.0"
   generatedBy: "1.8.0"
+  internal: true
 ---
 
 Archive a completed change in the experimental workflow.

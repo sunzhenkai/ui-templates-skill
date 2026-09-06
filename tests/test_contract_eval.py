@@ -27,14 +27,17 @@ class ContractEvalTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         files = [
-            "skills/ui-template/SKILL.md",
-            "skills/ui-template/evals/cases.yaml",
+            "skills/ui-template-author/SKILL.md",
+            "skills/ui-template-author/evals/cases.yaml",
             "skills/ui-template-apply/SKILL.md",
             "skills/ui-template-apply/evals/cases.yaml",
             "scripts/check_template_apply_state.py",
             "scripts/contract_eval/runner.py",
+            "scripts/manage_template_index.py",
             "tests/fixtures/eval/script-contracts.yaml",
             "tests/fixtures/eval/llm-contracts.yaml",
+            "tests/fixtures/eval/loop-contracts.yaml",
+            "tests/fixtures/eval/catalog-contracts.yaml",
             "governance/eval/deterministic-baseline.json",
         ]
         files.extend(
@@ -44,7 +47,7 @@ class ContractEvalTests(unittest.TestCase):
         )
         files.extend(
             str(path.relative_to(ROOT))
-            for directory in (ROOT / "skills/ui-template/references", ROOT / "skills/ui-template-apply/references")
+            for directory in (ROOT / "skills/ui-template-author/references", ROOT / "skills/ui-template-apply/references")
             for path in directory.glob("*.md")
         )
         for relative in files:
@@ -57,7 +60,7 @@ class ContractEvalTests(unittest.TestCase):
         extra = args
         if "--cases" not in args:
             extra = (
-                "--cases", "skills/ui-template/evals/cases.yaml",
+                "--cases", "skills/ui-template-author/evals/cases.yaml",
                 "--cases", "skills/ui-template-apply/evals/cases.yaml",
                 *args,
             )
@@ -73,13 +76,17 @@ class ContractEvalTests(unittest.TestCase):
         fixture = self.root / "tests/fixtures/eval/script-contracts.yaml"
         digest = hashlib.sha256(fixture.read_bytes()).hexdigest()
         for relative in (
-            "skills/ui-template/evals/cases.yaml",
+            "skills/ui-template-author/evals/cases.yaml",
             "skills/ui-template-apply/evals/cases.yaml",
         ):
             path = self.root / relative
             text = path.read_text(encoding="utf-8")
             document = yaml.safe_load(text)
-            old_hashes = {case["fixture_sha256"] for case in document["cases"] if case["judge"] == "script"}
+            old_hashes = {
+                case["fixture_sha256"]
+                for case in document["cases"]
+                if case["judge"] == "script" and "script-contracts.yaml" in str(case.get("fixture", ""))
+            }
             self.assertEqual(1, len(old_hashes))
             path.write_text(text.replace(old_hashes.pop(), digest), encoding="utf-8")
         return digest
@@ -96,11 +103,17 @@ class ContractEvalTests(unittest.TestCase):
             "apply-requires-reference-reading", "no-apply-without-template", "no-phase-skipping",
             "browser-verification-evidence", "spec-wins-over-apply", "routing-semantics-enforced",
             "apply-token-freeze", "apply-out-of-scope-rejected",
+            "authoring-template-lifecycle-verbs", "authoring-layered-extraction",
+            "apply-no-patch-generated-web", "apply-retired-template-rejected",
+            "apply-fidelity-compare-mode", "apply-no-source-checkout",
             "fidelity-portable-structural", "fidelity-legacy-baseline", "fidelity-unknown-fail-closed",
             "fidelity-canonical-stable", "fidelity-negative-mutations", "fidelity-capture-reproducibility",
             "fidelity-example-exclusion", "apply-fidelity-projections", "apply-fidelity-facet-recovery",
-            "fidelity-chrome-incomplete", "fidelity-layout-high-without-chrome",
+            "fidelity-chrome-incomplete", "fidelity-chrome-optional-anchors",
+            "fidelity-layout-high-without-chrome",
             "fidelity-capture-no-graph", "fidelity-capture-chrome-incomplete", "apply-chrome-unavailable",
+            "authoring-catalog-zero-drift", "apply-catalog-seed-from-empty-project",
+            "apply-no-template-only-when-absent-from-catalog",
         }
         actual_ids: set[str] = set()
         judges: dict[str, int] = {"script": 0, "llm": 0}
@@ -116,10 +129,10 @@ class ContractEvalTests(unittest.TestCase):
                 actual_ids.add(case["id"])
                 judges[case["judge"]] += 1
         self.assertEqual(expected_ids, actual_ids)
-        self.assertEqual({"script": 29, "llm": 2}, judges)
+        self.assertEqual({"script": 39, "llm": 2}, judges)
         self.assertEqual(
             {
-                "skills/ui-template/evals/cases.yaml",
+                "skills/ui-template-author/evals/cases.yaml",
                 "skills/ui-template-apply/evals/cases.yaml",
             },
             set(LEGACY_CASES),
@@ -131,7 +144,7 @@ class ContractEvalTests(unittest.TestCase):
         first = run(ROOT)
         second = run(ROOT)
         self.assertEqual("passed", first["status"])
-        self.assertEqual({"declared": 31, "parsed": 31, "executed": 31, "script": 29, "llm": 2}, first["counts"])
+        self.assertEqual({"declared": 41, "parsed": 41, "executed": 41, "script": 39, "llm": 2}, first["counts"])
         self.assertEqual("matched", first["baseline"]["status"])
         self.assertEqual({"added": [], "removed": [], "changed": []}, first["baseline"]["diff"])
         self.assertEqual(first, second)
@@ -177,14 +190,14 @@ class ContractEvalTests(unittest.TestCase):
         self.assertTrue(any(item.startswith("LLM_RESULT_COUNT_MISMATCH") for item in report["failures"]))
 
     def test_parse_failure_and_global_duplicate_id_return_nonzero(self) -> None:
-        authoring = self.root / "skills/ui-template/evals/cases.yaml"
+        authoring = self.root / "skills/ui-template-author/evals/cases.yaml"
         authoring.write_text(authoring.read_text(encoding="utf-8").replace("judge: script", "judge: invalid", 1), encoding="utf-8")
         proc, report = self.cli("--no-baseline")
         self.assertNotEqual(0, proc.returncode)
         self.assertTrue(any(item.startswith("EVAL_PARSE_FAILURE") for item in report["failures"]))
         self.assertNotEqual(report["counts"]["declared"], report["counts"]["parsed"])
 
-        shutil.copy2(ROOT / "skills/ui-template/evals/cases.yaml", authoring)
+        shutil.copy2(ROOT / "skills/ui-template-author/evals/cases.yaml", authoring)
         apply_cases = self.root / "skills/ui-template-apply/evals/cases.yaml"
         apply_cases.write_text(
             apply_cases.read_text(encoding="utf-8").replace(
@@ -203,8 +216,8 @@ class ContractEvalTests(unittest.TestCase):
         self.assertNotIn("web-v2", source)
         self.assertEqual(
             {
-                "skills/ui-template/evals/cases.yaml",
-                "skills/ui-template/evals/fidelity-cases.yaml",
+                "skills/ui-template-author/evals/cases.yaml",
+                "skills/ui-template-author/evals/fidelity-cases.yaml",
                 "skills/ui-template-apply/evals/cases.yaml",
                 "skills/ui-template-apply/evals/fidelity-cases.yaml",
             },

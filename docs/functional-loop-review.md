@@ -1,5 +1,7 @@
 # ui-templates-skill 全仓功能闭环审查与优化建议
 
+> **Superseded（2026-09-05）。** 现行功能与目标以 [`governance/FUNCTIONAL-LOOP.md`](../governance/FUNCTIONAL-LOOP.md) 为准。本文是 2026-09-03 的历史审查，其中多数 P0 已落地，不得再指导实现。
+>
 > 审查日期：2026-09-03  
 > 审查对象：`ui-template`、`ui-template-apply`、模板契约与校验器、`workbench-shell`、`web-v2`/`web-v3`、OpenSpec、安装/镜像/eval/experience 治理  
 > 参考对象：本机 `ui-ux-pro-max` skill  

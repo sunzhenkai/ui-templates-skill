@@ -10,11 +10,11 @@ active_release:
   - tests/**
   - openspec/config.yaml
   - openspec/specs/**
-  - openspec/changes/harden-template-lifecycle/**
-  - skills/ui-template/SKILL.md
-  - skills/ui-template/references/**
-  - skills/ui-template/evals/**
-  - skills/ui-template/runtime/**
+  - skills/ui-template-author/SKILL.md
+  - skills/ui-template-author/references/**
+  - skills/ui-template-author/evals/**
+  - skills/ui-template-author/runtime/**
+  - skills/ui-template-author/catalog/**
   - skills/ui-template-apply/SKILL.md
   - skills/ui-template-apply/references/**
   - skills/ui-template-apply/evals/**
@@ -24,6 +24,7 @@ immutable_history:
   - skills/**/patches/**
   - skills/**/experience/**
 exclusions:
+  - example/workbench-shell/web/**
   - example/workbench-shell/web-v1/**
   - example/workbench-shell/web-v2/**
   - docs/**
@@ -33,19 +34,19 @@ checks:
   documents:
     - README.md
     - AGENTS.md
+    - governance/FUNCTIONAL-LOOP.md
     - governance/release/**
-    - skills/ui-template/SKILL.md
-    - skills/ui-template/references/**
-    - skills/ui-template/evals/**
+    - skills/ui-template-author/SKILL.md
+    - skills/ui-template-author/references/**
+    - skills/ui-template-author/evals/**
     - skills/ui-template-apply/SKILL.md
     - skills/ui-template-apply/references/**
     - skills/ui-template-apply/evals/**
     - templates/**
   production_skills:
-    - skills/ui-template
+    - skills/ui-template-author
     - skills/ui-template-apply
   mirror_target: .agents/skills
   openspec:
     base: openspec/specs
-    overlay: openspec/changes/harden-template-lifecycle/specs
-    change: harden-template-lifecycle
+    overlay: ""

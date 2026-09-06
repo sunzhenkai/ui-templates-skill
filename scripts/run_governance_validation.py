@@ -92,6 +92,14 @@ def validate(root: Path, report_dir: Path) -> dict:
         [python, "scripts/validate_templates.py", "templates", "--json"],
         cwd=root, stdout_path=report_dir / "template-validation.json", label="template validator",
     )
+    run(
+        [python, "scripts/validate_templates.py", "skills/ui-template-author/catalog", "--json"],
+        cwd=root, stdout_path=report_dir / "catalog-validation.json", label="catalog validator",
+    )
+    run(
+        [python, "scripts/manage_skill_distribution.py", "catalog", "--check"],
+        cwd=root, label="catalog drift",
+    )
     tests = run(
         [python, "-m", "unittest", "discover", "-s", "tests", "-v"],
         cwd=root, label="unit tests",

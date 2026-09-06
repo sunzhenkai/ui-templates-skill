@@ -112,11 +112,11 @@ class SchemaTests(unittest.TestCase):
 
     def test_manifest_paths_are_safe_and_unique_by_path(self) -> None:
         for bad_path in (
-            "skills/ui-template/../../outside.txt",
-            "/skills/ui-template/SKILL.md",
-            "skills\\ui-template\\SKILL.md",
+            "skills/ui-template-author/../../outside.txt",
+            "/skills/ui-template-author/SKILL.md",
+            "skills\\ui-template-author\\SKILL.md",
             "skills/ui-template-manager/SKILL.md",
-            "skills/ui-template/.internal",
+            "skills/ui-template-author/.internal",
         ):
             manifest = copy.deepcopy(self.good["skills-manifest"])
             manifest["files"][0]["path"] = bad_path

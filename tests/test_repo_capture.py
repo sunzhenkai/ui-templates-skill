@@ -160,6 +160,23 @@ class RepoCaptureTests(unittest.TestCase):
                 capture_from_files(request_path, source)
             self.assertEqual("CHROME_COMPOSITION_INCOMPLETE", raised.exception.code)
 
+    def test_shell_without_optional_anchor_facts_completes(self) -> None:
+        def drop_optional_anchors(graph):
+            usage = next(item for item in graph["usages"] if item["id"] == "usage.shell")
+            usage["facts"] = [
+                item for item in usage["facts"] if item.get("property") != "anchor_role"
+            ]
+
+        with tempfile.TemporaryDirectory() as temp:
+            source, request_path, _ = self.materialize(temp, drop_optional_anchors)
+            receipt = capture_from_files(request_path, source)
+            self.assertEqual("captured", receipt["status"])
+            self.assertEqual([], receipt["unresolved"])
+            shell_facts = [item for item in receipt["facts"] if item.get("subject") == "shell"]
+            self.assertFalse(any(item.get("property") == "anchor_role" for item in shell_facts))
+            self.assertTrue(any(item.get("property") == "shell_variant" for item in shell_facts))
+            self.assertTrue(any(item.get("property") == "slot_role" for item in shell_facts))
+
     def test_missing_graph_stays_unsupported_or_missing(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             source, request_path, _ = self.materialize(temp)
@@ -310,11 +327,11 @@ class RepoCaptureTests(unittest.TestCase):
             self.assertEqual("用户明确只提取视觉语言", receipt["style_only_reason"])
 
     def test_authoring_references_publish_authority_subset_and_report_contract(self) -> None:
-        skill = (ROOT / "skills/ui-template/SKILL.md").read_text(encoding="utf-8")
-        source = (ROOT / "skills/ui-template/references/source-repo.md").read_text(encoding="utf-8")
-        format_text = (ROOT / "skills/ui-template/references/spec-format.md").read_text(encoding="utf-8")
-        report = (ROOT / "skills/ui-template/references/authoring-report.md").read_text(encoding="utf-8")
-        capture_format = (ROOT / "skills/ui-template/references/repo-capture-format.md").read_text(encoding="utf-8")
+        skill = (ROOT / "skills/ui-template-author/SKILL.md").read_text(encoding="utf-8")
+        source = (ROOT / "skills/ui-template-author/references/source-repo.md").read_text(encoding="utf-8")
+        format_text = (ROOT / "skills/ui-template-author/references/spec-format.md").read_text(encoding="utf-8")
+        report = (ROOT / "skills/ui-template-author/references/authoring-report.md").read_text(encoding="utf-8")
+        capture_format = (ROOT / "skills/ui-template-author/references/repo-capture-format.md").read_text(encoding="utf-8")
         for required in ("layout_scenes", "component_geometry", "state_presentations", "Non-Goals", "legacy-baseline"):
             self.assertIn(required, format_text)
         for required in ("literal source graph", "不执行来源代码", "regex", "3–5 个代表组件", "limit-exceeded", "negative"):
@@ -328,17 +345,18 @@ class RepoCaptureTests(unittest.TestCase):
 
     def test_production_runtime_is_synchronized_without_mirror_write(self) -> None:
         pairs = (
-            ("scripts/template_authoring/__init__.py", "skills/ui-template/runtime/template_authoring/__init__.py"),
-            ("scripts/template_authoring/chrome.py", "skills/ui-template/runtime/template_authoring/chrome.py"),
-            ("scripts/template_authoring/capture.py", "skills/ui-template/runtime/template_authoring/capture.py"),
-            ("scripts/template_authoring/profile.py", "skills/ui-template/runtime/template_authoring/profile.py"),
-            ("scripts/template_authoring/gate.py", "skills/ui-template/runtime/template_authoring/gate.py"),
-            ("scripts/capture_repo_fidelity.py", "skills/ui-template/runtime/capture_repo_fidelity.py"),
-            ("scripts/run_authoring_gate.py", "skills/ui-template/runtime/run_authoring_gate.py"),
-            ("scripts/template_validation/fidelity.py", "skills/ui-template/runtime/template_validation/fidelity.py"),
-            ("scripts/template_validation/validator.py", "skills/ui-template/runtime/template_validation/validator.py"),
-            ("scripts/template_apply_state/fidelity.py", "skills/ui-template/runtime/template_apply_state/fidelity.py"),
-            ("scripts/contract_eval/runner.py", "skills/ui-template/runtime/contract_eval/runner.py"),
+            ("scripts/template_authoring/__init__.py", "skills/ui-template-author/runtime/template_authoring/__init__.py"),
+            ("scripts/template_authoring/chrome.py", "skills/ui-template-author/runtime/template_authoring/chrome.py"),
+            ("scripts/template_authoring/capture.py", "skills/ui-template-author/runtime/template_authoring/capture.py"),
+            ("scripts/template_authoring/profile.py", "skills/ui-template-author/runtime/template_authoring/profile.py"),
+            ("scripts/template_authoring/gate.py", "skills/ui-template-author/runtime/template_authoring/gate.py"),
+            ("scripts/capture_repo_fidelity.py", "skills/ui-template-author/runtime/capture_repo_fidelity.py"),
+            ("scripts/run_authoring_gate.py", "skills/ui-template-author/runtime/run_authoring_gate.py"),
+            ("scripts/template_validation/fidelity.py", "skills/ui-template-author/runtime/template_validation/fidelity.py"),
+            ("scripts/template_validation/validator.py", "skills/ui-template-author/runtime/template_validation/validator.py"),
+            ("scripts/template_apply_state/fidelity.py", "skills/ui-template-author/runtime/template_apply_state/fidelity.py"),
+            ("scripts/contract_eval/runner.py", "skills/ui-template-author/runtime/contract_eval/runner.py"),
+            ("scripts/manage_template_index.py", "skills/ui-template-author/runtime/manage_template_index.py"),
         )
         for source, runtime in pairs:
             with self.subTest(source=source):

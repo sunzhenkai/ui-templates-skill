@@ -30,6 +30,12 @@ POSITIVE_IMPLEMENTATION = re.compile(
     r"`implementation/`\s*(?:playbook|目录|adapter|适配))",
     re.IGNORECASE,
 )
+SOURCE_HOST_REF = re.compile(
+    r"https?://(?:www\.)?(?:github\.com|gitlab\.com)/([^/\s#]+)(?:/([^/\s@#]+))?",
+    re.IGNORECASE,
+)
+GENERIC_SOURCE_SLUGS = frozenset({"github", "gitlab", "users", "org", "repo", "source", "docs", "www"})
+SOURCE_PRODUCT_NAME_ALLOWLIST = frozenset({"AGENTS.md"})
 
 
 @dataclass(frozen=True)
@@ -243,17 +249,66 @@ def effective_openspec(
     return effective, pending, findings, read_paths
 
 
+def source_product_terms_from_ref(ref: str) -> set[str]:
+    terms: set[str] = set()
+    for match in SOURCE_HOST_REF.finditer(ref or ""):
+        for part in match.groups():
+            if not part:
+                continue
+            slug = part.strip().casefold()
+            if len(slug) < 4 or slug in GENERIC_SOURCE_SLUGS:
+                continue
+            terms.add(slug)
+    return terms
+
+
+def collect_source_product_terms(root: Path, paths: set[str]) -> set[str]:
+    terms: set[str] = set()
+    for relative in paths:
+        parts = PurePosixPath(relative).parts
+        if len(parts) != 3 or parts[0] != "templates" or parts[2] != "meta.yaml":
+            continue
+        try:
+            data = load_yaml(root / relative)
+        except (OSError, UnicodeError, ValueError, yaml.YAMLError):
+            continue
+        sources = data.get("sources") if isinstance(data, dict) else None
+        if not isinstance(sources, list):
+            continue
+        for source in sources:
+            if isinstance(source, dict):
+                terms.update(source_product_terms_from_ref(str(source.get("ref") or "")))
+    return terms
+
+
+def check_source_product_names(path: str, text: str, terms: set[str]) -> list[Finding]:
+    if path in SOURCE_PRODUCT_NAME_ALLOWLIST or not terms:
+        return []
+    findings: list[Finding] = []
+    for term in sorted(terms):
+        pattern = re.compile(rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])", re.IGNORECASE)
+        if pattern.search(text):
+            findings.append(Finding(
+                "SOURCE_PRODUCT_NAME_LEAK",
+                path,
+                f"source product name {term!r} belongs in meta.sources[] / AGENTS.md provenance only",
+            ))
+    return findings
+
+
 def check_document_contract(path: str, text: str) -> list[Finding]:
     requirements: dict[str, tuple[str, ...]] = {
         "README.md": (
-            "ui-template", "ui-template-apply", "2.0.0", "schema v2", "apply/",
+            "ui-template-author", "ui-template-apply", "2.1.0", "schema v2", "apply/",
+            "npx skills", "-s ui-template-author", "-s ui-template-apply",
             "make validate", "make eval", "migrate_template.py", "ROLLBACK.md",
         ),
         "AGENTS.md": (
-            "ui-template", "ui-template-apply", "schema v2", "apply/", "schemas/template/v2/",
+            "ui-template-author", "ui-template-apply", "schema v2", "apply/", "schemas/template/v2/",
             "harden-template-lifecycle", "make validate", "openspec validate --all --strict",
             "879d0de9166261c26ec35b69f5cec9382191eda1",
             "0aedb680ecdf61aa8eafdb5d80e6b58edba63df5",
+            "不得把来源产品写成对齐目标",
         ),
     }
     findings: list[Finding] = []
@@ -275,17 +330,17 @@ def check_versions(root: Path) -> list[Finding]:
         compatibility = load_yaml(root / "governance/release/compatibility.yaml")
         declared = {
             "distribution.bundle": str(distribution.get("bundle", {}).get("version", "")),
-            "distribution.ui-template": str(distribution.get("public_skills", {}).get("ui-template", {}).get("version", "")),
+            "distribution.ui-template-author": str(distribution.get("public_skills", {}).get("ui-template-author", {}).get("version", "")),
             "distribution.ui-template-apply": str(distribution.get("public_skills", {}).get("ui-template-apply", {}).get("version", "")),
             "compatibility.bundle": str(compatibility.get("bundle_version", "")),
-            "compatibility.ui-template": str(compatibility.get("public_skills", {}).get("ui-template", "")),
+            "compatibility.ui-template-author": str(compatibility.get("public_skills", {}).get("ui-template-author", "")),
             "compatibility.ui-template-apply": str(compatibility.get("public_skills", {}).get("ui-template-apply", "")),
         }
         for label, actual in declared.items():
             if actual != version:
                 findings.append(Finding("RELEASE_VERSION_MISMATCH", label, f"expected {version}, got {actual}"))
         public = set(distribution.get("public_skills", {}))
-        if public != {"ui-template", "ui-template-apply"}:
+        if public != {"ui-template-author", "ui-template-apply"}:
             findings.append(Finding("PUBLIC_SKILL_SET_INVALID", "governance/release/distribution-v1.yaml", str(sorted(public))))
         schema_range = distribution.get("bundle", {}).get("template_schema", {})
         if schema_range != {"minimum": 2, "maximum": 2}:
@@ -322,14 +377,27 @@ def check_repository(root: Path, scope_path: Path) -> dict:
     checks = config.get("checks", {})
     document_paths = expand(checks.get("documents", []), paths) - domains["exclusions"] - domains["immutable_history"]
     openspec = checks.get("openspec", {})
-    effective, pending, openspec_findings, openspec_reads = effective_openspec(
-        root, str(openspec.get("base", "openspec/specs")),
-        str(openspec.get("overlay", "")), paths - domains["exclusions"],
-    )
+    overlay_root = str(openspec.get("overlay", "")).strip()
+    if overlay_root:
+        effective, pending, openspec_findings, openspec_reads = effective_openspec(
+            root, str(openspec.get("base", "openspec/specs")),
+            overlay_root, paths - domains["exclusions"],
+        )
+    else:
+        # 归档后的稳定态：没有 active change delta，effective contract 就是 base specs。
+        effective, pending, openspec_findings, openspec_reads = {}, [], [], set()
     del effective
     findings.extend(openspec_findings)
     read_paths.update(openspec_reads)
     document_paths.update(openspec_reads)
+    source_terms = collect_source_product_terms(root, paths)
+    leak_paths = {
+        relative
+        for relative in (domains["active_release"] | document_paths)
+        if relative.endswith(".md")
+        and relative not in domains["exclusions"]
+        and relative not in domains["immutable_history"]
+    }
 
     for relative in sorted(document_paths):
         if not relative.endswith(".md"):
@@ -341,9 +409,19 @@ def check_repository(root: Path, scope_path: Path) -> dict:
             findings.append(Finding("ACTIVE_DOCUMENT_UNREADABLE", relative, str(exc)))
             continue
         findings.extend(check_markdown_links(root, relative, text, paths, domains["exclusions"]))
+        findings.extend(check_source_product_names(relative, text, source_terms))
         if relative not in openspec_reads:
             findings.extend(check_active_semantics(relative, text))
             findings.extend(check_document_contract(relative, text))
+
+    for relative in sorted(leak_paths - read_paths):
+        try:
+            text = _safe_text(root, relative)
+            read_paths.add(relative)
+        except (OSError, UnicodeError) as exc:
+            findings.append(Finding("ACTIVE_DOCUMENT_UNREADABLE", relative, str(exc)))
+            continue
+        findings.extend(check_source_product_names(relative, text, source_terms))
 
     for relative in sorted(domains["active_release"]):
         if "/implementation/" in f"/{relative}/" or relative.endswith("/implementation"):

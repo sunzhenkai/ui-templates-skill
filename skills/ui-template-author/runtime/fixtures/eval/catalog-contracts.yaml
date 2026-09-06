@@ -1,0 +1,37 @@
+schema_version: 1
+cases:
+  authoring-catalog-zero-drift:
+    assertions:
+      - type: python_call
+        operation: catalog_zero_drift
+        json_path_equals:
+          - path: [matched]
+            value: true
+          - path: [drift_detected]
+            value: true
+  apply-catalog-seed-from-empty-project:
+    assertions:
+      - type: python_call
+        operation: catalog_seed_contracts
+        json_path_equals:
+          - path: [empty_seeded]
+            value: true
+          - path: [second_seed_skipped]
+            value: true
+          - path: [existing_not_overwritten]
+            value: true
+          - path: [retired_blocked]
+            value: true
+  apply-no-template-only-when-absent-from-catalog:
+    assertions:
+      - type: python_call
+        operation: catalog_seed_contracts
+        json_path_equals:
+          - path: [missing_handoff]
+            value: true
+      - type: file_contains
+        path: skills/ui-template-apply/SKILL.md
+        all:
+          - 移交 Authoring
+          - catalog
+        none: []

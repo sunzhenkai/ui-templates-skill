@@ -66,3 +66,7 @@ lerna-debug.log*
 .tsbuildinfo
 *.tsbuildinfo
 .kiro
+
+/*.png
+
+.ui-template-apply

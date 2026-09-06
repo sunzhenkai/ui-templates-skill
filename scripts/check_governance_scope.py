@@ -96,7 +96,16 @@ def git_changed_path_names() -> list[str]:
 
 def guard_example_paths(paths: list[str] | None = None) -> list[str]:
     names = paths if paths is not None else git_changed_path_names()
-    hits = sorted({name for name in names if path_has_example_prefix(name)})
+    # example/workbench-shell/web 是本任务的正常跟踪交付物（同 prompts/）；
+    # 冻结排除样例（web-v2/web-v3/docs 等）仍然拒绝任何变更。
+    allowed_prefixes = ("example/workbench-shell/web/",)
+    hits = sorted(
+        {
+            name
+            for name in names
+            if path_has_example_prefix(name) and not name.startswith(allowed_prefixes)
+        }
+    )
     return [f"EXAMPLE_PATH_IN_SCOPE: {name}" for name in hits]
 
 
@@ -104,10 +113,25 @@ def guard_web_v2() -> list[str]:
     baseline = load(BASELINE)
     path = str(baseline["path"])
     errors: list[str] = []
-    actual_tree = git("rev-parse", f"HEAD:{path}")
+    tree_probe = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", f"HEAD:{path}"],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    if tree_probe.returncode != 0:
+        # 排除样例已从 HEAD 删除：治理要求它保持不存在且工作区无残留文件。
+        if baseline.get("head_tree") not in (None, ""):
+            errors.append(f"WEB_V2_BASELINE_STALE: path {path} absent from HEAD but baseline pins head_tree; re-record baseline")
+        present = {p for p in tracked_and_present_paths() if p == path or p.startswith(path + "/")}
+        if present:
+            errors.append("WEB_V2_WORKTREE_CHANGED:\n" + "\n".join(sorted(present)))
+        return errors
+    actual_tree = tree_probe.stdout.strip()
     if actual_tree != baseline["head_tree"]:
         errors.append(f"WEB_V2_BASELINE_MISMATCH: expected {baseline['head_tree']}, got {actual_tree}")
-    changed = git("status", "--porcelain", "--untracked-files=all", "--", path)
+    changed = subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=all", "--", path],
+        cwd=ROOT, check=True, text=True, capture_output=True,
+    ).stdout
     if changed:
         errors.append("WEB_V2_WORKTREE_CHANGED:\n" + changed)
     return errors
