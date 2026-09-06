@@ -27,7 +27,7 @@
       "status": "passed"
     },
     "apply-greenfield-architecture-gate": {
-      "fixture_sha256": "982d788bb4aae2ec71c3623f368772395bd7b3644f5fae724fef75e077953d0b",
+      "fixture_sha256": "9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2",
       "status": "passed"
     },
     "apply-no-template-only-when-absent-from-catalog": {
@@ -35,7 +35,7 @@
       "status": "passed"
     },
     "apply-session-closed-delete-hint": {
-      "fixture_sha256": "982d788bb4aae2ec71c3623f368772395bd7b3644f5fae724fef75e077953d0b",
+      "fixture_sha256": "9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2",
       "status": "passed"
     },
     "apply-no-patch-generated-web": {

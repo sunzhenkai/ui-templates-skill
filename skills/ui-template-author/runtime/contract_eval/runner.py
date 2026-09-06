@@ -580,6 +580,7 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
         greenfield = {
             "schema_version": 2,
             "site": "greenfield",
+            "output_root": ".",
             "confirmed_by_user": True,
             "build_identity": "build:eval",
             "layers": layers,
@@ -588,6 +589,7 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
         existing_arch = {
             "schema_version": 2,
             "site": "existing",
+            "output_root": ".",
             "confirmed_by_user": True,
             "observed_stack": "package.json + vue",
             "layers": layers,
@@ -606,7 +608,9 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             (site_root / "package.json").write_text("{}\n", encoding="utf-8")
             existing_site = detect_architecture_site(site_root)
             explicit_site = detect_architecture_site(site_root, explicit_greenfield=True)
-            apply_root = Path(temp) / "apply"
+            consumer = Path(temp) / "consumer"
+            consumer.mkdir()
+            apply_root = consumer / ".ui-template-apply"
             apply_root.mkdir()
             (apply_root / "00-architecture.yaml").write_text(
                 yaml.safe_dump(unconfirmed, allow_unicode=True, sort_keys=False),
@@ -617,12 +621,42 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                 {phase: {"status": "complete"} for phase in range(10)},
                 resource_path(root, "schemas/template/v2"),
             )
+            mono = Path(temp) / "mono"
+            (mono / "apps" / "legacy").mkdir(parents=True)
+            (mono / "package.json").write_text("{}\n", encoding="utf-8")
+            (mono / "apps" / "legacy" / "package.json").write_text("{}\n", encoding="utf-8")
+            (mono / "apps" / "legacy" / "main.ts").write_text("export {}\n", encoding="utf-8")
+            nested = mono / "apps" / "agent-web"
+            nested.mkdir(parents=True)
+            (nested / "src").mkdir()
+            nested_empty = detect_architecture_site(nested)
+            nested_missing = detect_architecture_site(mono / "apps" / "new-web")
+            parent_existing = detect_architecture_site(mono)
+            mono_apply = mono / ".ui-template-apply"
+            mono_apply.mkdir()
+            (mono_apply / "00-architecture.yaml").write_text(
+                yaml.safe_dump(
+                    {**existing_arch, "output_root": "apps/agent-web"},
+                    allow_unicode=True,
+                    sort_keys=False,
+                ),
+                encoding="utf-8",
+            )
+            mismatched = _architecture_findings(
+                mono_apply,
+                {0: {"status": "pending"}},
+                resource_path(root, "schemas/template/v2"),
+            )
         return {
             "empty_greenfield": empty_site == "greenfield",
             "placeholder_greenfield": placeholder_site == "greenfield",
             "ledger_ignored": ledger_site == "greenfield",
             "package_json_existing": existing_site == "existing",
             "explicit_keeps_named_greenfield": explicit_site == "greenfield",
+            "nested_empty_greenfield": nested_empty == "greenfield",
+            "nested_missing_greenfield": nested_missing == "greenfield",
+            "repo_root_existing": parent_existing == "existing",
+            "nested_site_mismatch": any(item.code == "ARCHITECTURE_SITE_MISMATCH" for item in mismatched),
             "named_stack_preserved": layers["ui_framework"] == "vue",
             "architecture_schema_ok": not store.errors("architecture", greenfield),
             "unconfirmed_schema_ok": not store.errors("architecture", unconfirmed),

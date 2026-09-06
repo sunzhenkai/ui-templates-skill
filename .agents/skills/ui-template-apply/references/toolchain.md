@@ -14,7 +14,7 @@
 
 ## Phase 0 架构选型 gate
 
-greenfield 没有官方默认栈。先向用户给出闭集层候选并等待确认：language/runtime、UI framework（可为 none）、bundler/dev、routing、styling、client/server state、data access、unit/browser verification、package manager、repo shape。用户点名某层后只能记录该层，不得替换成另一套默认。未确认前不得调用任何 create/scaffold/install 命令，也不得写依赖清单或应用源码；`project-init` 仅在用户明确要脚手架且所选栈落在其 reference 时作为确认后的可选执行器。existing 项目只记录 `observed_stack`，不进入选型访谈。
+greenfield 没有官方默认栈。判定只看本次输出根：仓库已初始化但输出根是新应用时仍要选型。先向用户给出闭集层候选并等待确认：language/runtime、UI framework（可为 none）、bundler/dev、routing、styling、client/server state、data access、unit/browser verification、package manager、repo shape。用户点名某层后只能记录该层，不得替换成另一套默认。兄弟应用、workspace 约定或功能规格里的技术提及只可作为候选，不得写成 `confirmed_by_user`。未确认前不得调用任何 create/scaffold/install 命令，也不得写依赖清单或应用源码；`project-init` 仅在用户明确要脚手架且所选栈落在其 reference 时作为确认后的可选执行器。existing 只在该输出根已有依赖清单或实质源码时成立，只记录 `observed_stack`，不进入选型访谈。
 
 ## `ui-ux-pro-max` Query Contract
 

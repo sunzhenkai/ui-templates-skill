@@ -4,7 +4,7 @@
   "title": "Template Apply Phase 0 architecture freeze v2",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "site", "layers", "confirmed_by_user"],
+  "required": ["schema_version", "site", "output_root", "layers", "confirmed_by_user"],
   "allOf": [
     {
       "if": {"properties": {"site": {"const": "greenfield"}}, "required": ["site"]},
@@ -18,6 +18,12 @@
   "properties": {
     "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
     "site": {"enum": ["greenfield", "existing"]},
+    "output_root": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?:\\.|[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*)$"
+    },
+    "observed_constraints": {"type": "string", "minLength": 1},
     "confirmed_by_user": {"type": "boolean"},
     "init_command": {"type": "string", "minLength": 1},
     "build_identity": {"type": "string", "minLength": 1},

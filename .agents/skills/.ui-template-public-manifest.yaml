@@ -60,15 +60,15 @@ skills:
     - path: runtime/capture_repo_fidelity.py
       sha256: 5a5624800e37cf2c611c96267f98d72f8b7ba1479361a51a7e6f506ca8807f8a
     - path: runtime/check_template_apply_state.py
-      sha256: 60393cd64af4f542130cbaa042e040a8636ac8bcea61d78e26c66e59afb66713
+      sha256: 28d3ff946624fcda9081aa21425da0f519751b8285eb46d6dba47ad0af2abd56
     - path: runtime/contract_eval/__init__.py
       sha256: 1c9acef6e515e28bb56b78987a817cfaf6bf885ac7e59f9b8dfbe65ee865f17c
     - path: runtime/contract_eval/runner.py
-      sha256: 3e07c6aff92fa266eafbdd19e8f2c233d0ebe8e02eec9688cdd70e07ecd4df26
+      sha256: 3b17f9e588a0b35eaa8e25cf6b6c0d29dc410b8a1de02837027cd6cd7ac6b34d
     - path: runtime/deterministic-baseline.json
-      sha256: 32b43071f8026df1c37c9fa5c67b494193032297bd8c0b1e37fa6b184a506539
+      sha256: e5ed6f0ab698ad1824f050e3e654b68eb60be6d976e431fbb1d07135a9b08798
     - path: runtime/fixtures/eval/apply-hygiene-contracts.yaml
-      sha256: 982d788bb4aae2ec71c3623f368772395bd7b3644f5fae724fef75e077953d0b
+      sha256: 9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2
     - path: runtime/fixtures/eval/catalog-contracts.yaml
       sha256: 1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c
     - path: runtime/fixtures/eval/fidelity-contracts.yaml
@@ -120,7 +120,7 @@ skills:
     - path: runtime/schemas/template/fidelity/v1/fidelity.schema.json
       sha256: 59f0f11703caa3f78b3f40f28ed5b314daffb837b9dcd0310783ccd7396cc92b
     - path: runtime/schemas/template/v2/architecture.schema.json
-      sha256: bbd7dc5b892d429a5534e9dd2a9dfd97b28e7038922dce6289a2c5b8d0f85cf0
+      sha256: fce4085d7270784c9e98d922abc7057f021d7bb4be7e6c53fa93f4b87d246f46
     - path: runtime/schemas/template/v2/checkpoint.schema.json
       sha256: 5031ebd350ec193f9eee52b5d02e2dc6697bef9b9b4021ea6df496ae57e35284
     - path: runtime/schemas/template/v2/common.schema.json
@@ -138,11 +138,11 @@ skills:
     - path: runtime/schemas/template/v2/verification.schema.json
       sha256: 84d439d457c182163d8e7f8783ebf5c8dabedeb28cdc3ecf0113dcdd0a6cdcc1
     - path: runtime/template_apply_state/__init__.py
-      sha256: 84fb1cb91a53b0aaa035c031f4bcb538d0459ddb670046db3ce105187b7ddb8e
+      sha256: 3aca7f22f1560e76ff8fb15cbde52ce028d439c2657bb7e0dd1d9398ffdc29d7
     - path: runtime/template_apply_state/fidelity.py
       sha256: d362f16d7e4c1976b2f993154ba337b5241275580722dc0c86d514facd9a6578
     - path: runtime/template_apply_state/state.py
-      sha256: f2a0e02e7116f625439da84e79034b509a5f8f3543bb05aa59595c0aaf451dce
+      sha256: 4f7187b50152b0170e2f91695c056b7aae2acc7af59fa2d7f5f3b7a81605c456
     - path: runtime/template_authoring/__init__.py
       sha256: 2fe572af74497e93f8014b3b279892f0be39965a50a86dd84304b32ef546960a
     - path: runtime/template_authoring/capture.py
@@ -175,15 +175,15 @@ skills:
     version: 2.2.0
     files:
     - path: SKILL.md
-      sha256: 9fdc999caaf0054b9d755d2eee31f0ead22c01e3e918980820558cc8da967502
+      sha256: 260a08247522a76c02b1c6fa61e93ef4f299f7678145e93916dc7ce173898af2
     - path: evals/README.md
       sha256: e9393ec7cd315c80558f89e5d43a0bc48a41b0856cfecdc7e11a27e89a1025a1
     - path: evals/cases.yaml
-      sha256: dc8c65b0202eedacbc8ef2ddce22ee9337c143f96f5bc4f34cefcdc59d4b54a3
+      sha256: 9d870642d9e52b8f695642b75532100ab1f24e4670cf6a61a01abf659db6f1d1
     - path: evals/fidelity-cases.yaml
       sha256: 473a6b71893f4c69016007b4a7b13e4bca3d0de042381210263014ecae45362e
     - path: references/apply-workflow.md
-      sha256: 797a8f767719cafdcf58ed30ba65f05208c5aa8788b32dda2b25e2096fcd6088
+      sha256: e89e6e13d222dc8a0a548a8c5a0a392067b6a8d097c8b8ccda527df5c4f67c21
     - path: references/fidelity-compare.md
       sha256: e48dd488a81fdaafa5b82c6d6c433f7714ea5ec105bf97fc138a21cae05012dc
     - path: references/quality-gates.md
@@ -191,4 +191,4 @@ skills:
     - path: references/template-contract.md
       sha256: 7eef094c346375de2fcf1bec994f7a30343e056898f0862719e5b51012ba102c
     - path: references/toolchain.md
-      sha256: 07637881ef52bde154d423c08ec8692c691d11f1845004b333e6645791754fa0
+      sha256: ef36900655f88cbda60e7d3779150517232836df91e67bdee76c3511502149dc

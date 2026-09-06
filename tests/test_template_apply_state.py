@@ -94,6 +94,7 @@ class ApplyStateTests(unittest.TestCase):
                     path.write_text(yaml.safe_dump({
                         "schema_version": 2,
                         "site": "greenfield",
+                        "output_root": ".",
                         "confirmed_by_user": True,
                         "build_identity": self.build,
                         "layers": layers,
@@ -486,9 +487,40 @@ class ApplyStateTests(unittest.TestCase):
             (root / ".gitignore").write_text(".ui-template-apply/\n", encoding="utf-8")
             self.assertEqual("greenfield", detect_architecture_site(root))
             (root / "src").mkdir()
+            self.assertEqual("greenfield", detect_architecture_site(root))
             (root / "src/main.ts").write_text("export {}\n", encoding="utf-8")
             self.assertEqual("existing", detect_architecture_site(root))
             self.assertEqual("greenfield", detect_architecture_site(root, explicit_greenfield=True))
+
+    def test_architecture_site_uses_output_root_not_repo_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            repo = Path(temp)
+            (repo / "apps" / "legacy").mkdir(parents=True)
+            (repo / "package.json").write_text("{}\n", encoding="utf-8")
+            (repo / "apps" / "legacy" / "main.ts").write_text("export {}\n", encoding="utf-8")
+            app = repo / "apps" / "agent-web"
+            app.mkdir(parents=True)
+            (app / "src").mkdir()
+            self.assertEqual("existing", detect_architecture_site(repo))
+            self.assertEqual("greenfield", detect_architecture_site(app))
+            self.assertEqual("greenfield", detect_architecture_site(repo / "apps" / "missing"))
+            apply_root = repo / ".ui-template-apply"
+            apply_root.mkdir()
+            layers = {name: "pending" for name in (
+                "language", "ui_framework", "bundler", "routing", "styling", "state",
+                "data", "unit_test", "browser", "package_manager", "repo_shape",
+            )}
+            (apply_root / "00-architecture.yaml").write_text(yaml.safe_dump({
+                "schema_version": 2,
+                "site": "existing",
+                "output_root": "apps/agent-web",
+                "confirmed_by_user": True,
+                "observed_stack": "repo package.json",
+                "layers": layers,
+            }, allow_unicode=True, sort_keys=False), encoding="utf-8")
+            from scripts.template_apply_state.state import _architecture_findings
+            findings = _architecture_findings(apply_root, {0: {"status": "pending"}}, None)
+            self.assertIn("ARCHITECTURE_SITE_MISMATCH", {item.code for item in findings})
 
     def test_phase0_architecture_is_required_and_confirmation_blocks_later_phases(self) -> None:
         self.assertEqual([], self.validate())

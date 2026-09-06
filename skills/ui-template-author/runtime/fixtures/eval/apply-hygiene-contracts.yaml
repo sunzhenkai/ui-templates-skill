@@ -25,12 +25,21 @@ cases:
             value: true
           - path: [unconfirmed_blocks_complete]
             value: true
+          - path: [nested_empty_greenfield]
+            value: true
+          - path: [nested_missing_greenfield]
+            value: true
+          - path: [repo_root_existing]
+            value: true
+          - path: [nested_site_mismatch]
+            value: true
       - type: json_schema_validity
         schema: schemas/template/v2/architecture.schema.json
         valid: true
         instance:
           schema_version: 2
           site: greenfield
+          output_root: .
           confirmed_by_user: true
           build_identity: build:eval
           layers:
@@ -51,6 +60,8 @@ cases:
           - 未确认不得写应用源码
           - 已有工程只记录观察到的栈
           - 禁止静默换栈
+          - 仓库已初始化但输出根仍是新应用
+          - 功能规格里的技术提及
         none:
           - 默认 React
       - type: file_contains
@@ -59,6 +70,8 @@ cases:
           - 不得写依赖清单
           - 不得把任何栈写成 Apply 默认
           - 只记录观察到的栈
+          - architecture-site <output-root>
+          - 仓库已初始化但输出根仍是新应用
   apply-session-closed-delete-hint:
     assertions:
       - type: python_call

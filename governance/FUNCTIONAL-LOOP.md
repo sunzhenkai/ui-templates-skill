@@ -70,7 +70,7 @@ L0–L6 只是变更集合标签。Intake 必须冻结**本次改哪些路径/�
 
 - 输入：`published` 模板 + 用户需求。
 - Intake：项目 `published` 优先；缺行时只读 Author catalog 并在 `.ui-template-apply/` pin identity；不为消费创建项目 `templates/`。
-- greenfield：先确认闭集技术架构；未确认不得写应用源码/依赖/工程配置。existing 只记录 observed stack。
+- greenfield：判定只看本次前端输出根。仓库已初始化但输出根仍是新应用时仍要先确认闭集技术架构；未确认不得写应用源码/依赖/工程配置。兄弟应用或功能规格不得自动确认。existing 只在该输出根已有栈时记录 observed stack。
 - 禁止：原版 checkout、历史生成物。
 - 完成：Phase 8/9 对**模板 expected** 通过。
 - 收尾：Phase 9 通过且无 proposed feedback 才 closed；提示可删 `.ui-template-apply/`，未领养则本仓不应有 `templates/`，但绝不自动删除。

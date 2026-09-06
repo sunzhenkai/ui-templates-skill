@@ -173,20 +173,34 @@ def source_identity(root: Path) -> str:
     return f"git:{commit}:dirty:{canonical_digest(payload)['value']}"
 
 
+def resolve_architecture_output_root(apply_root: Path, output_root: str) -> Path | None:
+    """把 architecture.output_root 解析到消费项目根下；拒绝绝对路径与越界。"""
+    raw = output_root.strip()
+    if not raw or raw.startswith("/") or ".." in Path(raw).parts:
+        return None
+    project_root = apply_root.resolve().parent
+    target = project_root if raw in {".", "./"} else (project_root / raw)
+    try:
+        resolved = target.resolve()
+        resolved.relative_to(project_root)
+    except ValueError:
+        return None
+    return resolved
+
+
 def detect_architecture_site(root: Path, *, explicit_greenfield: bool = False) -> str:
-    """判定输出根是 greenfield 还是 existing；会话账本不参与判定。"""
+    """判定输出根是 greenfield 还是 existing；仓库根与会话账本不参与判定。"""
     if explicit_greenfield or not root.exists():
         return "greenfield"
     for path in root.rglob("*"):
         relative = path.relative_to(root)
         if relative.parts and relative.parts[0] in {".git", ".ui-template-apply"}:
             continue
-        if path.is_file():
-            if path.name in DEPENDENCY_MANIFESTS or path.suffix.lower() in SOURCE_SUFFIXES:
-                return "existing"
-            if path.name not in GREENFIELD_PLACEHOLDER_NAMES:
-                return "existing"
-        else:
+        if not path.is_file():
+            continue
+        if path.name in DEPENDENCY_MANIFESTS or path.suffix.lower() in SOURCE_SUFFIXES:
+            return "existing"
+        if path.name not in GREENFIELD_PLACEHOLDER_NAMES:
             return "existing"
     return "greenfield"
 
@@ -342,15 +356,37 @@ def _architecture_findings(
     except ApplyStateError as exc:
         return [Finding("ARCHITECTURE_INVALID", "00-architecture.yaml", str(exc), 0)]
     findings = _schema_findings("architecture", data, "00-architecture.yaml", schema_dir, 0)
-    if isinstance(data, dict) and data.get("site") == "greenfield" and not data.get("confirmed_by_user"):
-        for phase_id, phase in sorted(phases.items()):
-            if phase.get("status") == "complete":
+    if isinstance(data, dict):
+        raw_output = data.get("output_root")
+        if isinstance(raw_output, str):
+            target = resolve_architecture_output_root(apply_root, raw_output)
+            if target is None:
                 findings.append(Finding(
-                    "ARCHITECTURE_UNCONFIRMED",
-                    "00-architecture.yaml#confirmed_by_user",
-                    f"greenfield 未确认不得将 Phase {phase_id} 标为 complete",
-                    phase_id,
+                    "ARCHITECTURE_OUTPUT_ROOT_INVALID",
+                    "00-architecture.yaml#output_root",
+                    "output_root 必须是消费项目根下的相对路径",
+                    0,
+                    {"output_root": raw_output},
                 ))
+            else:
+                detected = detect_architecture_site(target)
+                if data.get("site") != detected:
+                    findings.append(Finding(
+                        "ARCHITECTURE_SITE_MISMATCH",
+                        "00-architecture.yaml#site",
+                        "site 必须与输出根探测结果一致，不得用仓库根或兄弟应用代替",
+                        0,
+                        {"declared": data.get("site"), "detected": detected, "output_root": raw_output},
+                    ))
+        if data.get("site") == "greenfield" and not data.get("confirmed_by_user"):
+            for phase_id, phase in sorted(phases.items()):
+                if phase.get("status") == "complete":
+                    findings.append(Finding(
+                        "ARCHITECTURE_UNCONFIRMED",
+                        "00-architecture.yaml#confirmed_by_user",
+                        f"greenfield 未确认不得将 Phase {phase_id} 标为 complete",
+                        phase_id,
+                    ))
     return findings
 
 

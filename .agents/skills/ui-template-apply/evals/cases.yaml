@@ -222,20 +222,22 @@ cases:
   - id: apply-greenfield-architecture-gate
     skill: ui-template-apply
     category: checkpoint
-    description: greenfield 未确认不得写依赖清单；用户点名栈不得被改成另一套默认；existing 不跑选型。
-    given: 空目录或已有 package.json 的消费项目要求用 published 模板实现页面
+    description: greenfield 未确认不得写依赖清单；用户点名栈不得被改成另一套默认；existing 不跑选型；嵌套空输出根仍要选型。
+    given: 空目录、已有 package.json 的输出根，或已初始化 monorepo 里的空前端应用要求用 published 模板实现页面
     fixture: tests/fixtures/eval/apply-hygiene-contracts.yaml#apply-greenfield-architecture-gate
-    fixture_sha256: 982d788bb4aae2ec71c3623f368772395bd7b3644f5fae724fef75e077953d0b
+    fixture_sha256: 9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2
     judge: script
     expect:
       must:
         - 空仓判定 greenfield 并等待架构确认
         - 用户点名的 UI 框架保持不变
         - 已有依赖清单只记录 observed stack
+        - 仓库已初始化但空输出根仍判定 greenfield
       must_not:
         - 未确认时创建 package.json
         - 把用户点名栈改成另一套默认
-        - 对 existing 项目跑选型访谈
+        - 对 existing 输出根跑选型访谈
+        - 因仓库根有 package.json 跳过新应用选型
     revision: harden-template-lifecycle-eval-v1
   - id: apply-session-closed-delete-hint
     skill: ui-template-apply
@@ -243,7 +245,7 @@ cases:
     description: Phase 9 closed 且无 proposed 时汇报可删 .ui-template-apply/；未 closed 不得宣称可删。
     given: Apply 收尾或仍有 proposed feedback
     fixture: tests/fixtures/eval/apply-hygiene-contracts.yaml#apply-session-closed-delete-hint
-    fixture_sha256: 982d788bb4aae2ec71c3623f368772395bd7b3644f5fae724fef75e077953d0b
+    fixture_sha256: 9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2
     judge: script
     expect:
       must:
