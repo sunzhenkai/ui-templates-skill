@@ -187,21 +187,22 @@ cases:
       must_not:
         - 按 meta.sources[] 打开本地绝对路径
     revision: harden-template-lifecycle-eval-v1
-  - id: apply-catalog-seed-from-empty-project
+  - id: apply-catalog-pin-from-empty-project
     skill: ui-template-apply
     category: routing
-    description: 空项目从 Author catalog 播种 published 模板后可 require-published；已有行不覆盖，retired 不救回。
+    description: 空项目从 Author catalog pin published 模板完成 Intake，不创建项目 templates/。
     given: 新项目安装双 skill 且本地 templates/ 为空
-    fixture: tests/fixtures/eval/catalog-contracts.yaml#apply-catalog-seed-from-empty-project
-    fixture_sha256: e0031cd424d9733e22785fc97d311b451d850790e0dd3745520ce146d8335f83
+    fixture: tests/fixtures/eval/catalog-contracts.yaml#apply-catalog-pin-from-empty-project
+    fixture_sha256: 1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c
     judge: script
     expect:
       must:
-        - 从 catalog 播种 workbench-shell 或等价 published 模板
-        - 已有同名行或目录不覆盖
-        - 项目 retired 行保持 retired
+        - 只读 catalog pin workbench-shell 或等价 published 模板
+        - 不创建项目 templates/
+        - 项目 published 行优先
       must_not:
         - 把空项目当成没有模板
+        - 为消费播种项目库
     revision: harden-template-lifecycle-eval-v1
   - id: apply-no-template-only-when-absent-from-catalog
     skill: ui-template-apply
@@ -209,7 +210,7 @@ cases:
     description: 只有项目库与 catalog 都没有目标 published 模板时才报没有模板并移交 Authoring。
     given: 用户要求用一个 catalog 与项目库都不存在的模板名
     fixture: tests/fixtures/eval/catalog-contracts.yaml#apply-no-template-only-when-absent-from-catalog
-    fixture_sha256: e0031cd424d9733e22785fc97d311b451d850790e0dd3745520ce146d8335f83
+    fixture_sha256: 1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c
     judge: script
     expect:
       must:
@@ -217,4 +218,54 @@ cases:
         - 移交 ui-template-author
       must_not:
         - catalog 已有官方模板时停止并声称没有模板
+    revision: harden-template-lifecycle-eval-v1
+  - id: apply-greenfield-architecture-gate
+    skill: ui-template-apply
+    category: checkpoint
+    description: greenfield 未确认不得写依赖清单；用户点名栈不得被改成另一套默认；existing 不跑选型。
+    given: 空目录或已有 package.json 的消费项目要求用 published 模板实现页面
+    fixture: tests/fixtures/eval/apply-hygiene-contracts.yaml#apply-greenfield-architecture-gate
+    fixture_sha256: 982d788bb4aae2ec71c3623f368772395bd7b3644f5fae724fef75e077953d0b
+    judge: script
+    expect:
+      must:
+        - 空仓判定 greenfield 并等待架构确认
+        - 用户点名的 UI 框架保持不变
+        - 已有依赖清单只记录 observed stack
+      must_not:
+        - 未确认时创建 package.json
+        - 把用户点名栈改成另一套默认
+        - 对 existing 项目跑选型访谈
+    revision: harden-template-lifecycle-eval-v1
+  - id: apply-session-closed-delete-hint
+    skill: ui-template-apply
+    category: feedback
+    description: Phase 9 closed 且无 proposed 时汇报可删 .ui-template-apply/；未 closed 不得宣称可删。
+    given: Apply 收尾或仍有 proposed feedback
+    fixture: tests/fixtures/eval/apply-hygiene-contracts.yaml#apply-session-closed-delete-hint
+    fixture_sha256: 982d788bb4aae2ec71c3623f368772395bd7b3644f5fae724fef75e077953d0b
+    judge: script
+    expect:
+      must:
+        - closed 汇报含可删除 .ui-template-apply/
+        - 未领养时说明不应有 templates/
+      must_not:
+        - 未 closed 时宣称会话可删
+        - 自动删除账本或项目库
+    revision: harden-template-lifecycle-eval-v1
+  - id: apply-catalog-adopt-portable
+    skill: ui-template-apply
+    category: validation-gate
+    description: 显式 seed/领养后项目库可走 INDEX/core 校验；retired 仍拒绝。
+    given: 用户明确把官方模板接到本仓，或项目行已 retired
+    fixture: tests/fixtures/eval/catalog-contracts.yaml#apply-catalog-adopt-portable
+    fixture_sha256: 1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c
+    judge: script
+    expect:
+      must:
+        - 显式 seed 写入项目库与 INDEX
+        - 已有同名行或目录不覆盖
+        - retired 拒绝且不救回
+      must_not:
+        - Apply Intake 默默播种
     revision: harden-template-lifecycle-eval-v1

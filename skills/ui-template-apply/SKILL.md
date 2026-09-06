@@ -13,14 +13,16 @@ description: 使用已有 schema v2 UI 模板按 Phase 0–9 实现真实页面�
 npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-template-apply
 ```
 
-治理回滚用 `make bundle` / `make install`。项目库缺目标 published 行时，先从已安装 `ui-template-author/catalog/` 播种。
+治理回滚用 `make bundle` / `make install`。官方模板随 Author `catalog/` 安装；Apply 默认只读 pin，不写入项目 `templates/`。
 
 ## 启动边界
 
 - 已选 **published** 模板并要求实现页面 → 进入本流程（默认模式 A：干净实现）。
 - 用户明确要求对齐原版视觉 → 仍只读模板实现，另按模式 B 对照可部署 oracle；差异回写 skill/模板后重生，不得改生成物。
 - “做成模板/提取风格/导入模板/退役或删除模板” → 移交 `ui-template-author`。
-- 项目库缺少目标 published 行时，先从已安装 `ui-template-author/catalog/` 播种再 `require-published`。只有项目库与 catalog 都没有该 published 模板时才报没有模板、停止并移交 Authoring，禁止猜测。项目 `retired` 行不得被 catalog 覆盖。Intake 运行 `manage_template_index.py require-published`（默认播种），非 0 不得进入 Phase 1。
+- Intake 运行 `manage_template_index.py resolve <name>`（`require-published` 默认不播种）。项目 `published` 行优先；项目 `retired` 行不得被 catalog 覆盖；项目没有该行时只读 Author catalog 并 pin 到 `.ui-template-apply/`。只有项目库与 catalog 都没有该 published 模板时才报没有模板、停止并移交 Authoring，禁止猜测。空项目缺 `templates/` 不是失败。
+- 输出根为空或用户要求从零搭建时判定 `greenfield`：必须先确认技术架构，未确认不得写应用源码。已有工程只记录观察到的栈，禁止静默换栈。
+- Phase 9 通过且无 proposed feedback 后会话 closed：必须提示可以删除 `.ui-template-apply/`；未领养则本仓不应有 `templates/`。不自动删除。
 - MUST NOT 读取原版 checkout、`meta.sources[]` 路径或工作区已有生成物作为实现参考。生成目录是本次约定的空目录或当前输出目录，不得把历史输出当参考。
 
 ## 必读契约
@@ -31,7 +33,7 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 
 严格按 [apply-workflow.md](references/apply-workflow.md) 执行，并在项目根维护标准 `.ui-template-apply/`：
 
-0. Intake → `00-intake.md`
+0. Intake → `00-intake.md`、`00-architecture.yaml`
 1. Design direction/token freeze → `01-design-direction.md`、`01-token-map.yaml`
 2. IA/layout/routes → `02-routes.yaml`
 3. Project structure → `03-structure.md`
@@ -54,4 +56,4 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 
 可复用模板缺口创建 schema v2 proposed feedback；文件名 stem 必须等于 UUID，evidence refs 必须相对 `.ui-template-apply/` 根存在且不越界，targets 必须在完整 known rule IDs 中命中。按 UUID 或 normalized fingerprint 命中时合并证据，不重复创建；新目标路径碰撞不得覆盖，写后必须验证整个 inbox，失败则回滚。项目目录、API/mock、技术栈和业务专属问题留在消费项目。
 
-最终汇报只引用 `.ui-template-apply/`：included/deferred/excluded、当前身份、完成 phases、current-build verification、P0/P1/recheck、反馈 UUID/receipt、实际工程命令及不可用工具回退。Phase 8/9 无效或任一 gate 失败时不得说“完成”。
+最终汇报只引用 `.ui-template-apply/`：included/deferred/excluded、当前身份、完成 phases、current-build verification、P0/P1/recheck、反馈 UUID/receipt、实际工程命令及不可用工具回退。Phase 9 通过且 inbox 无 proposed 时必须输出 `session_closed: true`、`may_delete_apply_root: true` 与固定句子「可以删除整个 .ui-template-apply/；删除后生成页面不受影响；再次 Apply 视为新 Intake。」未领养则说明本仓不应存在 `templates/`。Phase 8/9 无效或任一 gate 失败时不得说“完成”，也不得说会话可删。

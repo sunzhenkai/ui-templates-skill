@@ -7,6 +7,7 @@ Report 是稳定 JSON envelope `report_schema_version: 1`。成功 structural �
 - replay identity 与 `declared = resolved = executed = passed > 0`；
 - eval runner identity/fingerprint 与 `declared = parsed = executed > 0`；
 - production INDEX before/after digest、`unchanged_during_gate: true`，以及是否显式 promoted。
+- catalog 领养决定：未领养为 `catalog_adopted: false`；领养则记录模板 name/version/digest、catalog 来源 locator 与项目 `templates/<name>/` 结果。
 
 示例（省略非关键计数）：
 

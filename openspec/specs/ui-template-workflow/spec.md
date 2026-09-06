@@ -21,7 +21,7 @@
 
 #### Scenario: 只有 catalog 有官方模板
 - **WHEN** 用户想用 `workbench-shell` 做页面，项目库为空，但 Author catalog 有 published `workbench-shell`
-- **THEN** skill 不得声称没有模板；播种或移交 Apply 后应能消费该模板
+- **THEN** skill 不得声称没有模板；移交 Apply 后应能以 catalog pin 消费该模板，且不得为了移交而先播种项目库
 
 ### Requirement: 只读 catalog 与可写项目库分离
 `ui-template-author` SHALL 把官方 published 模板放在 skill 内只读 catalog，并把消费项目 `templates/` + `INDEX.md` 当作唯一可写生产库。Authoring 的 create / update-from-source / update-from-feedback / update-portable / retire / delete / Index SHALL 只改项目库，SHALL NOT 改 catalog。catalog 随 skill 升级替换；项目库不随 skill 安装覆盖。
@@ -38,16 +38,20 @@
 - **WHEN** 用户项目已有自建或改过的 `templates/<name>/`，随后升级 Author skill
 - **THEN** catalog 可更新，该项目模板目录与 INDEX 行不被 skill 安装覆盖
 
-### Requirement: 缺项目行时从 catalog 播种
-当用户要使用 catalog 中已有的 published 模板，且项目 INDEX 没有同名行或没有对应目录时，Authoring/Apply 共享的库解析 SHALL 把该模板从 catalog 播种到项目 `templates/` 并写入 published INDEX 行，然后才允许后续库动词或 Apply Intake。已有同名项目目录或 INDEX 行 SHALL NOT 被播种覆盖；冲突时保留项目库并报告，不得静默替换。
+### Requirement: 写模板时才从 catalog 领养
+当用户或 Authoring 要改模板、接受 feedback 落库、retire、delete、Index，或用户明确要求把官方模板接到本仓时，若项目 INDEX 没有同名行且没有对应目录，Authoring SHALL 把 catalog 中该 published 模板领养到项目 `templates/` 并写入 published INDEX 行，然后才允许这些写动词。Apply Intake SHALL NOT 执行该领养。已有同名项目目录或 INDEX 行 SHALL NOT 被领养覆盖；冲突时保留项目库并报告，不得静默替换。显式 `seed` 仍是 Authoring 库动词，行为与领养相同。
 
-#### Scenario: 空项目首次使用官方模板
-- **WHEN** 消费项目没有 `templates/` 或 INDEX 中没有 `workbench-shell`，且 Author catalog 有 published `workbench-shell`
-- **THEN** 项目出现完整模板目录与 published INDEX 行，内容来自 catalog
+#### Scenario: 空项目只 Apply 不落库
+- **WHEN** 消费项目没有 `templates/`，用户只用 catalog 中的 `workbench-shell` 实现页面，且未要求改模板或接到本仓
+- **THEN** 项目不出现 `templates/` 或 INDEX 行
+
+#### Scenario: 接受 feedback 时才领养
+- **WHEN** Authoring 接受针对 catalog pin 的 feedback 并要改规格
+- **THEN** 项目出现完整 `templates/<name>/` 与 published INDEX 行，内容来自当时 pin 住的 catalog 副本，随后只改项目库
 
 #### Scenario: 项目已有同名模板
 - **WHEN** 项目 INDEX 或目录已有 `workbench-shell`
-- **THEN** 播种不改现有文件；若用户要官方副本必须显式 refresh 并得到确认
+- **THEN** 领养不改现有文件；若用户要官方副本必须显式 refresh 并得到确认
 
 #### Scenario: catalog 无该名称
 - **WHEN** 用户要的模板在 catalog 与项目库都不存在

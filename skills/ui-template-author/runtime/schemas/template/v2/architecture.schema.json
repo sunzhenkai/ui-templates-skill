@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/template/v2/architecture.schema.json",
+  "title": "Template Apply Phase 0 architecture freeze v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "site", "layers", "confirmed_by_user"],
+  "allOf": [
+    {
+      "if": {"properties": {"site": {"const": "greenfield"}}, "required": ["site"]},
+      "then": {"required": ["build_identity"]}
+    },
+    {
+      "if": {"properties": {"site": {"const": "existing"}}, "required": ["site"]},
+      "then": {"required": ["observed_stack"]}
+    }
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "site": {"enum": ["greenfield", "existing"]},
+    "confirmed_by_user": {"type": "boolean"},
+    "init_command": {"type": "string", "minLength": 1},
+    "build_identity": {"type": "string", "minLength": 1},
+    "observed_stack": {"type": "string"},
+    "layers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language", "ui_framework", "bundler", "routing", "styling", "state", "data", "unit_test", "browser", "package_manager", "repo_shape"],
+      "properties": {
+        "language": {"type": "string", "minLength": 1},
+        "ui_framework": {"type": "string", "minLength": 1},
+        "bundler": {"type": "string", "minLength": 1},
+        "routing": {"type": "string", "minLength": 1},
+        "styling": {"type": "string", "minLength": 1},
+        "state": {"type": "string", "minLength": 1},
+        "data": {"type": "string", "minLength": 1},
+        "unit_test": {"type": "string", "minLength": 1},
+        "browser": {"type": "string", "minLength": 1},
+        "package_manager": {"type": "string", "minLength": 1},
+        "repo_shape": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

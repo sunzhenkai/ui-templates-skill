@@ -2,6 +2,10 @@
 
 本文件定义 `ui-template-author` 消费 Apply feedback 的规则；记录结构由 schema v2 `feedback.schema.json` 定义。
 
+## 项目库领养 gate
+
+feedback 指向 catalog pin 且用户接受处置需要修改模板时，先确认项目 `templates/INDEX.md` 没有同名行且 `templates/<name>/` 不存在，然后执行 `manage_template_index.py adopt <name>`，把当时 pin 住的 published catalog 副本写入项目库。已有同名行或目录时不覆盖；冲突保留项目库并报告。用户拒绝领养时，feedback 保持 `proposed`，不得把状态推进到 accepted/applied，也不得报告“已修改模板”。领养成功必须在 Report 写入 `catalog_adopted: true`、模板 identity/digest 与项目路径；随后所有编辑只落项目库，绝不改 Author catalog。
+
 ## 发现顺序
 
 更新模板前必须扫描并去重：1）用户显式给出的 feedback 文件/目录；2）用户指定消费项目的 `.ui-template-apply/feedback/*.{yaml,yml}`；3）当前工作区中已明确属于该模板的 inbox。不得递归扫描未知目录或读取无授权项目。没有发现记录也要在 Report 说明扫描范围。

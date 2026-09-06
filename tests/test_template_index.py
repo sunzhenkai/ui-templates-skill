@@ -142,6 +142,129 @@ class TemplateIndexTests(unittest.TestCase):
             self.assertFalse(missing["ok"])
             self.assertEqual("TEMPLATE_NOT_IN_CATALOG", missing["code"])
 
+    def test_resolve_reads_catalog_without_creating_project_library(self) -> None:
+        from manage_template_index import resolve_published, seed_from_catalog
+
+        catalog = ROOT / "skills/ui-template-author/catalog"
+        script = ROOT / "scripts/manage_template_index.py"
+        with tempfile.TemporaryDirectory() as temp:
+            empty = Path(temp) / "empty"
+            empty.mkdir()
+            empty_index = empty / "INDEX.md"
+            resolved = resolve_published(empty_index, empty, "workbench-shell", catalog)
+            self.assertTrue(resolved["ok"], resolved)
+            self.assertEqual("catalog", resolved["origin"])
+            self.assertEqual("catalog/workbench-shell", resolved["path"])
+            self.assertFalse(empty_index.exists())
+            self.assertFalse((empty / "workbench-shell").exists())
+            cli = subprocess.run(
+                [sys.executable, str(script), "require-published", "workbench-shell", "--json",
+                 "--catalog", str(catalog), "--index", str(empty_index), "--templates", str(empty)],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(0, cli.returncode, cli.stderr + cli.stdout)
+            payload = __import__("json").loads(cli.stdout)
+            self.assertTrue(payload["ok"])
+            self.assertEqual("catalog", payload["origin"])
+            self.assertFalse((empty / "workbench-shell").exists())
+            project = Path(temp) / "project"
+            project_index = project / "INDEX.md"
+            seeded = seed_from_catalog(catalog, project_index, project, ["workbench-shell"])
+            self.assertIn("workbench-shell", seeded["seeded"])
+            only_named = seed_from_catalog(catalog, Path(temp) / "other" / "INDEX.md", Path(temp) / "other", ["workbench-shell"])
+            self.assertEqual(["workbench-shell"], only_named["seeded"])
+            self.assertFalse((Path(temp) / "other" / "INDEX.md").read_text(encoding="utf-8").count("|") < 2)
+            project_hit = resolve_published(project_index, project, "workbench-shell", catalog)
+            self.assertEqual("project", project_hit["origin"])
+            retired_root = Path(temp) / "retired"
+            retired_index = retired_root / "INDEX.md"
+            retired_index.parent.mkdir(parents=True)
+            retired_index.write_text(project_index.read_text(encoding="utf-8").replace("published", "retired"), encoding="utf-8")
+            shutil.copytree(project / "workbench-shell", retired_root / "workbench-shell")
+            blocked = resolve_published(retired_index, retired_root, "workbench-shell", catalog)
+            self.assertFalse(blocked["ok"])
+            self.assertEqual("INDEX_NOT_PUBLISHED", blocked["code"])
+            self.assertEqual("project", blocked["origin"])
+
+    def test_apply_close_only_reports_closed_session_and_never_deletes(self) -> None:
+        from manage_template_index import session_closed
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / ".ui-template-apply"
+            feedback = root / "feedback"
+            feedback.mkdir(parents=True)
+            (root / "checkpoint.yaml").write_text(
+                "phases:\n- id: 9\n  status: complete\n",
+                encoding="utf-8",
+            )
+            feedback.joinpath("proposed.yaml").write_text("status: proposed\n", encoding="utf-8")
+            open = session_closed(root)
+            self.assertFalse(open["ok"])
+            self.assertFalse(open["may_delete_apply_root"])
+            feedback.joinpath("proposed.yaml").unlink()
+            closed = session_closed(root)
+            self.assertTrue(closed["ok"])
+            self.assertTrue(closed["may_delete_apply_root"])
+            self.assertFalse(closed["may_delete_templates"])
+            self.assertTrue(root.is_dir())
+
+    def test_authoring_write_verbs_adopt_catalog_only_once_and_do_not_overwrite(self) -> None:
+        from manage_template_index import seed_from_catalog
+
+        catalog = ROOT / "skills/ui-template-author/catalog"
+        script = ROOT / "scripts/manage_template_index.py"
+        with tempfile.TemporaryDirectory() as temp:
+            project = Path(temp) / "project"
+            project.mkdir()
+            index = project / "INDEX.md"
+            retired = subprocess.run(
+                [sys.executable, str(script), "retire", "workbench-shell", "--reason", "test",
+                 "--catalog", str(catalog), "--index", str(index), "--templates", str(project)],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(0, retired.returncode, retired.stderr + retired.stdout)
+            self.assertIn("retired", index.read_text(encoding="utf-8"))
+            self.assertTrue((project / "workbench-shell/spec.md").is_file())
+
+            orphan = Path(temp) / "orphan"
+            orphan.mkdir()
+            (orphan / "workbench-shell").mkdir()
+            (orphan / "workbench-shell/spec.md").write_text("user-owned\n", encoding="utf-8")
+            blocked = subprocess.run(
+                [sys.executable, str(script), "retire", "workbench-shell", "--reason", "test",
+                 "--catalog", str(catalog), "--index", str(orphan / "INDEX.md"), "--templates", str(orphan)],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(1, blocked.returncode)
+            self.assertIn("INDEX_MISSING", blocked.stderr)
+            self.assertEqual("user-owned\n", (orphan / "workbench-shell/spec.md").read_text(encoding="utf-8"))
+
+            deleted_root = Path(temp) / "deleted"
+            deleted_root.mkdir()
+            deleted = seed_from_catalog(
+                catalog, deleted_root / "INDEX.md", deleted_root, ["workbench-shell"]
+            )
+            self.assertIn("workbench-shell", deleted["seeded"])
+            remove = subprocess.run(
+                [sys.executable, str(script), "delete", "workbench-shell",
+                 "--catalog", str(catalog), "--index", str(deleted_root / "INDEX.md"), "--templates", str(deleted_root)],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(1, remove.returncode)
+            self.assertIn("DELETE_REQUIRES_RETIRED", remove.stderr)
+            self.assertTrue((deleted_root / "workbench-shell/spec.md").is_file())
+
+            catalog_only_delete = Path(temp) / "catalog-only-delete"
+            catalog_only_delete.mkdir()
+            removed = subprocess.run(
+                [sys.executable, str(script), "delete", "workbench-shell",
+                 "--catalog", str(catalog), "--index", str(catalog_only_delete / "INDEX.md"), "--templates", str(catalog_only_delete)],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(0, removed.returncode, removed.stderr + removed.stdout)
+            self.assertFalse((catalog_only_delete / "workbench-shell").exists())
+            self.assertNotIn("workbench-shell", (catalog_only_delete / "INDEX.md").read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()

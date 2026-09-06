@@ -57,6 +57,8 @@ PYTHON_OPERATIONS = frozenset({
     "changeset_undeclared_stable",
     "catalog_zero_drift",
     "catalog_seed_contracts",
+    "apply_architecture_contracts",
+    "apply_close_contracts",
 })
 
 
@@ -525,25 +527,138 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             for name in ("spec.md", "tokens.yaml", "meta.yaml", "evidence.yaml"):
                 (catalog / "demo" / name).write_text(f"{name}\n", encoding="utf-8")
             empty = Path(temp) / "empty"
+            empty.mkdir()
             empty_index = empty / "INDEX.md"
-            first = module.ensure_published(empty_index, empty, "demo", catalog)
-            again = module.seed_from_catalog(catalog, empty_index, empty, ["demo"])
-            (empty / "demo" / "spec.md").write_text("user-owned\n", encoding="utf-8")
-            after_skip = (empty / "demo" / "spec.md").read_text(encoding="utf-8")
+            pinned = module.resolve_published(empty_index, empty, "demo", catalog)
+            empty_no_templates = (
+                (not empty_index.exists())
+                and (not (empty / "demo").exists())
+                and (not (empty / "templates").exists())
+            )
+            project = Path(temp) / "project"
+            project_index = project / "INDEX.md"
+            first = module.seed_from_catalog(catalog, project_index, project, ["demo"])
+            again = module.seed_from_catalog(catalog, project_index, project, ["demo"])
+            (project / "demo" / "spec.md").write_text("user-owned\n", encoding="utf-8")
+            after_skip = (project / "demo" / "spec.md").read_text(encoding="utf-8")
+            project_hit = module.resolve_published(project_index, project, "demo", catalog)
             retired_root = Path(temp) / "retired"
             retired_index = retired_root / "INDEX.md"
             retired_index.parent.mkdir(parents=True)
             retired_index.write_text(index_text.replace("published", "retired"), encoding="utf-8")
             (retired_root / "demo").mkdir()
             (retired_root / "demo" / "spec.md").write_text("retired-copy\n", encoding="utf-8")
-            retired = module.ensure_published(retired_index, retired_root, "demo", catalog)
-            missing = module.ensure_published(empty_index, empty, "missing", catalog)
+            retired = module.resolve_published(retired_index, retired_root, "demo", catalog)
+            missing = module.resolve_published(empty_index, empty, "missing", catalog)
+            explicit_seeded = first["ok"] and "demo" in first["seeded"] and project_index.is_file()
+            project_preferred = project_hit.get("origin") == "project" and project_hit["ok"]
+            second_seed_skipped = "demo" in {item["name"] for item in again["skipped"]}
+            retired_blocked = (not retired["ok"]) and retired["code"] == "INDEX_NOT_PUBLISHED"
+            missing_handoff = (not missing["ok"]) and missing["code"] == "TEMPLATE_NOT_IN_CATALOG"
         return {
-            "empty_seeded": first["ok"] and first["code"] == "INDEX_PUBLISHED",
-            "second_seed_skipped": "demo" in {item["name"] for item in again["skipped"]},
+            "empty_resolved": pinned["ok"] and pinned.get("origin") == "catalog" and pinned.get("path") == "catalog/demo",
+            "empty_no_templates": empty_no_templates,
+            "project_preferred": project_preferred,
+            "explicit_seeded": explicit_seeded,
+            "second_seed_skipped": second_seed_skipped,
             "existing_not_overwritten": after_skip == "user-owned\n",
-            "retired_blocked": (not retired["ok"]) and retired["code"] == "INDEX_NOT_PUBLISHED",
-            "missing_handoff": (not missing["ok"]) and missing["code"] == "TEMPLATE_NOT_IN_CATALOG",
+            "retired_blocked": retired_blocked,
+            "missing_handoff": missing_handoff,
+        }
+    if operation == "apply_architecture_contracts":
+        import tempfile
+        from template_apply_state.state import _architecture_findings, detect_architecture_site
+        from template_validation.schema import SchemaStore
+
+        layers = {
+            name: ("vue" if name == "ui_framework" else "chosen-by-user")
+            for name in (
+                "language", "ui_framework", "bundler", "routing", "styling", "state",
+                "data", "unit_test", "browser", "package_manager", "repo_shape",
+            )
+        }
+        greenfield = {
+            "schema_version": 2,
+            "site": "greenfield",
+            "confirmed_by_user": True,
+            "build_identity": "build:eval",
+            "layers": layers,
+        }
+        unconfirmed = {**greenfield, "confirmed_by_user": False}
+        existing_arch = {
+            "schema_version": 2,
+            "site": "existing",
+            "confirmed_by_user": True,
+            "observed_stack": "package.json + vue",
+            "layers": layers,
+        }
+        store = SchemaStore(resource_path(root, "schemas/template/v2"))
+        with tempfile.TemporaryDirectory() as temp:
+            site_root = Path(temp) / "site"
+            site_root.mkdir()
+            empty_site = detect_architecture_site(site_root)
+            (site_root / "README.md").write_text("# demo\n", encoding="utf-8")
+            (site_root / ".gitignore").write_text(".ui-template-apply/\n", encoding="utf-8")
+            placeholder_site = detect_architecture_site(site_root)
+            (site_root / ".ui-template-apply").mkdir()
+            (site_root / ".ui-template-apply/checkpoint.yaml").write_text("schema_version: 2\n", encoding="utf-8")
+            ledger_site = detect_architecture_site(site_root)
+            (site_root / "package.json").write_text("{}\n", encoding="utf-8")
+            existing_site = detect_architecture_site(site_root)
+            explicit_site = detect_architecture_site(site_root, explicit_greenfield=True)
+            apply_root = Path(temp) / "apply"
+            apply_root.mkdir()
+            (apply_root / "00-architecture.yaml").write_text(
+                yaml.safe_dump(unconfirmed, allow_unicode=True, sort_keys=False),
+                encoding="utf-8",
+            )
+            blocked = _architecture_findings(
+                apply_root,
+                {phase: {"status": "complete"} for phase in range(10)},
+                resource_path(root, "schemas/template/v2"),
+            )
+        return {
+            "empty_greenfield": empty_site == "greenfield",
+            "placeholder_greenfield": placeholder_site == "greenfield",
+            "ledger_ignored": ledger_site == "greenfield",
+            "package_json_existing": existing_site == "existing",
+            "explicit_keeps_named_greenfield": explicit_site == "greenfield",
+            "named_stack_preserved": layers["ui_framework"] == "vue",
+            "architecture_schema_ok": not store.errors("architecture", greenfield),
+            "unconfirmed_schema_ok": not store.errors("architecture", unconfirmed),
+            "existing_schema_ok": not store.errors("architecture", existing_arch),
+            "unconfirmed_blocks_complete": any(item.code == "ARCHITECTURE_UNCONFIRMED" for item in blocked),
+        }
+    if operation == "apply_close_contracts":
+        import importlib.util
+        import tempfile
+
+        module_path = resource_path(root, "scripts/manage_template_index.py")
+        spec = importlib.util.spec_from_file_location("manage_template_index", module_path)
+        if spec is None or spec.loader is None:
+            raise EvalFailure("MANAGE_TEMPLATE_INDEX_UNIMPORTABLE")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        closed_hint = "可以删除整个 .ui-template-apply/；删除后生成页面不受影响；再次 Apply 视为新 Intake。"
+        with tempfile.TemporaryDirectory() as temp:
+            root_dir = Path(temp) / ".ui-template-apply"
+            inbox = root_dir / "feedback"
+            inbox.mkdir(parents=True)
+            (root_dir / "checkpoint.yaml").write_text("phases:\n- id: 9\n  status: pending\n", encoding="utf-8")
+            incomplete = module.session_closed(root_dir)
+            (root_dir / "checkpoint.yaml").write_text("phases:\n- id: 9\n  status: complete\n", encoding="utf-8")
+            (inbox / "open.yaml").write_text("status: proposed\n", encoding="utf-8")
+            proposed = module.session_closed(root_dir)
+            (inbox / "open.yaml").unlink()
+            closed = module.session_closed(root_dir)
+            still_present = root_dir.is_dir()
+        return {
+            "incomplete_open": (not incomplete["ok"]) and incomplete.get("session_closed") is False,
+            "proposed_open": (not proposed["ok"]) and proposed.get("may_delete_apply_root") is False,
+            "closed_ok": closed["ok"] and closed.get("session_closed") is True and closed.get("may_delete_apply_root") is True,
+            "closed_hint": closed_hint in str(closed.get("hint", "")),
+            "no_auto_delete": still_present,
+            "templates_not_auto_deleted": closed.get("may_delete_templates") is False,
         }
     if operation == "changeset_undeclared_stable":
         import importlib.util

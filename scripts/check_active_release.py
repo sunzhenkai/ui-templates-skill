@@ -299,7 +299,7 @@ def check_source_product_names(path: str, text: str, terms: set[str]) -> list[Fi
 def check_document_contract(path: str, text: str) -> list[Finding]:
     requirements: dict[str, tuple[str, ...]] = {
         "README.md": (
-            "ui-template-author", "ui-template-apply", "2.1.0", "schema v2", "apply/",
+            "ui-template-author", "ui-template-apply", "2.2.0", "schema v2", "apply/",
             "npx skills", "-s ui-template-author", "-s ui-template-apply",
             "make validate", "make eval", "migrate_template.py", "ROLLBACK.md",
         ),

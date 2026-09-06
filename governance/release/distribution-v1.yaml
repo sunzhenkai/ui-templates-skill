@@ -1,12 +1,12 @@
 schema_version: 1
 bundle:
-  version: 2.1.0
+  version: 2.2.0
   template_schema:
     minimum: 2
     maximum: 2
 public_skills:
   ui-template-author:
-    version: 2.1.0
+    version: 2.2.0
     include:
       - SKILL.md
       - references/*.md
@@ -27,7 +27,7 @@ public_skills:
       - catalog/INDEX.md
       - catalog/**/*
   ui-template-apply:
-    version: 2.1.0
+    version: 2.2.0
     include:
       - SKILL.md
       - references/*.md

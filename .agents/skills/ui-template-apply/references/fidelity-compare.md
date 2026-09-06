@@ -17,10 +17,10 @@ Apply 有两种模式。checkpoint 仍是 Phase 0–9，不新增 phase。消费
 Intake 必须先跑：
 
 ```bash
-python3 ui-template-author/runtime/manage_template_index.py require-published <name>
+python3 ui-template-author/runtime/manage_template_index.py resolve <name>
 ```
 
-未传 `--index` 时使用项目 `templates/INDEX.md`；默认从兄弟目录 `ui-template-author/catalog/` 播种缺失的 published 模板。项目 `retired` 行不救回。非 0 退出则停止，不得进入 Phase 1。
+未传 `--index` 时使用项目 `templates/INDEX.md`。项目 `published` 行优先；项目 `retired` 行不救回；缺项目行时只读兄弟目录 `ui-template-author/catalog/` 并把 `origin/resolved_path` pin 进 `.ui-template-apply/`，不得创建项目 `templates/`。非 0 退出则停止，不得进入 Phase 1。
 
 ## 模式 B — 保真对照（仅用户明确要求对齐原版）
 

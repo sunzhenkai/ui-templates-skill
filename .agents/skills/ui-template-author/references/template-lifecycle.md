@@ -31,8 +31,9 @@ draft → published → retired → deleted
 | --- | --- | --- |
 | `list` / `show` | 浏览库 | 读 INDEX；报告 name/status/version/coverage 摘要 |
 | `create` | 新建 | 冻结变更集合；Generate→Validate→Eval 后 Index 为 published |
+| `adopt` / `seed <name>` | 把官方模板接到本仓，或为写动词补齐项目库 | 仅当项目无同名行且无目录；拷贝 catalog published 副本并写 INDEX；已有行/目录不覆盖 |
 | `update-from-source` | 本会话有 source | 声明路径/组件集合；未声明文件保持原字节 |
-| `update-from-feedback` | 消费 Apply feedback | 幂等；项目专属 rejected |
+| `update-from-feedback` | 消费 Apply feedback | 先在无项目库时领养；幂等；项目专属 rejected |
 | `update-portable` | 无 session source | 不得伪造 source-direct sidecar |
 | `validate` | 校验已发布模板 | portable；缺 source 时 replay `not-run` |
 | `retire` | 停止新消费 | INDEX 改为 retired；目录保留 |
@@ -45,11 +46,11 @@ draft → published → retired → deleted
 ```bash
 python3 scripts/manage_template_index.py list
 python3 scripts/manage_template_index.py show <name>
-python3 scripts/manage_template_index.py seed
 python3 scripts/manage_template_index.py seed <name>
+python3 scripts/manage_template_index.py adopt <name>
 python3 scripts/manage_template_index.py retire <name> --reason "<reason>"
 python3 scripts/manage_template_index.py delete <name>
 python3 scripts/manage_template_index.py require-published <name>
 ```
 
-未传 `--index` / `--templates` 时使用当前工作目录的 `templates/`，不是 skill 根。`seed` 与默认 `require-published` 从 `--catalog` 或已安装 `ui-template-author/catalog/` 拷贝缺失的 published 模板；已有同名行或目录不覆盖，retired 行不救回。安装环境把 `scripts/manage_template_index.py` 换成 `ui-template-author/runtime/manage_template_index.py`。Authoring 的 create/update/retire/delete 只写项目库，不得改 catalog。delete 前必须已 retired。成功后立刻对剩余项目 `templates/` 跑 portable validator。
+未传 `--index` / `--templates` 时使用当前工作目录的 `templates/`，不是 skill 根。`seed <name>` / `adopt <name>` 是显式领养，从 `--catalog` 或已安装 `ui-template-author/catalog/` 拷贝该 published 模板；已有同名行或目录不覆盖，retired 行不救回。update、feedback 落库、retire/delete 在项目完全缺失该条目时可先执行同一领养；Report 必须写明 `catalog_adopted: true` 与来源 identity。`require-published` 默认等价 resolve，只返回项目/catalog pin，不播种。安装环境把 `scripts/manage_template_index.py` 换成 `ui-template-author/runtime/manage_template_index.py`。Authoring 的 create/update/retire/delete 只写项目库，不得改 catalog。delete 前必须已 retired。成功后立刻对剩余项目 `templates/` 跑 portable validator。

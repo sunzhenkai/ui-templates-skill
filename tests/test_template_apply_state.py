@@ -16,6 +16,7 @@ from scripts.template_apply_state import (
     build_identity,
     canonical_digest,
     create_feedback,
+    detect_architecture_site,
     feedback_receipt,
     merge_feedback,
     recover_checkpoint,
@@ -85,6 +86,18 @@ class ApplyStateTests(unittest.TestCase):
                 elif relative == "09-review.md":
                     front = yaml.safe_dump(self._verification("phase-9-review"), allow_unicode=True, sort_keys=False).strip()
                     path.write_text(f"---\n{front}\n---\n# Review\n", encoding="utf-8")
+                elif relative == "00-architecture.yaml":
+                    layers = {name: "confirmed-by-user" for name in (
+                        "language", "ui_framework", "bundler", "routing", "styling", "state",
+                        "data", "unit_test", "browser", "package_manager", "repo_shape",
+                    )}
+                    path.write_text(yaml.safe_dump({
+                        "schema_version": 2,
+                        "site": "greenfield",
+                        "confirmed_by_user": True,
+                        "build_identity": self.build,
+                        "layers": layers,
+                    }, allow_unicode=True, sort_keys=False), encoding="utf-8")
                 elif path.suffix == ".yaml":
                     path.write_text("schema_version: 2\nitems: []\n", encoding="utf-8")
                 else:
@@ -461,6 +474,47 @@ class ApplyStateTests(unittest.TestCase):
         state_findings = self.validate(fidelity_value=state, previous_fidelity=data)
         self.assertIn("CHECKPOINT_FIDELITY_GEOMETRY_STATE_DRIFT", {item.code for item in state_findings})
         self.assertEqual(4, recovery_decision(state_findings, self.checkpoint)["earliest_phase"])
+
+    def test_architecture_site_detection_ignores_apply_ledger(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self.assertEqual("greenfield", detect_architecture_site(root))
+            (root / ".ui-template-apply").mkdir()
+            (root / ".ui-template-apply/checkpoint.yaml").write_text("schema_version: 2\n", encoding="utf-8")
+            self.assertEqual("greenfield", detect_architecture_site(root))
+            (root / "README.md").write_text("# demo\n", encoding="utf-8")
+            (root / ".gitignore").write_text(".ui-template-apply/\n", encoding="utf-8")
+            self.assertEqual("greenfield", detect_architecture_site(root))
+            (root / "src").mkdir()
+            (root / "src/main.ts").write_text("export {}\n", encoding="utf-8")
+            self.assertEqual("existing", detect_architecture_site(root))
+            self.assertEqual("greenfield", detect_architecture_site(root, explicit_greenfield=True))
+
+    def test_phase0_architecture_is_required_and_confirmation_blocks_later_phases(self) -> None:
+        self.assertEqual([], self.validate())
+        phase0 = self.checkpoint["phases"][0]
+        phase0["artifacts"] = [item for item in phase0["artifacts"] if item["path"] != "00-architecture.yaml"]
+        self.assertIn("CHECKPOINT_ARTIFACT_UNDECLARED", {item.code for item in self.validate()})
+
+        architecture = self.root / "00-architecture.yaml"
+        data = yaml.safe_load(architecture.read_text(encoding="utf-8"))
+        data["confirmed_by_user"] = False
+        architecture.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False), encoding="utf-8")
+        for item in phase0["artifacts"]:
+            if item["path"] == "00-architecture.yaml":
+                item["digest"] = canonical_digest(_artifact_value(architecture))
+        findings = self.validate()
+        blocked_phases = {finding.phase for finding in findings if finding.code == "ARCHITECTURE_UNCONFIRMED"}
+        self.assertEqual(set(range(10)), blocked_phases)
+
+    def test_template_origin_pin_is_pairwise_consistent_and_old_checkpoint_is_compatible(self) -> None:
+        self.assertEqual([], self.validate())
+        self.checkpoint["template"].update({"origin": "catalog", "resolved_path": "catalog/demo"})
+        self.assertEqual([], self.validate())
+        self.checkpoint["template"]["resolved_path"] = "templates/demo"
+        self.assertIn("CHECKPOINT_RESOLVED_PATH_MISMATCH", {item.code for item in self.validate()})
+        self.checkpoint["template"].pop("resolved_path")
+        self.assertIn("CHECKPOINT_TEMPLATE_PIN_INCOMPLETE", {item.code for item in self.validate()})
 
 if __name__ == "__main__":
     unittest.main()

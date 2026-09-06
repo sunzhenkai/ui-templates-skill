@@ -13,7 +13,7 @@ schema v2 模板以 `spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml` �
 
 格式语义以 [`skills/ui-template-author/references/spec-format.md`](skills/ui-template-author/references/spec-format.md) 为准，机器结构以 [`schemas/template/v2/`](schemas/template/v2/) 为准，可选结构保真 sidecar 以 [`schemas/template/fidelity/v1/`](schemas/template/fidelity/v1/) 为准。当前模板库见 [`templates/INDEX.md`](templates/INDEX.md)；`workbench-shell` 来源同时包含固定 revision 的公开仓库源码和一份已泛化的用户设计文档。无本会话 source 时 workbench 保持 `legacy-baseline`，`confidence.layout` 不高于 medium，不索取上游本地路径。双 skill 必须配套升级；未知 profile 不静默降级。`example/**` 是治理排除项。
 
-## 安装与升级 2.1.0
+## 安装与升级 2.2.0
 
 普通项目成对安装两个公开 skill（不要用 `--all`）：
 
@@ -21,19 +21,19 @@ schema v2 模板以 `spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml` �
 npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-template-apply
 ```
 
-官方 published 模板随 `ui-template-author/catalog/` 安装。项目根 `templates/` 是可写库；缺目标 published 行时从 catalog 播种，已有同名行或目录不覆盖。
+官方 published 模板随 `ui-template-author/catalog/` 安装。空项目 Apply 只读 catalog pin，不创建项目 `templates/`。`seed` / 领养是 Authoring 显式动词：第一次要改模板、接受 feedback 落库或用户明确「把官方模板接到本仓」时才写入项目库；已有同名行或目录不覆盖。
 
 治理、checksum 与回滚仍构建可复现 bundle：
 
 ```bash
 make bootstrap
 make bundle
-ARTIFACT=dist/ui-templates-skill-2.1.0.tar.gz \
+ARTIFACT=dist/ui-templates-skill-2.2.0.tar.gz \
 INSTALL_TARGET=/path/to/project/.agents/skills \
 make install
 ```
 
-产物为 `dist/ui-templates-skill-2.1.0.tar.gz`、SHA-256 sidecar 和 bundle 内 `skills-manifest.yaml`。同一 `make install` 用于升级：安装器先验证 checksum/manifest，在目标父目录 staging，只原子替换 `ui-template-author` 与 `ui-template-apply`，清理已删除的受管生产文件和已退役的 `ui-template` 目录，并保留其他 skills 以及单独管理的 `patches/`、`experience/`。不要用旧的单目录 `cp -r` 安装。
+产物为 `dist/ui-templates-skill-2.2.0.tar.gz`、SHA-256 sidecar 和 bundle 内 `skills-manifest.yaml`。同一 `make install` 用于升级：安装器先验证 checksum/manifest，在目标父目录 staging，只原子替换 `ui-template-author` 与 `ui-template-apply`，清理已删除的受管生产文件和已退役的 `ui-template` 目录，并保留其他 skills 以及单独管理的 `patches/`、`experience/`。不要用旧的单目录 `cp -r` 安装。
 
 ## 验证、评估与镜像
 

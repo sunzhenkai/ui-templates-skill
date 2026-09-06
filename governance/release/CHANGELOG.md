@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2.2.0 — 2026-09-06
+
+兼容版本：Apply 默认只读 catalog pin，不再为消费播种项目库。
+
+- 空项目 Apply Intake 只读 Author catalog 并把 name/version/digest/`origin` pin 到 `.ui-template-apply/`，不创建项目 `templates/`。
+- `require-published` 默认等价 resolve / `--no-seed`；`seed` / `adopt` 是 Authoring 显式领养，已有同名行或目录不覆盖，retired 不救回。
+- Phase 0 判定 `greenfield | existing`；greenfield 未确认不得写应用源码或依赖清单，不得把任何栈写成 Apply 默认。
+- Phase 9 closed 且无 proposed feedback 时必须提示可删 `.ui-template-apply/`；未领养则本仓不应有 `templates/`。不自动删除。
+- checkpoint 增加可选 `template.origin` / `resolved_path`；新增 Phase 0 `00-architecture.yaml`。
+- `workbench-shell` 的 `template_version` 不因本版本上涨。
+
 ## Unreleased
 
 - 现行治理/规格不再把上游产品名写成对齐目标或本机依赖；`check_active_release.py` 从已发布模板 `meta.sources[].ref` 提取名称并拒绝泄漏。

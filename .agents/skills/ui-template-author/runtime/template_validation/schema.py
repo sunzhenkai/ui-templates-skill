@@ -12,6 +12,7 @@ SCHEMA_FILES = {
     "evidence": "evidence.schema.json",
     "feedback": "feedback.schema.json",
     "checkpoint": "checkpoint.schema.json",
+    "architecture": "architecture.schema.json",
     "verification": "verification.schema.json",
     "skills-manifest": "skills-manifest.schema.json",
 }

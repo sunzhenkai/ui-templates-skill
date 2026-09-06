@@ -12,6 +12,10 @@
 | 真实浏览器 | Playwright/chrome-devtools/browser-use/项目脚本 | current-build screenshot/console/AX/computed/URL |
 | Review | design review 工具或独立复核 | rule-ID findings、severity、fix、re-check |
 
+## Phase 0 架构选型 gate
+
+greenfield 没有官方默认栈。先向用户给出闭集层候选并等待确认：language/runtime、UI framework（可为 none）、bundler/dev、routing、styling、client/server state、data access、unit/browser verification、package manager、repo shape。用户点名某层后只能记录该层，不得替换成另一套默认。未确认前不得调用任何 create/scaffold/install 命令，也不得写依赖清单或应用源码；`project-init` 仅在用户明确要脚手架且所选栈落在其 reference 时作为确认后的可选执行器。existing 项目只记录 `observed_stack`，不进入选型访谈。
+
 ## `ui-ux-pro-max` Query Contract
 
 每次查询都是独立记录并写入 `01-design-direction.md`（整体方向）、`04-components.yaml`（组件）或 `09-review.md`（复核）：

@@ -6,7 +6,7 @@
   "required": ["schema_version", "template", "scope", "tokens_digest", "phases", "source_identity", "build_identity", "updated_at"],
   "properties": {
     "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
-    "template": {"type": "object", "additionalProperties": false, "required": ["name", "version", "digest"], "properties": {"name": {"type": "string", "minLength": 1}, "version": {"$ref": "common.schema.json#/$defs/semver"}, "digest": {"$ref": "common.schema.json#/$defs/digest"}}},
+    "template": {"type": "object", "additionalProperties": false, "required": ["name", "version", "digest"], "properties": {"name": {"type": "string", "minLength": 1}, "version": {"$ref": "common.schema.json#/$defs/semver"}, "digest": {"$ref": "common.schema.json#/$defs/digest"}, "origin": {"enum": ["catalog", "project"]}, "resolved_path": {"type": "string", "minLength": 1, "pattern": "^(templates|catalog)/[A-Za-z0-9._-]+$"}}},
     "scope": {"type": "object", "additionalProperties": false, "required": ["included", "deferred", "excluded"], "properties": {"included": {"type": "array", "items": {"type": "string"}}, "deferred": {"type": "array", "items": {"type": "string"}}, "excluded": {"type": "array", "items": {"type": "string"}}}},
     "tokens_digest": {"$ref": "common.schema.json#/$defs/digest"},
     "phases": {

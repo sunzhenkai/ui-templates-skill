@@ -98,8 +98,8 @@ class SkillDistributionTests(unittest.TestCase):
 
     def test_versioned_allowlist_and_explicit_exclusions(self) -> None:
         config = load_config(self.repo)
-        self.assertEqual("2.1.0", config.bundle_version)
-        self.assertEqual({"ui-template-author": "2.1.0", "ui-template-apply": "2.1.0"}, config.skill_versions)
+        self.assertEqual("2.2.0", config.bundle_version)
+        self.assertEqual({"ui-template-author": "2.2.0", "ui-template-apply": "2.2.0"}, config.skill_versions)
         self.assertEqual((2, 2), (config.template_schema_minimum, config.template_schema_maximum))
         exclusions = set(config.exclusions)
         for required in (
@@ -191,13 +191,13 @@ class SkillDistributionTests(unittest.TestCase):
         unrelated.parent.mkdir(parents=True)
         unrelated.write_text("keep", encoding="utf-8")
         result = install_bundle(built.artifact, target)
-        self.assertEqual("2.1.0", result["bundle_version"])
+        self.assertEqual("2.2.0", result["bundle_version"])
         self.assertTrue((target / "ui-template-author/SKILL.md").is_file())
         self.assertTrue((target / "ui-template-apply/SKILL.md").is_file())
         self.assertTrue((target / "ui-template-author/catalog/INDEX.md").is_file())
         self.assertTrue((target / "ui-template-author/catalog/workbench-shell/spec.md").is_file())
         project = target.parent.parent
-        seeded = subprocess.run(
+        resolved = subprocess.run(
             [
                 sys.executable, str(target / "ui-template-author/runtime/manage_template_index.py"),
                 "require-published", "workbench-shell", "--json",
@@ -207,9 +207,12 @@ class SkillDistributionTests(unittest.TestCase):
             ],
             text=True, capture_output=True, check=False, cwd=project,
         )
-        self.assertEqual(0, seeded.returncode, seeded.stderr + seeded.stdout)
-        self.assertTrue(json.loads(seeded.stdout)["ok"])
-        self.assertTrue((project / "templates/workbench-shell/spec.md").is_file())
+        self.assertEqual(0, resolved.returncode, resolved.stderr + resolved.stdout)
+        payload = json.loads(resolved.stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual("catalog", payload.get("origin"))
+        self.assertFalse((project / "templates/workbench-shell/spec.md").exists())
+        self.assertFalse((project / "templates/INDEX.md").exists())
         self.assertEqual("keep", unrelated.read_text(encoding="utf-8"))
         stale = target / "ui-template-author/references/stale-managed.md"
         stale.write_text("stale", encoding="utf-8")
@@ -377,7 +380,7 @@ class SkillDistributionTests(unittest.TestCase):
         )
         self.assertEqual(0, eval_proc.returncode, eval_proc.stderr + eval_proc.stdout)
         report = json.loads(eval_proc.stdout)
-        self.assertEqual({"declared": 41, "parsed": 41, "executed": 41, "script": 39, "llm": 2}, report["counts"])
+        self.assertEqual({"declared": 44, "parsed": 44, "executed": 44, "script": 42, "llm": 2}, report["counts"])
         self.assertTrue(report["discovery"]["example_excluded"])
         self.assertIn("example/**", report["discovery"]["exclusions"])
         portable_templates = self.base / "project/templates"

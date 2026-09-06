@@ -34,8 +34,21 @@ LEGAL_FEEDBACK = {
     "verified": set(),
 }
 TERMINAL_FEEDBACK = {"rejected", "verified"}
+GREENFIELD_PLACEHOLDER_NAMES = {
+    ".gitignore", "LICENSE", "LICENCE", "README", "README.md", "README.markdown", "README.txt",
+}
+DEPENDENCY_MANIFESTS = {
+    "package.json", "package-lock.json", "pnpm-lock.yaml", "yarn.lock", "bun.lockb",
+    "pyproject.toml", "requirements.txt", "Pipfile.lock", "poetry.lock",
+    "Cargo.toml", "Cargo.lock", "go.mod", "go.sum", "pom.xml",
+    "build.gradle", "build.gradle.kts", "composer.json", "Gemfile",
+}
+SOURCE_SUFFIXES = {
+    ".astro", ".c", ".cc", ".cpp", ".cs", ".css", ".go", ".html", ".java", ".js", ".jsx",
+    ".kt", ".php", ".py", ".rb", ".rs", ".scss", ".svelte", ".swift", ".ts", ".tsx", ".vue",
+}
 PHASE_ARTIFACTS: dict[int, tuple[str, ...]] = {
-    0: ("00-intake.md",),
+    0: ("00-intake.md", "00-architecture.yaml"),
     1: ("01-design-direction.md", "01-token-map.yaml"),
     2: ("02-routes.yaml",),
     3: ("03-structure.md",),
@@ -158,6 +171,24 @@ def source_identity(root: Path) -> str:
         "untracked": sorted(untracked, key=lambda item: item["path"]),
     }
     return f"git:{commit}:dirty:{canonical_digest(payload)['value']}"
+
+
+def detect_architecture_site(root: Path, *, explicit_greenfield: bool = False) -> str:
+    """判定输出根是 greenfield 还是 existing；会话账本不参与判定。"""
+    if explicit_greenfield or not root.exists():
+        return "greenfield"
+    for path in root.rglob("*"):
+        relative = path.relative_to(root)
+        if relative.parts and relative.parts[0] in {".git", ".ui-template-apply"}:
+            continue
+        if path.is_file():
+            if path.name in DEPENDENCY_MANIFESTS or path.suffix.lower() in SOURCE_SUFFIXES:
+                return "existing"
+            if path.name not in GREENFIELD_PLACEHOLDER_NAMES:
+                return "existing"
+        else:
+            return "existing"
+    return "greenfield"
 
 
 def build_identity(command: str, artifact: Path) -> str:
@@ -298,6 +329,31 @@ def validate_verification(
     return _sorted_findings(findings)
 
 
+def _architecture_findings(
+    apply_root: Path,
+    phases: dict[int, dict[str, Any]],
+    schema_dir: Path | None,
+) -> list[Finding]:
+    path = apply_root / "00-architecture.yaml"
+    if not path.is_file():
+        return []
+    try:
+        data = load_structured(path)
+    except ApplyStateError as exc:
+        return [Finding("ARCHITECTURE_INVALID", "00-architecture.yaml", str(exc), 0)]
+    findings = _schema_findings("architecture", data, "00-architecture.yaml", schema_dir, 0)
+    if isinstance(data, dict) and data.get("site") == "greenfield" and not data.get("confirmed_by_user"):
+        for phase_id, phase in sorted(phases.items()):
+            if phase.get("status") == "complete":
+                findings.append(Finding(
+                    "ARCHITECTURE_UNCONFIRMED",
+                    "00-architecture.yaml#confirmed_by_user",
+                    f"greenfield 未确认不得将 Phase {phase_id} 标为 complete",
+                    phase_id,
+                ))
+    return findings
+
+
 def _template_identity(template_value: Any) -> dict[str, Any]:
     """从 meta 或包含 meta 的 envelope 读取当前模板 identity。"""
     value = template_value
@@ -363,6 +419,25 @@ def validate_checkpoint(
 
     phases = checkpoint.get("phases", []) if isinstance(checkpoint.get("phases"), list) else []
     by_id = {phase.get("id"): phase for phase in phases if isinstance(phase, dict) and isinstance(phase.get("id"), int)}
+    findings.extend(_architecture_findings(root, by_id, schema_dir))
+    if isinstance(checkpoint_template, dict):
+        origin = checkpoint_template.get("origin")
+        resolved_path = checkpoint_template.get("resolved_path")
+        if (origin is None) != (resolved_path is None):
+            findings.append(Finding(
+                "CHECKPOINT_TEMPLATE_PIN_INCOMPLETE",
+                "checkpoint.yaml#template",
+                "origin 与 resolved_path 必须成对出现；旧 checkpoint 可同时缺省",
+                0,
+            ))
+        elif origin is not None:
+            expected_path = f"{'templates' if origin == 'project' else 'catalog'}/{checkpoint_template.get('name', '')}"
+            if origin not in {"catalog", "project"}:
+                findings.append(Finding("CHECKPOINT_TEMPLATE_ORIGIN_INVALID", "checkpoint.yaml#template.origin", "origin 只能是 catalog 或 project", 0))
+            elif not re.match(r"^(templates|catalog)/[A-Za-z0-9._-]+$", str(resolved_path)):
+                findings.append(Finding("CHECKPOINT_RESOLVED_PATH_INVALID", "checkpoint.yaml#template.resolved_path", "resolved_path 必须是 templates/<name> 或 catalog/<name>", 0))
+            elif resolved_path != expected_path:
+                findings.append(Finding("CHECKPOINT_RESOLVED_PATH_MISMATCH", "checkpoint.yaml#template.resolved_path", "resolved_path 与 origin/name 不一致", 0, {"expected": expected_path, "actual": resolved_path}))
     for phase_id in range(10):
         phase = by_id.get(phase_id)
         if not phase:

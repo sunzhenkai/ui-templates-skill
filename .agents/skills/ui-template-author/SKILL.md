@@ -23,7 +23,7 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 - Markdown/PDF 设计文档 → [source-doc.md](references/source-doc.md)
 - 浏览 / 退役 / 删除模板 → [template-lifecycle.md](references/template-lifecycle.md)
 - “用模板实现页面/搭后台” → 停止 Authoring，移交 `ui-template-apply`。
-- 官方 published 模板在本 skill 的只读 `catalog/`；消费项目可写库是项目根 `templates/`。项目库没有同名 published 行时，先从 catalog 播种，不得声称“没有模板”。
+- 官方 published 模板在本 skill 的只读 `catalog/`；消费项目可写库是项目根 `templates/`。项目库没有同名行时不得声称“没有模板”；只有用户要求写模板、落库 feedback、retire/delete 或明确「接到本仓」时，才从 catalog 领养到项目库。
 
 ## 不变量
 
@@ -42,11 +42,11 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 
 ### 0. Intake 与 feedback discovery
 
-确认模板名、更新或新建、授权和范围，以及库动词（create / update-from-source / update-from-feedback / update-portable / validate / retire / delete）。先分清 **session source**（用户本会话给出的可读仓库/文档）与 **provenance**（已写入 `meta.sources[]` 的出处身份）。只有新建导入或从源更新才需要 session source；已发布模板的 provenance 不得当成「请提供本地绝对路径」的理由。
+确认模板名、更新或新建、授权和范围，以及库动词（create / adopt / update-from-source / update-from-feedback / update-portable / validate / retire / delete）。先分清 **session source**（用户本会话给出的可读仓库/文档）与 **provenance**（已写入 `meta.sources[]` 的出处身份）。只有新建导入或从源更新才需要 session source；已发布模板的 provenance 不得当成「请提供本地绝对路径」的理由。
 
 本次从源导入或从源更新时：固定 session source、将写入 meta 的 source ID、完整 revision、platform、**本次变更集合（路径/组件，可用 L0–L6 标签）**、scenes/components/contexts、limits 与 conformance；默认 structural，只有用户明确要求仅视觉语言时才是有理由的 style-only。未冻结变更集合不得 Generate-from-source；未声明文件保持原字节。对已发布模板做校验/改文档/消费反馈/退役/删除时跳过 session-source Intake。retired 模板不得被汇报为可被 Apply 新消费。
 
-更新前按 [feedback-lifecycle.md](references/feedback-lifecycle.md) 扫描显式路径及已授权消费项目 `.ui-template-apply/feedback/`，按 UUID/fingerprint 幂等处置。未知 schema 或非法状态记录先修复，不跳过。
+更新前按 [feedback-lifecycle.md](references/feedback-lifecycle.md) 扫描显式路径及已授权消费项目 `.ui-template-apply/feedback/`，按 UUID/fingerprint 幂等处置。将要修改项目库而项目无同名行且无目录时，先按 pin 身份从 catalog 领养并在 Report 声明；已有同名行或目录不覆盖。未知 schema 或非法状态记录先修复，不跳过。
 
 repo capture 仅在已有 session source 时运行，且只接受 [repo-capture-format.md](references/repo-capture-format.md) 的 closed JSON/YAML literal source graph。不得执行来源代码、用 regex 冒充 TSX/JS parser、以“3–5 个代表组件”静默抽样，也不得为补 source 而按 provenance 自行联网 clone。用户把 Git 地址作为**本会话导入输入**时，读取该地址是 session source，不是补取。歧义、动态表达式、同 context/slot 冲突和 limit 超限均 unresolved；先请求收窄 scope 或显式 decision。structural 导入需要 chrome-complete graph（`shell_variant` + 有序 slots；已声明的锚点必须闭合）。缺 graph、chrome incomplete 或用页面模式分类学覆盖来源壳 IA 时不得 Index。`confidence.layout: high` 需要 chrome-complete sidecar。
 
@@ -86,7 +86,7 @@ bundle 与生产镜像在本 skill 根分发 `runtime/capture_repo_fidelity.py`�
 
 ### 5. Report
 
-按 [authoring-report.md](references/authoring-report.md) 报告模板路径、`schema_version`/`template_version`、来源与 coverage、default/estimated 摘要、core/profile version、conformance/scope/canonical digest、capture closure digest、replay identity/counters、unresolved、资产决定、规则/feedback receipts、实际命令及 checker/runner identity。legacy v2 无 sidecar 明确为 `legacy-baseline`；style-only 明确未提供 layout/geometry/state structural fidelity。已发布模板 portable 成功且 replay `not-run` 时不得使用 `STRUCTURAL_REPLAY_REQUIRED`，也不得把「请提供本地绝对路径」当作失败原因。无 sidecar 时 layout 不得为 high。仅在本次从源导入的全部 gate 与 Index 成功后，或已发布模板 portable 校验成功后，使用相应“完成”。失败报告必须给出阻断 gate/稳定 issue code；若动过 INDEX 路径，证明 production INDEX before/after digest 相同。
+按 [authoring-report.md](references/authoring-report.md) 报告模板路径、`schema_version`/`template_version`、来源与 coverage、default/estimated 摘要、core/profile version、conformance/scope/canonical digest、capture closure digest、replay identity/counters、unresolved、资产决定、规则/feedback receipts、catalog adoption、实际命令及 checker/runner identity。legacy v2 无 sidecar 明确为 `legacy-baseline`；style-only 明确未提供 layout/geometry/state structural fidelity。已发布模板 portable 成功且 replay `not-run` 时不得使用 `STRUCTURAL_REPLAY_REQUIRED`，也不得把「请提供本地绝对路径」当作失败原因。无 sidecar 时 layout 不得为 high。仅在本次从源导入的全部 gate 与 Index 成功后，或已发布模板 portable 校验成功后，使用相应“完成”。失败报告必须给出阻断 gate/稳定 issue code；若动过 INDEX 路径，证明 production INDEX before/after digest 相同。
 
 ## Portable checker/eval 发现协议
 

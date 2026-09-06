@@ -10,6 +10,7 @@ from template_apply_state import (
     ApplyStateError,
     build_identity,
     canonical_digest,
+    detect_architecture_site,
     load_structured,
     merge_feedback,
     recovery_decision,
@@ -27,6 +28,9 @@ def parser() -> argparse.ArgumentParser:
     digest.add_argument("path", type=Path)
     source = sub.add_parser("source-identity")
     source.add_argument("root", type=Path)
+    site = sub.add_parser("architecture-site")
+    site.add_argument("root", type=Path)
+    site.add_argument("--explicit-greenfield", action="store_true")
     build = sub.add_parser("build-identity")
     build.add_argument("artifact", type=Path)
     build.add_argument("--command", dest="build_command", required=True)
@@ -62,6 +66,9 @@ def main() -> int:
         return 0
     if args.command == "source-identity":
         print(source_identity(args.root))
+        return 0
+    if args.command == "architecture-site":
+        print(detect_architecture_site(args.root, explicit_greenfield=args.explicit_greenfield))
         return 0
     if args.command == "build-identity":
         print(build_identity(args.build_command, args.artifact))

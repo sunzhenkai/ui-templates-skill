@@ -26,7 +26,7 @@
 3. `skills/ui-template-author/references/spec-format.md`：模板字段语义、所有权和 Authoring 行为。
 4. active OpenSpec：对外可观察要求。`harden-template-lifecycle` 与 `close-functional-loops` 已 archive 并合入 `openspec/specs/`；当前无 pending overlay。
 5. `scripts/template_validation/`：上述契约的可执行实现（含 portable profile 与 session-source replay）。
-6. `governance/release/`：bundle 2.1.0、兼容、迁移、回滚与分发 allowlist。对外入口是成对 `npx skills add`；`make bundle` / `make install` 是治理通道。官方模板副本在 `skills/ui-template-author/catalog/`。
+6. `governance/release/`：bundle 2.2.0、兼容、迁移、回滚与分发 allowlist。对外入口是成对 `npx skills add`；`make bundle` / `make install` 是治理通道。官方模板副本在 `skills/ui-template-author/catalog/`。
 7. `governance/FUNCTIONAL-LOOP.md`：现行功能闭环与目标；与 1–6 冲突必须先修复。
 8. `README.md`、本文件和发布说明是派生入口；冲突必须修复，不能选择性忽略。
 
@@ -71,12 +71,12 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 治理/checksum/回滚仍通过双-skill installer，目标是 skills 父目录：
 
 ```bash
-ARTIFACT=dist/ui-templates-skill-2.1.0.tar.gz \
+ARTIFACT=dist/ui-templates-skill-2.2.0.tar.gz \
 INSTALL_TARGET=/path/to/project/.agents/skills \
 make install
 ```
 
-不得恢复旧 `cp -r skills/ui-template-author ...` 入口。installer 只替换两个 public skill，保留其他 skills 与独立历史档案。官方 catalog 随 Author skill 安装；项目可写库是项目根 `templates/`。v1 迁移使用：
+不得恢复旧 `cp -r skills/ui-template-author ...` 入口。installer 只替换两个 public skill，保留其他 skills 与独立历史档案。官方 catalog 随 Author skill 安装；项目可写库是项目根 `templates/`。空项目 Apply 不创建 `templates/`；`seed` 是显式领养。v1 迁移使用：
 
 ```bash
 /tmp/ui-template-governance-venv/bin/python scripts/migrate_template.py SOURCE CANDIDATE
@@ -90,7 +90,7 @@ make install
 
 - 生成物不是修复面。
 - Apply 零原版、零历史 web。
-- INDEX 是唯一目录（`published` 才可新消费）。
+- 库宿主 INDEX 是唯一可写目录；消费仓可 catalog pin（`published` 才可新消费）。
 - 未声明的变更保持原字节。
 
 ## 修改规则

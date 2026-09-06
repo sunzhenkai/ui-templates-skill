@@ -175,7 +175,7 @@ cases:
     description: 官方 catalog 必须与仓库根 published 生产库零漂移。
     given: 维护者改了 templates/ 或 catalog/
     fixture: tests/fixtures/eval/catalog-contracts.yaml#authoring-catalog-zero-drift
-    fixture_sha256: e0031cd424d9733e22785fc97d311b451d850790e0dd3745520ce146d8335f83
+    fixture_sha256: 1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c
     judge: script
     expect:
       must:

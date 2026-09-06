@@ -10,6 +10,7 @@
 .ui-template-apply/
 ├── checkpoint.yaml
 ├── 00-intake.md
+├── 00-architecture.yaml
 ├── 01-design-direction.md
 ├── 01-token-map.yaml
 ├── 02-routes.yaml
@@ -27,14 +28,16 @@
 
 ## Phase 0 — Intake（`00-intake.md`）
 
-记录模板 name/version/digest、平台/技术栈/既有约束、成功流程，以及 `included/deferred/excluded` 范围。先对项目 `templates/INDEX.md` 运行 `ui-template-author/runtime/manage_template_index.py require-published <name>`（默认从兄弟目录 `ui-template-author/catalog/` 播种缺失的 published 模板）。项目已有 `retired` 行不得覆盖。仅当项目库与 catalog 都没有该 published 模板时停止并移交 Authoring。生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。对 coverage 的 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。检测 `fidelity.yaml`：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。Gate：schema/origin/checker 通过，范围与非目标经确认。profile digest 纳入现有 template identity，不新增 checkpoint 字段。不得把原版源码或已有生成物写入 intake 作为实现输入。用户要求对齐原版时只记录 oracle 身份，对照手续见 [fidelity-compare.md](fidelity-compare.md)。
+记录模板 name/version/digest/`origin`/`resolved_path`、平台、成功流程，以及 `included/deferred/excluded` 范围。先运行 `ui-template-author/runtime/manage_template_index.py resolve <name>`（`require-published` 默认不播种）。项目 `published` 行 `origin=project`；项目 `retired` 停止且不得救回；项目没有该行时只读兄弟目录 `ui-template-author/catalog/` 并 pin，`origin=catalog`，不得创建项目 `templates/`。仅当项目库与 catalog 都没有该 published 模板时停止并移交 Authoring。判定 `greenfield | existing`：空目录或从零搭建必须写出 `00-architecture.yaml` 并经用户确认闭集层（language、UI framework、bundler、routing、styling、state、data、unit/browser、package manager、repo shape），未确认不得写应用源码，不得把任何栈写成 Apply 默认。`existing` 只记录观察到的栈。`project-init` 仅在用户明确要脚手架且所选栈落在其 reference 时作为确认后执行器。生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。对 coverage 的 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。检测 `fidelity.yaml`：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。Gate：schema/origin/checker 通过，范围与非目标经确认。profile digest 纳入现有 template identity。不得把原版源码或已有生成物写入 intake 作为实现输入。用户要求对齐原版时只记录 oracle 身份，对照手续见 [fidelity-compare.md](fidelity-compare.md)。
+
+`00-architecture.yaml` 使用 `architecture.schema.json`：`site` 为 `greenfield | existing`；`layers` 固定为 language、UI framework、bundler、routing、styling、client/server state、data access、unit/browser verification、package manager、repo shape；greenfield 必须有 `confirmed_by_user: true` 与预声明 `build_identity`，可记录拟用 `init_command`；existing 必须记录 `observed_stack`。greenfield 未确认前只允许写 `.ui-template-apply/`，不得写依赖清单、工程配置或应用源码；后续任何 phase 不得 complete。
 
 ## Phase 1 — Design direction & token freeze
 
 - `01-design-direction.md`：mood、anti-pattern、主题、密度、边界/动效及外部查询记录。
 - `01-token-map.yaml`：`schema_version: 2`、template/token digest、每个 template token 到项目 token 的映射；偏离含 rule ID、理由、确认。
 
-Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题角色/状态完整。不得从 prose 重演精确值。
+Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可消费 token 已映射，无未解释 arbitrary value；主题角色/状态完整。不得从 prose 重演精确值。
 
 ## Phase 2 — IA/layout/routes（`02-routes.yaml`）
 
@@ -42,7 +45,7 @@ Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题�
 
 ## Phase 3 — Project structure（`03-structure.md`）
 
-现场决定 shell/page/layout/shared/feature/state/data/styling/testing 边界和可执行命令。模板不提供默认目录或 adapter。Gate：新增文件有唯一归属，数据/状态/样式不绕过边界。
+现场只消费 Phase 0 已确认架构，决定 shell/page/layout/shared/feature/state/data/styling/testing 边界和可执行命令。模板不提供默认目录或 adapter；existing 不得静默换栈。Gate：新增文件有唯一归属，数据/状态/样式不绕过边界。
 
 ## Phase 4 — Component inventory（`04-components.yaml`）
 
@@ -68,6 +71,12 @@ Gate：所有可消费 token 已映射，无未解释 arbitrary value；主题�
 
 可复用模板缺口在 `feedback/<uuid>.yaml` 创建 schema v2 proposed 记录，引用 profile record/rule/current-build identities；项目/技术栈专属问题只留当前项目。创建/合并规则见本文件“Feedback”。
 
+Phase 9 有效通过且 feedback inbox 没有 `proposed` 时，会话才 `closed`。最终汇报必须输出 `session_closed: true`、`may_delete_apply_root: true`，以及固定句子：「可以删除整个 .ui-template-apply/；删除后生成页面不受影响；再次 Apply 视为新 Intake。」本次未领养项目库时还必须说明本仓不应存在 `templates/`。Apply 不自动删除任何目录。可用只读检查：
+
+```bash
+python3 ui-template-author/runtime/manage_template_index.py apply-close --apply-root .ui-template-apply --json
+```
+
 ## checkpoint 与身份
 
 `checkpoint.yaml` 符合 schema v2，固定含 0–9 十个有序 phase、template name/version/digest、scope、tokens digest、artifact digest、source identity、build identity、updated_at。恢复校验必须把 checkpoint `template.name`/`template.version` 分别绑定当前模板 meta 的 `name`/`template_version`（兼容显式 envelope 的 `version` 字段）；任一 identity 字段不一致均为 Phase 0 失效，不能只靠可伪造的 digest 通过。digest 统一为：安全解析值 → UTF-8 sorted-key canonical JSON（`ensure_ascii=false`、无多余空白、拒绝 NaN）→ SHA-256，算法标识 `sha256-canonical-json-v1`。因此 YAML 格式/键序变化不使 tokens 失效，语义变化会。
@@ -79,6 +88,7 @@ source identity：有 Git 时记录 commit + dirty diff digest；无 Git 时记�
 ```bash
 python3 scripts/check_template_apply_state.py digest <yaml-or-json>
 python3 scripts/check_template_apply_state.py source-identity <project-root>
+python3 scripts/check_template_apply_state.py architecture-site <project-root>
 python3 scripts/check_template_apply_state.py build-identity <build-artifact> --command '<actual-build-command>'
 python3 scripts/check_template_apply_state.py checkpoint \
   --apply-root .ui-template-apply --template <template-meta-or-envelope> \

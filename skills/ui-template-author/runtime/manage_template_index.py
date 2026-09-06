@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""生产 templates/INDEX.md 的 list/show/retire/delete/seed，以及 Apply Intake 的 published 检查。"""
+"""生产 templates/INDEX.md 的 list/show/retire/delete/seed/adopt/resolve，以及 Apply Intake 的 published 检查。"""
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -100,6 +102,66 @@ def require_published(index: Path, name: str) -> dict[str, object]:
     if status != "published":
         return {"ok": False, "code": "INDEX_NOT_PUBLISHED", "name": name, "status": status}
     return {"ok": True, "code": "INDEX_PUBLISHED", "name": name, "status": status}
+
+
+def _meta_field(directory: Path, field: str) -> str | None:
+    meta = directory / "meta.yaml"
+    if not meta.is_file():
+        return None
+    match = re.search(rf"(?m)^{re.escape(field)}:\s*[\"']?([^\s\"']+)", meta.read_text(encoding="utf-8"))
+    return match.group(1) if match else None
+
+
+def _template_digest(directory: Path) -> dict[str, str] | None:
+    if not directory.is_dir():
+        return None
+    files = _tree_bytes(directory)
+    payload = [{"path": path, "sha256": hashlib.sha256(body).hexdigest()} for path, body in sorted(files.items())]
+    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return {"algorithm": "sha256-canonical-json-v1", "value": hashlib.sha256(encoded).hexdigest()}
+
+
+def _locator(origin: str, name: str) -> str:
+    return f"{'templates' if origin == 'project' else 'catalog'}/{name}"
+
+
+def _identity(origin: str, directory: Path, name: str, status: str | None, code: str, ok: bool) -> dict[str, object]:
+    return {
+        "ok": ok,
+        "code": code,
+        "origin": origin,
+        "name": name,
+        "version": _meta_field(directory, "template_version"),
+        "digest": _template_digest(directory),
+        "status": status,
+        "path": _locator(origin, name),
+        "directory": str(directory),
+    }
+
+
+def resolve_published(
+    index: Path,
+    templates: Path,
+    name: str,
+    catalog: Path | None = None,
+) -> dict[str, object]:
+    current = require_published(index, name)
+    project_dir = templates / name
+    if current["ok"]:
+        return _identity("project", project_dir, name, "published", "RESOLVED_PUBLISHED", True)
+    if current["code"] == "INDEX_NOT_PUBLISHED":
+        payload = _identity("project", project_dir, name, current["status"], current["code"], False)
+        return payload
+    resolved = discover_catalog(catalog)
+    if resolved is None:
+        return {"ok": False, "code": "TEMPLATE_NOT_IN_CATALOG", "origin": None, "name": name, "version": None, "digest": None, "status": None, "path": None, "directory": None}
+    catalog_index = resolved / "INDEX.md"
+    rows = try_parse_index(catalog_index)
+    cells = rows.get(name)
+    catalog_dir = resolved / name
+    if cells is None or cells[4] != "published" or not catalog_dir.is_dir():
+        return {"ok": False, "code": "TEMPLATE_NOT_IN_CATALOG", "origin": None, "name": name, "version": None, "digest": None, "status": cells[4] if cells else None, "path": None, "directory": None}
+    return _identity("catalog", catalog_dir, name, "published", "RESOLVED_PUBLISHED", True)
 
 
 def seed_from_catalog(
@@ -222,9 +284,28 @@ def cmd_show(index: Path, templates: Path, name: str) -> int:
     return 0
 
 
-def cmd_retire(index: Path, name: str, reason: str) -> int:
+def _adopt_before_write(index: Path, templates: Path, name: str, catalog: Path | None) -> tuple[bool, bool]:
+    if name in try_parse_index(index) or (templates / name).exists():
+        return True, False
+    resolved = discover_catalog(catalog)
+    if resolved is None:
+        print("CATALOG_MISSING", file=sys.stderr)
+        return False, False
+    payload = seed_from_catalog(resolved, index, templates, [name])
+    if name not in payload["seeded"]:
+        code = payload["code"]
+        details = payload.get("missing") or payload.get("skipped") or []
+        print(f"{code}: {name} {details}", file=sys.stderr)
+        return False, False
+    return True, True
+
+
+def cmd_retire(index: Path, templates: Path, name: str, reason: str, catalog: Path | None) -> int:
     if not reason.strip():
         print("RETIRE_REASON_REQUIRED", file=sys.stderr)
+        return 1
+    adopted_ok, adopted = _adopt_before_write(index, templates, name, catalog)
+    if not adopted_ok:
         return 1
     _, rows = parse_index(index)
     if name not in rows:
@@ -239,7 +320,12 @@ def cmd_retire(index: Path, name: str, reason: str) -> int:
     return 0
 
 
-def cmd_delete(index: Path, templates: Path, name: str) -> int:
+def cmd_delete(index: Path, templates: Path, name: str, catalog: Path | None) -> int:
+    adopted_ok, adopted = _adopt_before_write(index, templates, name, catalog)
+    if not adopted_ok:
+        return 1
+    if adopted and cmd_retire(index, templates, name, "delete requested after catalog adoption", catalog) != 0:
+        return 1
     _, rows = parse_index(index)
     if name not in rows:
         print(f"INDEX_ROW_MISSING: {name}", file=sys.stderr)
@@ -281,11 +367,80 @@ def cmd_require_published(
     as_json: bool,
     seed: bool,
 ) -> int:
-    payload = ensure_published(index, templates, name, catalog) if seed else require_published(index, name)
+    payload = ensure_published(index, templates, name, catalog) if seed else resolve_published(index, templates, name, catalog)
     if as_json:
         _print_json(payload)
     else:
-        print(f"{payload['name']}\t{payload['status']}\t{payload['code']}")
+        print(f"{payload.get('name')}\t{payload.get('origin')}\t{payload.get('status')}\t{payload.get('code')}")
+    return 0 if payload["ok"] else 1
+
+
+def cmd_resolve(
+    index: Path,
+    templates: Path,
+    name: str,
+    catalog: Path | None,
+    as_json: bool,
+) -> int:
+    payload = resolve_published(index, templates, name, catalog)
+    if as_json:
+        _print_json(payload)
+    else:
+        print(f"{payload.get('name')}\t{payload.get('origin')}\t{payload.get('status')}\t{payload.get('code')}\t{payload.get('path')}")
+    return 0 if payload["ok"] else 1
+
+
+def _phase_status(text: str, phase_id: int) -> str | None:
+    try:
+        data = json.loads(text)
+        for phase in data.get("phases") or []:
+            if isinstance(phase, dict) and phase.get("id") == phase_id:
+                status = phase.get("status")
+                return str(status) if status is not None else None
+    except json.JSONDecodeError:
+        pass
+    for block in re.split(r"(?m)^(?:-\s*)?id:\s*", text):
+        if not block.startswith(f"{phase_id}") or (len(block) > 1 and block[len(str(phase_id))] not in {"", "\n", " ", "\t", "\r"}):
+            continue
+        match = re.search(r"(?m)^[ \t]*status:\s*(\S+)", block)
+        return match.group(1) if match else None
+    return None
+
+
+def session_closed(apply_root: Path) -> dict[str, object]:
+    checkpoint_path = apply_root / "checkpoint.yaml"
+    inbox = apply_root / "feedback"
+    if not checkpoint_path.is_file():
+        return {"ok": False, "code": "APPLY_ROOT_INCOMPLETE", "session_closed": False, "may_delete_apply_root": False, "hint": "缺少 checkpoint.yaml"}
+    phase9_complete = _phase_status(checkpoint_path.read_text(encoding="utf-8"), 9) == "complete"
+    proposed = False
+    if inbox.is_dir():
+        for path in inbox.glob("*.y*ml"):
+            if re.search(r"(?m)^status:\s*proposed\s*$", path.read_text(encoding="utf-8")):
+                proposed = True
+                break
+    closed = phase9_complete and not proposed
+    return {
+        "ok": closed,
+        "code": "APPLY_SESSION_CLOSED" if closed else "APPLY_SESSION_OPEN",
+        "session_closed": closed,
+        "may_delete_apply_root": closed,
+        "may_delete_templates": False,
+        "proposed_feedback": proposed,
+        "hint": (
+            "可以删除整个 .ui-template-apply/；删除后生成页面不受影响；再次 Apply 视为新 Intake。未领养则本仓不应存在 templates/。"
+            if closed
+            else "会话未 closed，不得删除 .ui-template-apply/，也不得宣称完成。"
+        ),
+    }
+
+
+def cmd_apply_close(apply_root: Path, as_json: bool) -> int:
+    payload = session_closed(apply_root)
+    if as_json:
+        _print_json(payload)
+    else:
+        print(f"{payload['code']}\t{payload['hint']}")
     return 0 if payload["ok"] else 1
 
 
@@ -320,21 +475,37 @@ def main() -> int:
     retire = sub.add_parser("retire")
     retire.add_argument("name")
     retire.add_argument("--reason", required=True)
+    retire.add_argument("--catalog", type=Path)
     _add_common(retire)
     delete = sub.add_parser("delete")
     delete.add_argument("name")
+    delete.add_argument("--catalog", type=Path)
     _add_common(delete)
     seed = sub.add_parser("seed")
     seed.add_argument("names", nargs="*")
     seed.add_argument("--catalog", type=Path)
     seed.add_argument("--json", action="store_true")
     _add_common(seed)
+    adopt = sub.add_parser("adopt")
+    adopt.add_argument("name")
+    adopt.add_argument("--catalog", type=Path)
+    adopt.add_argument("--json", action="store_true")
+    _add_common(adopt)
+    resolve_cmd = sub.add_parser("resolve")
+    resolve_cmd.add_argument("name")
+    resolve_cmd.add_argument("--catalog", type=Path)
+    resolve_cmd.add_argument("--json", action="store_true")
+    _add_common(resolve_cmd)
     require_cmd = sub.add_parser("require-published")
     require_cmd.add_argument("name")
     require_cmd.add_argument("--catalog", type=Path)
     require_cmd.add_argument("--json", action="store_true")
+    require_cmd.add_argument("--seed", action="store_true")
     require_cmd.add_argument("--no-seed", action="store_true")
     _add_common(require_cmd)
+    close_cmd = sub.add_parser("apply-close")
+    close_cmd.add_argument("--apply-root", type=Path, default=Path(".ui-template-apply"))
+    close_cmd.add_argument("--json", action="store_true")
     changeset = sub.add_parser("check-changeset")
     changeset.add_argument("--before", type=Path, required=True)
     changeset.add_argument("--after", type=Path, required=True)
@@ -343,19 +514,25 @@ def main() -> int:
     args = parser.parse_args()
     if args.command == "check-changeset":
         return cmd_check_changeset(args.before, args.after, args.allowed, args.json)
+    if args.command == "apply-close":
+        return cmd_apply_close(args.apply_root, args.json)
     index, templates = _resolve_library(args)
     if args.command == "list":
         return cmd_list(index)
     if args.command == "show":
         return cmd_show(index, templates, args.name)
     if args.command == "retire":
-        return cmd_retire(index, args.name, args.reason)
+        return cmd_retire(index, templates, args.name, args.reason, args.catalog)
     if args.command == "delete":
-        return cmd_delete(index, templates, args.name)
+        return cmd_delete(index, templates, args.name, args.catalog)
     if args.command == "seed":
         return cmd_seed(index, templates, args.catalog, args.names, args.json)
+    if args.command == "adopt":
+        return cmd_seed(index, templates, args.catalog, [args.name], args.json)
+    if args.command == "resolve":
+        return cmd_resolve(index, templates, args.name, args.catalog, args.json)
     if args.command == "require-published":
-        return cmd_require_published(index, templates, args.name, args.catalog, args.json, seed=not args.no_seed)
+        return cmd_require_published(index, templates, args.name, args.catalog, args.json, seed=bool(args.seed) and not args.no_seed)
     return 2
 
 

@@ -69,8 +69,11 @@ L0–L6 只是变更集合标签。Intake 必须冻结**本次改哪些路径/�
 **模式 A — 干净实现（默认）**
 
 - 输入：`published` 模板 + 用户需求。
+- Intake：项目 `published` 优先；缺行时只读 Author catalog 并在 `.ui-template-apply/` pin identity；不为消费创建项目 `templates/`。
+- greenfield：先确认闭集技术架构；未确认不得写应用源码/依赖/工程配置。existing 只记录 observed stack。
 - 禁止：原版 checkout、历史生成物。
 - 完成：Phase 8/9 对**模板 expected** 通过。
+- 收尾：Phase 9 通过且无 proposed feedback 才 closed；提示可删 `.ui-template-apply/`，未领养则本仓不应有 `templates/`，但绝不自动删除。
 
 **模式 B — 保真对照（仅“对齐原版”任务）**
 
@@ -84,7 +87,7 @@ L0–L6 只是变更集合标签。Intake 必须冻结**本次改哪些路径/�
 
 - “做成模板 / 更新模板 / 退役模板” → Authoring。
 - “用模板做页面” → Apply。
-- 项目库缺 published 行但 Author catalog 已有官方模板 → Apply 先播种再消费。
+- 项目库缺同名行但 Author catalog 已有官方模板 → Apply 只读 catalog pin；需要写模板、落库 feedback、retire/delete 或用户明确「接到本仓」时，Authoring 才显式领养到项目库。
 - 项目库与 catalog 都没有目标 published 模板 → 先 Author 声明变更集合过 gate，再 Apply。
 - schema 不支持、origin 未知、项目 `retired`、validation 失败 → Apply 停止。catalog 不得救回 retired 行。
 
@@ -103,6 +106,7 @@ draft（候选目录，不是 INDEX 状态，未进 INDEX）
 | 动词 | 门禁 |
 | --- | --- |
 | `create` | 冻结变更集合；Generate→Validate→Eval 后才能 Index 为 published |
+| `adopt` / `seed <name>` | 写模板前或用户明确接入时，从 catalog 领养到项目库；已有行/目录不覆盖 |
 | `update-from-source` | 需要 session source；声明路径/组件集合；未声明文件不重写 |
 | `update-from-feedback` | 幂等处置；项目专属 rejected |
 | `update-portable` | 无 session source；不得伪造 observed sidecar |
@@ -142,7 +146,7 @@ INDEX 表头固定为：名称、风格描述、来源类型、采集日期、�
 
 **I2 Apply 零原版、零历史 web。** 实现不得打开原版 checkout、`meta.sources[]` 路径或已有生成物。对照物只有当前模板、当前 skill、本会话可部署原版。
 
-**I3 INDEX 是唯一目录。** 状态只有 `published | retired`。Apply 新消费必须 `require-published`。draft 是未进 INDEX 的候选目录，不是第三状态。
+**I3 库宿主 INDEX、消费仓 pin。** 状态只有 `published | retired`。库宿主（本仓或已领养项目）的 INDEX 是唯一可写目录；消费仓可只用 catalog pin 完成 Apply，不因此创建 `templates/`。项目 `retired` 优先于 catalog。draft 是未进 INDEX 的候选目录，不是第三状态。
 
 **I4 未声明的变更保持原字节。** 从源更新必须给出路径/组件集合；未纳入文件不得重写。部分失败则整次不 Index。`confidence.components: high` 不得与大批 defaulted 并存。
 
@@ -167,7 +171,7 @@ example/<name>/web*/       生成物，治理排除
 闭环成立当且仅当：
 
 1. Authoring 能按变更集合创建/更新，失败不改生产 INDEX。
-2. Apply 能只靠 published 模板完成 Phase 0–9；`require-published` 拒绝 retired。
+2. Apply 能只靠 published 模板完成 Phase 0–9；resolve 支持 catalog pin，且项目 retired 拒绝。
 3. retire / delete 有机器校验与 skill 手续。
 4. 保真差异只能回写 skill/模板/prompts，且至少重生一次。
 5. `example/**/web*` 不决定治理通过。
