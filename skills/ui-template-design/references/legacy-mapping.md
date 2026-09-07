@@ -12,4 +12,4 @@ rounded-lg               radius-md
 p-6                      space-6
 ```
 
-这一步去掉重复劳动，不是一次视觉完美。无 mapping 就手工改页视为跳过 Phase 1.5。
+这一步去掉重复劳动，不是一次视觉完美。无 mapping 就手工改页视为跳过 Token Freeze 的前置步骤。

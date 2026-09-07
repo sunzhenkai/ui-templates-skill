@@ -23,6 +23,8 @@ Intake 用可观察信号判定 `bootstrap | refactor | iterate`，写入 `00-in
 
 未列入本次必读的 reference **不要读**。
 
+写核心产物 YAML 时按需读取 [artifact-templates.md](artifact-templates.md) 中对应段落，不预加载全文。
+
 ## 变更集合
 
 `refactor` 与 `iterate` 必须在 Intake 声明路径/层集合。未声明路径保持原字节。一次只允许动 Token、Primitive、Pattern、规则或 Gallery 中用户点名的层。

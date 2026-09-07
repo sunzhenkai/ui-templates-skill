@@ -8,7 +8,7 @@ cases:
     description: 只装 Design、无 Author/Apply/模板时仍可完成 freeze gate。
     given: 消费项目仅安装 ui-template-design，用户要求建立前端设计系统且未提供模板
     fixture: skills/ui-template-design/evals/contracts.yaml#design-standalone-complete
-    fixture_sha256: f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60
+    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
     judge: script
     expect:
       must:
@@ -24,7 +24,7 @@ cases:
     description: 仅有 Primitive、没有 Pattern 不得 freeze 完成。
     given: freeze 声明 primitives 为真而 patterns 为假
     fixture: skills/ui-template-design/evals/contracts.yaml#design-primitives-not-complete
-    fixture_sha256: f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60
+    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
     judge: script
     expect:
       must:
@@ -39,7 +39,7 @@ cases:
     description: raw palette 扫描失败；无模板时写 INDEX 失败；越界 output_root 失败。
     given: 输出根含 text-gray-500，或 freeze.touched_paths 含 templates/INDEX.md，或 output_root 含 ..
     fixture: skills/ui-template-design/evals/contracts.yaml#design-raw-token-fail
-    fixture_sha256: f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60
+    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
     judge: script
     expect:
       must:
@@ -55,7 +55,7 @@ cases:
     description: Apply 无 freeze 时保持现行工作流；Design 完成不要求 Apply Phase 8。
     given: 消费项目没有 design freeze，或 Design 会话只冻结体制
     fixture: skills/ui-template-design/evals/contracts.yaml#design-no-freeze-apply-optional
-    fixture_sha256: f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60
+    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
     judge: script
     expect:
       must:
@@ -70,7 +70,7 @@ cases:
     description: 做成模板的请求移交 Author；Author 把设计系统请求移交 Design。
     given: 用户要求抽取并发布 schema v2 模板，或要求建立项目 Design System 且不要做成模板
     fixture: skills/ui-template-design/evals/contracts.yaml#design-handoff-author
-    fixture_sha256: f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60
+    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
     judge: script
     expect:
       must:
@@ -85,7 +85,7 @@ cases:
     description: 按模板实现页面移交 Apply，且不得假装已实现业务页。
     given: 用户要求用已有 published 模板实现产品页面
     fixture: skills/ui-template-design/evals/contracts.yaml#design-handoff-apply
-    fixture_sha256: f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60
+    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
     judge: script
     expect:
       must:
@@ -100,7 +100,7 @@ cases:
     description: 用可观察信号判定 bootstrap/refactor/iterate；digest 不匹配或范围未声明则停止。
     given: freeze 为 frozen 且 digest 匹配，或无 freeze 时输出根空/已有代码，或用户只说优化 UI 未给范围
     fixture: skills/ui-template-design/evals/contracts.yaml#design-task-classes
-    fixture_sha256: f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60
+    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
     judge: script
     expect:
       must:
@@ -110,3 +110,20 @@ cases:
       must_not:
         - 凭用户口吻猜测任务类
     revision: add-ui-template-design-skill-eval-v1
+  - id: design-scanner-gate-extended
+    skill: ui-template-design
+    category: validation-gate
+    description: 扫描器覆盖 raw spacing/motion；gate 校验 digest 一致性与 Gallery 存在。
+    given: 输出根含 p-[17px] 或 transition-all；freeze digest 不匹配或 gallery=true 但无 07-gallery.yaml
+    fixture: skills/ui-template-design/evals/contracts.yaml#design-scanner-gate-extended
+    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
+    judge: script
+    revision: add-ui-template-design-skill-eval-v1
+    expect:
+      must:
+        - raw spacing 扫描失败
+        - raw motion 扫描失败
+        - digest 不匹配被 gate 阻断
+        - gallery 缺失被 gate 阻断
+      must_not:
+        - raw spacing 或 motion 存在仍 freeze

@@ -21,7 +21,6 @@ cases:
           - 未安装 Author/Apply
           - 没有模板
           - 不是失败
-          - 单独安装
           - ui-template-design
         none:
           - 必须成对安装 ui-template-design
@@ -53,7 +52,7 @@ cases:
         path: skills/ui-template-design/SKILL.md
         all:
           - scan_design_constraints.py
-          - 扫描失败不得 freeze
+          - 扫描失败或 digest 不一致不得 freeze
           - 禁止写 `templates/INDEX.md`
       - type: json_schema_validity
         schema: skills/ui-template-design/runtime/schemas/design-freeze/v1/freeze.schema.json
@@ -125,7 +124,7 @@ cases:
         all:
           - 任务类
           - iterate
-          - 不得加载完整 inventory
+          - 禁止全量 inventory
         none:
           - 凭用户口吻猜测
       - type: file_contains
@@ -142,3 +141,28 @@ cases:
           - 不要重开完整阶段 0–9
           - 不得加载完整 inventory
           - 未声明路径保持原字节
+  design-scanner-gate-extended:
+    assertions:
+      - type: python_call
+        operation: design_standalone_contracts
+        json_path_equals:
+          - path: [raw_spacing_failed]
+            value: true
+          - path: [raw_motion_failed]
+            value: true
+          - path: [digest_mismatch_blocked]
+            value: true
+          - path: [gallery_missing_blocked]
+            value: true
+      - type: file_contains
+        path: skills/ui-template-design/SKILL.md
+        all:
+          - digest 一致
+      - type: file_contains
+        path: skills/ui-template-design/references/artifact-templates.md
+        all:
+          - 02-tokens-freeze.yaml
+          - 03-primitives.yaml
+          - 04-patterns.yaml
+          - 07-gallery.yaml
+          - compute-digest

@@ -2,7 +2,7 @@
 
 输出根已有依赖清单或实质源码，且没有可用 freeze。只记录 observed stack，禁止静默换栈。仅任务类 `refactor` 预加载本文；`iterate` 不要读。
 
-## Phase 0 — 冻结业务
+## 前置 — 冻结业务
 
 禁止改 API、数据模型、权限、路由语义、业务状态、交互语义。允许改 layout、typography、spacing、components、visual hierarchy。一次任务不得同时做 architecture + UX + visual + business。重构改了 API 则停止并拆分任务。
 

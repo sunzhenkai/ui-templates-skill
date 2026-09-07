@@ -91,31 +91,31 @@
       "status": "passed"
     },
     "design-handoff-apply": {
-      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "fixture_sha256": "be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f",
       "status": "passed"
     },
     "design-handoff-author": {
-      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "fixture_sha256": "be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f",
       "status": "passed"
     },
     "design-no-freeze-apply-optional": {
-      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "fixture_sha256": "be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f",
       "status": "passed"
     },
     "design-primitives-not-complete": {
-      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "fixture_sha256": "be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f",
       "status": "passed"
     },
     "design-raw-token-fail": {
-      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "fixture_sha256": "be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f",
       "status": "passed"
     },
     "design-standalone-complete": {
-      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "fixture_sha256": "be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f",
       "status": "passed"
     },
     "design-task-classes": {
-      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "fixture_sha256": "be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f",
       "status": "passed"
     },
     "doc-source-routed-correctly": {
@@ -196,6 +196,10 @@
     },
     "tokens-yaml-required-and-complete": {
       "fixture_sha256": "fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c",
+      "status": "passed"
+    },
+    "design-scanner-gate-extended": {
+      "fixture_sha256": "be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f",
       "status": "passed"
     }
   }

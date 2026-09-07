@@ -21,10 +21,19 @@ RAW_PALETTE = re.compile(
 )
 RAW_HEX = re.compile(r"(?:className|style|color)\s*[=\:]\s*['\"`][^'\"`]*#[0-9A-Fa-f]{3,8}")
 HEX_CSS = re.compile(r"(?:color|background(?:-color)?|border-color)\s*:\s*#[0-9A-Fa-f]{3,8}")
+CSS_CUSTOM_HEX = re.compile(r"--[\w-]+\s*:\s*#[0-9A-Fa-f]{3,8}")
+RAW_SPACING_ARBITRARY = re.compile(r"\b[pm][trblxy]?-\[[\d.]+(?:px|rem|em|vh|vw)\]")
+RAW_SPACING_CSS = re.compile(
+    r"(?:padding|margin|gap|row-gap|column-gap)\s*:\s*[\d.]+(?:px|rem|em)\b"
+)
+RAW_TRANSITION_ALL = re.compile(r"\btransition-all\b")
+RAW_KEYFRAMES = re.compile(r"@keyframes\b")
 DOMAIN_IMPORT = re.compile(
     r"""import\s+(?:\{[^}]*\b(?:Button|Input|Dialog|Select)\b[^}]*\}|(?:Button|Input|Dialog))\s+from\s+['"][^'"]*(?:domain|features|entities)[^'"]*['"]"""
 )
 PAGE_DIV = re.compile(r"return\s*\(\s*<div\b[^>]*(?:className|class)=")
+NON_CSS_SUFFIXES = {".tsx", ".ts", ".jsx", ".js", ".vue", ".svelte", ".html", ".mdx"}
+APP_PATH_MARKERS = ("app/", "pages/", "/routes/", "views/")
 
 
 def iter_files(root: Path) -> Iterable[Path]:
@@ -50,6 +59,16 @@ def scan(root: Path) -> dict[str, object]:
             findings.append({"code": "RAW_PALETTE", "path": relative})
         if RAW_HEX.search(text) or HEX_CSS.search(text):
             findings.append({"code": "RAW_HEX", "path": relative})
+        if path.suffix.lower() in NON_CSS_SUFFIXES and CSS_CUSTOM_HEX.search(text):
+            findings.append({"code": "RAW_HEX", "path": relative})
+        if RAW_SPACING_ARBITRARY.search(text):
+            findings.append({"code": "RAW_SPACING", "path": relative})
+        if path.suffix.lower() in NON_CSS_SUFFIXES and RAW_SPACING_CSS.search(text):
+            findings.append({"code": "RAW_SPACING", "path": relative})
+        if RAW_TRANSITION_ALL.search(text):
+            findings.append({"code": "RAW_MOTION", "path": relative})
+        if RAW_KEYFRAMES.search(text) and any(m in relative for m in APP_PATH_MARKERS):
+            findings.append({"code": "RAW_MOTION", "path": relative})
         if DOMAIN_IMPORT.search(text):
             findings.append({"code": "CROSS_LAYER_IMPORT", "path": relative})
         if "Page" not in text and PAGE_DIV.search(text) and ("app/" in relative or "pages/" in relative or "/routes/" in relative):

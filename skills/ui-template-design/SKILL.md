@@ -5,25 +5,13 @@ description: 在消费项目建立并冻结可执行前端 Design System（语�
 
 # ui-template-design
 
-把前端从「Agent 直接生成页面」变成「在可执行 Design System 约束下组装页面」。本 skill 建立并冻结 Token → Primitive → Pattern → Page Type；不创建 schema v2 模板，不实现全站业务页。
-
-单独安装，不要用 `--all`：
-
-```bash
-npx skills add sunzhenkai/ui-templates-skill -s ui-template-design
-```
-
-模板产品仍成对安装 `ui-template-author` 与 `ui-template-apply`。缺少那两个 skill、catalog 或项目 `templates/` 不是失败。
+把前端从「Agent 直接生成页面」变成「在可执行 Design System 约束下组装页面」。本 skill 建立并冻结 Token → Primitive → Pattern → Page Type；不创建 schema v2 模板，不实现全站业务页。缺少 Author、Apply、catalog 或项目 `templates/` 不是失败。
 
 ## 路由
 
-先按可观察信号判定任务类，写入 `00-intake.md`，再只加载 [task-classes.md](references/task-classes.md) 中该类必读文件。禁止凭「优化一下 UI」猜测。判定顺序与必读表只以 `task-classes.md` 为准。
+先按可观察信号判定任务类，写入 `00-intake.md`，再只加载 [task-classes.md](references/task-classes.md) 中该类必读文件。禁止凭「优化一下 UI」猜测。判定顺序、必读/禁止预加载表只以 `task-classes.md` 为准。
 
-- 任务类 `bootstrap`（初始化）→ [greenfield.md](references/greenfield.md)。
-- 任务类 `refactor`（重构）→ [existing-refactor.md](references/existing-refactor.md)。
-- 任务类 `iterate`（迭代更新）→ [iterate.md](references/iterate.md)；不得加载完整 inventory。
-- “做成模板 / 提取风格 / 导入模板” → 停止，移交 `ui-template-author`。
-- “用模板实现页面 / 按模板做 UI” → 停止，移交 `ui-template-apply`。未安装 Apply 时说明 freeze 完成后可再装，不得假装已实现业务页。
+移交红线：「做成模板 / 提取风格 / 导入模板」→ 停止，移交 `ui-template-author`；「用模板实现页面 / 按模板做 UI」→ 停止，移交 `ui-template-apply`。未安装 Apply 时说明 freeze 完成后可再装，不得假装已实现业务页。
 
 ## 不变量
 
@@ -58,11 +46,15 @@ python3 skills/ui-template-design/runtime/check_design_freeze.py gate --design-r
 python3 skills/ui-template-design/runtime/scan_design_constraints.py <output-root> --json
 ```
 
-仅有 Constitution、规则未落地或扫描失败不得 freeze。digest 算法为 `sha256-canonical-json-v1`（与 Apply 相同）。
+仅有 Constitution、规则未落地、扫描失败或 digest 不一致不得 freeze。digest 算法为 `sha256-canonical-json-v1`；写 freeze.yaml 前用 `compute-digest` 子命令计算：
+
+```bash
+python3 skills/ui-template-design/runtime/check_design_freeze.py compute-digest --freeze-path .ui-template-design/freeze.yaml --json
+```
 
 ## 完成定义
 
-可以声明完成，当且仅当：UX Model 无 unresolved；token 已确认且唯一；Primitive 状态闭合；声明的 Pattern 含 Data-State/断点/运动/禁止组合；可执行规则已写入且本次扫描通过；Gallery 可运行且有 current-build 截图；视觉 loop 通过或 3 轮后升级人类；`freeze.yaml` 为 `frozen`。`iterate` 另须：变更集合已声明、只动点名层、未声明路径保持原字节、扫描通过、freeze digest 已刷新。不得称为完成：只有 Markdown、只有 shadcn 初始化、只改了一个业务页、截图身份过期。全站未迁完不是失败。未装 Author/Apply、未用模板不是失败。
+可以声明完成，当且仅当：UX Model 无 unresolved；token 已确认且唯一；Primitive 状态闭合；声明的 Pattern 含 Data-State/断点/运动/禁止组合；可执行规则已写入且本次扫描通过；Gallery 可运行且有 current-build 截图；视觉 loop 通过或 3 轮后升级人类；`freeze.yaml` 为 `frozen` 且 digest 一致。`iterate` 另须：变更集合已声明、只动点名层、未声明路径保持原字节、扫描通过、freeze digest 已刷新。不得称为完成：只有 Markdown、只有 shadcn 初始化、只改了一个业务页、截图身份过期。全站未迁完不是失败。未装 Author/Apply、未用模板不是失败。
 
 ## 汇报
 

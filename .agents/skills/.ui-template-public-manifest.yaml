@@ -64,7 +64,7 @@ skills:
     - path: runtime/contract_eval/__init__.py
       sha256: 1c9acef6e515e28bb56b78987a817cfaf6bf885ac7e59f9b8dfbe65ee865f17c
     - path: runtime/contract_eval/runner.py
-      sha256: c81b8436539a4713178106a740e10491f6363ed762792c07387ec369e0525c60
+      sha256: 713ea784e870953d8822ed5f6a5ce089e8e182f05c9d1bae95fd15efdab92ce4
     - path: runtime/deterministic-baseline.json
       sha256: e5ed6f0ab698ad1824f050e3e654b68eb60be6d976e431fbb1d07135a9b08798
     - path: runtime/fixtures/eval/apply-hygiene-contracts.yaml
@@ -196,15 +196,17 @@ skills:
     version: 2.2.0
     files:
     - path: SKILL.md
-      sha256: 6ba6b1fed473358ca8404f43989cec1decfe554c9abb135bdfa7a5ce904c22cd
+      sha256: cd99e3e2877590c8d1a50d2e13b556822636b6c3b781a207dd7344c5ad8e5164
     - path: evals/README.md
       sha256: a4e650d7a02c7cae175923b4b505cc4b82f6afdc5ce514de10bc1c2c304c1bb2
     - path: evals/cases.yaml
-      sha256: 45b3eae6346dc60c5cff952ea6a1e4aba46dedc500abb380cd941093aac8370b
+      sha256: 69889d15fc9d3b953b4a34b072c226eb689f9989a9d463e09e61beb924e7ccb6
     - path: evals/contracts.yaml
-      sha256: f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60
+      sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
     - path: references/adapters.md
       sha256: 95c05b4482de956966e3a3ca9596ff999ab13af6c53fa43e6d503a94a8e3b6a5
+    - path: references/artifact-templates.md
+      sha256: fd29c569465e592ca2a266c9be83472315437e0d8a500a43858bf91a1f761040
     - path: references/constitution-template.md
       sha256: c18050c592ac2dc1fc64a9434845c27e79aedaeeb26f9ed4a041c98312545ad6
     - path: references/data-state.md
@@ -212,7 +214,7 @@ skills:
     - path: references/executable-rules.md
       sha256: fb16e1bf112a082813d231b7448d45a54addbbe8d5142ca95b9bf4c218707bbb
     - path: references/existing-refactor.md
-      sha256: e5123d5ec999370f2f2b7e7392efa04390e34175db6e34ee48e3d7a7565014d0
+      sha256: 719004616589c70712e6c3be3cc09d1dfb70962ba8d761b45756063f0102cfd5
     - path: references/gallery.md
       sha256: 247aba7ddd19ebc5ad7b42c9af761d55d785a250246be4b12af0fefe5fb15fa9
     - path: references/greenfield.md
@@ -224,15 +226,15 @@ skills:
     - path: references/layers.md
       sha256: d06b4688566c0d64eff9a88c2bb5bfba1faa6bef21145483b76ea46b51bdb180
     - path: references/legacy-mapping.md
-      sha256: 09824bd3252c76403a4c7301bcc5d182d73783f160fb16ac252cb5c2b91e64d2
+      sha256: 013d966d63514867c6865f863a581090a7d4e8cada9966ca268b65b8fee81c58
     - path: references/task-classes.md
-      sha256: e0c3a50b9cba172f6f55720b15d920c4e7bcfb468b69a142309961898fc1e6a0
+      sha256: e72662dd068c8efb30e39b0924aa1c93eede9febd5d9ba552413b32648dbed71
     - path: references/visual-loop.md
       sha256: f93bbed36bda2641baad90142636b49edc8319e3e8b198e8b27b25a8e61a99f7
     - path: runtime/check_design_freeze.py
-      sha256: a8dede6921414527245363783c43b61dff0894f40b4692c000c09afadb00f6e1
+      sha256: 03e9521cb4ff119af95c5770470a8f5babc7d311c56d2265cb841bc6cd569149
     - path: runtime/scan_design_constraints.py
-      sha256: 470be7c96b40ae13caca258cf686a00b0816c8400e5df6ac4a726775f3357c61
+      sha256: ba19b1ea38a64bd491c9d0bd31809da9d1dd4b8789b03f64d3ffc378c39ac4e5
     - path: runtime/schemas/design-freeze/v1/checkpoint.schema.json
       sha256: 9d7341e8ce10aa55defd27cca6bbc7b7525d4d57a128c69ddbbd0373a0f1f167
     - path: runtime/schemas/design-freeze/v1/freeze.schema.json

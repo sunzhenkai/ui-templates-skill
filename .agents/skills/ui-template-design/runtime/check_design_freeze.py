@@ -95,6 +95,11 @@ def _index_touched(freeze: dict[str, Any]) -> bool:
     return False
 
 
+def compute_digest(freeze: dict[str, Any]) -> dict[str, str]:
+    body = {k: v for k, v in freeze.items() if k != "digest"}
+    return digest_of(body)
+
+
 def gate(project_root: Path, design_root: Path) -> dict[str, Any]:
     findings: list[dict[str, str]] = []
     freeze_path = design_root / "freeze.yaml"
@@ -121,8 +126,14 @@ def gate(project_root: Path, design_root: Path) -> dict[str, Any]:
     if freeze.get("template") in (None, {}) and _index_touched(freeze):
         findings.append({"code": "INDEX_FORBIDDEN_WITHOUT_TEMPLATE", "path": "templates/INDEX.md"})
     if freeze.get("status") == "frozen":
+        stored = freeze.get("digest", {}).get("value")
+        computed = compute_digest(freeze)
+        if stored and computed["value"] != stored:
+            findings.append({"code": "DIGEST_MISMATCH", "path": "freeze.yaml"})
         if freeze.get("kit", {}).get("primitives") and not freeze.get("kit", {}).get("patterns"):
             findings.append({"code": "PRIMITIVES_ONLY_NOT_COMPLETE", "path": "freeze.yaml"})
+        if freeze.get("kit", {}).get("gallery") and not (design_root / "07-gallery.yaml").is_file():
+            findings.append({"code": "GALLERY_MISSING", "path": "07-gallery.yaml"})
         rules = [str(item) for item in freeze.get("rules_files") or []]
         if not rules:
             findings.append({"code": "RULES_MISSING", "path": "freeze.yaml"})
@@ -151,6 +162,8 @@ def main(argv: list[str] | None = None) -> int:
     validate = sub.add_parser("validate")
     validate.add_argument("kind", choices=["freeze", "checkpoint"])
     validate.add_argument("path", type=Path)
+    digest_cmd = sub.add_parser("compute-digest")
+    digest_cmd.add_argument("--freeze-path", type=Path, required=True)
     gate_cmd = sub.add_parser("gate")
     gate_cmd.add_argument("--design-root", type=Path, required=True)
     gate_cmd.add_argument("--project-root", type=Path, default=Path("."))
@@ -161,6 +174,11 @@ def main(argv: list[str] | None = None) -> int:
             data = load_yaml(args.path)
             errors = validate_document(args.kind, data)
             payload = {"ok": not errors, "errors": errors}
+        elif args.command == "compute-digest":
+            data = load_yaml(args.freeze_path)
+            if not isinstance(data, dict):
+                raise DesignFreezeError("FREEZE_NOT_MAPPING")
+            payload = compute_digest(data)
         else:
             payload = gate(args.project_root.resolve(), args.design_root.resolve())
     except DesignFreezeError as exc:

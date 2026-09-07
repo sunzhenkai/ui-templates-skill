@@ -732,7 +732,6 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             valid_freeze = {
                 "schema": "design-freeze/v1",
                 "status": "frozen",
-                "digest": freeze_mod.digest_of({"kit": True}),
                 "mode": "greenfield",
                 "template": None,
                 "kit": {"primitives": True, "patterns": True, "gallery": True},
@@ -742,14 +741,28 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                 "rules_files": ["AGENTS.design.md"],
                 "updated_at": "2026-09-07T00:00:00Z",
             }
+            valid_freeze["digest"] = freeze_mod.compute_digest(valid_freeze)
+            gallery_file = design_root / "07-gallery.yaml"
+            gallery_file.write_text("schema: design-gallery/v1\n", encoding="utf-8")
             (design_root / "freeze.yaml").write_text(yaml.safe_dump(valid_freeze, allow_unicode=True), encoding="utf-8")
             valid_gate = freeze_mod.gate(project, design_root)
+            digest_bad = dict(valid_freeze)
+            digest_bad["digest"] = dict(valid_freeze["digest"])
+            digest_bad["digest"]["value"] = "b" * 64
+            (design_root / "freeze.yaml").write_text(yaml.safe_dump(digest_bad, allow_unicode=True), encoding="utf-8")
+            digest_gate = freeze_mod.gate(project, design_root)
+            gallery_file.unlink()
+            (design_root / "freeze.yaml").write_text(yaml.safe_dump(valid_freeze, allow_unicode=True), encoding="utf-8")
+            gallery_gate = freeze_mod.gate(project, design_root)
+            gallery_file.write_text("schema: design-gallery/v1\n", encoding="utf-8")
             primitive_only = dict(valid_freeze)
             primitive_only["kit"] = {"primitives": True, "patterns": False, "gallery": False}
+            primitive_only["digest"] = freeze_mod.compute_digest(primitive_only)
             (design_root / "freeze.yaml").write_text(yaml.safe_dump(primitive_only, allow_unicode=True), encoding="utf-8")
             primitive_gate = freeze_mod.gate(project, design_root)
             index_freeze = dict(valid_freeze)
             index_freeze["touched_paths"] = ["templates/INDEX.md"]
+            index_freeze["digest"] = freeze_mod.compute_digest(index_freeze)
             (design_root / "freeze.yaml").write_text(yaml.safe_dump(index_freeze, allow_unicode=True), encoding="utf-8")
             index_gate = freeze_mod.gate(project, design_root)
             unsafe = dict(valid_freeze)
@@ -757,6 +770,10 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             unsafe_errors = freeze_mod.validate_document("freeze", unsafe)
             (output / "Page.tsx").write_text('export function Page() { return <p className="text-gray-500">x</p>; }\n', encoding="utf-8")
             scanned = scan_mod.scan(output)
+            (output / "Spacing.tsx").write_text('export const S = () => <div className="p-[17px]">x</div>;\n', encoding="utf-8")
+            scanned_spacing = scan_mod.scan(output)
+            (output / "Motion.tsx").write_text('export const M = () => <div className="transition-all">x</div>;\n', encoding="utf-8")
+            scanned_motion = scan_mod.scan(output)
             (design_root / "freeze.yaml").write_text(yaml.safe_dump(valid_freeze, allow_unicode=True), encoding="utf-8")
             restored = freeze_mod.gate(project, design_root)
             class_bootstrap = freeze_mod.classify_task_class(output_root_empty=True, freeze_status=None)
@@ -774,6 +791,12 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "no_templates": no_templates,
             "no_catalog": no_catalog,
             "valid_gate_ok": valid_gate["ok"] and restored["ok"],
+            "digest_mismatch_blocked": any(
+                item.get("code") == "DIGEST_MISMATCH" for item in digest_gate["findings"]
+            ),
+            "gallery_missing_blocked": any(
+                item.get("code") == "GALLERY_MISSING" for item in gallery_gate["findings"]
+            ),
             "primitives_only_blocked": any(
                 item.get("code") == "PRIMITIVES_ONLY_NOT_COMPLETE" for item in primitive_gate["findings"]
             ),
@@ -783,6 +806,12 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "unsafe_output_rejected": bool(unsafe_errors),
             "raw_palette_failed": (not scanned["ok"]) and any(
                 item.get("code") == "RAW_PALETTE" for item in scanned["findings"]
+            ),
+            "raw_spacing_failed": (not scanned_spacing["ok"]) and any(
+                item.get("code") == "RAW_SPACING" for item in scanned_spacing["findings"]
+            ),
+            "raw_motion_failed": (not scanned_motion["ok"]) and any(
+                item.get("code") == "RAW_MOTION" for item in scanned_motion["findings"]
             ),
             "task_class_bootstrap": class_bootstrap.get("task_class") == "bootstrap" and class_bootstrap.get("ok"),
             "task_class_refactor": class_refactor.get("task_class") == "refactor" and class_refactor.get("ok"),
