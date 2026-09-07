@@ -52,12 +52,12 @@ class GovernanceScopeTests(unittest.TestCase):
         self.assertIn("commands_executed", runner)
         self.assertNotIn("example/workbench-shell/" + "web-v2/package.json", runner)
 
-    def test_root_makefile_has_complete_safe_dual_skill_targets(self) -> None:
+    def test_root_makefile_has_complete_governance_targets_without_local_install(self) -> None:
         text = (ROOT / "Makefile").read_text(encoding="utf-8")
-        for target in ("bootstrap:", "validate:", "test:", "eval:", "bundle:", "install:", "mirror-check:", "mirror-write:"):
+        for target in ("bootstrap:", "validate:", "test:", "eval:", "bundle:"):
             self.assertIn(target, text)
-        self.assertIn("$${INSTALL_TARGET:?", text)
-        self.assertIn("scripts/manage_skill_distribution.py install", text)
+        for forbidden in ("install:", "mirror-check:", "mirror-write:", "MIRROR_TARGET"):
+            self.assertNotIn(forbidden, text)
         self.assertNotIn("cp -r", text)
 
 

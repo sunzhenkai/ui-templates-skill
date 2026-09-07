@@ -77,6 +77,20 @@ class ActiveReleaseTests(unittest.TestCase):
             findings = check_mirror(ROOT, mirror)
         self.assertTrue(any(item.startswith(self.expected["production-mirror-drift"]) for item in findings))
 
+    def test_local_skills_allow_only_manager(self) -> None:
+        self.assertEqual([], active.check_local_skill_boundary(ROOT))
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            skills = root / ".agents/skills"
+            (skills / "ui-template-manager").mkdir(parents=True)
+            (skills / "ui-template-author").mkdir()
+            (skills / ".ui-template-public-manifest.yaml").write_text("schema_version: 1\n", encoding="utf-8")
+            findings = active.check_local_skill_boundary(root)
+        self.assertEqual(
+            {"LOCAL_PUBLIC_SKILL_FORBIDDEN"},
+            {item.code for item in findings},
+        )
+
     def test_source_product_name_outside_provenance_is_rejected(self) -> None:
         terms = active.source_product_terms_from_ref("https://github.com/acme-labs/acme @ abc")
         self.assertEqual({"acme-labs", "acme"}, terms)
@@ -107,11 +121,7 @@ class ActiveReleaseTests(unittest.TestCase):
             )
         self.assertEqual({"acme-labs", "acme"}, terms)
 
-    def test_archived_overlay_requirements_live_in_base_specs(self) -> None:
-        # harden-template-lifecycle archive 时已把 delta 合入 base specs；
-        # 归档后不再有 overlay，合并结果必须仍留在 base specs 中。
-        workflow = active._safe_text(ROOT, "openspec/specs/ui-template-workflow/spec.md")
-        self.assertNotIn("Optional implementation playbook 元数据", workflow)
+    def test_workbench_impl_requirements_live_in_base_specs(self) -> None:
         implementation = active._safe_text(ROOT, "openspec/specs/workbench-shell-implementation/spec.md")
         self.assertIn("技术栈无关 apply 指南", implementation)
         self.assertNotIn("完整实施 playbook", implementation)

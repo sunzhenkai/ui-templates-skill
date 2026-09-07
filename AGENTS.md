@@ -18,7 +18,7 @@
 - `skills/ui-template-apply/`：消费已发布 published 模板的 Phase 0–9、checkpoint、current-build 浏览器证据、可选原版对照、review 与 feedback。
 - `skills/ui-template-design/`：在消费项目建立并冻结可执行 Design System（语义 token、Primitive、Pattern、Page Type、Gallery）。
 
-`.agents/skills/ui-template-manager/` 是 repository-only 路由薄封装；不得把它当作公开产品源码。生产正文唯一源码是 `skills/`，`.agents/skills/{ui-template-author,ui-template-apply,ui-template-design}` 是 allowlist 生成镜像。
+`.agents/skills/ui-template-manager/` 是 repository-only 路由薄封装；不得把它当作公开产品源码。生产正文唯一源码是 `skills/`；`.agents/skills` 不得存放公开 skill 镜像。
 
 事实源按职责分层：
 
@@ -27,7 +27,7 @@
 3. `skills/ui-template-author/references/spec-format.md`：模板字段语义、所有权和 Authoring 行为。
 4. active OpenSpec：对外可观察要求。`harden-template-lifecycle` 与 `close-functional-loops` 已 archive 并合入 `openspec/specs/`；当前无 pending overlay。
 5. `scripts/template_validation/`：上述契约的可执行实现（含 portable profile 与 session-source replay）。
-6. `governance/release/`：bundle 2.2.0、兼容、迁移、回滚与分发 allowlist。对外入口是成对 `npx skills add`（Author/Apply）以及单独 `-s ui-template-design`；`make bundle` / `make install` 是治理通道。官方模板副本在 `skills/ui-template-author/catalog/`。
+6. `governance/release/`：bundle 2.2.0、兼容、迁移、回滚与分发 allowlist。对外入口是成对 `npx skills add`（Author/Apply）以及单独 `-s ui-template-design`；`make bundle` 是可复现发布与 checksum 治理通道。官方模板副本在 `skills/ui-template-author/catalog/`。
 7. `governance/FUNCTIONAL-LOOP.md`：现行功能闭环与目标；与 1–6 冲突必须先修复。
 8. `README.md`、本文件和发布说明是派生入口；冲突必须修复，不能选择性忽略。
 
@@ -45,8 +45,6 @@ make validate
 make test
 make eval
 make bundle
-make mirror-check
-make mirror-write
 ```
 
 默认固定环境为 `/tmp/ui-template-governance-venv`。等价的 canonical 命令：
@@ -59,7 +57,6 @@ python3 -m venv /tmp/ui-template-governance-venv
 /tmp/ui-template-governance-venv/bin/python scripts/run_contract_evals.py --json-out governance-reports/eval.json --junit-out governance-reports/eval.xml
 /tmp/ui-template-governance-venv/bin/python scripts/check_active_release.py --json-out governance-reports/active-release.json
 /tmp/ui-template-governance-venv/bin/python scripts/manage_skill_distribution.py build --output-dir dist
-/tmp/ui-template-governance-venv/bin/python scripts/manage_skill_distribution.py mirror --check --target .agents/skills
 openspec validate --all --strict
 ```
 
@@ -75,15 +72,7 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 npx skills add sunzhenkai/ui-templates-skill -s ui-template-design
 ```
 
-治理/checksum/回滚仍通过双-skill installer，目标是 skills 父目录：
-
-```bash
-ARTIFACT=dist/ui-templates-skill-2.2.0.tar.gz \
-INSTALL_TARGET=/path/to/project/.agents/skills \
-make install
-```
-
-不得恢复旧 `cp -r skills/ui-template-author ...` 入口。默认 `make install` 只替换 Author/Apply 两个 public skill，保留已安装的 `ui-template-design`、其他 skills 与独立历史档案。官方 catalog 随 Author skill 安装；项目可写库是项目根 `templates/`。空项目 Apply 不创建 `templates/`；`seed` 是显式领养。v1 迁移使用：
+根 Makefile 不声明 install 或公开 skill mirror 目标，`.agents/skills` 不是安装目标。不得恢复旧 `cp -r skills/ui-template-author ...` 入口。官方 catalog 随 Author skill 分发；项目可写库是项目根 `templates/`。空项目 Apply 不创建 `templates/`；`seed` 是显式领养。v1 迁移使用：
 
 ```bash
 /tmp/ui-template-governance-venv/bin/python scripts/migrate_template.py SOURCE CANDIDATE
@@ -104,7 +93,7 @@ make install
 
 - 改模板 schema/Authoring：同步 `schemas/template/v2/`、`skills/ui-template-author/`、validator、fixtures、active OpenSpec delta 与派生文档。
 - 改 Apply：同步 `skills/ui-template-apply/`、Apply state/schema、eval、active OpenSpec delta。
-- 改公开生产 skill 后运行 `make mirror-write`，再以 `make mirror-check` 证明零漂移；生成器只管理 allowlist 文件。
+- 改公开生产 skill 后运行 `make test`、`make eval`、`make validate`；不得把变更写入 `.agents/skills`。
 - 改 Design：同步 `skills/ui-template-design/`、`schemas/design-freeze/`、Design runtime/eval 与 active OpenSpec delta。
 - 改 `templates/` 后至少运行真实模板 validator；不得把样例测试当模板契约证据。
 - 新增治理依赖必须精确固定版本，并更新 `governance/DEPENDENCIES.md` 与许可用途。

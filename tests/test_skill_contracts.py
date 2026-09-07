@@ -36,7 +36,7 @@ class SkillContractTests(unittest.TestCase):
         positions = [text.index(f"### {index}. {name}") for index, name in ((1, "Generate"), (2, "Validate"), (3, "Eval"), (4, "Index"), (5, "Report"))]
         self.assertEqual(positions, sorted(positions))
         self.assertIn("失败后不得修改生产 `templates/INDEX.md`", text)
-        self.assertIn("bundle 与生产镜像在本 skill 根分发", text)
+        self.assertIn("bundle 在本 skill 根分发", text)
         self.assertTrue((ROOT / "skills/ui-template-author/runtime/validate_templates.py").is_file())
         self.assertTrue((ROOT / "skills/ui-template-author/runtime/run_contract_evals.py").is_file())
         self.assertIn("缺失或能力不满足即 fail closed", text)

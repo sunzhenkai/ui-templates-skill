@@ -54,7 +54,6 @@ checks:
     - skills/ui-template-author
     - skills/ui-template-apply
     - skills/ui-template-design
-  mirror_target: .agents/skills
   openspec:
     base: openspec/specs
     overlay: ""

@@ -132,15 +132,6 @@ def validate(root: Path, report_dir: Path) -> dict:
         shutil.copy2(artifact_a, report_dir / artifact_a.name)
         shutil.copy2(artifact_a.with_name(artifact_a.name + ".sha256"), report_dir / (artifact_a.name + ".sha256"))
         extract_manifest(artifact_a, report_dir / "skills-manifest.yaml")
-        run(
-            [python, "scripts/manage_skill_distribution.py", "install", str(artifact_a), "--target", str(temp / "project/.agents/skills")],
-            cwd=root, label="bundle install smoke",
-        )
-
-    run(
-        [python, "scripts/manage_skill_distribution.py", "mirror", "--check", "--target", ".agents/skills"],
-        cwd=root, label="production mirror",
-    )
     summary = {
         "schema_version": 1,
         "status": "passed",

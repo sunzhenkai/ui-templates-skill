@@ -3,13 +3,8 @@ GOVERNANCE_VENV ?= /tmp/ui-template-governance-venv
 GOVERNANCE_PYTHON ?= $(GOVERNANCE_VENV)/bin/python
 REPORT_DIR ?= governance-reports
 DIST_DIR ?= dist
-MIRROR_TARGET ?= .agents/skills
 
-export ARTIFACT
-export CHECKSUM
-export INSTALL_TARGET
-
-.PHONY: bootstrap validate test eval bundle install mirror-check mirror-write
+.PHONY: bootstrap validate test eval bundle
 
 bootstrap:
 	$(PYTHON) -m venv "$(GOVERNANCE_VENV)"
@@ -30,22 +25,3 @@ eval:
 
 bundle:
 	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py build --output-dir "$(DIST_DIR)"
-
-install:
-	@set -eu; \
-	: "$${ARTIFACT:?set ARTIFACT to a verified ui-templates-skill bundle}"; \
-	: "$${INSTALL_TARGET:?set INSTALL_TARGET to the target skills parent directory}"; \
-	case "$${INSTALL_TARGET}" in /|.|..) echo "unsafe INSTALL_TARGET: $${INSTALL_TARGET}" >&2; exit 2;; esac; \
-	if [ -n "$${CHECKSUM:-}" ]; then \
-		"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py install \
-			"$${ARTIFACT}" --checksum "$${CHECKSUM}" --target "$${INSTALL_TARGET}"; \
-	else \
-		"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py install \
-			"$${ARTIFACT}" --target "$${INSTALL_TARGET}"; \
-	fi
-
-mirror-check:
-	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py mirror --check --target "$(MIRROR_TARGET)"
-
-mirror-write:
-	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py mirror --write --target "$(MIRROR_TARGET)"

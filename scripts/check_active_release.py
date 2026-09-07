@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""校验 active/release 文档链接、语义、effective OpenSpec 与生产镜像。"""
+"""校验 active/release 文档链接、语义、effective OpenSpec 与本地 skill 边界。"""
 from __future__ import annotations
 
 import argparse
@@ -365,6 +365,26 @@ def check_mirror_state(root: Path, target: str) -> list[Finding]:
         return [Finding("MIRROR_DRIFT", target, str(exc))]
 
 
+def check_local_skill_boundary(root: Path, target: str = ".agents/skills") -> list[Finding]:
+    allowed = {"ui-template-manager"}
+    public = {"ui-template-author", "ui-template-apply", "ui-template-design"}
+    findings: list[Finding] = []
+    skills = root / target
+    if not skills.exists():
+        return findings
+    if skills.is_symlink() or not skills.is_dir():
+        return [Finding("LOCAL_SKILL_TARGET_UNSAFE", target, "expected a real directory")]
+    for path in skills.iterdir():
+        name = path.name
+        if name in allowed and path.is_dir() and not path.is_symlink():
+            continue
+        if name in public or name == ".ui-template-public-manifest.yaml":
+            findings.append(Finding("LOCAL_PUBLIC_SKILL_FORBIDDEN", f"{target}/{name}", "public skills are not mirrored in this repository"))
+        else:
+            findings.append(Finding("LOCAL_SKILL_ENTRY_INVALID", f"{target}/{name}", "only ui-template-manager is allowed"))
+    return findings
+
+
 def check_repository(root: Path, scope_path: Path) -> dict:
     config = load_yaml(scope_path)
     paths = git_paths(root)
@@ -430,8 +450,11 @@ def check_repository(root: Path, scope_path: Path) -> dict:
             findings.append(Finding("ACTIVE_IMPLEMENTATION_PATH", relative, "removed implementation/ path is active"))
 
     findings.extend(check_required_paths(paths, checks.get("production_skills", [])))
+    findings.extend(check_local_skill_boundary(root))
     findings.extend(check_versions(root))
-    findings.extend(check_mirror_state(root, str(checks.get("mirror_target", ".agents/skills"))))
+    mirror_target = checks.get("mirror_target")
+    if mirror_target:
+        findings.extend(check_mirror_state(root, str(mirror_target)))
 
     immutable_unreadable: list[str] = []
     immutable_readable = 0
