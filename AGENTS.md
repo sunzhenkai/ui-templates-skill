@@ -7,7 +7,7 @@
 - 默认使用简体中文；代码、命令、标识符和路径保留原文。
 - 不提交凭据、私有数据或环境专属绝对路径；来源资产必须遵守许可、再分发和脱敏决定。
 - `example/workbench-shell/web/**`、`example/workbench-shell/web-v1/**`、`example/workbench-shell/web-v2/**`、`example/workbench-shell/web-v3/**` 和 `docs/**` 是治理排除项。root governance 不读取或运行样例内容，也不以样例质量决定发布通过。生成 web 不是修复面。
-- 现行功能闭环与目标见 [`governance/FUNCTIONAL-LOOP.md`](governance/FUNCTIONAL-LOOP.md)。`docs/functional-loop-review.md` 已 superseded。
+- 现行功能闭环与目标见 [`governance/FUNCTIONAL-LOOP.md`](governance/FUNCTIONAL-LOOP.md)。`docs/functional-loop-review.md` 已 superseded 并移除。
 - `openspec/changes/archive/**`、`skills/**/patches/**`、`skills/**/experience/**` 是 immutable history：只按档案策略分类/检查可读性，不做当前术语重写。
 
 ## 产品与事实源

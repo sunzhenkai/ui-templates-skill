@@ -2,7 +2,7 @@
 
 本文是本仓库**现行**功能闭环与目标的人类可读权威。机器契约仍按 `AGENTS.md` 的事实源分层：schema → `spec-format.md` → active OpenSpec → validator。本文与它们冲突时必须先修复漂移，不得任选其一继续。
 
-`docs/functional-loop-review.md`（2026-09-03）已 superseded，不得再指导实现。
+`docs/functional-loop-review.md`（2026-09-03）已 superseded，不得再指导实现；该文件已于 2026-09-07 从仓库移除。
 
 ## 1. 原始目标
 

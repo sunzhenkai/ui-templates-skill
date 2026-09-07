@@ -70,3 +70,6 @@ lerna-debug.log*
 /*.png
 
 .ui-template-apply
+
+# ui-template-design skill local state (freeze/checkpoint, consumer-side)
+.ui-template-design/
