@@ -42,6 +42,7 @@ class ContractEvalTests(unittest.TestCase):
             "tests/fixtures/eval/loop-contracts.yaml",
             "tests/fixtures/eval/catalog-contracts.yaml",
             "tests/fixtures/eval/apply-hygiene-contracts.yaml",
+            "tests/fixtures/eval/apply-design-decision-contracts.yaml",
             "governance/eval/deterministic-baseline.json",
         ]
         files.extend(
@@ -126,9 +127,12 @@ class ContractEvalTests(unittest.TestCase):
             "apply-no-template-only-when-absent-from-catalog",
             "apply-greenfield-architecture-gate", "apply-session-closed-delete-hint",
             "apply-catalog-adopt-portable",
+            "apply-style-consistency-contract", "apply-information-semantics-contract",
+            "apply-placement-review-contract",
             "design-standalone-complete", "design-primitives-not-complete", "design-raw-token-fail",
             "design-no-freeze-apply-optional", "design-handoff-author", "design-handoff-apply",
             "design-task-classes", "design-scanner-gate-extended",
+            "design-decision-gates",
         }
         actual_ids: set[str] = set()
         judges: dict[str, int] = {"script": 0, "llm": 0}
@@ -144,7 +148,7 @@ class ContractEvalTests(unittest.TestCase):
                 actual_ids.add(case["id"])
                 judges[case["judge"]] += 1
         self.assertEqual(expected_ids, actual_ids)
-        self.assertEqual({"script": 50, "llm": 2}, judges)
+        self.assertEqual({"script": 54, "llm": 2}, judges)
         self.assertEqual(
             {
                 "skills/ui-template-author/evals/cases.yaml",
@@ -159,7 +163,7 @@ class ContractEvalTests(unittest.TestCase):
         first = run(ROOT)
         second = run(ROOT)
         self.assertEqual("passed", first["status"])
-        self.assertEqual({"declared": 52, "parsed": 52, "executed": 52, "script": 50, "llm": 2}, first["counts"])
+        self.assertEqual({"declared": 56, "parsed": 56, "executed": 56, "script": 54, "llm": 2}, first["counts"])
         self.assertEqual("matched", first["baseline"]["status"])
         self.assertEqual({"added": [], "removed": [], "changed": []}, first["baseline"]["diff"])
         self.assertEqual(first, second)

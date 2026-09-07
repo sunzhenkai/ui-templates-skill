@@ -365,6 +365,32 @@ class ApplyStateTests(unittest.TestCase):
                 now=NOW,
             )
 
+    def test_feedback_rejects_local_design_rule_target(self) -> None:
+        template = {"name": "demo", "version": "2.0.0", "source_revision": "abc"}
+        candidate = create_feedback(
+            template=template,
+            scenario="局部设计决定",
+            suggestion="保留会话内约束",
+            scope="template-rule",
+            targets=["LOCAL-STYLE-001"],
+            evidence_refs=["evidence/a.json"],
+            now=NOW,
+        )
+        findings = validate_feedback(
+            candidate,
+            apply_root=self.root,
+            known_rule_ids={"LOCAL-STYLE-001"},
+        )
+        self.assertIn("FEEDBACK_LOCAL_RULE_TARGET", {finding.code for finding in findings})
+        with self.assertRaisesRegex(ApplyStateError, "FEEDBACK_LOCAL_RULE_TARGET"):
+            merge_feedback(
+                self.root / "feedback",
+                candidate,
+                apply_root=self.root,
+                known_rule_ids={"LOCAL-STYLE-001"},
+                now=NOW,
+            )
+
     def test_feedback_requires_nonempty_evidence_and_each_transition_reason(self) -> None:
         template = {"name": "demo", "version": "2.0.0", "source_revision": "abc"}
         with self.assertRaises(ApplyStateError):

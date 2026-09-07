@@ -166,3 +166,31 @@ cases:
           - 04-patterns.yaml
           - 07-gallery.yaml
           - compute-digest
+  design-decision-gates:
+    assertions:
+      - type: file_contains
+        path: skills/ui-template-design/SKILL.md
+        all:
+          - decision-gates.md
+          - 至少 2 个合法候选
+          - 明确授权
+          - Agent 偏好都不是确认
+      - type: file_contains
+        path: skills/ui-template-design/references/decision-gates.md
+        all:
+          - 用户选择权是 freeze 前置条件
+          - 不得把第一个可行方案
+          - authority
+          - 不得静默决定
+          - Freeze
+      - type: file_contains
+        path: skills/ui-template-design/references/task-classes.md
+        all:
+          - decision-gates.md
+          - 歧义时让用户在候选中选择
+      - type: file_contains
+        path: skills/ui-template-design/references/artifact-templates.md
+        all:
+          - decision_gates
+          - "authority: user"
+          - consequence

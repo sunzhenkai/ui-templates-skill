@@ -122,6 +122,28 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("不由固定 checklist 数量驱动", text)
         self.assertNotIn("最低验收清单", text)
 
+    def test_apply_design_semantics_and_placement_contract(self) -> None:
+        workflow = self.read("skills/ui-template-apply/references/apply-workflow.md")
+        quality = self.read("skills/ui-template-apply/references/quality-gates.md")
+        toolchain = self.read("skills/ui-template-apply/references/toolchain.md")
+        skill = self.read("skills/ui-template-apply/SKILL.md")
+
+        for text in (workflow, quality):
+            self.assertIn("LOCAL-STYLE-###", text)
+            self.assertIn("LOCAL-INFORMATION-###", text)
+            self.assertIn("LOCAL-PLACEMENT-###", text)
+        self.assertIn("design_rules[]", workflow)
+        self.assertIn("placement_plan", workflow)
+        self.assertIn("semantic_decision", workflow)
+        self.assertIn("prebuild_design_critique", workflow)
+        self.assertIn("不得写入模板", workflow)
+        self.assertIn("不得放进 feedback `targets`", workflow)
+        self.assertIn("Design semantics & consistency", quality)
+        self.assertIn("主要动作层级错误", quality)
+        self.assertIn("two-pass", toolchain)
+        self.assertIn("current-build", skill)
+        self.assertIn("不得作为 feedback targets", skill)
+
 
 if __name__ == "__main__":
     unittest.main()

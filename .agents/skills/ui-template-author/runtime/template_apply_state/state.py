@@ -668,6 +668,8 @@ def validate_feedback(
         findings.append(Finding("FEEDBACK_RULE_CONTEXT_REQUIRED", path, "feedback 包含 targets，但未提供 known_rule_ids 规则上下文"))
     elif known_rule_ids is not None:
         for target in targets:
+            if str(target).startswith("LOCAL-"):
+                findings.append(Finding("FEEDBACK_LOCAL_RULE_TARGET", path, "feedback target 不得引用 local design rule", details={"target": target}))
             if target not in known_rule_ids:
                 findings.append(Finding("FEEDBACK_TARGET_DANGLING", path, "feedback target 引用未知 rule ID", details={"target": target}))
 

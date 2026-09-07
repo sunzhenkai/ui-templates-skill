@@ -2,6 +2,24 @@
 
 核心产物的最小 YAML shape。只保证字段可解析、gate 可验证；不预设视觉内容。按需读取，不预加载全文。
 
+## 00-intake.md
+
+```yaml
+task_class: refactor
+site: existing
+output_root: .
+change_set:
+  layers: [token, pattern]
+  paths: ["src/styles/**", "src/components/patterns/**"]
+decision_gates:
+  - gate: scope
+    question: "只修列表空态，还是提升为共享 EmptyState Pattern？"
+    options: ["local-fix", "shared-pattern"]
+    selected: shared-pattern
+    authority: user
+    consequence: "多一个 Pattern 与 Gallery 状态，但业务页不再各自补空态"
+```
+
 ## 02-tokens-freeze.yaml
 
 ```yaml

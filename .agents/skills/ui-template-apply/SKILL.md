@@ -50,11 +50,11 @@ description: 使用已有 schema v2 UI 模板按 Phase 0–9 实现真实页面�
 ## 工具与质量
 
 - 外部知识/审美/组件/浏览器/review 路由见 [toolchain.md](references/toolchain.md)。`ui-ux-pro-max` 必须遵守 Query Contract；输出只是候选。
-- 门禁见 [quality-gates.md](references/quality-gates.md)。每个结果绑定稳定 rule ID、当前 template/source/build identity 和 evidence；不以固定 checklist 数量或 prose“已检查”宣称完成。
+- 门禁见 [quality-gates.md](references/quality-gates.md)。每个结果绑定模板或 Phase 1 local rule ID、当前 template/source/build identity 和 evidence；风格一致性、信息语义和元素放置用 current-build 证据复验，不以固定 checklist 数量或 prose“已检查”宣称完成。
 - 没有真实浏览器能力时停止并请求可运行方式；静态检查不能替代 Phase 8。
 
 ## Feedback 与汇报
 
-可复用模板缺口按 [apply-workflow.md](references/apply-workflow.md) 创建 schema v2 proposed feedback（UUID 文件名、相对 `.ui-template-apply/` 的 evidence refs、完整 known rule IDs、原子写入失败回滚）；项目目录、API/mock、技术栈和业务专属问题留在消费项目。
+可复用模板缺口按 [apply-workflow.md](references/apply-workflow.md) 创建 schema v2 proposed feedback（UUID 文件名、相对 `.ui-template-apply/` 的 evidence refs、完整 known rule IDs、原子写入失败回滚）；`LOCAL-*` design rule IDs 只属于当前会话，不得作为 feedback targets。项目目录、API/mock、技术栈和业务专属问题留在消费项目。
 
 最终汇报只引用 `.ui-template-apply/`：included/deferred/excluded、当前身份、完成 phases、current-build verification、P0/P1/recheck、反馈 UUID/receipt、实际工程命令及不可用工具回退。Phase 9 通过且 inbox 无 proposed 时必须输出 `session_closed: true`、`may_delete_apply_root: true` 与固定句子「可以删除整个 .ui-template-apply/；删除后生成页面不受影响；再次 Apply 视为新 Intake。」未领养则说明本仓不应存在 `templates/`。Phase 8/9 无效或任一 gate 失败时不得说“完成”，也不得说会话可删。

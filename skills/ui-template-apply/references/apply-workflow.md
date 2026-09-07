@@ -68,14 +68,15 @@ digest 算法为 `sha256-canonical-json-v1`。
 
 ## Phase 1 — Design direction & token freeze
 
-- `01-design-direction.md`：mood、anti-pattern、主题、密度、边界/动效及外部查询记录。
-- `01-token-map.yaml`：`schema_version: 2`、template/token digest、每个 template token 到项目 token 的映射；偏离含 rule ID、理由、确认。
+- `01-design-direction.md`：mood、anti-pattern、主题、密度、边界/动效及外部查询记录；还必须记录页面单一职责、design thesis、信息词汇表、安静元素、模板兼容的视觉重点、禁止的默认套路和实现前自我批判。`frontend-design` 只提供 two-pass brainstorm、anti-default critique 与表达取舍；缺工具时手写同等字段。
+- `01-token-map.yaml`：`schema_version: 2`、template/token digest、每个 template token 到项目 token 的映射；偏离含 rule ID、理由、确认。同时定义 `design_rules[]`，每条必须有 `id`、`kind: style | information | placement`、decision、适用 route/component、`token_paths[]`、`template_rule_ids[]`、候选方案与理由；用户确认的偏离必须记录 confirmation。IDs 使用闭集 `LOCAL-STYLE-###`、`LOCAL-INFORMATION-###`、`LOCAL-PLACEMENT-###`。
+- style rule 把同一 semantic role（如 primary action、secondary action、status、metadata、input、data cell）绑定到一致 typography、color、spacing、radius、border、shadow、density 和状态 treatment；information rule 记录信息该由什么语义 primitive 承载；placement rule 记录任务组、主要信息/动作和阅读/焦点顺序。这些是会话内 local rules，不得写入模板、不得作为 feedback target。
 
-Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可消费 token 已映射，无未解释 arbitrary value；主题角色/状态完整。不得从 prose 重演精确值。
+Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可消费 token 已映射，无未解释 arbitrary value；主题角色/状态完整；三类 local design rules 可解析且不与模板 `spec.md`、`tokens.yaml`、`fidelity.yaml` 或已确认 design freeze 冲突。不得从 prose 重演精确值。
 
 ## Phase 2 — IA/layout/routes（`02-routes.yaml`）
 
-记录 route、页面模式、入口/主要动作、URL params、shell/scroll owner、响应式矩阵及无效状态；跨页目的地为 link。只把本次模板 `fidelity.yaml` 已声明的 layout/chrome record 投影为稳定 constraint IDs（region/arrangement/fill/shrink/wrap/scroll/overlay/responsive、以及已声明的 `shell_variant` / `slot:<role>:<order>` / `anchor:<role>→<region>`），不要求目标 DOM 或技术栈同构。无 sidecar 时这些几何 gate 为 unavailable，不得标 profile-verified，也不得用未声明的壳默认值去补。Gate：每个 included route 与该模板 `coverage.page_modes` 有确定映射；已声明的 wrap/scroll record 不得被根滚动或自动换行替代。
+记录 route、页面模式、入口/主要动作、URL params、shell/scroll owner、响应式矩阵及无效状态；跨页目的地为 link。每个 included route 必须有 `placement_plan`：页面单一职责、主要信息、主要动作、信息分组、阅读/焦点顺序、动作顺序和响应式降级位置，并引用相关 `LOCAL-PLACEMENT-###`。只把本次模板 `fidelity.yaml` 已声明的 layout/chrome record 投影为稳定 constraint IDs（region/arrangement/fill/shrink/wrap/scroll/overlay/responsive、以及已声明的 `shell_variant` / `slot:<role>:<order>` / `anchor:<role>→<region>`），不要求目标 DOM 或技术栈同构。无 sidecar 时这些几何 gate 为 unavailable，不得标 profile-verified，也不得用未声明的壳默认值去补。Gate：每个 included route 与该模板 `coverage.page_modes` 有确定映射；placement plan 的主要信息/动作和分组可追溯到页面职责；已声明的 wrap/scroll record 不得被根滚动或自动换行替代。
 
 ## Phase 3 — Project structure（`03-structure.md`）
 
@@ -83,10 +84,11 @@ Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可�
 
 ## Phase 4 — Component inventory（`04-components.yaml`）
 
-每项记录 semantic element、variants/sizes/states、keyboard/AT、source 与 template rule IDs。将 included component/slot geometry 和 subject/context/state presentation 纳入 inventory/token map；保留 `none`、不对称 padding 等 negative facts，禁止组件库默认值覆盖 profile expected。Gate：included route 的交互全覆盖；无嵌套交互；icon-only、浮层焦点和非颜色状态明确。
+每项记录 semantic element、variants/sizes/states、keyboard/AT、source 与 template rule IDs，并增加 `semantic_decision`：用户任务、信息角色、候选语义元素、最终 primitive、选择理由、文案契约、风格角色、放置组、`LOCAL-*-###` 与 template rule IDs。状态、比较数据、元数据和操作入口按用户任务选择语义 primitive；不得因装饰便利、组件库默认值或视觉热点选错元素。将 included component/slot geometry 和 subject/context/state presentation 纳入 inventory/token map；保留 `none`、不对称 padding 等 negative facts，禁止组件库默认值覆盖 profile expected。Gate：included route 的交互全覆盖；semantic decision 无悬空 local rule；无嵌套交互；icon-only、浮层焦点和非颜色状态明确。
 
 ## Phase 5–7 — 实现进度（`05-07-progress.yaml`）
 
+- Phase 5 entry gate：写入首个应用源码前，在代表切片记录 `prebuild_design_critique`，逐项判定 style consistency、information semantics 和 placement；任何 unresolved finding 先回 Phase 1/2/4 修正，不得带着已知冲突写代码。
 - Phase 5：一个端到端代表切片，覆盖 shell、数据区、loading/empty/error、URL 恢复、窄屏、键盘与 computed style。
 - Phase 6：完成所有 included page modes；deferred/excluded 不伪造证据。
 - Phase 7：完成 Intake included 的全局系统（如搜索、创建、通知；仅当模板声明了 FAB 再验 FAB）。
@@ -128,7 +130,8 @@ python3 scripts/check_template_apply_state.py checkpoint \
   --apply-root .ui-template-apply --template <template-meta-or-envelope> \
   --tokens <template/tokens.yaml> --scope <scope-yaml> \
   --source-identity <revision> --build-identity <build-id> \
-  --known-rule-id NN-001 [--known-rule-id AX-001 ...]
+  --known-rule-id NN-001 --known-rule-id AX-001 \
+  --known-rule-id LOCAL-STYLE-001 --known-rule-id LOCAL-INFORMATION-001 --known-rule-id LOCAL-PLACEMENT-001
 python3 scripts/check_template_apply_state.py feedback .ui-template-apply/feedback \
   --apply-root .ui-template-apply --known-rule-id NN-001 [--known-rule-id AX-001 ...]
 python3 scripts/check_template_apply_state.py feedback-merge .ui-template-apply/feedback <candidate.yaml> \
@@ -138,6 +141,8 @@ python3 scripts/check_template_apply_state.py feedback-merge .ui-template-apply/
 ## 恢复：从最早失效 phase 重新打开
 
 恢复时从 Phase 0 顺序验证，不按“最后工作位置”猜测：
+
+- checkpoint/verification 校验的 `known_rule_ids` 必须包含当前适用的模板 rule IDs 和 Phase 1 local design rule IDs；feedback `targets` 仍只能使用模板 rule IDs。
 
 - scope 变化或 template identity/digest 变化 → 最早 Phase 0；
 - token semantic digest 变化 → 最早 Phase 1；
@@ -151,6 +156,8 @@ python3 scripts/check_template_apply_state.py feedback-merge .ui-template-apply/
 最早 phase 标 pending，其后阶段标 stale 并清空旧 evidence refs；修复后重新计算 artifact digest。没有当前 Phase 8 evidence 时绝不允许完成。
 
 ## Feedback：UUID + normalized fingerprint
+
+`LOCAL-STYLE-###`、`LOCAL-INFORMATION-###` 和 `LOCAL-PLACEMENT-###` 只用于当前 Apply 会话验证；它们不是模板 rule IDs，不得放进 feedback `targets` 或当作 reusable template gap 的规则上下文。
 
 Apply 只创建 proposed，且文件必须命名为 `feedback/<record UUID>.yaml`，filename stem 与记录 `id` 不一致即拒绝整个 inbox。`evidence_refs` 至少包含一个非空引用，并必须作为相对 `.ui-template-apply/` 根的现存文件解析；绝对路径、`..` 或符号链接越界和缺失文件均 fail closed。UUID 用于记录身份；fingerprint 输入为 template name/version、NFKC+casefold+折叠空白后的 scenario，以及 sorted target rule IDs（无 target 时 scope），按 canonical JSON SHA-256。任何非空 `targets` 都必须在调用时提供完整 `known_rule_ids` 并逐项命中；缺少规则上下文或悬空 target 均不得写入。
 

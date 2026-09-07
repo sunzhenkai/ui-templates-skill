@@ -13,7 +13,7 @@ Intake 用可观察信号判定 `bootstrap | refactor | iterate`，写入 `00-in
 
 ## 必读 / 禁止预加载
 
-三类都必须读：`layers.md`、`executable-rules.md`、`adapters.md`。扫描与禁止 raw token 不因任务类豁免。
+三类都必须读：`decision-gates.md`、`layers.md`、`executable-rules.md`、`adapters.md`。扫描与禁止 raw token 不因任务类豁免。
 
 | 任务类 | 再读 | 禁止预加载 |
 | --- | --- | --- |
@@ -27,4 +27,4 @@ Intake 用可观察信号判定 `bootstrap | refactor | iterate`，写入 `00-in
 
 ## 变更集合
 
-`refactor` 与 `iterate` 必须在 Intake 声明路径/层集合。未声明路径保持原字节。一次只允许动 Token、Primitive、Pattern、规则或 Gallery 中用户点名的层。
+`refactor` 与 `iterate` 必须在 Intake 声明路径/层集合；歧义时让用户在候选中选择。未声明路径保持原字节。一次只允许动 Token、Primitive、Pattern、规则或 Gallery 中用户点名的层。

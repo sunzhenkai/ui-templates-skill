@@ -113,6 +113,57 @@ cases:
         - 从 prose 重新演绎数值
         - 引入未解释的 arbitrary color、字号、间距或圆角
     revision: harden-template-lifecycle-eval-v1
+  - id: apply-style-consistency-contract
+    skill: ui-template-apply
+    category: validation-gate
+    description: 同一语义角色的风格 treatment 必须由 local style rule 约束并用 current-build 证据复验。
+    given: Template Apply 即将实现按钮、状态、输入或数据单元等多个同角色元素
+    fixture: tests/fixtures/eval/apply-design-decision-contracts.yaml#apply-style-consistency-contract
+    fixture_sha256: 82cb8395374efbdbafdb9383118c1550279f6c8f84a201b64acb63186942cd22
+    judge: script
+    expect:
+      must:
+        - Phase 1 建立 LOCAL-STYLE-### 并绑定组件族和 token/rule
+        - 同一 semantic role 使用一致 typography、color、spacing、radius、border 和 shadow
+        - Phase 8 用 computed style 复验风格漂移
+      must_not:
+        - 用组件库默认值解释未记录的风格差异
+        - 以 prose“看起来一致”替代 current-build evidence
+    revision: harden-template-lifecycle-eval-v1
+  - id: apply-information-semantics-contract
+    skill: ui-template-apply
+    category: validation-gate
+    description: 状态、数据和操作必须按用户任务选择语义正确的展示元素。
+    given: Template Apply 需要展示状态、比较数据、元数据或操作入口
+    fixture: tests/fixtures/eval/apply-design-decision-contracts.yaml#apply-information-semantics-contract
+    fixture_sha256: 82cb8395374efbdbafdb9383118c1550279f6c8f84a201b64acb63186942cd22
+    judge: script
+    expect:
+      must:
+        - Phase 4 记录候选语义元素、最终 primitive、信息角色和选择理由
+        - 用 Accessibility tree 验证 role/name/state 和非颜色状态
+        - 操作和跨页目的地分别使用语义正确的 button/link
+      must_not:
+        - 为装饰便利或组件库默认值选错信息元素
+        - 让颜色成为唯一状态信号
+    revision: harden-template-lifecycle-eval-v1
+  - id: apply-placement-review-contract
+    skill: ui-template-apply
+    category: validation-gate
+    description: 主要信息、动作、分组和焦点顺序必须有 placement plan 并做多视口复验。
+    given: Template Apply 即将组装 included route
+    fixture: tests/fixtures/eval/apply-design-decision-contracts.yaml#apply-placement-review-contract
+    fixture_sha256: 82cb8395374efbdbafdb9383118c1550279f6c8f84a201b64acb63186942cd22
+    judge: script
+    expect:
+      must:
+        - Phase 2 记录页面职责、主要信息、主要动作、信息分组和阅读/焦点顺序
+        - 保留 fidelity 已声明的 shell、slot、anchor、scroll 和 overlay 约束
+        - Phase 8/9 复验响应式降级和主要动作层级
+      must_not:
+        - 为视觉平衡打散任务组或降级主要动作
+        - 用未声明的壳默认值替代模板结构约束
+    revision: harden-template-lifecycle-eval-v1
   - id: apply-out-of-scope-rejected
     skill: ui-template-apply
     category: routing

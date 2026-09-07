@@ -1,13 +1,13 @@
 # Template Apply Toolchain
 
-工具是候选增强器，不是设计权威；不可用时采用等价回退但不降低 gate。模板 `spec.md`/`tokens.yaml` 与用户已确认范围始终优先。
+工具是候选增强器，不是设计权威；不可用时采用等价回退但不降低 gate。模板 `spec.md`、`tokens.yaml`、`fidelity.yaml`、已确认 design freeze 与用户已确认范围始终优先。
 
 ## 能力路由
 
 | 能力 | 默认工具 | 产物中的证据 |
 | --- | --- | --- |
 | 外部知识候选 | `ui-ux-pro-max` | query contract record、选择/abstain 理由 |
-| 美学立场 | `frontend-design` | mood、anti-patterns、取舍 |
+| 美学立场 | `frontend-design` | design thesis、信息词汇表、anti-patterns、two-pass critique、取舍 |
 | 组件候选 | shadcn / 本地设计系统 | component source、适配与 a11y |
 | 真实浏览器 | Playwright/chrome-devtools/browser-use/项目脚本 | current-build screenshot/console/AX/computed/URL |
 | Review | design review 工具或独立复核 | rule-ID findings、severity、fix、re-check |
@@ -48,7 +48,9 @@ fallback: null
 
 ## `frontend-design`
 
-在 Phase 1 明确 mood、首屏注意力、安静元素、禁止的默认 AI 风格和密度/装饰取舍。不可用时手写同字段的 taste commitment；不得以工具名替代设计决策。
+`frontend-design` 是方法，不是第二套精确值或结构权威。Phase 1 做两段式预案：先确定 subject/page job、design thesis、信息词汇表、风格角色、密度/装饰取舍、模板兼容的视觉重点和安静元素；再对方案做 anti-default critique，剔除与本次页面职责无关的模板化配色、字体、编号、渐变和布局套路。
+
+输出必须落到 Phase 1 `design_rules[]`、Phase 2 `placement_plan` 和 Phase 4 `semantic_decision`：同一角色共用一致 treatment；状态、比较数据、元数据和动作按用户任务选择语义 primitive；主要信息/动作与阅读/焦点顺序跟随任务组，而不是装饰平衡。建议与模板契约冲突时保留模板约束；确需偏离时按 Phase 1 记录 local rule、理由和用户确认。不可用时手写同字段的 taste commitment 与自我批判；不得以工具名替代设计决策。
 
 ## 组件工具
 
@@ -60,8 +62,8 @@ fallback: null
 
 ## Review
 
-自动 review 不可用时进行独立人工复核，仍生成 `09-review.md` 结构化 front matter。findings 必须引用 rule ID、route/viewport/theme/state、expected/actual、evidence、fix 和 re-check；P0/P1 不得只写 prose 接受。
+自动 review 不可用时进行独立人工复核，仍生成 `09-review.md` 结构化 front matter。findings 必须引用 template 或 local rule ID、route/viewport/theme/state、expected/actual、evidence、fix 和 re-check；P0/P1 不得只写 prose 接受。设计复核至少检查风格角色一致性、信息 primitive 语义、任务组/主要动作放置和响应式降级。
 
 ## 冲突与隐私
 
-工具建议冲突时按用户确认 → template spec/tokens → 已记录项目约束裁决。默认不向第三方发送项目源码、用户数据、凭据或私有截图；需要外发必须另行获得明确授权。
+工具建议冲突时按 template spec/tokens/fidelity → 已确认 design freeze → 已记录项目约束裁决；用户只能在偏离被记录为显式决定时放宽项目约束，不能把未确认工具建议当成模板规则。默认不向第三方发送项目源码、用户数据、凭据或私有截图；需要外发必须另行获得明确授权。

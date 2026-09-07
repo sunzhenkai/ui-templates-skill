@@ -18,3 +18,7 @@
 8. 按页迁移可另开任务；本 skill 可将「体制 + Gallery」标完成
 
 不要一次性重写整个前端。无 mapping 表不得开始逐页改 class。
+
+## Existing gates
+
+Intake 让用户选择重构范围：仅视觉壳、含组件收敛、含 Pattern 提升等；并列出每项会触达的路径类型。Architecture gate 先确认「保持 observed stack」，再允许把换栈拆成独立任务；不得把必要依赖升级混入视觉重构。Inventory gate 声明全量或代表性抽样，并说明代表性抽样不能外推为全站事实。

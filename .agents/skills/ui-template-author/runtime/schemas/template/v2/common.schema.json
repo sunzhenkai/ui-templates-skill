@@ -9,7 +9,7 @@
     "confidence": {"enum": ["high", "medium", "low"]},
     "sourceType": {"enum": ["web", "repo", "image", "doc"]},
     "tokenPath": {"type": "string", "pattern": "^[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)+$"},
-    "ruleId": {"type": "string", "pattern": "^(NN|TOKEN|LAYOUT|ROUTE|AX|RESP|QUALITY)-[0-9]{3}$"},
+    "ruleId": {"type": "string", "pattern": "^(NN|TOKEN|LAYOUT|ROUTE|AX|RESP|QUALITY|LOCAL-STYLE|LOCAL-INFORMATION|LOCAL-PLACEMENT)-[0-9]{3}$"},
     "timestamp": {"type": "string", "format": "date-time"},
     "date": {"type": "string", "format": "date"},
     "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},

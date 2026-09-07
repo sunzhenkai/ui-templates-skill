@@ -1,6 +1,6 @@
 # Template Apply Quality Gates
 
-门禁由模板稳定 rule IDs、Intake included scope 和 coverage 驱动，不由固定 checklist 数量驱动。每条通过结论都必须在 `08-verification.json` 或 `09-review.md` front matter 中绑定当前 template digest、source identity、build identity、route、viewport、theme、state、expected/actual 与 evidence refs；仅有 prose“已检查”无效。
+门禁由模板稳定 rule IDs、Phase 1 已冻结的 local design rules、Intake included scope 和 coverage 驱动，不由固定 checklist 数量驱动。每条通过结论都必须在 `08-verification.json` 或 `09-review.md` front matter 中绑定当前 template digest、source identity、build identity、route、viewport、theme、state、expected/actual 与 evidence refs；仅有 prose“已检查”无效。
 
 ## 证据新鲜度
 
@@ -26,6 +26,10 @@
 
 从 `01-token-map.yaml` 取得 expected，在当前 build 读取 body、标题、导航、文本、按钮、输入、容器、表格/指标、浮层等适用元素的 computed color/type/spacing/radius/border/shadow/motion。双主题按 coverage 验证角色一致和对比度。arbitrary/new-token 必须已有 rule ID、理由与确认。记录 `TOKEN-###`/`NN-###`。
 
+### Design semantics & consistency
+
+对 Phase 1 冻结的每个 applicable local rule 做 current-build 验证。`LOCAL-STYLE-###` 检查同一 semantic role 在 typography、color、spacing、radius、border、shadow、density、hover/focus/active/disabled/selected 等 treatment 上一致；`LOCAL-INFORMATION-###` 用 Accessibility tree 和交互结果检查状态、比较数据、元数据、操作入口由语义正确的 primitive 承载，文案服从同一动作/信息词汇表；`LOCAL-PLACEMENT-###` 检查主要信息/动作、信息分组、阅读/焦点顺序和响应式降级符合 placement plan。风格漂移、错误 primitive、装饰性信息展示、任务组打散、主要动作层级错误均为 failed；记录引用 `LOCAL-*-###`，必要时同时引用 token/template rule。
+
 ### 交互与页面状态
 
 对模板声明且 included 的 default/hover/focus/active/selected/disabled/loading/error/empty/dragging/offline 等状态逐项验证；触屏提供等效操作，loading 保持结构，error 有重试/公告，empty 有下一步。coverage 标 unsupported 的状态不得伪造 passed。
@@ -41,6 +45,7 @@
 ## Phase 8 通过条件
 
 - 每个 included route × 模板适用 coverage × 关键 state 都有可解析记录或明确可复用证据引用；
+- 每个 included route 的 applicable `LOCAL-STYLE-###`、`LOCAL-INFORMATION-###` 和 `LOCAL-PLACEMENT-###` 都有 current-build 记录；
 - console error/unhandled rejection、AX、computed style、URL/交互失败均为 failed；
 - expected/actual 与 rule ID 可追踪，evidence 文件存在；
 - 所有记录身份等于 checkpoint 当前身份；
@@ -50,7 +55,7 @@ waived 仅接受模板契约允许且有稳定 rule ID/理由/期限的 waiver�
 
 ## Phase 9 review
 
-review 覆盖视觉、响应式、交互、可访问性、路由、IA、工程。正文可用 P0/P1/P2 分类，但机器 front matter 每条必须是 `recheck-passed` 或 `recheck-failed` 并指向修复后 current-build evidence。P0/P1 未修复只能由用户显式接受并保留理由/范围，不能靠删除 finding 通过；任何 recheck-failed 阻止完成。
+review 覆盖视觉一致性、信息语义、元素放置、响应式、交互、可访问性、路由、IA、工程。正文可用 P0/P1/P2 分类，但机器 front matter 每条必须是 `recheck-passed` 或 `recheck-failed` 并指向修复后 current-build evidence。P0/P1 未修复只能由用户显式接受并保留理由/范围，不能靠删除 finding 通过；任何 recheck-failed 阻止完成。
 
 ## 最终报告
 
