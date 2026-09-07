@@ -7,7 +7,8 @@ from typing import Any
 
 import yaml
 
-PUBLIC_SKILLS = ("ui-template-author", "ui-template-apply")
+PUBLIC_SKILLS = ("ui-template-author", "ui-template-apply", "ui-template-design")
+PAIR_SKILLS = ("ui-template-author", "ui-template-apply")
 RETIRED_PUBLIC_SKILLS = ("ui-template",)
 RETIRED_SKILL_SUCCESSORS = {"ui-template": "ui-template-author"}
 CONFIG_PATH = "governance/release/distribution-v1.yaml"

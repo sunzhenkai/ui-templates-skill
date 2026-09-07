@@ -64,7 +64,7 @@ class ActiveReleaseTests(unittest.TestCase):
     def test_mutation_missing_public_skill_has_stable_code(self) -> None:
         findings = active.check_required_paths(
             {"skills/ui-template-author/SKILL.md"},
-            ["skills/ui-template-author", "skills/ui-template-apply"],
+            ["skills/ui-template-author", "skills/ui-template-apply", "skills/ui-template-design"],
         )
         self.assertIn(self.expected["missing-public-skill"], {item.code for item in findings})
 

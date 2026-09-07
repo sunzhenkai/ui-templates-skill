@@ -16,6 +16,7 @@ ReplaceFunction = Callable[[str | bytes | os.PathLike[str] | os.PathLike[bytes],
 MANAGED_DIRECTORIES = {
     "ui-template-author": frozenset({"references", "evals", "runtime", "catalog"}),
     "ui-template-apply": frozenset({"references", "evals"}),
+    "ui-template-design": frozenset({"references", "evals", "runtime"}),
 }
 
 
@@ -84,7 +85,7 @@ def _managed_relative(skill: str, value: str) -> bool:
     )
 
 
-def _managed_from_manifest(path: Path) -> dict[str, set[str]]:
+def _managed_from_manifest(path: Path, *, strict: bool = True) -> dict[str, set[str]]:
     managed = {skill: set() for skill in PUBLIC_SKILLS}
     if not path.exists():
         return managed
@@ -97,10 +98,14 @@ def _managed_from_manifest(path: Path) -> dict[str, set[str]]:
     if not isinstance(document, dict) or document.get("schema_version") != 1:
         raise DistributionError(f"MIRROR_MANIFEST_INVALID: {path}")
     skills = document.get("skills")
-    if not isinstance(skills, dict) or set(skills) != set(PUBLIC_SKILLS):
+    if not isinstance(skills, dict) or (strict and set(skills) != set(PUBLIC_SKILLS)):
         raise DistributionError(f"MIRROR_MANIFEST_INVALID: {path}")
     for skill in PUBLIC_SKILLS:
         entry = skills.get(skill)
+        if entry is None:
+            if strict:
+                raise DistributionError(f"MIRROR_MANIFEST_INVALID: {path}")
+            continue
         files = entry.get("files") if isinstance(entry, dict) else None
         if not isinstance(files, list):
             raise DistributionError(f"MIRROR_MANIFEST_INVALID: {path}")
@@ -199,7 +204,7 @@ def write_mirror(
     manifest_replaced = False
     try:
         _require_same_filesystem(stage, mirror_skills)
-        previous = _managed_from_manifest(manifest_path)
+        previous = _managed_from_manifest(manifest_path, strict=False)
         for skill in PUBLIC_SKILLS:
             current = mirror_skills / skill
             staged_skill = prepared / skill

@@ -13,14 +13,15 @@
 
 ## 2. 产品边界
 
-公开产品只有两个必须配套安装的 skill：
+公开产品有三个 skill。模板产品仍必须配套安装 Author 与 Apply；Design 可单独安装，不要求模板：
 
 | Skill | 职责 | 不职责 |
 | --- | --- | --- |
-| `ui-template-author` | 创建 / 抽取 / 更新 / 浏览 / 退役 / 删除模板；拥有格式契约 | 不实现消费项目页面 |
-| `ui-template-apply` | 只消费已发布且 `published` 的模板，按 Phase 0–9 实现页面 | 不创建、迁移、索引模板；不读原版源码 |
+| `ui-template-author` | 创建 / 抽取 / 更新 / 浏览 / 退役 / 删除模板；拥有格式契约 | 不实现消费项目页面；不把「做设计系统」当成导入 |
+| `ui-template-apply` | 只消费已发布且 `published` 的模板，按 Phase 0–9 实现页面 | 不创建、迁移、索引模板；不读原版源码；无 freeze 时不要求先跑 Design |
+| `ui-template-design` | 在消费项目冻结 Token → Primitive → Pattern → Page Type | 不发布 schema v2 模板；不实现全站业务页；不要求 Author/Apply |
 
-`ui-template-manager` 只是本仓库路由薄封装，不进入公开 bundle。
+`ui-template-manager` 只是本仓库路由薄封装，不进入公开 bundle。`docs/ui-template-design.md` 是规划草案，不是发布能力证据。
 
 模板是自包含设计规范：`spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml`，可含拆分文档、可选 `fidelity.yaml` 与技术栈无关的 `apply/`。禁止 `implementation/`、stack adapter、工程目录、依赖、API/mock/data、状态库、runnable starter。
 
@@ -155,7 +156,8 @@ INDEX 表头固定为：名称、风格描述、来源类型、采集日期、�
 ```text
 skills/                    生产 skill 正文
 skills/ui-template-author/catalog/  只读官方 published 副本
-schemas/                   机器契约
+skills/ui-template-design/ 独立 Design System skill
+schemas/                   机器契约（含 design-freeze/v1）
 templates/INDEX.md         本仓可写唯一目录（含 status）
 templates/<name>/          published 或 retired 模板
 scripts/ tests/ governance 门禁

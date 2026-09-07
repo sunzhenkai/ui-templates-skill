@@ -30,20 +30,16 @@
       "fixture_sha256": "9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2",
       "status": "passed"
     },
-    "apply-no-template-only-when-absent-from-catalog": {
-      "fixture_sha256": "1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c",
-      "status": "passed"
-    },
-    "apply-session-closed-delete-hint": {
-      "fixture_sha256": "9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2",
-      "status": "passed"
-    },
     "apply-no-patch-generated-web": {
       "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
       "status": "passed"
     },
     "apply-no-source-checkout": {
       "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
+      "status": "passed"
+    },
+    "apply-no-template-only-when-absent-from-catalog": {
+      "fixture_sha256": "1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c",
       "status": "passed"
     },
     "apply-out-of-scope-rejected": {
@@ -56,6 +52,10 @@
     },
     "apply-retired-template-rejected": {
       "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
+      "status": "passed"
+    },
+    "apply-session-closed-delete-hint": {
+      "fixture_sha256": "9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2",
       "status": "passed"
     },
     "apply-token-freeze": {
@@ -88,6 +88,34 @@
     },
     "browser-verification-evidence": {
       "fixture_sha256": "fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c",
+      "status": "passed"
+    },
+    "design-handoff-apply": {
+      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "status": "passed"
+    },
+    "design-handoff-author": {
+      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "status": "passed"
+    },
+    "design-no-freeze-apply-optional": {
+      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "status": "passed"
+    },
+    "design-primitives-not-complete": {
+      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "status": "passed"
+    },
+    "design-raw-token-fail": {
+      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "status": "passed"
+    },
+    "design-standalone-complete": {
+      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
+      "status": "passed"
+    },
+    "design-task-classes": {
+      "fixture_sha256": "f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60",
       "status": "passed"
     },
     "doc-source-routed-correctly": {

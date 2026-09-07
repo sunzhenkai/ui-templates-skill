@@ -33,6 +33,15 @@ public_skills:
       - references/*.md
       - evals/*.md
       - evals/*.yaml
+  ui-template-design:
+    version: 2.2.0
+    include:
+      - SKILL.md
+      - references/*.md
+      - evals/*.md
+      - evals/*.yaml
+      - runtime/*.py
+      - runtime/schemas/design-freeze/v1/*.json
 shared_files:
   - source: LICENSE
     destination: LICENSE

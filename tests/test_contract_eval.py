@@ -31,6 +31,9 @@ class ContractEvalTests(unittest.TestCase):
             "skills/ui-template-author/evals/cases.yaml",
             "skills/ui-template-apply/SKILL.md",
             "skills/ui-template-apply/evals/cases.yaml",
+            "skills/ui-template-design/SKILL.md",
+            "skills/ui-template-design/evals/cases.yaml",
+            "skills/ui-template-design/evals/contracts.yaml",
             "scripts/check_template_apply_state.py",
             "scripts/contract_eval/runner.py",
             "scripts/manage_template_index.py",
@@ -48,8 +51,14 @@ class ContractEvalTests(unittest.TestCase):
         )
         files.extend(
             str(path.relative_to(ROOT))
-            for directory in (ROOT / "skills/ui-template-author/references", ROOT / "skills/ui-template-apply/references")
-            for path in directory.glob("*.md")
+            for directory in (
+                ROOT / "skills/ui-template-author/references",
+                ROOT / "skills/ui-template-apply/references",
+                ROOT / "skills/ui-template-design/references",
+                ROOT / "skills/ui-template-design/runtime",
+            )
+            for path in directory.rglob("*")
+            if path.is_file()
         )
         for relative in files:
             source = ROOT / relative
@@ -117,6 +126,9 @@ class ContractEvalTests(unittest.TestCase):
             "apply-no-template-only-when-absent-from-catalog",
             "apply-greenfield-architecture-gate", "apply-session-closed-delete-hint",
             "apply-catalog-adopt-portable",
+            "design-standalone-complete", "design-primitives-not-complete", "design-raw-token-fail",
+            "design-no-freeze-apply-optional", "design-handoff-author", "design-handoff-apply",
+            "design-task-classes",
         }
         actual_ids: set[str] = set()
         judges: dict[str, int] = {"script": 0, "llm": 0}
@@ -132,7 +144,7 @@ class ContractEvalTests(unittest.TestCase):
                 actual_ids.add(case["id"])
                 judges[case["judge"]] += 1
         self.assertEqual(expected_ids, actual_ids)
-        self.assertEqual({"script": 42, "llm": 2}, judges)
+        self.assertEqual({"script": 49, "llm": 2}, judges)
         self.assertEqual(
             {
                 "skills/ui-template-author/evals/cases.yaml",
@@ -147,7 +159,7 @@ class ContractEvalTests(unittest.TestCase):
         first = run(ROOT)
         second = run(ROOT)
         self.assertEqual("passed", first["status"])
-        self.assertEqual({"declared": 44, "parsed": 44, "executed": 44, "script": 42, "llm": 2}, first["counts"])
+        self.assertEqual({"declared": 51, "parsed": 51, "executed": 51, "script": 49, "llm": 2}, first["counts"])
         self.assertEqual("matched", first["baseline"]["status"])
         self.assertEqual({"added": [], "removed": [], "changed": []}, first["baseline"]["diff"])
         self.assertEqual(first, second)
@@ -223,6 +235,7 @@ class ContractEvalTests(unittest.TestCase):
                 "skills/ui-template-author/evals/fidelity-cases.yaml",
                 "skills/ui-template-apply/evals/cases.yaml",
                 "skills/ui-template-apply/evals/fidelity-cases.yaml",
+                "skills/ui-template-design/evals/cases.yaml",
             },
             set(__import__("contract_eval.runner", fromlist=["DEFAULT_CASES"]).DEFAULT_CASES),
         )

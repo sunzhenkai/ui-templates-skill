@@ -2,6 +2,16 @@
 
 执行前读取 `template-contract.md`。阶段不可跳过；“有页面文件/任务打勾”不等于完成，checkpoint 中 complete 必须由存在且 digest 匹配的 artifact 和证据支撑。
 
+## 可选 design freeze
+
+Intake 只读取消费项目根 `.ui-template-design/freeze.yaml`，不 import Design skill runtime 或 references。
+
+- 文件不存在：按现行 Phase 0–9；缺少 Design skill 或 freeze 不是失败。
+- 文件存在、schema 受支持且 digest 与当前设计系统本体一致：把 token 语义、Primitive/Pattern 边界和 Page Type 投影到 Phase 1–4；不得另造 PageHeader/ListPage 或未映射 token。
+- digest 不匹配或 schema 不受支持：停止，要求重新 freeze；用户确认忽略过期 freeze 后走现行工作流，不得静默混用。
+
+digest 算法为 `sha256-canonical-json-v1`。
+
 ## 标准目录
 
 所有消费项目状态固定在项目根 `.ui-template-apply/`：

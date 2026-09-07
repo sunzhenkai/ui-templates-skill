@@ -7,7 +7,7 @@
   "required": ["schema_version", "skill", "revision", "cases"],
   "properties": {
     "schema_version": {"const": 1},
-    "skill": {"enum": ["ui-template-author", "ui-template-apply"]},
+    "skill": {"enum": ["ui-template-author", "ui-template-apply", "ui-template-design"]},
     "revision": {"type": "string", "minLength": 1},
     "cases": {
       "type": "array",
@@ -38,7 +38,7 @@
       "required": ["id", "skill", "category", "description", "given", "fixture", "fixture_sha256", "judge", "expect", "revision"],
       "properties": {
         "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
-        "skill": {"enum": ["ui-template-author", "ui-template-apply"]},
+        "skill": {"enum": ["ui-template-author", "ui-template-apply", "ui-template-design"]},
         "category": {
           "enum": ["routing", "schema", "origin", "validation-gate", "feedback", "checkpoint", "installation", "prohibited-content"]
         },

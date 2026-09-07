@@ -7,11 +7,13 @@ description: 使用已有 schema v2 UI 模板按 Phase 0–9 实现真实页面�
 
 本 skill 只消费已有模板，不创建、迁移或索引模板。Authoring 由 `ui-template-author` 所有。干净实现与保真对照见 [fidelity-compare.md](references/fidelity-compare.md)。
 
-成对安装，不要用 `--all`：
+模板产品成对安装，不要用 `--all`：
 
 ```bash
 npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-template-apply
 ```
+
+项目级 Design System（可选、可单独安装）见 `ui-template-design`。没有 freeze 时本 skill 仍按现行 Phase 0–9 执行。
 
 治理回滚用 `make bundle` / `make install`。官方模板随 Author `catalog/` 安装；Apply 默认只读 pin，不写入项目 `templates/`。
 
@@ -20,6 +22,8 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 - 已选 **published** 模板并要求实现页面 → 进入本流程（默认模式 A：干净实现）。
 - 用户明确要求对齐原版视觉 → 仍只读模板实现，另按模式 B 对照可部署 oracle；差异回写 skill/模板后重生，不得改生成物。
 - “做成模板/提取风格/导入模板/退役或删除模板” → 移交 `ui-template-author`。
+- “建立或重构项目级 Design System / 统一 token 与 Pattern / 不要按模板写业务页” → 移交 `ui-template-design`。
+- 项目根若有可解析且 digest 匹配的 design freeze，投影为结构层约束；没有 freeze 时按现行 Phase 0–9 执行。缺少 Design skill 或 freeze 不是失败。digest 不匹配则停止，或经用户确认后忽略过期 freeze 并走现行工作流，不得静默混用。
 - Intake 运行 `manage_template_index.py resolve <name>`（`require-published` 默认不播种）。项目 `published` 行优先；项目 `retired` 行不得被 catalog 覆盖；项目没有该行时只读 Author catalog 并 pin 到 `.ui-template-apply/`。只有项目库与 catalog 都没有该 published 模板时才报没有模板、停止并移交 Authoring，禁止猜测。空项目缺 `templates/` 不是失败。
 - 判定对象是本次将写入前端应用源码的**输出根**，不是仓库根、`.ui-template-apply/` 或兄弟应用。先运行 `architecture-site <output-root>`。输出根不存在/为空/只有空子目录或 git 占位，或用户要求从零搭建时判定 `greenfield`：必须先向用户展示闭集层候选并等待确认，未确认不得写应用源码。仓库已初始化但输出根仍是新应用时仍是 `greenfield`。兄弟应用、workspace 约定或功能规格里的技术提及只可作为候选或 `observed_constraints`，不得当作已确认。仅当该输出根已有依赖清单或实质源码时才是 `existing`：已有工程只记录观察到的栈，禁止静默换栈。
 - Phase 9 通过且无 proposed feedback 后会话 closed：必须提示可以删除 `.ui-template-apply/`；未领养则本仓不应有 `templates/`。不自动删除。

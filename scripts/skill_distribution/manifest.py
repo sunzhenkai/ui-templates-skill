@@ -112,7 +112,7 @@ def validate_manifest_payload(document: Mapping[str, Any], payload: Mapping[str,
         raise DistributionError("MANIFEST_SCHEMA_UNSUPPORTED: expected 2")
     skills = document.get("skills")
     if not isinstance(skills, dict) or set(skills) != set(PUBLIC_SKILLS):
-        raise DistributionError("MANIFEST_SKILLS_INVALID: dual public skills required")
+        raise DistributionError("MANIFEST_SKILLS_INVALID: public skills required")
     files = document.get("files")
     if not isinstance(files, list):
         raise DistributionError("MANIFEST_FILES_INVALID")
@@ -185,8 +185,11 @@ def validate_references(payload: Mapping[str, bytes]) -> None:
         raise DistributionError(f"REFERENCE_MISSING: {missing}")
 
 
-def validate_trigger_resources(payload: Mapping[str, bytes]) -> None:
-    for skill in PUBLIC_SKILLS:
+def validate_trigger_resources(
+    payload: Mapping[str, bytes],
+    skills: tuple[str, ...] = PUBLIC_SKILLS,
+) -> None:
+    for skill in skills:
         path = f"skills/{skill}/SKILL.md"
         try:
             text = payload[path].decode("utf-8")

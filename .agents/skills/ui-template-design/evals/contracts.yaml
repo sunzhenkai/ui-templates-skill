@@ -1,0 +1,144 @@
+schema_version: 1
+cases:
+  design-standalone-complete:
+    assertions:
+      - type: python_call
+        operation: design_standalone_contracts
+        json_path_equals:
+          - path: [no_author]
+            value: true
+          - path: [no_apply]
+            value: true
+          - path: [no_templates]
+            value: true
+          - path: [no_catalog]
+            value: true
+          - path: [valid_gate_ok]
+            value: true
+      - type: file_contains
+        path: skills/ui-template-design/SKILL.md
+        all:
+          - 未安装 Author/Apply
+          - 没有模板
+          - 不是失败
+          - 单独安装
+          - ui-template-design
+        none:
+          - 必须成对安装 ui-template-design
+  design-primitives-not-complete:
+    assertions:
+      - type: python_call
+        operation: design_standalone_contracts
+        json_path_equals:
+          - path: [primitives_only_blocked]
+            value: true
+      - type: file_contains
+        path: skills/ui-template-design/SKILL.md
+        all:
+          - 仅有 Primitive
+          - 不算完成
+          - Pattern
+  design-raw-token-fail:
+    assertions:
+      - type: python_call
+        operation: design_standalone_contracts
+        json_path_equals:
+          - path: [raw_palette_failed]
+            value: true
+          - path: [index_forbidden]
+            value: true
+          - path: [unsafe_output_rejected]
+            value: true
+      - type: file_contains
+        path: skills/ui-template-design/SKILL.md
+        all:
+          - scan_design_constraints.py
+          - 扫描失败不得 freeze
+          - 禁止写 `templates/INDEX.md`
+      - type: json_schema_validity
+        schema: skills/ui-template-design/runtime/schemas/design-freeze/v1/freeze.schema.json
+        valid: true
+        instance:
+          schema: design-freeze/v1
+          status: frozen
+          digest:
+            algorithm: sha256-canonical-json-v1
+            value: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          mode: greenfield
+          template: null
+          kit:
+            primitives: true
+            patterns: true
+            gallery: true
+          updated_at: "2026-09-07T00:00:00Z"
+  design-no-freeze-apply-optional:
+    assertions:
+      - type: file_contains
+        path: skills/ui-template-apply/SKILL.md
+        all:
+          - design freeze
+          - 没有 freeze
+          - 现行 Phase 0–9
+        none:
+          - 必须先运行 ui-template-design
+      - type: file_contains
+        path: skills/ui-template-design/SKILL.md
+        all:
+          - 不要求 Apply Phase 8
+  design-handoff-author:
+    assertions:
+      - type: file_contains
+        path: skills/ui-template-design/SKILL.md
+        all:
+          - 做成模板
+          - 移交 `ui-template-author`
+      - type: file_contains
+        path: skills/ui-template-author/SKILL.md
+        all:
+          - ui-template-design
+          - 建立或重构项目级 Design System
+  design-handoff-apply:
+    assertions:
+      - type: file_contains
+        path: skills/ui-template-design/SKILL.md
+        all:
+          - 用模板实现页面
+          - 移交 `ui-template-apply`
+          - 不得假装已实现业务页
+  design-task-classes:
+    assertions:
+      - type: python_call
+        operation: design_standalone_contracts
+        json_path_equals:
+          - path: [task_class_bootstrap]
+            value: true
+          - path: [task_class_refactor]
+            value: true
+          - path: [task_class_iterate]
+            value: true
+          - path: [task_class_mismatch_blocked]
+            value: true
+          - path: [task_class_scope_blocked]
+            value: true
+      - type: file_contains
+        path: skills/ui-template-design/SKILL.md
+        all:
+          - 任务类
+          - iterate
+          - 不得加载完整 inventory
+        none:
+          - 凭用户口吻猜测
+      - type: file_contains
+        path: skills/ui-template-design/references/task-classes.md
+        all:
+          - bootstrap
+          - refactor
+          - iterate
+          - 未声明路径保持原字节
+          - 禁止凭用户口吻猜测
+      - type: file_contains
+        path: skills/ui-template-design/references/iterate.md
+        all:
+          - 不要重开完整阶段 0–9
+          - 不得加载完整 inventory
+          - 未声明路径保持原字节

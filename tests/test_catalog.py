@@ -36,7 +36,7 @@ class CatalogAndDiscoveryTests(unittest.TestCase):
         self.assertEqual(production["template_version"], catalog["template_version"])
 
     def test_internal_skills_are_hidden_from_default_npx_list(self) -> None:
-        public = {"ui-template-author", "ui-template-apply"}
+        public = {"ui-template-author", "ui-template-apply", "ui-template-design"}
         required_internal = {"ui-template-manager"}
         optional_internal = {
             "openspec-explore",
@@ -77,7 +77,7 @@ class CatalogAndDiscoveryTests(unittest.TestCase):
         )
         self.assertEqual(0, proc.returncode, proc.stderr + proc.stdout)
         text = re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", proc.stdout + "\n" + proc.stderr)
-        self.assertIn("Found 2 skills", text)
+        self.assertIn("Found 3 skills", text)
         for name in public:
             self.assertIsNotNone(re.search(rf"[│|]\s+{re.escape(name)}\s*$", text, re.M), text)
         for name in required_internal | optional_internal:

@@ -7,11 +7,13 @@ description: 从运行中的 Web 站点(URL)、代码仓库(本地路径或 Git 
 
 本 skill 只创建、迁移、更新和索引 UI 模板，不实现消费项目页面。浏览、退役与删除同样由本 skill 执行，手续见 [template-lifecycle.md](references/template-lifecycle.md)。公开格式由 [references/spec-format.md](references/spec-format.md) 唯一定义；分层抽取见 [extraction-layers.md](references/extraction-layers.md)。Apply 通过该契约解耦消费。现行闭环目标见仓库 `governance/FUNCTIONAL-LOOP.md`（安装环境可只读本 skill 引用）。
 
-成对安装，不要用 `--all`：
+模板产品成对安装，不要用 `--all`：
 
 ```bash
 npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-template-apply
 ```
+
+项目级 Design System（可选、可单独安装，不要求本 skill）见 `ui-template-design`。
 
 治理、checksum 与回滚仍用 `make bundle` / `make install`。官方 published 模板在本 skill 只读 `catalog/`；项目可写库是项目根 `templates/`。
 
@@ -23,6 +25,7 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 - Markdown/PDF 设计文档 → [source-doc.md](references/source-doc.md)
 - 浏览 / 退役 / 删除模板 → [template-lifecycle.md](references/template-lifecycle.md)
 - “用模板实现页面/搭后台” → 停止 Authoring，移交 `ui-template-apply`。
+- “建立或重构项目级 Design System / 统一 token 与 Pattern / 不要做成模板” → 停止 Authoring，移交 `ui-template-design`。仅当用户明确要求把已冻结视觉发布为 schema v2 模板时，才把 `.ui-template-design/freeze.yaml` 当作可选 session source；日常库动词不读不改该目录。
 - 官方 published 模板在本 skill 的只读 `catalog/`；消费项目可写库是项目根 `templates/`。项目库没有同名行时不得声称“没有模板”；只有用户要求写模板、落库 feedback、retire/delete 或明确「接到本仓」时，才从 catalog 领养到项目库。
 
 ## 不变量

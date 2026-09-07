@@ -8,7 +8,17 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Callable
 
-from .config import DistributionError, PUBLIC_SKILLS, RETIRED_PUBLIC_SKILLS, RETIRED_SKILL_SUCCESSORS
+from .config import DistributionError, PAIR_SKILLS, PUBLIC_SKILLS, RETIRED_PUBLIC_SKILLS, RETIRED_SKILL_SUCCESSORS
+
+
+def normalize_install_skills(skills: tuple[str, ...] | list[str] | None) -> tuple[str, ...]:
+    selected = tuple(skills) if skills is not None else PAIR_SKILLS
+    unknown = [item for item in selected if item not in PUBLIC_SKILLS]
+    if unknown:
+        raise DistributionError(f"INSTALL_SKILLS_UNKNOWN: {unknown}")
+    if not selected:
+        raise DistributionError("INSTALL_SKILLS_EMPTY")
+    return tuple(skill for skill in PUBLIC_SKILLS if skill in set(selected))
 from .manifest import load_manifest, sha256_bytes, validate_manifest_payload
 
 ReplaceFunction = Callable[[str | bytes | os.PathLike[str] | os.PathLike[bytes], str | bytes | os.PathLike[str] | os.PathLike[bytes]], None]
@@ -125,6 +135,7 @@ def install_bundle(
     archive_directories: tuple[str, ...] = ("patches", "experience"),
     replace: ReplaceFunction = os.replace,
     fail_after_skill: str | None = None,
+    skills: tuple[str, ...] | list[str] | None = None,
 ) -> dict:
     artifact = artifact.resolve()
     checksum_path = (checksum_file or artifact.with_name(artifact.name + ".sha256")).resolve()
@@ -149,6 +160,7 @@ def install_bundle(
     states: list[tuple[Path, Path | None]] = []
     try:
         _require_same_filesystem(stage, target_skills)
+        selected = normalize_install_skills(skills)
         manifest, members = _extract_verified(artifact, extracted)
         expected_by_skill = {
             skill: {
@@ -156,9 +168,9 @@ def install_bundle(
                 for path, value in members.items()
                 if path.startswith(f"skills/{skill}/")
             }
-            for skill in PUBLIC_SKILLS
+            for skill in selected
         }
-        for skill in PUBLIC_SKILLS:
+        for skill in selected:
             current = target_skills / skill
             staged_skill = extracted / "skills" / skill
             if not staged_skill.is_dir():
@@ -168,7 +180,7 @@ def install_bundle(
             if current.exists():
                 _preserve_archives(current, staged_skill, archive_directories)
         target_skills.mkdir(parents=True, exist_ok=True)
-        for skill in PUBLIC_SKILLS:
+        for skill in selected:
             current = target_skills / skill
             staged_skill = extracted / "skills" / skill
             backup = backups / skill if current.exists() else None
@@ -184,13 +196,14 @@ def install_bundle(
                 raise
             if fail_after_skill == skill:
                 raise DistributionError(f"INJECTED_INSTALL_FAILURE: {skill}")
-        for skill in PUBLIC_SKILLS:
+        for skill in selected:
             _verify_installed_skill(
                 target_skills / skill,
                 expected_by_skill[skill],
                 archive_directories,
             )
-        for retired in RETIRED_PUBLIC_SKILLS:
+        retired_skills = RETIRED_PUBLIC_SKILLS if "ui-template-author" in selected else ()
+        for retired in retired_skills:
             leftover = target_skills / retired
             if leftover.is_symlink() or (leftover.exists() and not leftover.is_dir()):
                 raise DistributionError(f"INSTALL_RETIRED_TARGET_UNSAFE: {leftover}")

@@ -19,9 +19,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from skill_distribution.builder import build_bundle  # noqa: E402
-from skill_distribution.config import DistributionError, load_config  # noqa: E402
 from skill_distribution.installer import install_bundle  # noqa: E402
 from skill_distribution.manifest import validate_trigger_resources  # noqa: E402
+from skill_distribution.config import PAIR_SKILLS, DistributionError, load_config  # noqa: E402
 from skill_distribution.mirror import check_mirror, write_mirror  # noqa: E402
 from template_validation.schema import SchemaStore  # noqa: E402
 
@@ -37,6 +37,7 @@ class SkillDistributionTests(unittest.TestCase):
         self.repo.mkdir()
         shutil.copytree(ROOT / "skills/ui-template-author", self.repo / "skills/ui-template-author")
         shutil.copytree(ROOT / "skills/ui-template-apply", self.repo / "skills/ui-template-apply")
+        shutil.copytree(ROOT / "skills/ui-template-design", self.repo / "skills/ui-template-design")
         shutil.copytree(ROOT / "governance/release", self.repo / "governance/release")
         shutil.copy2(ROOT / "LICENSE", self.repo / "LICENSE")
         subprocess.run(["git", "init", "-q"], cwd=self.repo, check=True)
@@ -99,7 +100,7 @@ class SkillDistributionTests(unittest.TestCase):
     def test_versioned_allowlist_and_explicit_exclusions(self) -> None:
         config = load_config(self.repo)
         self.assertEqual("2.2.0", config.bundle_version)
-        self.assertEqual({"ui-template-author": "2.2.0", "ui-template-apply": "2.2.0"}, config.skill_versions)
+        self.assertEqual({"ui-template-author": "2.2.0", "ui-template-apply": "2.2.0", "ui-template-design": "2.2.0"}, config.skill_versions)
         self.assertEqual((2, 2), (config.template_schema_minimum, config.template_schema_maximum))
         exclusions = set(config.exclusions)
         for required in (
@@ -161,6 +162,8 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertIn("skills/ui-template-author/catalog/INDEX.md", paths)
         self.assertIn("skills/ui-template-author/catalog/workbench-shell/spec.md", paths)
         self.assertIn("skills/ui-template-apply/SKILL.md", paths)
+        self.assertIn("skills/ui-template-design/SKILL.md", paths)
+        self.assertIn("skills/ui-template-design/runtime/check_design_freeze.py", paths)
         with tarfile.open(first.artifact, "r:gz") as archive:
             members = archive.getmembers()
             self.assertEqual(sorted(item.name for item in members), [item.name for item in members])
@@ -194,6 +197,7 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertEqual("2.2.0", result["bundle_version"])
         self.assertTrue((target / "ui-template-author/SKILL.md").is_file())
         self.assertTrue((target / "ui-template-apply/SKILL.md").is_file())
+        self.assertFalse((target / "ui-template-design").exists())
         self.assertTrue((target / "ui-template-author/catalog/INDEX.md").is_file())
         self.assertTrue((target / "ui-template-author/catalog/workbench-shell/spec.md").is_file())
         project = target.parent.parent
@@ -371,9 +375,10 @@ class SkillDistributionTests(unittest.TestCase):
         payload = {
             item["path"]: (target.parent / item["path"]).read_bytes()
             for item in built.manifest["files"]
-            if item["path"].startswith("skills/")
+            if item["path"].startswith("skills/ui-template-author/")
+            or item["path"].startswith("skills/ui-template-apply/")
         }
-        validate_trigger_resources(payload)
+        validate_trigger_resources(payload, skills=PAIR_SKILLS)
         eval_proc = subprocess.run(
             [sys.executable, str(target / "ui-template-author/runtime/run_contract_evals.py"), "--no-baseline"],
             text=True, capture_output=True, check=False,
@@ -458,6 +463,24 @@ class SkillDistributionTests(unittest.TestCase):
             "MIRROR_FILE_UNMANAGED ui-template-author/runtime/schemas/eval/result.schema.json",
             findings,
         )
+
+    def test_pair_install_keeps_existing_design_and_design_only_skips_catalog(self) -> None:
+        built = self.build()
+        target = self.base / "project/.agents/skills"
+        marker = target / "ui-template-design/keep.txt"
+        marker.parent.mkdir(parents=True)
+        marker.write_text("keep-design", encoding="utf-8")
+        install_bundle(built.artifact, target)
+        self.assertEqual("keep-design", marker.read_text(encoding="utf-8"))
+        self.assertTrue((target / "ui-template-author/SKILL.md").is_file())
+        self.assertTrue((target / "ui-template-author/catalog/INDEX.md").is_file())
+        design_only = self.base / "design-only/.agents/skills"
+        install_bundle(built.artifact, design_only, skills=("ui-template-design",))
+        self.assertTrue((design_only / "ui-template-design/SKILL.md").is_file())
+        self.assertTrue((design_only / "ui-template-design/runtime/check_design_freeze.py").is_file())
+        self.assertFalse((design_only / "ui-template-author").exists())
+        self.assertFalse((design_only / "ui-template-apply").exists())
+        self.assertFalse((design_only.parent.parent / "templates").exists())
 
 
 if __name__ == "__main__":

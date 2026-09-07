@@ -22,7 +22,11 @@ DEFAULT_CASES = (
     "skills/ui-template-author/evals/fidelity-cases.yaml",
     "skills/ui-template-apply/evals/cases.yaml",
     "skills/ui-template-apply/evals/fidelity-cases.yaml",
+    "skills/ui-template-design/evals/cases.yaml",
 )
+OPTIONAL_DEFAULT_CASES = frozenset({
+    "skills/ui-template-design/evals/cases.yaml",
+})
 LEGACY_CASES = (
     "skills/ui-template-author/evals/cases.yaml",
     "skills/ui-template-apply/evals/cases.yaml",
@@ -59,6 +63,7 @@ PYTHON_OPERATIONS = frozenset({
     "catalog_seed_contracts",
     "apply_architecture_contracts",
     "apply_close_contracts",
+    "design_standalone_contracts",
 })
 
 
@@ -694,6 +699,97 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "no_auto_delete": still_present,
             "templates_not_auto_deleted": closed.get("may_delete_templates") is False,
         }
+    if operation == "design_standalone_contracts":
+        import importlib.util
+        import shutil
+        import tempfile
+
+        skill_src = resource_path(root, "skills/ui-template-design")
+        with tempfile.TemporaryDirectory() as temp:
+            isolated = Path(temp) / "isolated"
+            dest = isolated / "skills/ui-template-design"
+            shutil.copytree(skill_src, dest)
+            no_author = not (isolated / "skills/ui-template-author").exists()
+            no_apply = not (isolated / "skills/ui-template-apply").exists()
+            no_templates = not (isolated / "templates").exists()
+            no_catalog = not any(isolated.rglob("catalog/INDEX.md"))
+            freeze_mod_path = dest / "runtime" / "check_design_freeze.py"
+            scan_mod_path = dest / "runtime" / "scan_design_constraints.py"
+            freeze_spec = importlib.util.spec_from_file_location("check_design_freeze", freeze_mod_path)
+            scan_spec = importlib.util.spec_from_file_location("scan_design_constraints", scan_mod_path)
+            if freeze_spec is None or freeze_spec.loader is None or scan_spec is None or scan_spec.loader is None:
+                raise EvalFailure("DESIGN_RUNTIME_UNIMPORTABLE")
+            freeze_mod = importlib.util.module_from_spec(freeze_spec)
+            scan_mod = importlib.util.module_from_spec(scan_spec)
+            freeze_spec.loader.exec_module(freeze_mod)
+            scan_spec.loader.exec_module(scan_mod)
+            project = isolated / "project"
+            design_root = project / ".ui-template-design"
+            output = project / "web"
+            design_root.mkdir(parents=True)
+            output.mkdir(parents=True)
+            (project / "AGENTS.design.md").write_text("# rules\n", encoding="utf-8")
+            valid_freeze = {
+                "schema": "design-freeze/v1",
+                "status": "frozen",
+                "digest": freeze_mod.digest_of({"kit": True}),
+                "mode": "greenfield",
+                "template": None,
+                "kit": {"primitives": True, "patterns": True, "gallery": True},
+                "golden_page": None,
+                "output_root": "web",
+                "touched_paths": ["web/design-system/tokens.css"],
+                "rules_files": ["AGENTS.design.md"],
+                "updated_at": "2026-09-07T00:00:00Z",
+            }
+            (design_root / "freeze.yaml").write_text(yaml.safe_dump(valid_freeze, allow_unicode=True), encoding="utf-8")
+            valid_gate = freeze_mod.gate(project, design_root)
+            primitive_only = dict(valid_freeze)
+            primitive_only["kit"] = {"primitives": True, "patterns": False, "gallery": False}
+            (design_root / "freeze.yaml").write_text(yaml.safe_dump(primitive_only, allow_unicode=True), encoding="utf-8")
+            primitive_gate = freeze_mod.gate(project, design_root)
+            index_freeze = dict(valid_freeze)
+            index_freeze["touched_paths"] = ["templates/INDEX.md"]
+            (design_root / "freeze.yaml").write_text(yaml.safe_dump(index_freeze, allow_unicode=True), encoding="utf-8")
+            index_gate = freeze_mod.gate(project, design_root)
+            unsafe = dict(valid_freeze)
+            unsafe["output_root"] = "../secret"
+            unsafe_errors = freeze_mod.validate_document("freeze", unsafe)
+            (output / "Page.tsx").write_text('export function Page() { return <p className="text-gray-500">x</p>; }\n', encoding="utf-8")
+            scanned = scan_mod.scan(output)
+            (design_root / "freeze.yaml").write_text(yaml.safe_dump(valid_freeze, allow_unicode=True), encoding="utf-8")
+            restored = freeze_mod.gate(project, design_root)
+            class_bootstrap = freeze_mod.classify_task_class(output_root_empty=True, freeze_status=None)
+            class_refactor = freeze_mod.classify_task_class(output_root_empty=False, freeze_status=None)
+            class_iterate = freeze_mod.classify_task_class(output_root_empty=False, freeze_status="frozen")
+            class_mismatch = freeze_mod.classify_task_class(
+                output_root_empty=False, freeze_status="frozen", freeze_digest_mismatch=True,
+            )
+            class_scope = freeze_mod.classify_task_class(
+                output_root_empty=False, freeze_status=None, scope_unresolved=True,
+            )
+        return {
+            "no_author": no_author,
+            "no_apply": no_apply,
+            "no_templates": no_templates,
+            "no_catalog": no_catalog,
+            "valid_gate_ok": valid_gate["ok"] and restored["ok"],
+            "primitives_only_blocked": any(
+                item.get("code") == "PRIMITIVES_ONLY_NOT_COMPLETE" for item in primitive_gate["findings"]
+            ),
+            "index_forbidden": any(
+                item.get("code") == "INDEX_FORBIDDEN_WITHOUT_TEMPLATE" for item in index_gate["findings"]
+            ),
+            "unsafe_output_rejected": bool(unsafe_errors),
+            "raw_palette_failed": (not scanned["ok"]) and any(
+                item.get("code") == "RAW_PALETTE" for item in scanned["findings"]
+            ),
+            "task_class_bootstrap": class_bootstrap.get("task_class") == "bootstrap" and class_bootstrap.get("ok"),
+            "task_class_refactor": class_refactor.get("task_class") == "refactor" and class_refactor.get("ok"),
+            "task_class_iterate": class_iterate.get("task_class") == "iterate" and class_iterate.get("ok"),
+            "task_class_mismatch_blocked": (not class_mismatch.get("ok")) and class_mismatch.get("code") == "DIGEST_MISMATCH",
+            "task_class_scope_blocked": (not class_scope.get("ok")) and class_scope.get("code") == "SCOPE_UNRESOLVED",
+        }
     if operation == "changeset_undeclared_stable":
         import importlib.util
         import tempfile
@@ -1093,7 +1189,19 @@ def run(
     check_baseline: bool = True,
 ) -> dict[str, Any]:
     root = root.resolve()
-    paths = case_paths or list(DEFAULT_CASES)
+    if case_paths is None:
+        paths = []
+        for relative in DEFAULT_CASES:
+            try:
+                path = resource_path(root, relative)
+            except EvalFailure as exc:
+                if relative in OPTIONAL_DEFAULT_CASES and str(exc).startswith("RESOURCE_MISSING"):
+                    continue
+                raise
+            if path.is_file() or relative not in OPTIONAL_DEFAULT_CASES:
+                paths.append(relative)
+    else:
+        paths = case_paths
     declared_all, parsed_all, loaded, failures = load_cases(root, paths)
     selected = [
         item for item in loaded
@@ -1267,7 +1375,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="运行离线 contract eval；不会调用模型或访问网络")
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--cases", action="append", dest="case_paths")
-    parser.add_argument("--skill", action="append", choices=["ui-template-author", "ui-template-apply"])
+    parser.add_argument("--skill", action="append", choices=["ui-template-author", "ui-template-apply", "ui-template-design"])
     parser.add_argument("--case", action="append", dest="case_ids")
     parser.add_argument("--baseline", default=DEFAULT_BASELINE)
     parser.add_argument("--no-baseline", action="store_true")

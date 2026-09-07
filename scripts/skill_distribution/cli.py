@@ -7,13 +7,13 @@ from pathlib import Path
 
 from .builder import build_bundle
 from .catalog import check_catalog, write_catalog
-from .config import DistributionError
+from .config import DistributionError, PUBLIC_SKILLS
 from .installer import install_bundle
 from .mirror import check_mirror, write_mirror
 
 
 def parser() -> argparse.ArgumentParser:
-    result = argparse.ArgumentParser(description="双 public skill 分发治理")
+    result = argparse.ArgumentParser(description="公开 skill 分发治理")
     result.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[2])
     sub = result.add_subparsers(dest="command", required=True)
     build = sub.add_parser("build")
@@ -22,6 +22,12 @@ def parser() -> argparse.ArgumentParser:
     install.add_argument("artifact", type=Path)
     install.add_argument("--checksum", type=Path)
     install.add_argument("--target", type=Path, required=True, help="目标 skills 父目录，例如 .agents/skills")
+    install.add_argument(
+        "--skills",
+        action="append",
+        choices=list(PUBLIC_SKILLS),
+        help="本次原子替换的 skill；默认成对 Author/Apply，不删除未选中的已装 skill",
+    )
     mirror = sub.add_parser("mirror")
     mode = mirror.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true")
@@ -48,7 +54,12 @@ def main(argv: list[str] | None = None) -> int:
                 "files": len(built.manifest["files"]),
             }
         elif args.command == "install":
-            payload = install_bundle(args.artifact, args.target, checksum_file=args.checksum)
+            payload = install_bundle(
+                args.artifact,
+                args.target,
+                checksum_file=args.checksum,
+                skills=tuple(args.skills) if args.skills else None,
+            )
         elif args.command == "catalog":
             if args.write:
                 payload = write_catalog(root)

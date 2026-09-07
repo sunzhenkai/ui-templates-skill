@@ -6,7 +6,7 @@ skills:
     version: 2.2.0
     files:
     - path: SKILL.md
-      sha256: 869211975a9345fb861b86c60a272b55857c37d1e8fa34e22a7812158693dfa3
+      sha256: e8e01ac07400f80af0d93212ab290250263ba6547c513c231e38d1b6cb988c20
     - path: catalog/INDEX.md
       sha256: db3624a8be6b8c8cc64857da2e5dc2187167dd9882443251944d7633a9b7c89f
     - path: catalog/workbench-shell/apply/playbook.md
@@ -64,7 +64,7 @@ skills:
     - path: runtime/contract_eval/__init__.py
       sha256: 1c9acef6e515e28bb56b78987a817cfaf6bf885ac7e59f9b8dfbe65ee865f17c
     - path: runtime/contract_eval/runner.py
-      sha256: 3b17f9e588a0b35eaa8e25cf6b6c0d29dc410b8a1de02837027cd6cd7ac6b34d
+      sha256: c81b8436539a4713178106a740e10491f6363ed762792c07387ec369e0525c60
     - path: runtime/deterministic-baseline.json
       sha256: e5ed6f0ab698ad1824f050e3e654b68eb60be6d976e431fbb1d07135a9b08798
     - path: runtime/fixtures/eval/apply-hygiene-contracts.yaml
@@ -112,11 +112,11 @@ skills:
     - path: runtime/run_contract_evals.py
       sha256: 0115b5ad5f3ff8403af8e277e1af91fd2ae8de7571ddbcb59e5ea0975fa52074
     - path: runtime/schemas/eval/case.schema.json
-      sha256: fc4ada622781b0a7646a775376fb868a433e5364d10af5c8478d83a9e5d5a26a
+      sha256: 1df833ab295d520fcbb328f0c7c66177cbec2de55bbee0744cfb44c947b2ad9e
     - path: runtime/schemas/eval/llm-judge-result.schema.json
       sha256: 44de33d228c71981083bf6d8bb10e12c9a57b45a90adb68ca6fc567f5a1e53be
     - path: runtime/schemas/eval/result.schema.json
-      sha256: 3e1c00c6e9be052a2b7f8abf183b76606f110f12833181848997a606ec1bcb0c
+      sha256: 6d461eadc07464e336ea09ad7661953538b09ff570582f8bc85f8c0962378572
     - path: runtime/schemas/template/fidelity/v1/fidelity.schema.json
       sha256: 59f0f11703caa3f78b3f40f28ed5b314daffb837b9dcd0310783ccd7396cc92b
     - path: runtime/schemas/template/v2/architecture.schema.json
@@ -132,7 +132,7 @@ skills:
     - path: runtime/schemas/template/v2/meta.schema.json
       sha256: d754f930698f2b94613ceadc3bef5567b9478153521bbb63a687672fa071ccae
     - path: runtime/schemas/template/v2/skills-manifest.schema.json
-      sha256: 90a2d7b142c7453219eedfbb75fd79eae44e7260098ed2fe9cb13340f129dbbd
+      sha256: ea7b9ad8afea0f4ae4996bcbf286ac8f4e6a90d13e495663f068185cab4464c8
     - path: runtime/schemas/template/v2/tokens.schema.json
       sha256: 1932623e7507b37b3661506e93a5f65c68b92823781af4cff266a6d33613a7b0
     - path: runtime/schemas/template/v2/verification.schema.json
@@ -175,7 +175,7 @@ skills:
     version: 2.2.0
     files:
     - path: SKILL.md
-      sha256: 260a08247522a76c02b1c6fa61e93ef4f299f7678145e93916dc7ce173898af2
+      sha256: 1023303dd38f6d864801092414163fb674f7697627d11acc6d65132754927e77
     - path: evals/README.md
       sha256: e9393ec7cd315c80558f89e5d43a0bc48a41b0856cfecdc7e11a27e89a1025a1
     - path: evals/cases.yaml
@@ -183,7 +183,7 @@ skills:
     - path: evals/fidelity-cases.yaml
       sha256: 473a6b71893f4c69016007b4a7b13e4bca3d0de042381210263014ecae45362e
     - path: references/apply-workflow.md
-      sha256: e89e6e13d222dc8a0a548a8c5a0a392067b6a8d097c8b8ccda527df5c4f67c21
+      sha256: 7a0ecef3aab9c36c62f8507df6e7191f53b8cd7cacedf7ebf4afdcb807d6979b
     - path: references/fidelity-compare.md
       sha256: e48dd488a81fdaafa5b82c6d6c433f7714ea5ec105bf97fc138a21cae05012dc
     - path: references/quality-gates.md
@@ -192,3 +192,48 @@ skills:
       sha256: 7eef094c346375de2fcf1bec994f7a30343e056898f0862719e5b51012ba102c
     - path: references/toolchain.md
       sha256: ef36900655f88cbda60e7d3779150517232836df91e67bdee76c3511502149dc
+  ui-template-design:
+    version: 2.2.0
+    files:
+    - path: SKILL.md
+      sha256: 6ba6b1fed473358ca8404f43989cec1decfe554c9abb135bdfa7a5ce904c22cd
+    - path: evals/README.md
+      sha256: a4e650d7a02c7cae175923b4b505cc4b82f6afdc5ce514de10bc1c2c304c1bb2
+    - path: evals/cases.yaml
+      sha256: 45b3eae6346dc60c5cff952ea6a1e4aba46dedc500abb380cd941093aac8370b
+    - path: evals/contracts.yaml
+      sha256: f3cc9e3ae1f4edd8fc02ed7221bc586ed2a709ac4ac914a16496df06fd2f6f60
+    - path: references/adapters.md
+      sha256: 95c05b4482de956966e3a3ca9596ff999ab13af6c53fa43e6d503a94a8e3b6a5
+    - path: references/constitution-template.md
+      sha256: c18050c592ac2dc1fc64a9434845c27e79aedaeeb26f9ed4a041c98312545ad6
+    - path: references/data-state.md
+      sha256: 8e242ff66cc19d4e039bc6efcd26a97c6c2c7fe7a14de3e08b1f526d46fa603c
+    - path: references/executable-rules.md
+      sha256: fb16e1bf112a082813d231b7448d45a54addbbe8d5142ca95b9bf4c218707bbb
+    - path: references/existing-refactor.md
+      sha256: e5123d5ec999370f2f2b7e7392efa04390e34175db6e34ee48e3d7a7565014d0
+    - path: references/gallery.md
+      sha256: 247aba7ddd19ebc5ad7b42c9af761d55d785a250246be4b12af0fefe5fb15fa9
+    - path: references/greenfield.md
+      sha256: ca286498a31a1af83078a9ce84d725269bae2ed0fa7e365c5acd47192bd4b061
+    - path: references/inventory.md
+      sha256: 6bf7a1e2d6100da5726890eea5590fcac5ebeec845b3be574761712b3b65bf5c
+    - path: references/iterate.md
+      sha256: e310c6327968ee12250f2b70a3c76cd111c2e58d7d3e593192b59683c9401595
+    - path: references/layers.md
+      sha256: d06b4688566c0d64eff9a88c2bb5bfba1faa6bef21145483b76ea46b51bdb180
+    - path: references/legacy-mapping.md
+      sha256: 09824bd3252c76403a4c7301bcc5d182d73783f160fb16ac252cb5c2b91e64d2
+    - path: references/task-classes.md
+      sha256: e0c3a50b9cba172f6f55720b15d920c4e7bcfb468b69a142309961898fc1e6a0
+    - path: references/visual-loop.md
+      sha256: f93bbed36bda2641baad90142636b49edc8319e3e8b198e8b27b25a8e61a99f7
+    - path: runtime/check_design_freeze.py
+      sha256: a8dede6921414527245363783c43b61dff0894f40b4692c000c09afadb00f6e1
+    - path: runtime/scan_design_constraints.py
+      sha256: 470be7c96b40ae13caca258cf686a00b0816c8400e5df6ac4a726775f3357c61
+    - path: runtime/schemas/design-freeze/v1/checkpoint.schema.json
+      sha256: 9d7341e8ce10aa55defd27cca6bbc7b7525d4d57a128c69ddbbd0373a0f1f167
+    - path: runtime/schemas/design-freeze/v1/freeze.schema.json
+      sha256: e7bfc4bb2fb6d6daea50c4b3d04cf75e5221c3d88e175776338fbed1134a4018

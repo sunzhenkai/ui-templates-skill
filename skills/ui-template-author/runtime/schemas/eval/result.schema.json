@@ -70,7 +70,7 @@
       "required": ["id", "skill", "category", "judge", "fixture", "fixture_sha256", "revision", "runtime_fingerprint", "execution", "status", "blocking", "details"],
       "properties": {
         "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
-        "skill": {"enum": ["ui-template-author", "ui-template-apply"]},
+        "skill": {"enum": ["ui-template-author", "ui-template-apply", "ui-template-design"]},
         "category": {"type": "string", "minLength": 1},
         "judge": {"enum": ["script", "llm"]},
         "fixture": {"type": "string", "minLength": 1},

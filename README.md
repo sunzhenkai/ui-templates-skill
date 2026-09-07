@@ -1,11 +1,12 @@
 # ui-templates-skill
 
-`ui-templates-skill` 是一套双 public skill 产品：
+`ui-templates-skill` 发布三个 public skill：
 
 - **`ui-template-author`**：从获授权的 Web、代码仓库、图片或设计文档提取设计规则，创建、迁移、更新 schema v2 模板并维护索引。
 - **`ui-template-apply`**：消费已验证模板，按 Phase 0–9 在目标项目实现 UI，维护 checkpoint、current-build 浏览器证据、review 与 feedback。
+- **`ui-template-design`**：在消费项目建立并冻结可执行 Design System（token、Primitive、Pattern、Page Type、Gallery）。可单独安装，不要求 Author/Apply、catalog 或项目 `templates/`。
 
-完整能力必须同时安装两个 skill。仓库内 `.agents/skills/ui-template-manager/` 只是项目级路由薄封装，不进入公开 bundle。现行功能闭环、模板生命周期与防回退规约见 [`governance/FUNCTIONAL-LOOP.md`](governance/FUNCTIONAL-LOOP.md)。
+模板产品必须同时安装 Author 与 Apply。Design 是可选第三条 skill，不加入「必须与模板对同时安装」约束。仓库内 `.agents/skills/ui-template-manager/` 只是项目级路由薄封装，不进入公开 bundle。现行功能闭环、模板生命周期与防回退规约见 [`governance/FUNCTIONAL-LOOP.md`](governance/FUNCTIONAL-LOOP.md)。`docs/ui-template-design.md` 是规划草案，不是发布能力证据。
 
 ## 模板契约
 
@@ -15,10 +16,16 @@ schema v2 模板以 `spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml` �
 
 ## 安装与升级 2.2.0
 
-普通项目成对安装两个公开 skill（不要用 `--all`）：
+普通项目成对安装模板产品（不要用 `--all`）：
 
 ```bash
 npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-template-apply
+```
+
+只建立项目级 Design System 时单独安装，不要求 Author/Apply 或 catalog：
+
+```bash
+npx skills add sunzhenkai/ui-templates-skill -s ui-template-design
 ```
 
 官方 published 模板随 `ui-template-author/catalog/` 安装。空项目 Apply 只读 catalog pin，不创建项目 `templates/`。`seed` / 领养是 Authoring 显式动词：第一次要改模板、接受 feedback 落库或用户明确「把官方模板接到本仓」时才写入项目库；已有同名行或目录不覆盖。
@@ -33,15 +40,15 @@ INSTALL_TARGET=/path/to/project/.agents/skills \
 make install
 ```
 
-产物为 `dist/ui-templates-skill-2.2.0.tar.gz`、SHA-256 sidecar 和 bundle 内 `skills-manifest.yaml`。同一 `make install` 用于升级：安装器先验证 checksum/manifest，在目标父目录 staging，只原子替换 `ui-template-author` 与 `ui-template-apply`，清理已删除的受管生产文件和已退役的 `ui-template` 目录，并保留其他 skills 以及单独管理的 `patches/`、`experience/`。不要用旧的单目录 `cp -r` 安装。
+产物为 `dist/ui-templates-skill-2.2.0.tar.gz`、SHA-256 sidecar 和 bundle 内 `skills-manifest.yaml`。同一 `make install` 用于升级：安装器先验证 checksum/manifest，在目标父目录 staging，默认只原子替换 `ui-template-author` 与 `ui-template-apply`，不删除已安装的 `ui-template-design`，清理已删除的受管生产文件和已退役的 `ui-template` 目录，并保留其他 skills 以及单独管理的 `patches/`、`experience/`。单独安装 Design 用 installer `--skills ui-template-design`，不要求目标出现 catalog。不要用旧的单目录 `cp -r` 安装。
 
 ## 验证、评估与镜像
 
 ```bash
 make validate       # root governance gate；显式排除 web-v2/web-v3 样例路径
 make test           # 全部 Python unittest
-make eval           # Authoring/Apply contract eval，输出 JSON/JUnit
-make mirror-check   # 检查 .agents/skills 中双 public skill 生产镜像
+make eval           # Authoring/Apply/Design contract eval，输出 JSON/JUnit
+make mirror-check   # 检查 .agents/skills 中公开 skill 生产镜像
 make mirror-write   # 以 allowlist 原子重建受管镜像，不触碰其他 skills
 ```
 

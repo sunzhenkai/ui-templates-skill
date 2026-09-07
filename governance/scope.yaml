@@ -18,6 +18,10 @@ active_release:
   - skills/ui-template-apply/SKILL.md
   - skills/ui-template-apply/references/**
   - skills/ui-template-apply/evals/**
+  - skills/ui-template-design/SKILL.md
+  - skills/ui-template-design/references/**
+  - skills/ui-template-design/evals/**
+  - skills/ui-template-design/runtime/**
   - templates/**
 immutable_history:
   - openspec/changes/archive/**
@@ -42,10 +46,14 @@ checks:
     - skills/ui-template-apply/SKILL.md
     - skills/ui-template-apply/references/**
     - skills/ui-template-apply/evals/**
+    - skills/ui-template-design/SKILL.md
+    - skills/ui-template-design/references/**
+    - skills/ui-template-design/evals/**
     - templates/**
   production_skills:
     - skills/ui-template-author
     - skills/ui-template-apply
+    - skills/ui-template-design
   mirror_target: .agents/skills
   openspec:
     base: openspec/specs
