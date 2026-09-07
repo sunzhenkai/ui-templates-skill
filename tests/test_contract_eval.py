@@ -133,6 +133,7 @@ class ContractEvalTests(unittest.TestCase):
             "design-no-freeze-apply-optional", "design-handoff-author", "design-handoff-apply",
             "design-task-classes", "design-scanner-gate-extended",
             "design-decision-gates",
+            "design-framework-alignment",
         }
         actual_ids: set[str] = set()
         judges: dict[str, int] = {"script": 0, "llm": 0}
@@ -148,7 +149,7 @@ class ContractEvalTests(unittest.TestCase):
                 actual_ids.add(case["id"])
                 judges[case["judge"]] += 1
         self.assertEqual(expected_ids, actual_ids)
-        self.assertEqual({"script": 54, "llm": 2}, judges)
+        self.assertEqual({"script": 55, "llm": 2}, judges)
         self.assertEqual(
             {
                 "skills/ui-template-author/evals/cases.yaml",
@@ -163,7 +164,7 @@ class ContractEvalTests(unittest.TestCase):
         first = run(ROOT)
         second = run(ROOT)
         self.assertEqual("passed", first["status"])
-        self.assertEqual({"declared": 56, "parsed": 56, "executed": 56, "script": 54, "llm": 2}, first["counts"])
+        self.assertEqual({"declared": 57, "parsed": 57, "executed": 57, "script": 55, "llm": 2}, first["counts"])
         self.assertEqual("matched", first["baseline"]["status"])
         self.assertEqual({"added": [], "removed": [], "changed": []}, first["baseline"]["diff"])
         self.assertEqual(first, second)

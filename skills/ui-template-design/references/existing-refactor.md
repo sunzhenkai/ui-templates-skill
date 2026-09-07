@@ -21,4 +21,4 @@
 
 ## Existing gates
 
-Intake 让用户选择重构范围：仅视觉壳、含组件收敛、含 Pattern 提升等；并列出每项会触达的路径类型。Architecture gate 先确认「保持 observed stack」，再允许把换栈拆成独立任务；不得把必要依赖升级混入视觉重构。Inventory gate 声明全量或代表性抽样，并说明代表性抽样不能外推为全站事实。
+Intake 让用户选择重构范围：仅视觉壳、含组件收敛、含 Pattern 提升等；并列出每项会触达的路径类型。Architecture gate 先确认「保持 observed stack」，再允许把换栈拆成独立任务；不得把必要依赖升级混入视觉重构。确认保持后，Design System 按该栈原生 theming 承接（token 精确值落在其主题机制），不得另建并行第二套 token / 组件实现。Inventory gate 声明全量或代表性抽样，并说明代表性抽样不能外推为全站事实。

@@ -18,8 +18,8 @@ description: 在消费项目建立并冻结可执行前端 Design System（语�
 ## 不变量
 
 - 可在未安装 Author/Apply、没有模板的环境执行到完成态。
-- 后一层不得重新决定前一层的精确值或结构。仅有 Primitive 或只安装第三方组件库不算完成。
-- 语义 token 是精确值唯一载体。禁止未映射调色板、hex、任意 spacing。
+- 后一层不得重新决定前一层的精确值或结构。仅有 Primitive 或只安装第三方组件库不算完成；复用组件体系组件不豁免 Primitive 注册。
+- 语义 token 是精确值唯一载体；已选型组件体系的原生 theming 文件是合法载体形态，不得另建并行第二套 token。禁止未映射调色板、hex、任意 spacing。
 - 页面只组装已登记 Page Type 与 Pattern，禁止为单页私造页头、间距或空状态。
 - 约束靠 Agent 会加载的规则文件和扫描，不靠自觉。禁止默默覆盖项目根 `AGENTS.md`。
 - 生成物不是修复面：缺陷回写 token / Primitive / Pattern / 本 skill 后重生。
@@ -31,7 +31,7 @@ description: 在消费项目建立并冻结可执行前端 Design System（语�
 阶段不可跳过。完成看产物与证据，不看「已经写了页面」。状态在项目根 `.ui-template-design/`。
 
 0. Intake → `00-intake.md`：任务类 `bootstrap | refactor | iterate`、站点 `greenfield | existing`、输出根、变更集合、decision gates 账本。digest 不匹配则停止。`iterate` 不重开完整 0–9。
-1. Stack → `00-architecture.yaml`：greenfield 逐层列出候选并由用户选择；existing 确认保持或另行拆分迁移。未确认不得写应用源码。
+1. Stack → `00-architecture.yaml`：greenfield 按选型引导逐层列出候选（分层建议语义 + 官方 CLI 优先，见 greenfield.md）并由用户选择；existing 确认保持或另行拆分迁移。未确认不得写应用源码。
 2. UX Model & Inventory → `01-ux-model.md`、`01-inventory.yaml`。`refactor` 必做；`iterate` 禁止全量 inventory。
 3. Token Freeze → `02-tokens-freeze.yaml`；existing 含 `02-legacy-mapping.yaml`。精确值只在设计系统 token 文件。
 4. Primitives → `03-primitives.yaml`。状态表闭合，只消费 token。

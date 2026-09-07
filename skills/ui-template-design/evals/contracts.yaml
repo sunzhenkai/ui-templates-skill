@@ -194,3 +194,32 @@ cases:
           - decision_gates
           - "authority: user"
           - consequence
+  design-framework-alignment:
+    assertions:
+      - type: file_contains
+        path: skills/ui-template-design/references/greenfield.md
+        all:
+          - 选型引导
+          - 分层建议语义
+          - 默认候选路径
+          - 官方 CLI 优先
+          - 以当时官方文档为准
+          - 不钉死次版本
+          - 合法栈
+          - 不依赖本地安装其他 skill
+      - type: file_contains
+        path: skills/ui-template-design/references/layers.md
+        all:
+          - 不得另建并行第二套 token
+          - 降级阶梯
+          - 混装即换栈
+          - 复用不豁免注册
+      - type: file_contains
+        path: skills/ui-template-design/references/existing-refactor.md
+        all:
+          - 不得另建并行第二套 token / 组件实现
+      - type: file_contains
+        path: skills/ui-template-design/SKILL.md
+        all:
+          - 合法载体形态
+          - 选型引导
