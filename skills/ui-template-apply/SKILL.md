@@ -5,17 +5,14 @@ description: 使用已有 schema v2 UI 模板按 Phase 0–9 实现真实页面�
 
 # ui-template-apply
 
-本 skill 只消费已有模板，不创建、迁移或索引模板。Authoring 由 `ui-template-author` 所有。干净实现与保真对照见 [fidelity-compare.md](references/fidelity-compare.md)。
+本 skill 只消费已有模板，不创建、迁移或索引模板。Authoring 由 `ui-template-author` 所有；项目级 Design System 是可选独立 skill（`ui-template-design`）。官方模板随 Author `catalog/` 安装；Apply 对项目库默认只读 pin，不写入项目 `templates/`；空项目缺 `templates/` 不是失败。
 
-模板产品成对安装，不要用 `--all`：
+## 模式与移交
 
-```bash
-npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-template-apply
-```
-
-项目级 Design System（可选、可单独安装）见 `ui-template-design`。没有 freeze 时本 skill 仍按现行 Phase 0–9 执行。
-
-治理回滚用 `make bundle` / `make install`。官方模板随 Author `catalog/` 安装；Apply 默认只读 pin，不写入项目 `templates/`。
+- 已选 **published** 模板并要求实现页面 → 进入 Phase 0–9（默认模式 A：干净实现）。
+- 用户明确要求对齐原版视觉 → 仍只读模板实现，另按模式 B 对照可部署 oracle，见 [fidelity-compare.md](references/fidelity-compare.md)；差异回写 skill/模板后重生，不得改生成物。
+- “做成模板/提取风格/导入模板/退役或删除模板” → 移交 `ui-template-author`。
+- “建立或重构项目级 Design System / 统一 token 与 Pattern” → 移交 `ui-template-design`。没有 freeze 时本 skill 仍按现行 Phase 0–9 执行。
 
 ## 启动边界
 
@@ -31,7 +28,7 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 
 ## 必读契约
 
-先读 [template-contract.md](references/template-contract.md)：只接受 `schema_version: 2` 与 `source | computed | estimated | default`；四种 origin 都按确定值消费；`spec.md` 是规则入口，`tokens.yaml` 是精确值唯一载体，coverage 在实现前形成 accepted/deferred/excluded 决定。存在 `fidelity.yaml` 时校验 supported profile；无 sidecar 为 legacy-baseline，未知 profile 停止。不得发布 stack adapter。
+先读 [template-contract.md](references/template-contract.md)：只接受 `schema_version: 2` 与 `source | computed | estimated | default`；四种 origin 都按确定值消费；`spec.md` 是规则入口，`tokens.yaml` 是精确值唯一载体，coverage 在实现前形成 accepted/deferred/excluded 决定。存在 `fidelity.yaml` 时校验 supported profile；无 sidecar 为 legacy-baseline，未知 profile 停止。不得发布 stack adapter。消费项目根若有 design freeze，按 [apply-workflow.md](references/apply-workflow.md) 的规则投影为结构层约束或停止，不得静默混用；缺少 freeze 不是失败。
 
 ## Phase 0–9
 
@@ -58,6 +55,6 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 
 ## Feedback 与汇报
 
-可复用模板缺口创建 schema v2 proposed feedback；文件名 stem 必须等于 UUID，evidence refs 必须相对 `.ui-template-apply/` 根存在且不越界，targets 必须在完整 known rule IDs 中命中。按 UUID 或 normalized fingerprint 命中时合并证据，不重复创建；新目标路径碰撞不得覆盖，写后必须验证整个 inbox，失败则回滚。项目目录、API/mock、技术栈和业务专属问题留在消费项目。
+可复用模板缺口按 [apply-workflow.md](references/apply-workflow.md) 创建 schema v2 proposed feedback（UUID 文件名、相对 `.ui-template-apply/` 的 evidence refs、完整 known rule IDs、原子写入失败回滚）；项目目录、API/mock、技术栈和业务专属问题留在消费项目。
 
 最终汇报只引用 `.ui-template-apply/`：included/deferred/excluded、当前身份、完成 phases、current-build verification、P0/P1/recheck、反馈 UUID/receipt、实际工程命令及不可用工具回退。Phase 9 通过且 inbox 无 proposed 时必须输出 `session_closed: true`、`may_delete_apply_root: true` 与固定句子「可以删除整个 .ui-template-apply/；删除后生成页面不受影响；再次 Apply 视为新 Intake。」未领养则说明本仓不应存在 `templates/`。Phase 8/9 无效或任一 gate 失败时不得说“完成”，也不得说会话可删。

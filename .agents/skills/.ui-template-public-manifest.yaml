@@ -175,7 +175,7 @@ skills:
     version: 2.2.0
     files:
     - path: SKILL.md
-      sha256: 1023303dd38f6d864801092414163fb674f7697627d11acc6d65132754927e77
+      sha256: ec50581423e85fb4d728fe92b8661156e2fe8eb09def043ae5c2a565c33ad086
     - path: evals/README.md
       sha256: e9393ec7cd315c80558f89e5d43a0bc48a41b0856cfecdc7e11a27e89a1025a1
     - path: evals/cases.yaml
@@ -183,7 +183,7 @@ skills:
     - path: evals/fidelity-cases.yaml
       sha256: 473a6b71893f4c69016007b4a7b13e4bca3d0de042381210263014ecae45362e
     - path: references/apply-workflow.md
-      sha256: 7a0ecef3aab9c36c62f8507df6e7191f53b8cd7cacedf7ebf4afdcb807d6979b
+      sha256: b6254da3bb03a12fdb66d42479c4250d5d78e4d6fafb17fd501d11f4665d7e1f
     - path: references/fidelity-compare.md
       sha256: e48dd488a81fdaafa5b82c6d6c433f7714ea5ec105bf97fc138a21cae05012dc
     - path: references/quality-gates.md

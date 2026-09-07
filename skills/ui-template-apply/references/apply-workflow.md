@@ -2,6 +2,22 @@
 
 执行前读取 `template-contract.md`。阶段不可跳过；“有页面文件/任务打勾”不等于完成，checkpoint 中 complete 必须由存在且 digest 匹配的 artifact 和证据支撑。
 
+## 目录
+
+1. 可选 design freeze
+2. 标准目录
+3. Phase 0 — Intake
+4. Phase 1 — Design direction & token freeze
+5. Phase 2 — IA/layout/routes
+6. Phase 3 — Project structure
+7. Phase 4 — Component inventory
+8. Phase 5–7 — 实现进度
+9. Phase 8 — Browser verification
+10. Phase 9 — Review & feedback
+11. checkpoint 与身份
+12. 恢复：从最早失效 phase 重新打开
+13. Feedback：UUID + normalized fingerprint
+
 ## 可选 design freeze
 
 Intake 只读取消费项目根 `.ui-template-design/freeze.yaml`，不 import Design skill runtime 或 references。
@@ -38,7 +54,15 @@ digest 算法为 `sha256-canonical-json-v1`。
 
 ## Phase 0 — Intake（`00-intake.md`）
 
-记录模板 name/version/digest/`origin`/`resolved_path`、平台、成功流程，以及 `included/deferred/excluded` 范围。先运行 `ui-template-author/runtime/manage_template_index.py resolve <name>`（`require-published` 默认不播种）。项目 `published` 行 `origin=project`；项目 `retired` 停止且不得救回；项目没有该行时只读兄弟目录 `ui-template-author/catalog/` 并 pin，`origin=catalog`，不得创建项目 `templates/`。仅当项目库与 catalog 都没有该 published 模板时停止并移交 Authoring。判定对象是本次前端**输出根**（将写入应用源码的目录），不是仓库根或兄弟应用。先运行 `architecture-site <output-root>`。判定 `greenfield | existing`：输出根不存在、为空、只有空子目录或 git 占位，或从零搭建必须写出 `00-architecture.yaml`（含相对项目根的 `output_root`）并经用户确认闭集层（language、UI framework、bundler、routing、styling、state、data、unit/browser、package manager、repo shape），未确认不得写应用源码，不得把任何栈写成 Apply 默认。仓库已初始化但输出根仍是新应用时仍是 `greenfield`，必须停下选型。兄弟应用、workspace 约定或功能规格里的技术提及不得当作确认。`existing` 只在该输出根已有依赖清单或实质源码时成立，只记录观察到的栈。`project-init` 仅在用户明确要脚手架且所选栈落在其 reference 时作为确认后执行器。生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。对 coverage 的 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。检测 `fidelity.yaml`：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。Gate：schema/origin/checker 通过，范围与非目标经确认。profile digest 纳入现有 template identity。不得把原版源码或已有生成物写入 intake 作为实现输入。用户要求对齐原版时只记录 oracle 身份，对照手续见 [fidelity-compare.md](fidelity-compare.md)。
+1. 模板解析：先运行 `ui-template-author/runtime/manage_template_index.py resolve <name>`（`require-published` 默认不播种）。项目 `published` 行 `origin=project`；项目 `retired` 停止且不得救回；项目没有该行时只读兄弟目录 `ui-template-author/catalog/` 并 pin，`origin=catalog`，不得创建项目 `templates/`。仅当项目库与 catalog 都没有该 published 模板时停止并移交 Authoring。
+2. 记录 `00-intake.md`：模板 name/version/digest/`origin`/`resolved_path`、平台、成功流程，以及 `included/deferred/excluded` 范围。
+3. 架构判定：判定对象是本次前端**输出根**（将写入应用源码的目录），不是仓库根或兄弟应用；先运行 `architecture-site <output-root>`。
+   - `greenfield`：输出根不存在、为空、只有空子目录或 git 占位，或用户要求从零搭建。必须写出 `00-architecture.yaml`（含相对项目根的 `output_root`）并经用户确认闭集层（language、UI framework、bundler、routing、styling、state、data、unit/browser、package manager、repo shape），未确认不得写应用源码，不得把任何栈写成 Apply 默认。仓库已初始化但输出根仍是新应用时仍是 `greenfield`，必须停下选型。
+   - 兄弟应用、workspace 约定或功能规格里的技术提及只可作为候选，不得当作确认；`project-init` 仅在用户明确要脚手架且所选栈落在其 reference 时作为确认后执行器。
+   - `existing`：仅在该输出根已有依赖清单或实质源码时成立，只记录观察到的栈。
+4. coverage 决定：对 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。
+5. `fidelity.yaml` 检测：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。profile digest 纳入现有 template identity。
+6. Gate：schema/origin/checker 通过，范围与非目标经确认。不得把原版源码或已有生成物写入 intake 作为实现输入；生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。用户要求对齐原版时只记录 oracle 身份，对照手续见 [fidelity-compare.md](fidelity-compare.md)。
 
 `00-architecture.yaml` 使用 `architecture.schema.json`：必填 `output_root`（相对消费项目根，禁止 `..`）；`site` 为 `greenfield | existing` 且必须与对该输出根的探测一致；`layers` 固定为 language、UI framework、bundler、routing、styling、client/server state、data access、unit/browser verification、package manager、repo shape；greenfield 必须有 `confirmed_by_user: true` 与预声明 `build_identity`，可记录拟用 `init_command` 与 `observed_constraints`；existing 必须记录 `observed_stack`。greenfield 未确认前只允许写 `.ui-template-apply/`，不得写依赖清单、工程配置或应用源码；后续任何 phase 不得 complete。
 
