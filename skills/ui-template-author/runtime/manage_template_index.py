@@ -131,7 +131,7 @@ def _identity(origin: str, directory: Path, name: str, status: str | None, code:
         "code": code,
         "origin": origin,
         "name": name,
-        "version": _meta_field(directory, "template_version"),
+        "version": _meta_field(directory, "template_version") or _meta_field(directory, "version"),
         "digest": _template_digest(directory),
         "status": status,
         "path": _locator(origin, name),

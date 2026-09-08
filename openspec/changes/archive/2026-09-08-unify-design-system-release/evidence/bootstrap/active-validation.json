@@ -1,0 +1,24 @@
+{
+  "digests": {
+    "binding": {
+      "computed": "915ef6e0a82ae3af36f2acccab5848f688b07a4aa21ac24581bac3edfb74c2b9",
+      "recorded": {
+        "algorithm": "sha256-canonical-json-v1",
+        "value": "18635f4ece011ed224991cdcb46dc22e566dcd2926020dfe80bad95bd6f0b9fe"
+      }
+    },
+    "contract": {
+      "computed": "7e69c93148e33280a327430adcd0c7d35d0562ca6f6e0645fa5d2658e42fb6f2",
+      "recorded": {
+        "algorithm": "sha256-canonical-json-v1",
+        "value": "7e69c93148e33280a327430adcd0c7d35d0562ca6f6e0645fa5d2658e42fb6f2"
+      }
+    }
+  },
+  "errors": [],
+  "kind": "active",
+  "schema_version": 1,
+  "target": "/tmp/tmpo_hmkt16/bootstrap/.ui-template-design",
+  "valid": true,
+  "warnings": []
+}

@@ -299,9 +299,9 @@ def check_source_product_names(path: str, text: str, terms: set[str]) -> list[Fi
 def check_document_contract(path: str, text: str) -> list[Finding]:
     requirements: dict[str, tuple[str, ...]] = {
         "README.md": (
-            "ui-template-author", "ui-template-apply", "ui-template-design", "2.2.0", "schema v2", "apply/",
+            "ui-template-author", "ui-template-apply", "ui-template-design", "3.0.0", "design-system/v1", "apply/",
             "npx skills", "-s ui-template-author", "-s ui-template-apply", "-s ui-template-design",
-            "make validate", "make eval", "migrate_template.py", "ROLLBACK.md",
+            "make validate", "make eval", "validate_design_system.py", "MIGRATION-v2-to-design-system-v1.md", "ROLLBACK.md",
         ),
         "AGENTS.md": (
             "ui-template-author", "ui-template-apply", "ui-template-design", "schema v2", "apply/", "schemas/template/v2/",
@@ -344,8 +344,11 @@ def check_versions(root: Path) -> list[Finding]:
         public = set(distribution.get("public_skills", {}))
         if public != {"ui-template-author", "ui-template-apply", "ui-template-design"}:
             findings.append(Finding("PUBLIC_SKILL_SET_INVALID", "governance/release/distribution-v1.yaml", str(sorted(public))))
+        contract_range = distribution.get("bundle", {}).get("contract_family", {})
+        if contract_range != {"minimum": "design-system/v1", "maximum": "design-system/v1"}:
+            findings.append(Finding("CONTRACT_FAMILY_RANGE_INVALID", "governance/release/distribution-v1.yaml", str(contract_range)))
         schema_range = distribution.get("bundle", {}).get("template_schema", {})
-        if schema_range != {"minimum": 2, "maximum": 2}:
+        if schema_range != {"minimum": 1, "maximum": 1}:
             findings.append(Finding("TEMPLATE_SCHEMA_RANGE_INVALID", "governance/release/distribution-v1.yaml", str(schema_range)))
     except (OSError, UnicodeError, ValueError, yaml.YAMLError) as exc:
         findings.append(Finding("RELEASE_METADATA_UNREADABLE", "governance/release", str(exc)))
@@ -387,7 +390,7 @@ def check_local_skill_boundary(root: Path, target: str = ".agents/skills") -> li
 
 def check_repository(root: Path, scope_path: Path) -> dict:
     config = load_yaml(scope_path)
-    paths = git_paths(root)
+    paths = {path for path in git_paths(root) if (root / path).exists() or (root / path).is_symlink()}
     domains = classified_paths(config, paths)
     findings: list[Finding] = []
     read_paths: set[str] = set()

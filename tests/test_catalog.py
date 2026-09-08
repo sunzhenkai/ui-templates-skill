@@ -28,12 +28,12 @@ def _frontmatter(path: Path) -> dict:
 class CatalogAndDiscoveryTests(unittest.TestCase):
     def test_catalog_matches_published_production_library(self) -> None:
         self.assertEqual([], check_catalog(ROOT))
-        self.assertTrue((ROOT / "skills/ui-template-author/catalog/workbench-shell/spec.md").is_file())
+        self.assertTrue((ROOT / "skills/ui-template-author/catalog/workbench-shell/design-system.yaml").is_file())
         production = yaml.safe_load((ROOT / "templates/workbench-shell/meta.yaml").read_text(encoding="utf-8"))
         catalog = yaml.safe_load(
             (ROOT / "skills/ui-template-author/catalog/workbench-shell/meta.yaml").read_text(encoding="utf-8")
         )
-        self.assertEqual(production["template_version"], catalog["template_version"])
+        self.assertEqual(production["version"], catalog["version"])
 
     def test_internal_skills_are_hidden_from_default_npx_list(self) -> None:
         public = {"ui-template-author", "ui-template-apply", "ui-template-design"}

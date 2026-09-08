@@ -1,0 +1,57 @@
+{
+  "browser": {
+    "headless": true,
+    "name": "chromium",
+    "viewport": {
+      "height": 800,
+      "width": 1280
+    }
+  },
+  "build_identity": "fixture@increment",
+  "checks": {
+    "accessibility_tree": {
+      "passed": true,
+      "snapshot": "- main:\n  - navigation \"Primary\": Navigation\n  - heading \"Workbench\" [level=1]\n  - button \"Primary action\""
+    },
+    "button_geometry": {
+      "actual": {
+        "height": 38,
+        "width": 129,
+        "x": 240,
+        "y": 49
+      },
+      "passed": true
+    },
+    "console_clean": {
+      "console": [],
+      "passed": true
+    },
+    "keyboard_focus": {
+      "actual": "primitive/button",
+      "expected": "primitive/button",
+      "passed": true
+    },
+    "page_errors": {
+      "errors": [],
+      "passed": true
+    },
+    "primary_computed_style": {
+      "actual": "rgb(22, 163, 74)",
+      "expected": "rgb(22, 163, 74)",
+      "passed": true
+    },
+    "surface_computed_style": {
+      "actual": "rgb(255, 255, 255)",
+      "expected": "rgb(255, 255, 255)",
+      "passed": true
+    }
+  },
+  "design_ids": [
+    "primitive/button",
+    "pattern/page-mode-a"
+  ],
+  "mode": "increment",
+  "passed": true,
+  "schema": "design-system-regeneration-evidence/v1",
+  "url": "file:///tmp/unify-increment-regen/app/index.html"
+}

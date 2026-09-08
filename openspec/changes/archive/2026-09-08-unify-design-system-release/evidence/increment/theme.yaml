@@ -1,0 +1,6 @@
+schema: design-system-theme/v1
+tokens:
+  :root:
+    --ds-color-primary: '#16a34a'
+    --ds-color-surface: '#ffffff'
+    --ds-space-md: 16px

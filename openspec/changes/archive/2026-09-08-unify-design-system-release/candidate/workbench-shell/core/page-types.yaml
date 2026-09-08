@@ -1,0 +1,57 @@
+schema: design-system-page-types/v1
+items:
+- id: page-type/page-mode-a
+  name: Page type A
+  patterns:
+  - pattern/page-mode-a
+  data_states:
+  - loading
+  - success
+  - empty
+  - error
+  rule_refs:
+  - rule/NN-005
+- id: page-type/page-mode-b
+  name: Page type B
+  patterns:
+  - pattern/page-mode-b
+  data_states:
+  - loading
+  - success
+  - empty
+  - error
+  rule_refs:
+  - rule/NN-005
+- id: page-type/page-mode-c
+  name: Page type C
+  patterns:
+  - pattern/page-mode-c
+  data_states:
+  - loading
+  - success
+  - empty
+  - error
+  rule_refs:
+  - rule/NN-005
+- id: page-type/page-mode-d
+  name: Page type D
+  patterns:
+  - pattern/page-mode-d
+  data_states:
+  - loading
+  - success
+  - empty
+  - error
+  rule_refs:
+  - rule/NN-005
+- id: page-type/page-mode-e
+  name: Page type E
+  patterns:
+  - pattern/page-mode-e
+  data_states:
+  - loading
+  - success
+  - empty
+  - error
+  rule_refs:
+  - rule/NN-005

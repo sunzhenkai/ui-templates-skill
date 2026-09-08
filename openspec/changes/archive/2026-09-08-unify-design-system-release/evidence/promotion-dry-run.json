@@ -1,0 +1,162 @@
+{
+  "checks": [
+    {
+      "id": "staged-package-and-migration",
+      "passed": true,
+      "result": {
+        "results": [
+          {
+            "digests": {
+              "contract": {
+                "computed": "41ddaa7b5121af594a722da6f1ab5b5d48e0a84a4ef61a51eae8e20f267a2530",
+                "recorded": {
+                  "algorithm": "sha256-canonical-json-v1",
+                  "value": "41ddaa7b5121af594a722da6f1ab5b5d48e0a84a4ef61a51eae8e20f267a2530"
+                }
+              }
+            },
+            "errors": [],
+            "kind": "package",
+            "schema_version": 1,
+            "target": "/tmp/promotion-dry-run-6pu52w9a/templates/workbench-shell",
+            "valid": true,
+            "warnings": []
+          },
+          {
+            "digests": {
+              "source": {
+                "algorithm": "sha256-file-v1",
+                "value": "4ba7314d9a693f1f026349bc862b00fd178c1159f3c7431a2867b0f4b740781b"
+              },
+              "target": {
+                "algorithm": "sha256-file-v1",
+                "value": "f44c15bbfec430af287ab70464592072ffb9e72c9bfe575ee7d033e8caf2d297"
+              }
+            },
+            "errors": [],
+            "kind": "migration",
+            "schema_version": 1,
+            "target": "/tmp/promotion-dry-run-6pu52w9a/templates/workbench-shell/migration.yaml",
+            "valid": true,
+            "warnings": []
+          }
+        ],
+        "schema_version": 1,
+        "valid": true
+      }
+    },
+    {
+      "id": "production-index-parse",
+      "passed": true,
+      "rows": {
+        "workbench-shell": [
+          "workbench-shell",
+          "中性浅暗双主题的工作台 App Shell：外壳安静、画布承载内容、紧凑 14px 界面、1px 分区分隔、蓝色品牌色克制出现。",
+          "repo",
+          "2026-09-03",
+          "published"
+        ]
+      }
+    },
+    {
+      "id": "staged-package-is-published",
+      "passed": true,
+      "result": {
+        "code": "INDEX_PUBLISHED",
+        "name": "workbench-shell",
+        "ok": true,
+        "status": "published"
+      }
+    },
+    {
+      "id": "catalog-index-parse",
+      "passed": true,
+      "rows": {
+        "workbench-shell": [
+          "workbench-shell",
+          "中性浅暗双主题的工作台 App Shell：外壳安静、画布承载内容、紧凑 14px 界面、1px 分区分隔、蓝色品牌色克制出现。",
+          "repo",
+          "2026-09-03",
+          "published"
+        ]
+      }
+    },
+    {
+      "catalog": {
+        "apply/playbook.md": "3db1376cb3291c00e6fdda45bc49d4ec5e0c233bfa5637a6b9fc5888cfc773e5",
+        "apply/quality.md": "ef5aa676e2fedf8bce49482cb11c03b4baf173d399fc57c3c497895f2e458650",
+        "core/evidence.yaml": "ee23c861084dc4cc02be35fe732e6d3378856172fc8fba4e314b7ddaca8d76e8",
+        "core/layout.yaml": "47dbdf870bb7e5a839c16d94cd462992929492ba18b2c135284dabfc0a8cc788",
+        "core/page-types.yaml": "6f5789b6950730aef4f7aadad654eac7ff3365ceef192dc3f5b68f232a9943df",
+        "core/patterns.yaml": "a6c111dbd362b85fa78c13f3db239df078916767c9db6294b9c68d2c50963183",
+        "core/primitives.yaml": "6d8d701282e25db6124b128c1c2919a789f6c99ac6c084ba6fc053636b5e084e",
+        "core/rules.yaml": "10c24b9c712645cdd4b05301b81a6e4fb144f99db31b30ee91a35330f89e1b61",
+        "core/tokens.yaml": "7e0e1157f70c9e6f816777ee9a488b98087cd5b38e0b893ff8e3d44ad87ed1d1",
+        "design-system.yaml": "3c32e4758407419425a666b6866b070bbc55ef23f282ffc48b1ee5717d7d0faa",
+        "meta.yaml": "f8eb069c06248def74c66c482c5fad0d06de1cc96ded3feef3618842f4af4ef6",
+        "migration.yaml": "5a5fed3f0f11487691789f7f96fba85702230e6395dd8dedeb48a47b4835ce23"
+      },
+      "id": "staged-package-catalog-byte-identity",
+      "package": {
+        "apply/playbook.md": "3db1376cb3291c00e6fdda45bc49d4ec5e0c233bfa5637a6b9fc5888cfc773e5",
+        "apply/quality.md": "ef5aa676e2fedf8bce49482cb11c03b4baf173d399fc57c3c497895f2e458650",
+        "core/evidence.yaml": "ee23c861084dc4cc02be35fe732e6d3378856172fc8fba4e314b7ddaca8d76e8",
+        "core/layout.yaml": "47dbdf870bb7e5a839c16d94cd462992929492ba18b2c135284dabfc0a8cc788",
+        "core/page-types.yaml": "6f5789b6950730aef4f7aadad654eac7ff3365ceef192dc3f5b68f232a9943df",
+        "core/patterns.yaml": "a6c111dbd362b85fa78c13f3db239df078916767c9db6294b9c68d2c50963183",
+        "core/primitives.yaml": "6d8d701282e25db6124b128c1c2919a789f6c99ac6c084ba6fc053636b5e084e",
+        "core/rules.yaml": "10c24b9c712645cdd4b05301b81a6e4fb144f99db31b30ee91a35330f89e1b61",
+        "core/tokens.yaml": "7e0e1157f70c9e6f816777ee9a488b98087cd5b38e0b893ff8e3d44ad87ed1d1",
+        "design-system.yaml": "3c32e4758407419425a666b6866b070bbc55ef23f282ffc48b1ee5717d7d0faa",
+        "meta.yaml": "f8eb069c06248def74c66c482c5fad0d06de1cc96ded3feef3618842f4af4ef6",
+        "migration.yaml": "5a5fed3f0f11487691789f7f96fba85702230e6395dd8dedeb48a47b4835ce23"
+      },
+      "passed": true
+    },
+    {
+      "id": "staged-index-identity",
+      "passed": true
+    },
+    {
+      "id": "compatibility-3-0",
+      "passed": true
+    },
+    {
+      "id": "distribution-vendor-allowlist",
+      "passed": true
+    }
+  ],
+  "kind": "promotion-dry-run",
+  "production_before": {
+    "catalog_index_sha256": "db3624a8be6b8c8cc64857da2e5dc2187167dd9882443251944d7633a9b7c89f",
+    "catalog_package_files": {
+      "apply/playbook.md": "3db1376cb3291c00e6fdda45bc49d4ec5e0c233bfa5637a6b9fc5888cfc773e5",
+      "apply/quality.md": "ef5aa676e2fedf8bce49482cb11c03b4baf173d399fc57c3c497895f2e458650",
+      "components.md": "8be3b78f40ce8812f69b3f32d41c184198e9659f9c5578587dacfd72d022b289",
+      "evidence.yaml": "540f628051c87829c24eb7829fe5f421eb1eea149ae9b1d7f6b1575dd918d265",
+      "meta.yaml": "8961bcd061a97d0c2bcc2095de98038be9fa5a38591f955b244fffeca8626bdb",
+      "platforms/desktop.md": "8cd998e92ae8163bf4e367667932c7548720949b5faab64df1b4f7da6a6d1588",
+      "platforms/mobile.md": "4c27a57e8faa0ab5d36b6a5ec01834293a10eddb112bee6d28e165a8ea5dac79",
+      "platforms/web.md": "c81403aca299d0f932dfc56f13c47abde87fb1d403761cbce212e390becfb8fd",
+      "routes-and-layouts.md": "bcec20ebbef7aa6646823688b8242c094a7d3dfb3f27c42a1817acab695baa67",
+      "spec.md": "580eb9e0d6d303cca4b0babb29c2ff155237fc54299f3c326684e7dd2c43b28f",
+      "tokens.yaml": "aedf590f02b308881f5b9982bf145e763e83800cc54ed649cfe01db09b511476"
+    },
+    "production_package_files": {
+      "apply/playbook.md": "3db1376cb3291c00e6fdda45bc49d4ec5e0c233bfa5637a6b9fc5888cfc773e5",
+      "apply/quality.md": "ef5aa676e2fedf8bce49482cb11c03b4baf173d399fc57c3c497895f2e458650",
+      "components.md": "8be3b78f40ce8812f69b3f32d41c184198e9659f9c5578587dacfd72d022b289",
+      "evidence.yaml": "540f628051c87829c24eb7829fe5f421eb1eea149ae9b1d7f6b1575dd918d265",
+      "meta.yaml": "8961bcd061a97d0c2bcc2095de98038be9fa5a38591f955b244fffeca8626bdb",
+      "platforms/desktop.md": "8cd998e92ae8163bf4e367667932c7548720949b5faab64df1b4f7da6a6d1588",
+      "platforms/mobile.md": "4c27a57e8faa0ab5d36b6a5ec01834293a10eddb112bee6d28e165a8ea5dac79",
+      "platforms/web.md": "c81403aca299d0f932dfc56f13c47abde87fb1d403761cbce212e390becfb8fd",
+      "routes-and-layouts.md": "bcec20ebbef7aa6646823688b8242c094a7d3dfb3f27c42a1817acab695baa67",
+      "spec.md": "580eb9e0d6d303cca4b0babb29c2ff155237fc54299f3c326684e7dd2c43b28f",
+      "tokens.yaml": "aedf590f02b308881f5b9982bf145e763e83800cc54ed649cfe01db09b511476"
+    },
+    "templates_index_sha256": "db3624a8be6b8c8cc64857da2e5dc2187167dd9882443251944d7633a9b7c89f"
+  },
+  "schema_version": 1,
+  "status": "passed"
+}

@@ -44,7 +44,9 @@ def expected_catalog(repo_root: Path) -> tuple[str, dict[str, dict[str, bytes]]]
         if not directory.is_dir():
             raise DistributionError(f"CATALOG_SOURCE_TEMPLATE_MISSING: {name}")
         files = _tree_bytes(directory)
-        if "spec.md" not in files or "tokens.yaml" not in files or "meta.yaml" not in files or "evidence.yaml" not in files:
+        design_system_core = {"design-system.yaml", "meta.yaml", "core/tokens.yaml", "core/primitives.yaml", "core/patterns.yaml", "core/page-types.yaml", "core/layout.yaml", "core/rules.yaml", "core/evidence.yaml"}
+        legacy_core = {"spec.md", "tokens.yaml", "meta.yaml", "evidence.yaml"}
+        if not (design_system_core <= set(files) or legacy_core <= set(files)):
             raise DistributionError(f"CATALOG_SOURCE_CORE_MISSING: {name}")
         templates[name] = files
     return render_index(published), templates

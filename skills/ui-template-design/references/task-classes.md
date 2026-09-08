@@ -25,6 +25,22 @@ Intake 用可观察信号判定 `bootstrap | refactor | iterate`，写入 `00-in
 
 写核心产物 YAML 时按需读取 [artifact-templates.md](artifact-templates.md) 中对应段落，不预加载全文。
 
+## Source origin
+
+`source_origin` 是正交字段，不改变任务类判定：
+
+```yaml
+source_origin:
+  kind: blank | template-package | legacy-freeze-migration
+  package: null | {name, version, digest}
+  migration: null | {receipt, source_digest}
+```
+
+- `bootstrap + blank`：从零创建 core/binding。
+- `bootstrap/refactor + template-package`：只领养 published package，复制 core；不改 package identity 或 stable IDs。
+- `refactor + legacy-freeze-migration`：先生成无 unresolved/errors 的 migration receipt，再进入 refactor。
+- `iterate` 只允许有效 Active Instance；不接受旧 freeze 直接迭代。
+
 ## 变更集合
 
 `refactor` 与 `iterate` 必须在 Intake 声明路径/层集合；歧义时让用户在候选中选择。未声明路径保持原字节。一次只允许动 Token、Primitive、Pattern、规则或 Gallery 中用户点名的层。

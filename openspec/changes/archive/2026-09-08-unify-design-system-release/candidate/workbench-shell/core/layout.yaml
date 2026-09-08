@@ -1,0 +1,67 @@
+schema: design-system-layout/v1
+items:
+- id: route/page-mode-a
+  name: Route mode A
+  page_type: page-type/page-mode-a
+  slots:
+  - app-shell
+  - page-header
+  - content
+  breakpoints:
+  - narrow
+  - compact
+  - wide
+  rule_refs:
+  - rule/NN-004
+- id: route/page-mode-b
+  name: Route mode B
+  page_type: page-type/page-mode-b
+  slots:
+  - app-shell
+  - page-header
+  - content
+  breakpoints:
+  - narrow
+  - compact
+  - wide
+  rule_refs:
+  - rule/NN-004
+- id: route/page-mode-c
+  name: Route mode C
+  page_type: page-type/page-mode-c
+  slots:
+  - app-shell
+  - page-header
+  - content
+  breakpoints:
+  - narrow
+  - compact
+  - wide
+  rule_refs:
+  - rule/NN-004
+- id: route/page-mode-d
+  name: Route mode D
+  page_type: page-type/page-mode-d
+  slots:
+  - app-shell
+  - page-header
+  - content
+  breakpoints:
+  - narrow
+  - compact
+  - wide
+  rule_refs:
+  - rule/NN-004
+- id: route/page-mode-e
+  name: Route mode E
+  page_type: page-type/page-mode-e
+  slots:
+  - app-shell
+  - page-header
+  - content
+  breakpoints:
+  - narrow
+  - compact
+  - wide
+  rule_refs:
+  - rule/NN-004

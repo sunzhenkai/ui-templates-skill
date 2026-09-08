@@ -1,0 +1,57 @@
+{
+  "browser": {
+    "headless": true,
+    "name": "chromium",
+    "viewport": {
+      "height": 800,
+      "width": 1280
+    }
+  },
+  "build_identity": "fixture@bootstrap",
+  "checks": {
+    "accessibility_tree": {
+      "passed": true,
+      "snapshot": "- main:\n  - navigation \"Primary\": Navigation\n  - heading \"Workbench\" [level=1]\n  - button \"Primary action\""
+    },
+    "button_geometry": {
+      "actual": {
+        "height": 38,
+        "width": 129,
+        "x": 240,
+        "y": 49
+      },
+      "passed": true
+    },
+    "console_clean": {
+      "console": [],
+      "passed": true
+    },
+    "keyboard_focus": {
+      "actual": "primitive/button",
+      "expected": "primitive/button",
+      "passed": true
+    },
+    "page_errors": {
+      "errors": [],
+      "passed": true
+    },
+    "primary_computed_style": {
+      "actual": "rgb(37, 99, 235)",
+      "expected": "rgb(37, 99, 235)",
+      "passed": true
+    },
+    "surface_computed_style": {
+      "actual": "rgb(255, 255, 255)",
+      "expected": "rgb(255, 255, 255)",
+      "passed": true
+    }
+  },
+  "design_ids": [
+    "primitive/button",
+    "pattern/page-mode-a"
+  ],
+  "mode": "bootstrap",
+  "passed": true,
+  "schema": "design-system-regeneration-evidence/v1",
+  "url": "file:///tmp/tmpo_hmkt16/bootstrap/app/index.html"
+}

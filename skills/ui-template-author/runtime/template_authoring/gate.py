@@ -109,6 +109,57 @@ def run_authoring_gate(
         }
     before = _file_digest(production_index)
     issues: list[dict[str, Any]] = []
+    if (candidate_template / "design-system.yaml").is_file():
+        validator_command = _command(
+            validator,
+            ["validate", str(candidate_template.resolve()), "--kind", "package", "--json"],
+        )
+        returncode, validator_payload, stderr = _run_json(validator_command, cwd)
+        if returncode != 0 or not isinstance(validator_payload, dict) or not validator_payload.get("valid"):
+            issues.append({"code": "DESIGN_SYSTEM_VALIDATOR_FAILED", "returncode": returncode, "stderr": stderr})
+        eval_command = _command(eval_runner, ["--skill", "ui-template-author"])
+        returncode, eval_payload, stderr = _run_json(eval_command, cwd)
+        if returncode != 0 or not _eval_passed(eval_payload):
+            issues.append({"code": "EVAL_FAILED", "returncode": returncode, "stderr": stderr})
+        unchanged_before_promotion = _file_digest(production_index) == before
+        if not unchanged_before_promotion:
+            issues.append({"code": "PRODUCTION_INDEX_CHANGED_DURING_GATE"})
+        promoted = False
+        if not issues and promote_index:
+            try:
+                _atomic_copy(candidate_index, production_index)
+                promoted = True
+            except OSError as exc:
+                issues.append({"code": "INDEX_PROMOTION_FAILED", "message": str(exc)})
+        after = _file_digest(production_index)
+        manifest = load_document(candidate_template / "design-system.yaml")
+        return {
+            "report_schema_version": REPORT_SCHEMA_VERSION,
+            "status": "passed" if not issues else "failed",
+            "gate": {
+                "capture": "not-run", "reproducibility": "not-run",
+                "validation": "passed" if not any(item["code"] == "DESIGN_SYSTEM_VALIDATOR_FAILED" for item in issues) else "failed",
+                "eval": "passed" if _eval_passed(eval_payload) else "failed",
+            },
+            "capture": None,
+            "profile": {
+                "schema_version": "design-system/v1", "profile": "design-system-package",
+                "conformance": manifest.get("capability"), "scope": manifest.get("capability"),
+                "canonical_digest": manifest.get("contract_digest"), "unresolved": [],
+            },
+            "replay": {"status": "not-run"},
+            "eval": None if eval_payload is None else {
+                "runner_version": eval_payload.get("runner_version"), "revision": eval_payload.get("revision"),
+                "runtime_fingerprint": eval_payload.get("runtime_fingerprint"), "counts": eval_payload.get("counts"),
+                "status": eval_payload.get("status"),
+            },
+            "production_index": {
+                "before_digest": before, "after_digest": after, "unchanged_during_gate": unchanged_before_promotion,
+                "promoted": promoted,
+            },
+            "degradation": None,
+            "issues": sorted(issues, key=canonical_json),
+        }
     capture_receipt: dict[str, Any] | None = None
     validator_payload: dict[str, Any] | None = None
     eval_payload: dict[str, Any] | None = None

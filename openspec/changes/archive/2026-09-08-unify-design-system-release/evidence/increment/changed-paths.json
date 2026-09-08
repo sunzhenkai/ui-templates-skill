@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "declared": [
+    "app/theme.css",
+    "app/index.html"
+  ],
+  "changed": [
+    "theme.css",
+    "theme.yaml"
+  ]
+}

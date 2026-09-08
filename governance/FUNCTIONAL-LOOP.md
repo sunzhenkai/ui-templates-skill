@@ -17,13 +17,13 @@
 
 | Skill | 职责 | 不职责 |
 | --- | --- | --- |
-| `ui-template-author` | 创建 / 抽取 / 更新 / 浏览 / 退役 / 删除模板；拥有格式契约 | 不实现消费项目页面；不把「做设计系统」当成导入 |
-| `ui-template-apply` | 只消费已发布且 `published` 的模板，按 Phase 0–9 实现页面 | 不创建、迁移、索引模板；不读原版源码；无 freeze 时不要求先跑 Design |
-| `ui-template-design` | 在消费项目冻结 Token → Primitive → Pattern → Page Type | 不发布 schema v2 模板；不实现全站业务页；不要求 Author/Apply |
+| `ui-template-author` | 创建 / 抽取 / 更新 / 浏览 / 退役 / 删除 `design-system/v1` Template Package；拥有 package 格式契约 | 不实现消费项目页面；不生成 project binding |
+| `ui-template-apply` | 只消费 digest 一致 Active Instance，按 `bootstrap | increment` 与 Phase 0–9 实现页面 | 不创建、迁移、索引 package；不改 core contract；不读原版源码 |
+| `ui-template-design` | 创建 / 领养 / 重构 / 迭代并冻结 Active Instance 与 Project Binding | 不发布 Template Package；不实现全站业务页；不要求 Author/Apply |
 
 `ui-template-manager` 只是本仓库路由薄封装，不进入公开 bundle。`docs/ui-template-design.md` 是规划草案，不是发布能力证据。
 
-模板是自包含设计规范：`spec.md`、`tokens.yaml`、`meta.yaml`、`evidence.yaml`，可含拆分文档、可选 `fidelity.yaml` 与技术栈无关的 `apply/`。禁止 `implementation/`、stack adapter、工程目录、依赖、API/mock/data、状态库、runnable starter。
+Template Package 是自包含 portable core：`design-system.yaml`、`meta.yaml` 与七层 `core/`，可含技术栈无关 `apply/`。Project Binding 只在消费项目 Active Instance 中。禁止 `binding.yaml`、`implementation/`、stack adapter、工程目录、依赖、API/mock/data、状态库、runnable starter。schema v2 template 与 design-freeze v1 是 migration-only source。
 
 ## 3. 稳态总环
 
@@ -31,8 +31,8 @@
 原版 @ 固定 revision（仅 session source 或视觉 oracle）
         │ Author：按层/组件抽取
         ▼
-自包含 published 模板
-        │ Apply：只读模板 + 用户需求（prompts）
+published Template Package
+        │ Design/Apply：领养为 Active Instance + Project Binding
         │ MUST NOT 读原版源码 / 历史生成物
         ▼
 干净生成物（一次性消费项目）
@@ -51,7 +51,7 @@
 3. **原版只出现在两个窗口：** Author 的 session source；保真对照的临时部署。
 4. **重生才是完成证明。** 改完模板/skill 之后必须用新产物再验收。
 5. **分层抽取。** chrome → tokens → scene → 原子组件 → 复合组件，禁止抽样冒充完整。
-6. **模板自包含。** Apply 不看原版也能消费常用组件规格。
+6. **Package 自包含。** Active Instance 只消费 portable core、Stable Entity ID 和显式 Project Binding；不即兴补语义。
 7. **历史生成物不是参考。** 对照物只有当前模板、当前 skill、本会话原版部署。
 8. **现行文档不点名上游产品。** 出处只留在 `meta.sources[]` 与 `AGENTS.md` 出处段；对齐与更新协议只写原版 / session source。
 
@@ -69,8 +69,8 @@ L0–L6 只是变更集合标签。Intake 必须冻结**本次改哪些路径/�
 
 **模式 A — 干净实现（默认）**
 
-- 输入：`published` 模板 + 用户需求。
-- Intake：项目 `published` 优先；缺行时只读 Author catalog 并在 `.ui-template-apply/` pin identity；不为消费创建项目 `templates/`。
+- 输入：digest 一致 Active Design System + 用户需求；`bootstrap` 可从 published package adopt-only 建立 Active Instance。
+- Intake：Active Instance 优先；缺 Active Instance 时只允许 `bootstrap` 从 published package adopt-only 建立；increment 停止。
 - greenfield：判定只看本次前端输出根。仓库已初始化但输出根仍是新应用时仍要先确认闭集技术架构；未确认不得写应用源码/依赖/工程配置。兄弟应用或功能规格不得自动确认。existing 只在该输出根已有栈时记录 observed stack。
 - 禁止：原版 checkout、历史生成物。
 - 完成：Phase 8/9 对**模板 expected** 通过。

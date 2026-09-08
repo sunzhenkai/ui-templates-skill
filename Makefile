@@ -22,6 +22,8 @@ eval:
 	"$(GOVERNANCE_PYTHON)" scripts/run_contract_evals.py \
 		--json-out "$(REPORT_DIR)/eval.json" \
 		--junit-out "$(REPORT_DIR)/eval.xml"
+	"$(GOVERNANCE_PYTHON)" scripts/run_design_system_evals.py \
+		--json-out "$(REPORT_DIR)/design-system-eval.json"
 
 bundle:
 	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py build --output-dir "$(DIST_DIR)"

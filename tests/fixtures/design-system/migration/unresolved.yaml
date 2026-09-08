@@ -1,0 +1,23 @@
+schema: design-system-migration/v1
+source:
+  kind: template-v2
+  identity: workbench-shell@2.0.1
+  digest:
+    algorithm: sha256-canonical-json-v1
+    value: e42fa0f73206944c9f2dcf6e6d164949c71b127dde0555dc33be50611a56d9a8
+target:
+  kind: package
+  identity: workbench-shell@3.0.0
+  digest:
+    algorithm: sha256-canonical-json-v1
+    value: 33ea40aff3c8d13869eb72fded3e94df31ab5fbc21d4e515a663d149eb331e8a
+status: completed
+changes:
+- layer: tokens
+  action: mapped
+  source: themes.light.background
+  target: token/color.surface
+unresolved:
+- component mapping has no source evidence
+errors: []
+completed_at: '2026-09-08T00:00:00Z'

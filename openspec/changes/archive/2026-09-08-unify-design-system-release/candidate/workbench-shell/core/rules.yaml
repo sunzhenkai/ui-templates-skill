@@ -1,0 +1,34 @@
+schema: design-system-rules/v1
+items:
+- id: rule/NN-001
+  statement: 'Maintain section contract: 0. 不可协商规则（Non-negotiables）'
+  severity: must
+  status: active
+- id: rule/NN-002
+  statement: 'Maintain section contract: 1. 整体风格'
+  severity: must
+  status: active
+- id: rule/NN-003
+  statement: 'Maintain section contract: 2. 配色'
+  severity: must
+  status: active
+- id: rule/NN-004
+  statement: 'Maintain section contract: 3. 字体'
+  severity: must
+  status: active
+- id: rule/NN-005
+  statement: 'Maintain section contract: 4. 间距与布局'
+  severity: must
+  status: active
+- id: rule/NN-006
+  statement: 'Maintain section contract: 5. 页面模式与组件'
+  severity: must
+  status: active
+- id: rule/NN-007
+  statement: 'Maintain section contract: 6. 其他特征'
+  severity: must
+  status: active
+- id: rule/NN-008
+  statement: 'Maintain section contract: 7. 还原要点'
+  severity: must
+  status: active

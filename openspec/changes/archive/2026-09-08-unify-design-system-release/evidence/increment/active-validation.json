@@ -1,0 +1,24 @@
+{
+  "digests": {
+    "binding": {
+      "computed": "ce4f6b0244c5003fa800591381b9e654f6ce001f6a4b89722d76ce31a9fcf716",
+      "recorded": {
+        "algorithm": "sha256-canonical-json-v1",
+        "value": "234530e583cd53bfdc56aff4ea3dd1e1edcbae0a0f3a7d0824c9eeb393ea720e"
+      }
+    },
+    "contract": {
+      "computed": "cac5fae7e250d42f3edd41722780b814d61512eefd0e96d2b23d1ba4f184b5e3",
+      "recorded": {
+        "algorithm": "sha256-canonical-json-v1",
+        "value": "cac5fae7e250d42f3edd41722780b814d61512eefd0e96d2b23d1ba4f184b5e3"
+      }
+    }
+  },
+  "errors": [],
+  "kind": "active",
+  "schema_version": 1,
+  "target": "/tmp/unify-increment-regen/.ui-template-design",
+  "valid": true,
+  "warnings": []
+}
