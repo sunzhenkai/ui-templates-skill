@@ -44,8 +44,12 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("出处身份", text)
         self.assertIn("请提供本地绝对路径", text)
         self.assertIn("已发布模板、无 session source：portable 即可", text)
-        for variable in ("UI_TEMPLATE_VALIDATOR", "UI_TEMPLATE_EVAL_RUNNER"):
+        for variable in ("UI_TEMPLATE_VALIDATOR", "UI_TEMPLATE_EVAL_RUNNER", "UI_DESIGN_SYSTEM_VALIDATOR"):
             self.assertIn(variable, text)
+        self.assertIn("shared_validate_design_system.py", text)
+        self.assertIn("VALIDATOR_SELF_INVOCATION", text)
+        self.assertIn("DESIGN_SYSTEM_VALIDATOR_MISSING", text)
+        self.assertNotIn("`UI_DESIGN_SYSTEM_VALIDATOR` 或 `runtime/validate_design_system.py`", text)
 
     def test_repo_guide_separates_session_source_from_published_provenance(self) -> None:
         skill = self.read("skills/ui-template-author/SKILL.md")

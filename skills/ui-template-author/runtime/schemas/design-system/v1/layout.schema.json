@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/layout.schema.json",
+  "title": "Design System layout v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "items"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-layout/v1"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "page_type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^route/[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "page_type": {
+            "$ref": "common.schema.json#/$defs/entityId"
+          },
+          "slots": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "breakpoints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rule_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/entityId"
+            }
+          }
+        }
+      }
+    }
+  }
+}

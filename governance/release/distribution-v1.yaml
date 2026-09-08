@@ -1,6 +1,6 @@
 schema_version: 1
 bundle:
-  version: 3.0.0
+  version: 3.0.1
   contract_family:
     minimum: design-system/v1
     maximum: design-system/v1
@@ -9,13 +9,16 @@ bundle:
     maximum: 1
 public_skills:
   ui-template-author:
-    version: 3.0.0
+    version: 3.0.1
     include:
       - SKILL.md
       - references/*.md
       - evals/*.md
       - evals/*.yaml
       - runtime/*.py
+      - runtime/shared_validate_design_system.py
+      - runtime/validator_discovery.py
+      - runtime/schemas/design-system/v1/*.json
       - runtime/contract_eval/*.py
       - runtime/template_validation/*.py
       - runtime/template_apply_state/*.py
@@ -30,7 +33,7 @@ public_skills:
       - catalog/INDEX.md
       - catalog/**/*
   ui-template-apply:
-    version: 3.0.0
+    version: 3.0.1
     include:
       - SKILL.md
       - references/*.md
@@ -43,14 +46,20 @@ public_skills:
       - evals/*.md
       - evals/*.yaml
       - runtime/*.py
+      - runtime/shared_validate_design_system.py
+      - runtime/validator_discovery.py
+      - runtime/schemas/design-system/v1/*.json
   ui-template-design:
-    version: 3.0.0
+    version: 3.0.1
     include:
       - SKILL.md
       - references/*.md
       - evals/*.md
       - evals/*.yaml
       - runtime/*.py
+      - runtime/shared_validate_design_system.py
+      - runtime/validator_discovery.py
+      - runtime/schemas/design-system/v1/*.json
       - runtime/schemas/design-freeze/v1/*.json
 shared_files:
   - source: LICENSE

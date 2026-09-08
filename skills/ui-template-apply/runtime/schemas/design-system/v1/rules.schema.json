@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/rules.schema.json",
+  "title": "Design System rules v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "items"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-rules/v1"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "statement"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/entityId"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": [
+              "must",
+              "should"
+            ]
+          },
+          "token_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "enum": [
+              "active",
+              "retired",
+              "superseded"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

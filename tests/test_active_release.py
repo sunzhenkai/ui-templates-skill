@@ -77,6 +77,22 @@ class ActiveReleaseTests(unittest.TestCase):
             findings = check_mirror(ROOT, mirror)
         self.assertTrue(any(item.startswith(self.expected["production-mirror-drift"]) for item in findings))
 
+    def test_shared_validator_copy_drift_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            shutil.copytree(ROOT / "scripts", root / "scripts")
+            shutil.copytree(ROOT / "schemas/design-system/v1", root / "schemas/design-system/v1")
+            for skill in ("ui-template-author", "ui-template-apply", "ui-template-design"):
+                runtime = root / "skills" / skill / "runtime"
+                runtime.mkdir(parents=True)
+                shutil.copy2(ROOT / "scripts/validate_design_system.py", runtime / "shared_validate_design_system.py")
+                shutil.copy2(ROOT / "scripts/design_system_validator_discovery.py", runtime / "validator_discovery.py")
+                shutil.copytree(ROOT / "schemas/design-system/v1", runtime / "schemas/design-system/v1")
+            drifted = root / "skills/ui-template-author/runtime/shared_validate_design_system.py"
+            drifted.write_text(drifted.read_text(encoding="utf-8") + "\n# drift\n", encoding="utf-8")
+            findings = active.check_shared_validator_copies(root)
+        self.assertIn(self.expected["shared-validator-drift"], {item.code for item in findings})
+
     def test_local_skills_allow_only_manager(self) -> None:
         self.assertEqual([], active.check_local_skill_boundary(ROOT))
         with tempfile.TemporaryDirectory() as temporary:

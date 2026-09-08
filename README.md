@@ -14,7 +14,7 @@
 
 `core/tokens.yaml` 是 token 精确值唯一权威；原生 theming 是 Token Projection。Primitive、Pattern、Page Type、Token 和 Rule 使用 Stable Entity ID。package capability 为 `tokens-only | ui-kit | page-system`；缺层必须声明为能力边界。format 语义见 [`skills/ui-template-author/references/package-format.md`](skills/ui-template-author/references/package-format.md)，机器结构见 [`schemas/design-system/v1/`](schemas/design-system/v1/)。当前模板库见 [`templates/INDEX.md`](templates/INDEX.md)；`workbench-shell` 已迁移为 `page-system` package 3.0.0。双 skill 必须配套升级；未知 contract family fail closed。`example/**` 是治理排除项。
 
-## 安装与升级 3.0.0
+## 安装与升级 3.0.1
 
 普通项目成对安装模板产品（不要用 `--all`）：
 
@@ -37,7 +37,7 @@ make bootstrap
 make bundle
 ```
 
-产物为 `dist/ui-templates-skill-3.0.0.tar.gz`、SHA-256 sidecar 和 bundle 内 `skills-manifest.yaml`。升级通过显式 `-s` 的 `npx skills add` 重新选择对应 public skill；不要用旧的单目录 `cp -r` 安装。
+产物为 `dist/ui-templates-skill-3.0.1.tar.gz`、SHA-256 sidecar 和 bundle 内 `skills-manifest.yaml`。升级通过显式 `-s` 的 `npx skills add` 重新选择对应 public skill；不要用旧的单目录 `cp -r` 安装。已安装 3.0.0 需升级后才带共享 design-system validator；不要把 `UI_DESIGN_SYSTEM_VALIDATOR` 指到 discovery wrapper。
 
 ## 验证与评估
 

@@ -106,11 +106,11 @@ bundle 在本 skill 根分发 `runtime/capture_repo_fidelity.py`、`runtime/run_
 对 validator 和 eval runner 分别执行以下**有序且不模糊**的发现；第一个存在的候选必须通过调用/输出契约，否则失败，不继续尝试同名未知程序：
 
 1. 用户或受控环境显式设置的绝对路径：`UI_TEMPLATE_VALIDATOR` / `UI_TEMPLATE_EVAL_RUNNER`；
-1. package validator 的环境变量 `UI_DESIGN_SYSTEM_VALIDATOR` 或 `runtime/validate_design_system.py`；
+1. package validator：`UI_DESIGN_SYSTEM_VALIDATOR` **只能**指向共享实现 `runtime/shared_validate_design_system.py`（或仓库根 `scripts/validate_design_system.py`）。`runtime/validate_design_system.py` 是 discovery wrapper，**不是**实现，禁止写入该环境变量。缺共享实现或 schema 时 `DESIGN_SYSTEM_VALIDATOR_MISSING`；指向 wrapper 时 `VALIDATOR_SELF_INVOCATION`。安装态调用：`python3 runtime/validate_design_system.py validate <candidate-package> --kind package --json`。
 2. 本 skill 根目录 `runtime/validate_templates.py` / `runtime/run_contract_evals.py`；
 3. 仅当检测到仓库根同时含 `schemas/template/v2/` 时，使用该根的 `scripts/validate_templates.py` / `scripts/run_contract_evals.py`。
 
-禁止从任意 `PATH`、网络下载或另一 checkout 猜测 runner。旧模板 validator 必须接受候选路径、`--index`、`--json`，输出 schema version、findings、contrast counters 与失败退出码；package validator 必须接受 `validate <path> --kind package|active --json`，输出 stable sorted errors/digests 与失败退出码；eval runner 必须接受 skill/case scope 和 JSON 输出，提供 runner version、revision、fixture hash、declared/parsed/executed。候选缺失或能力不满足即 fail closed。bundle 与生产镜像必须把 runtime、schema 和固定 eval resources 一起分发。
+禁止从任意 `PATH`、网络下载或另一 checkout 猜测 runner。旧模板 validator 必须接受候选路径、`--index`、`--json`，输出 schema version、findings、contrast counters 与失败退出码；package validator 必须接受 `validate <path> --kind package|active --json`，输出 stable sorted errors/digests 与失败退出码；eval runner 必须接受 skill/case scope 和 JSON 输出，提供 runner version、revision、fixture hash、declared/parsed/executed。候选缺失或能力不满足即 fail closed。bundle 与生产镜像必须把 runtime、共享 design-system validator、schema 和固定 eval resources 一起分发。
 
 ## Feedback 状态
 

@@ -14,6 +14,8 @@ Before writing business code, validate:
 python3 skills/ui-template-apply/runtime/check_active_instance.py validate .ui-template-design --kind active --json
 ```
 
+安装态无仓库 `scripts/` 时，wrapper 启动同目录 `shared_validate_design_system.py`。`UI_DESIGN_SYSTEM_VALIDATOR` 只能指向该共享实现；指向 Apply 或 Author 的 discovery wrapper 会以 `VALIDATOR_SELF_INVOCATION` 失败并停止实施。
+
 `bootstrap` may build the Active Instance once from a `published` frozen package:
 
 ```bash

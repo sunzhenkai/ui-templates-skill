@@ -40,6 +40,8 @@ source_origin:
 python3 skills/ui-template-design/runtime/check_active_instance.py validate .ui-template-design --kind active --json
 ```
 
+Design-only 安装没有仓库 `scripts/` 或 Author 时，使用本 skill `runtime/shared_validate_design_system.py`。禁止把 `check_active_instance.py` 或其它 discovery wrapper 写入 `UI_DESIGN_SYSTEM_VALIDATOR`；命中则 `VALIDATOR_SELF_INVOCATION`，不得 freeze。
+
 Freeze 前还需 Gallery/浏览器证据和规则扫描。`migration receipt` 有 unresolved/errors 时不得继续 freeze。
 
 ## Package adoption

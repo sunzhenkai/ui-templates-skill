@@ -26,6 +26,8 @@ Intake 只消费 `.ui-template-design/design-system.yaml`、`core/`、`binding.y
 python3 skills/ui-template-apply/runtime/check_active_instance.py validate .ui-template-design --kind active --json
 ```
 
+安装态使用 `runtime/shared_validate_design_system.py`；禁止把 discovery wrapper 写入 `UI_DESIGN_SYSTEM_VALIDATOR`（`VALIDATOR_SELF_INVOCATION`）。
+
 - increment：缺失、未知 schema、capability 不足、contract/binding/projection digest 失配都停止。
 - bootstrap：可从 published frozen package adopt-only 复制 core 并生成 binding；不得改 package identity、stable IDs 或 core 值。
 - 旧 schema v2 template 和 `design-freeze/v1` 是 migration source，不是可直接实施输入。

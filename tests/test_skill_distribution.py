@@ -99,8 +99,8 @@ class SkillDistributionTests(unittest.TestCase):
 
     def test_versioned_allowlist_and_explicit_exclusions(self) -> None:
         config = load_config(self.repo)
-        self.assertEqual("3.0.0", config.bundle_version)
-        self.assertEqual({"ui-template-author": "3.0.0", "ui-template-apply": "3.0.0", "ui-template-design": "3.0.0"}, config.skill_versions)
+        self.assertEqual("3.0.1", config.bundle_version)
+        self.assertEqual({"ui-template-author": "3.0.1", "ui-template-apply": "3.0.1", "ui-template-design": "3.0.1"}, config.skill_versions)
         self.assertEqual((1, 1), (config.template_schema_minimum, config.template_schema_maximum))
         exclusions = set(config.exclusions)
         for required in (
@@ -165,6 +165,11 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertIn("skills/ui-template-apply/SKILL.md", paths)
         self.assertIn("skills/ui-template-design/SKILL.md", paths)
         self.assertIn("skills/ui-template-design/runtime/check_design_freeze.py", paths)
+        self.assertIn("skills/ui-template-author/runtime/shared_validate_design_system.py", paths)
+        self.assertIn("skills/ui-template-apply/runtime/shared_validate_design_system.py", paths)
+        self.assertIn("skills/ui-template-design/runtime/shared_validate_design_system.py", paths)
+        self.assertIn("skills/ui-template-design/runtime/schemas/design-system/v1/manifest.schema.json", paths)
+        self.assertIn("skills/ui-template-apply/runtime/schemas/design-system/v1/manifest.schema.json", paths)
         with tarfile.open(first.artifact, "r:gz") as archive:
             members = archive.getmembers()
             self.assertEqual(sorted(item.name for item in members), [item.name for item in members])
@@ -195,7 +200,7 @@ class SkillDistributionTests(unittest.TestCase):
         unrelated.parent.mkdir(parents=True)
         unrelated.write_text("keep", encoding="utf-8")
         result = install_bundle(built.artifact, target)
-        self.assertEqual("3.0.0", result["bundle_version"])
+        self.assertEqual("3.0.1", result["bundle_version"])
         self.assertTrue((target / "ui-template-author/SKILL.md").is_file())
         self.assertTrue((target / "ui-template-apply/SKILL.md").is_file())
         self.assertFalse((target / "ui-template-design").exists())

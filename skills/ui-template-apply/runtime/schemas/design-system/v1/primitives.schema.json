@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/primitives.schema.json",
+  "title": "Design System primitives v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "items"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-primitives/v1"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "states"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/entityId"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sizes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "states": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "token_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rule_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/entityId"
+            }
+          }
+        }
+      }
+    }
+  }
+}

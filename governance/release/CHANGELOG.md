@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 3.0.1 — Unreleased
+
+兼容补丁：安装态自带统一 design-system validator，并切断 discovery wrapper 自 exec。
+
+- 三个 public skill 的 `runtime/` 分发 `shared_validate_design_system.py` 与 `schemas/design-system/v1/`；Design 单独安装即可 `validate --kind active`。
+- `UI_DESIGN_SYSTEM_VALIDATOR` 只能指向共享实现。指向 discovery wrapper 立即以 `VALIDATOR_SELF_INVOCATION` 失败，不再繁殖进程。
+- 缺共享实现或 schema 仍为 `DESIGN_SYSTEM_VALIDATOR_MISSING`。已安装 3.0.0 需升级；不要把 wrapper 路径写入该环境变量。
+
 ## 3.0.0 — Unreleased
 
 破坏性版本：官方发布产物与三个 public skill 统一切换到 `design-system/v1`。

@@ -62,7 +62,7 @@ class DesignActiveInstanceTests(unittest.TestCase):
     def test_design_skill_declares_active_instance_gates(self) -> None:
         skill = (ROOT / "skills/ui-template-design/SKILL.md").read_text(encoding="utf-8")
         reference = (ROOT / "skills/ui-template-design/references/active-instance.md").read_text(encoding="utf-8")
-        for required in ("design-system/v1", "binding.yaml", "Token Projection", "source origin", "check_active_instance.py"):
+        for required in ("design-system/v1", "binding.yaml", "Token Projection", "source origin", "check_active_instance.py", "VALIDATOR_SELF_INVOCATION", "shared_validate_design_system.py"):
             self.assertIn(required, skill)
         for required in ("template-package", "legacy-freeze-migration", "binding_digest", "published"):
             self.assertIn(required, reference)

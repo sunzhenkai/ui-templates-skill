@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/evidence.schema.json",
+  "title": "Design System evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "items"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-evidence/v1"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "target",
+          "origin"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^evidence-[0-9a-zA-Z-]{3,80}$"
+          },
+          "kind": {
+            "enum": [
+              "token",
+              "component",
+              "layout",
+              "rule",
+              "asset",
+              "default",
+              "basis"
+            ]
+          },
+          "target": {
+            "type": "string"
+          },
+          "origin": {
+            "$ref": "common.schema.json#/$defs/origin"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "source_revision": {
+            "type": "string"
+          },
+          "locator": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "basis": {
+            "type": "string"
+          },
+          "decision_id": {
+            "type": "string"
+          },
+          "confidence": {
+            "$ref": "common.schema.json#/$defs/confidence"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "superseded"
+            ]
+          },
+          "supersedes": {
+            "type": "string"
+          },
+          "captured_at": {
+            "$ref": "common.schema.json#/$defs/timestamp"
+          }
+        }
+      }
+    }
+  }
+}

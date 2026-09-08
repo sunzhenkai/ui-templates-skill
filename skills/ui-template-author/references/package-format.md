@@ -62,9 +62,17 @@ manifest 里的 `layers` 只能声明 capability 范围内文件。缺层是 cap
 
 ## Gate
 
+仓库内：
+
 ```bash
 python3 scripts/validate_design_system.py validate <candidate-package> --kind package --json
 python3 scripts/validate_design_system.py validate-feedback <feedback.yaml> --evidence-root <inbox> --json
 ```
 
-任一 error 都停止 Index。candidate-only；production INDEX 只在用户显式确认的 publish/index gate 中更新。
+安装态使用本 skill 的 discovery wrapper（它会启动 `runtime/shared_validate_design_system.py`，不得把 wrapper 写入 `UI_DESIGN_SYSTEM_VALIDATOR`）：
+
+```bash
+python3 runtime/validate_design_system.py validate <candidate-package> --kind package --json
+```
+
+指向 wrapper 会以 `VALIDATOR_SELF_INVOCATION` 失败；缺共享实现或 schema 为 `DESIGN_SYSTEM_VALIDATOR_MISSING`。任一 error 都停止 Index。candidate-only；production INDEX 只在用户显式确认的 publish/index gate 中更新。

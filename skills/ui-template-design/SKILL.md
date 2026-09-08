@@ -41,12 +41,18 @@ description: 在消费项目创建、领养、重构、迭代并冻结 `design-s
 8. Visual loop → `08-verification.json` + `evidence/`。真实浏览器；自愈最多 3 轮。无浏览器则停止。
 9. Freeze & Report → `design-system.yaml` 的 `status: frozen`。contract、binding、projection、Gallery 和 browser evidence digest 绑定当前本体。未迁完业务页仍可完成。
 
-Validate/Freeze 前运行 runtime：
+Validate/Freeze 前运行 runtime。本 skill 可单独安装：`check_active_instance.py` 是 discovery wrapper，会启动同目录 `shared_validate_design_system.py`。`UI_DESIGN_SYSTEM_VALIDATOR` 只能指向该共享实现；指向本 wrapper 或 Author wrapper 会以 `VALIDATOR_SELF_INVOCATION` 失败，不得 freeze。
 
 ```bash
 python3 skills/ui-template-design/runtime/check_active_instance.py validate .ui-template-design --kind active --json
 python3 skills/ui-template-design/runtime/check_design_freeze.py gate --design-root .ui-template-design --project-root . --json  # legacy-freeze migration only
 python3 skills/ui-template-design/runtime/scan_design_constraints.py <output-root> --json
+```
+
+安装态（无仓库 `scripts/`、无 Author）同样调用：
+
+```bash
+python3 runtime/check_active_instance.py validate .ui-template-design --kind active --json
 ```
 
 仅有 Constitution、规则未落地、扫描失败或 digest 不一致不得 freeze。digest 算法为 `sha256-canonical-json-v1`；写 freeze.yaml 前用 `compute-digest` 子命令计算：

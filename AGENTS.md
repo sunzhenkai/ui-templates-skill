@@ -27,7 +27,7 @@
 3. `skills/ui-template-author/references/package-format.md`：当前 package 字段语义、所有权和 Authoring 行为；`references/spec-format.md` 只服务 schema v2 migration。
 4. active OpenSpec：对外可观察要求。`harden-template-lifecycle` 与 `close-functional-loops` 已 archive 并合入 `openspec/specs/`；当前无 pending overlay。
 5. `scripts/template_validation/`：上述契约的可执行实现（含 portable profile 与 session-source replay）。
-6. `governance/release/`：bundle 3.0.0、兼容、迁移、回滚与分发 allowlist。对外入口是成对 `npx skills add`（Author/Apply）以及单独 `-s ui-template-design`；`make bundle` 是可复现发布与 checksum 治理通道。官方模板副本在 `skills/ui-template-author/catalog/`。
+6. `governance/release/`：bundle 3.0.1、兼容、迁移、回滚与分发 allowlist。对外入口是成对 `npx skills add`（Author/Apply）以及单独 `-s ui-template-design`；`make bundle` 是可复现发布与 checksum 治理通道。官方模板副本在 `skills/ui-template-author/catalog/`。安装态三个 public skill 自带 `runtime/shared_validate_design_system.py`；`UI_DESIGN_SYSTEM_VALIDATOR` 不得指向 discovery wrapper。
 7. `governance/FUNCTIONAL-LOOP.md`：现行功能闭环与目标；与 1–6 冲突必须先修复。
 8. `README.md`、本文件和发布说明是派生入口；冲突必须修复，不能选择性忽略。
 

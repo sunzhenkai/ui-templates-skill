@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/meta.schema.json",
+  "title": "Design System metadata v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "name",
+    "version",
+    "description",
+    "sources",
+    "captured_at",
+    "confidence",
+    "coverage"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-meta/v1"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "version": {
+      "$ref": "common.schema.json#/$defs/semver"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "type",
+          "ref",
+          "revision",
+          "captured_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^source-[0-9]{3}$"
+          },
+          "type": {
+            "enum": [
+              "web",
+              "repo",
+              "image",
+              "doc"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "captured_at": {
+            "$ref": "common.schema.json#/$defs/timestamp"
+          }
+        }
+      }
+    },
+    "captured_at": {
+      "$ref": "common.schema.json#/$defs/date"
+    },
+    "platforms": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "web",
+          "mobile",
+          "desktop"
+        ]
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "overall"
+      ],
+      "properties": {
+        "overall": {
+          "$ref": "common.schema.json#/$defs/confidence"
+        },
+        "layout": {
+          "$ref": "common.schema.json#/$defs/confidence"
+        },
+        "visual": {
+          "$ref": "common.schema.json#/$defs/confidence"
+        },
+        "components": {
+          "$ref": "common.schema.json#/$defs/confidence"
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "components",
+        "states"
+      ],
+      "properties": {
+        "platforms": {
+          "$ref": "common.schema.json#/$defs/coverageDimension"
+        },
+        "viewports": {
+          "$ref": "common.schema.json#/$defs/coverageDimension"
+        },
+        "themes": {
+          "$ref": "common.schema.json#/$defs/coverageDimension"
+        },
+        "page_modes": {
+          "$ref": "common.schema.json#/$defs/coverageDimension"
+        },
+        "components": {
+          "$ref": "common.schema.json#/$defs/coverageDimension"
+        },
+        "states": {
+          "$ref": "common.schema.json#/$defs/coverageDimension"
+        }
+      }
+    }
+  }
+}

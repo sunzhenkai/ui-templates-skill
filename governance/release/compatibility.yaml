@@ -1,9 +1,9 @@
 schema_version: 1
-bundle_version: 3.0.0
+bundle_version: 3.0.1
 public_skills:
-  ui-template-author: 3.0.0
-  ui-template-apply: 3.0.0
-  ui-template-design: 3.0.0
+  ui-template-author: 3.0.1
+  ui-template-apply: 3.0.1
+  ui-template-design: 3.0.1
 contract_family:
   minimum: design-system/v1
   maximum: design-system/v1

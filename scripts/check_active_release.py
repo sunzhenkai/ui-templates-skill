@@ -99,6 +99,47 @@ def check_required_paths(paths: set[str], skill_roots: Iterable[str]) -> list[Fi
     return findings
 
 
+PUBLIC_VALIDATOR_SKILLS = ("ui-template-author", "ui-template-apply", "ui-template-design")
+
+
+def check_shared_validator_copies(root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    canonical_script = root / "scripts/validate_design_system.py"
+    canonical_helper = root / "scripts/design_system_validator_discovery.py"
+    canonical_schemas = root / "schemas/design-system/v1"
+    if not canonical_script.is_file() or not canonical_helper.is_file() or not canonical_schemas.is_dir():
+        findings.append(Finding("SHARED_VALIDATOR_MISSING", "scripts/validate_design_system.py", "canonical design-system validator is incomplete"))
+        return findings
+    script_bytes = canonical_script.read_bytes()
+    helper_bytes = canonical_helper.read_bytes()
+    schema_files = {path.name: path.read_bytes() for path in sorted(canonical_schemas.glob("*.schema.json"))}
+    if not schema_files:
+        findings.append(Finding("SHARED_VALIDATOR_SCHEMA_MISSING", "schemas/design-system/v1", "canonical schema set is empty"))
+        return findings
+    for skill in PUBLIC_VALIDATOR_SKILLS:
+        runtime = root / "skills" / skill / "runtime"
+        copies = (
+            (runtime / "shared_validate_design_system.py", script_bytes, "SHARED_VALIDATOR_DRIFT"),
+            (runtime / "validator_discovery.py", helper_bytes, "SHARED_VALIDATOR_HELPER_DRIFT"),
+        )
+        for path, expected, code in copies:
+            relative = path.relative_to(root).as_posix()
+            if not path.is_file():
+                findings.append(Finding("SHARED_VALIDATOR_MISSING", relative, f"{skill} is missing the shared design-system validator copy"))
+                continue
+            if path.read_bytes() != expected:
+                findings.append(Finding(code, relative, f"{skill} copy drifted from the canonical source"))
+        dest_schema = runtime / "schemas/design-system/v1"
+        for name, payload in schema_files.items():
+            copy = dest_schema / name
+            relative = copy.relative_to(root).as_posix()
+            if not copy.is_file():
+                findings.append(Finding("SHARED_VALIDATOR_SCHEMA_MISSING", relative, f"{skill} is missing {name}"))
+            elif copy.read_bytes() != payload:
+                findings.append(Finding("SHARED_VALIDATOR_SCHEMA_DRIFT", relative, f"{skill} schema copy drifted from the canonical source"))
+    return findings
+
+
 def _relative_target(source: str, raw: str) -> str | None:
     target = raw.strip()
     if target.startswith("<") and ">" in target:
@@ -299,7 +340,7 @@ def check_source_product_names(path: str, text: str, terms: set[str]) -> list[Fi
 def check_document_contract(path: str, text: str) -> list[Finding]:
     requirements: dict[str, tuple[str, ...]] = {
         "README.md": (
-            "ui-template-author", "ui-template-apply", "ui-template-design", "3.0.0", "design-system/v1", "apply/",
+            "ui-template-author", "ui-template-apply", "ui-template-design", "3.0.1", "design-system/v1", "apply/",
             "npx skills", "-s ui-template-author", "-s ui-template-apply", "-s ui-template-design",
             "make validate", "make eval", "validate_design_system.py", "MIGRATION-v2-to-design-system-v1.md", "ROLLBACK.md",
         ),
@@ -453,6 +494,7 @@ def check_repository(root: Path, scope_path: Path) -> dict:
             findings.append(Finding("ACTIVE_IMPLEMENTATION_PATH", relative, "removed implementation/ path is active"))
 
     findings.extend(check_required_paths(paths, checks.get("production_skills", [])))
+    findings.extend(check_shared_validator_copies(root))
     findings.extend(check_local_skill_boundary(root))
     findings.extend(check_versions(root))
     mirror_target = checks.get("mirror_target")
