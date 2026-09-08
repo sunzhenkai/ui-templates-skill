@@ -88,11 +88,15 @@ def validate(root: Path, report_dir: Path) -> dict:
         [python, "scripts/check_active_release.py", "--json-out", str(report_dir / "active-release.json")],
         cwd=root, label="active/release checker",
     )
+    production_validator = [
+        python, "scripts/validate_design_system.py", "validate", "templates/workbench-shell",
+        "--kind", "package", "--json",
+    ]
+    production_migration = root / "templates/workbench-shell/migration.yaml"
+    if production_migration.is_file():
+        production_validator.extend(["--migration", production_migration.relative_to(root).as_posix()])
     run(
-        [
-            python, "scripts/validate_design_system.py", "validate", "templates/workbench-shell",
-            "--kind", "package", "--migration", "templates/workbench-shell/migration.yaml", "--json",
-        ],
+        production_validator,
         cwd=root, stdout_path=report_dir / "design-system-production-validation.json", label="production package validator",
     )
     run(

@@ -1,57 +1,47 @@
 schema: design-system-page-types/v1
 items:
-- id: page-type/page-mode-a
-  name: Page type A
+- id: page-type/dashboard
+  name: Workspace dashboard
   patterns:
-  - pattern/page-mode-a
+  - pattern/dashboard-shell
   data_states:
   - loading
-  - success
-  - empty
+  - ready
   - error
   rule_refs:
-  - rule/NN-005
-- id: page-type/page-mode-b
-  name: Page type B
+  - rule/LAYOUT-101
+  - rule/LAYOUT-103
+- id: page-type/collection
+  name: Collection or board
   patterns:
-  - pattern/page-mode-b
+  - pattern/page-chrome
+  - pattern/dashboard-shell
+  data_states:
+  - empty
+  - loading
+  - ready
+  - error
+  rule_refs:
+  - rule/LAYOUT-101
+  - rule/LAYOUT-102
+- id: page-type/detail
+  name: Detail document
+  patterns:
+  - pattern/master-detail
+  - pattern/page-chrome
   data_states:
   - loading
-  - success
-  - empty
+  - ready
   - error
   rule_refs:
-  - rule/NN-005
-- id: page-type/page-mode-c
-  name: Page type C
+  - rule/LAYOUT-105
+- id: page-type/modal
+  name: Modal task
   patterns:
-  - pattern/page-mode-c
+  - pattern/modal
   data_states:
-  - loading
-  - success
-  - empty
-  - error
+  - open
+  - closed
   rule_refs:
-  - rule/NN-005
-- id: page-type/page-mode-d
-  name: Page type D
-  patterns:
-  - pattern/page-mode-d
-  data_states:
-  - loading
-  - success
-  - empty
-  - error
-  rule_refs:
-  - rule/NN-005
-- id: page-type/page-mode-e
-  name: Page type E
-  patterns:
-  - pattern/page-mode-e
-  data_states:
-  - loading
-  - success
-  - empty
-  - error
-  rule_refs:
-  - rule/NN-005
+  - rule/LAYOUT-105
+  - rule/AX-101

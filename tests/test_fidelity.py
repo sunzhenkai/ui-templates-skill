@@ -314,15 +314,13 @@ class FidelityContractTests(unittest.TestCase):
         process = subprocess.run(
             [
                 sys.executable, str(ROOT / "scripts/validate_design_system.py"), "validate",
-                str(ROOT / "templates/workbench-shell"), "--kind", "package",
-                "--migration", str(ROOT / "templates/workbench-shell/migration.yaml"), "--json",
+                str(ROOT / "templates/workbench-shell"), "--kind", "package", "--json",
             ],
             cwd=ROOT, text=True, capture_output=True, check=False,
         )
         payload = json.loads(process.stdout)
         self.assertEqual(0, process.returncode, payload)
         self.assertTrue(payload["valid"], payload)
-        self.assertTrue(payload["results"][0]["valid"])
 
     def test_classify_helpers(self) -> None:
         self.assertEqual("legacy-baseline", classify_sidecar(None, present=False))

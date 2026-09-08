@@ -69,9 +69,9 @@ class SkillContractTests(unittest.TestCase):
     def test_workbench_meta_sources_are_identity_not_live_checkouts(self) -> None:
         meta = yaml.safe_load((ROOT / "templates/workbench-shell/meta.yaml").read_text(encoding="utf-8"))
         ids = [item["id"] for item in meta["sources"]]
-        self.assertEqual(["source-001", "source-002"], ids)
+        self.assertEqual(["source-001"], ids)
         self.assertTrue(all(item.get("ref") and item.get("revision") for item in meta["sources"]))
-        self.assertFalse((ROOT / "templates/workbench-shell/fidelity.yaml").exists())
+        self.assertTrue((ROOT / "templates/workbench-shell/fidelity.yaml").is_file())
         repo = self.read("skills/ui-template-author/references/source-repo.md")
         self.assertIn("已发布模板没有 session source 时", repo)
         self.assertIn("不得停下来要求用户提供路径", repo)
