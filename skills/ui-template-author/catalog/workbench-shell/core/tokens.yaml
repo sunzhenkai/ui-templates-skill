@@ -1,18 +1,12 @@
 schema: design-system-tokens/v1
 tokens:
-  themes:
+  color:
     light:
       app-shell:
         value: oklch(0.964435 0.001327 286.375)
         origin: source
       page-canvas:
         value: oklch(0.988087 0 0)
-        origin: source
-      background:
-        value: oklch(0.988087 0 0)
-        origin: source
-      foreground:
-        value: oklch(0.141 0.005 285.823)
         origin: source
       surface:
         value: oklch(1 0 0)
@@ -34,6 +28,9 @@ tokens:
         origin: source
       surface-border:
         value: oklch(0.92 0.004 286.32)
+        origin: source
+      foreground:
+        value: oklch(0.141 0.005 285.823)
         origin: source
       card:
         value: oklch(1 0 0)
@@ -84,22 +81,7 @@ tokens:
         value: oklch(0.92 0.004 286.32)
         origin: source
       ring:
-        value: oklch(0.505 0.016 285.938)
-        origin: default
-      chart-1:
-        value: oklch(0.55 0.16 255)
-        origin: source
-      chart-2:
-        value: oklch(0.66 0.13 255)
-        origin: source
-      chart-3:
-        value: oklch(0.76 0.10 255)
-        origin: source
-      chart-4:
-        value: oklch(0.85 0.06 255)
-        origin: source
-      chart-5:
-        value: oklch(0.92 0.03 255)
+        value: oklch(0.705 0.015 286.067)
         origin: source
       sidebar:
         value: oklch(0.964435 0.001327 286.375)
@@ -126,8 +108,8 @@ tokens:
         value: oklch(0.705 0.015 286.067)
         origin: source
       brand:
-        value: oklch(0.50 0.16 255)
-        origin: default
+        value: oklch(0.55 0.16 255)
+        origin: source
       brand-foreground:
         value: oklch(0.985 0 0)
         origin: source
@@ -140,36 +122,12 @@ tokens:
       info:
         value: oklch(0.55 0.18 250)
         origin: source
-      scrollbar-thumb:
-        value: oklch(0 0 0 / 10%)
-        origin: source
-      scrollbar-thumb-hover:
-        value: oklch(0 0 0 / 18%)
-        origin: source
-      scrollbar-track:
-        value: transparent
-        origin: source
-      find-match:
-        value: oklch(0.92 0.15 100)
-        origin: source
-      find-match-active:
-        value: oklch(0.82 0.17 62)
-        origin: source
-      find-match-foreground:
-        value: oklch(0.22 0.03 92)
-        origin: source
     dark:
       app-shell:
         value: oklch(0.155 0.005 285.823)
         origin: source
       page-canvas:
         value: oklch(0.18 0.005 285.823)
-        origin: source
-      background:
-        value: oklch(0.18 0.005 285.823)
-        origin: source
-      foreground:
-        value: oklch(0.985 0 0)
         origin: source
       surface:
         value: oklch(0.21 0.006 285.885)
@@ -184,13 +142,16 @@ tokens:
         value: oklch(0.274 0.006 286.033)
         origin: source
       surface-selected:
-        value: oklch(0.30 0.006 286.033)
+        value: oklch(0.3 0.006 286.033)
         origin: source
       surface-selected-foreground:
         value: oklch(0.985 0 0)
         origin: source
       surface-border:
         value: oklch(1 0 0 / 10%)
+        origin: source
+      foreground:
+        value: oklch(0.985 0 0)
         origin: source
       card:
         value: oklch(0.21 0.006 285.885)
@@ -243,21 +204,6 @@ tokens:
       ring:
         value: oklch(0.552 0.016 285.938)
         origin: source
-      chart-1:
-        value: oklch(0.72 0.16 255)
-        origin: source
-      chart-2:
-        value: oklch(0.62 0.13 255)
-        origin: source
-      chart-3:
-        value: oklch(0.52 0.10 255)
-        origin: source
-      chart-4:
-        value: oklch(0.42 0.06 255)
-        origin: source
-      chart-5:
-        value: oklch(0.32 0.03 255)
-        origin: source
       sidebar:
         value: oklch(0.21 0.006 285.885)
         origin: source
@@ -286,8 +232,8 @@ tokens:
         value: oklch(0.65 0.16 255)
         origin: source
       brand-foreground:
-        value: oklch(0.21 0.006 285.885)
-        origin: default
+        value: oklch(0.985 0 0)
+        origin: source
       success:
         value: oklch(0.65 0.15 145)
         origin: source
@@ -297,214 +243,81 @@ tokens:
       info:
         value: oklch(0.65 0.18 250)
         origin: source
-      scrollbar-thumb:
-        value: oklch(1 0 0 / 8%)
-        origin: source
-      scrollbar-thumb-hover:
-        value: oklch(1 0 0 / 18%)
-        origin: source
-      scrollbar-track:
-        value: transparent
-        origin: source
-      find-match:
-        value: oklch(0.82 0.16 100)
-        origin: source
-      find-match-active:
-        value: oklch(0.76 0.18 60)
-        origin: source
-      find-match-foreground:
-        value: oklch(0.18 0.02 92)
-        origin: source
   typography:
-    family:
-      body:
-        value: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
-          'Microsoft YaHei', 'Noto Sans CJK SC', 'Apple SD Gothic Neo', 'Malgun Gothic',
-          'Noto Sans CJK KR', sans-serif
-        origin: source
-      heading:
-        value: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
-          'Microsoft YaHei', 'Noto Sans CJK SC', 'Apple SD Gothic Neo', 'Malgun Gothic',
-          'Noto Sans CJK KR', sans-serif
-        origin: source
-      mono:
-        value: Geist Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
-        origin: source
-    scale:
-      micro:
-        value:
-          size:
-            value: 11
-            unit: px
-          lineHeight:
-            value: 15
-            unit: px
-        origin: source
-      caption:
-        value:
-          size:
-            value: 12
-            unit: px
-          lineHeight:
-            value: 16
-            unit: px
-        origin: source
-      label:
-        value:
-          size:
-            value: 13
-            unit: px
-          lineHeight:
-            value: 18
-            unit: px
-        origin: source
-      body:
-        value:
-          size:
-            value: 14
-            unit: px
-          lineHeight:
-            value: 20
-            unit: px
-        origin: source
-      body-lg:
-        value:
-          size:
-            value: 15
-            unit: px
-          lineHeight:
-            value: 22
-            unit: px
-        origin: source
-      title-sm:
-        value:
-          size:
-            value: 16
-            unit: px
-          lineHeight:
-            value: 24
-            unit: px
-        origin: source
-      title:
-        value:
-          size:
-            value: 18
-            unit: px
-          lineHeight:
-            value: 28
-            unit: px
-        origin: source
-      title-lg:
-        value:
-          size:
-            value: 20
-            unit: px
-          lineHeight:
-            value: 28
-            unit: px
-        origin: source
-      display-sm:
-        value:
-          size:
-            value: 24
-            unit: px
-          lineHeight:
-            value: 32
-            unit: px
-        origin: source
-      display:
-        value:
-          size:
-            value: 36
-            unit: px
-          lineHeight:
-            value: 40
-            unit: px
-        origin: source
-  spacing:
-    base:
-      value: 4
+    micro:
+      value: 11
       origin: source
       unit: px
-    allowed:
-      value:
-      - 2
-      - 4
-      - 6
-      - 8
-      - 10
-      - 12
-      - 16
-      - 20
-      - 24
-      - 32
-      - 40
-      - 48
-      - 64
+    caption:
+      value: 12
       origin: source
       unit: px
-  radius:
-    base:
-      value: 10
+    label:
+      value: 13
       origin: source
       unit: px
-    xs:
-      value: 6
-      origin: source
-      unit: px
-    sm:
-      value: 8
-      origin: source
-      unit: px
-    md:
-      value: 8
-      origin: source
-      unit: px
-    lg:
-      value: 10
-      origin: source
-      unit: px
-    xl:
+    body:
       value: 14
       origin: source
       unit: px
-    2xl:
-      value: 18
+    body-lg:
+      value: 15
       origin: source
       unit: px
-    3xl:
-      value: 22
-      origin: source
-      unit: px
-    4xl:
-      value: 26
-      origin: source
-      unit: px
-  shadow:
-    surface:
-      value:
-        value: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 1px rgb(15 23 42 / 0.03)
-        darkValue: 0 1px 2px rgb(0 0 0 / 0.2), 0 1px 1px rgb(0 0 0 / 0.16)
-      origin: source
-    menu:
-      value:
-        value: 0 8px 24px rgb(15 23 42 / 0.08), 0 2px 6px rgb(15 23 42 / 0.05)
-        darkValue: 0 10px 28px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.18)
-      origin: source
-    floating:
-      value:
-        value: 0 16px 40px rgb(15 23 42 / 0.14), 0 3px 10px rgb(15 23 42 / 0.08)
-        darkValue: 0 20px 48px rgb(0 0 0 / 0.46), 0 4px 12px rgb(0 0 0 / 0.28)
-      origin: source
-  layout:
-    root-height:
-      value: 100svh
-      origin: source
-    page-gutter:
+    title-sm:
       value: 16
       origin: source
       unit: px
-    page-header-height:
+    title:
+      value: 18
+      origin: source
+      unit: px
+    title-lg:
+      value: 20
+      origin: source
+      unit: px
+    display-sm:
+      value: 24
+      origin: source
+      unit: px
+    display:
+      value: 36
+      origin: source
+      unit: px
+  space:
+    '0':
+      value: 0
+      origin: source
+      unit: px
+    '1':
+      value: 4
+      origin: source
+      unit: px
+    '2':
+      value: 8
+      origin: source
+      unit: px
+    '3':
+      value: 12
+      origin: source
+      unit: px
+    '4':
+      value: 16
+      origin: source
+      unit: px
+    '5':
+      value: 20
+      origin: source
+      unit: px
+    '6':
+      value: 24
+      origin: source
+      unit: px
+    '8':
+      value: 32
+      origin: source
+      unit: px
+    header-height:
       value: 48
       origin: source
       unit: px
@@ -512,66 +325,38 @@ tokens:
       value: 48
       origin: source
       unit: px
-    sidebar-default-width:
-      value: 256
-      origin: source
-      unit: px
-    sidebar-min-width:
-      value: 200
-      origin: source
-      unit: px
-    sidebar-max-width:
-      value: 360
-      origin: source
-      unit: px
-    sidebar-icon-width:
-      value: 48
-      origin: source
-      unit: px
-    sidebar-item-height:
-      value: 32
-      origin: source
-      unit: px
-    sidebar-mobile-width:
-      value: 288
-      origin: source
-      unit: px
-    chat-fab-size:
+    chat-launcher-size:
       value: 40
       origin: source
       unit: px
-    chat-fab-inset:
+    chat-launcher-inset:
       value: 8
       origin: source
       unit: px
-    chat-fab-clearance:
-      value: 56
-      origin: source
+  radius:
+    sm:
+      value: 6
+      origin: computed
       unit: px
-    navigation-progress-height:
-      value: 2
-      origin: source
-      unit: px
-    canvas-inset:
+    md:
       value: 8
+      origin: computed
+      unit: px
+    lg:
+      value: 10
       origin: source
       unit: px
-  interaction:
-    focus-ring-width:
-      value: 3
+    full:
+      value: 999
+      origin: source
       unit: px
-      origin: default
-  responsive:
-    web:
-      expanded-min:
-        value: 1280
-        unit: px
-        origin: source
-      collapsed-min:
-        value: 1024
-        unit: px
-        origin: source
-      narrow-content-threshold:
-        value: 768
-        unit: px
-        origin: source
+  shadow:
+    surface:
+      value: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 1px rgb(15 23 42 / 0.03)
+      origin: source
+    menu:
+      value: 0 8px 24px rgb(15 23 42 / 0.08), 0 2px 6px rgb(15 23 42 / 0.05)
+      origin: source
+    floating:
+      value: 0 16px 40px rgb(15 23 42 / 0.14), 0 3px 10px rgb(15 23 42 / 0.08)
+      origin: source

@@ -1,191 +1,102 @@
+schema: design-system-meta/v1
 name: workbench-shell
-description: 中性浅暗双主题的工作台 App Shell：外壳安静、画布承载内容、紧凑 14px 界面、1px 分区分隔、蓝色品牌色克制出现。
+version: 1.0.0
+description: Neutral dual-theme workbench app shell with a quiet inset sidebar, dense 14px interface, crisp 1px separation
+  and restrained blue accents.
 sources:
 - id: source-001
   type: repo
-  ref: https://github.com/multica-ai/multica @ 879d0de9166261c26ec35b69f5cec9382191eda1
-  revision: 879d0de9166261c26ec35b69f5cec9382191eda1
-  captured_at: '2026-09-03T00:00:00Z'
-- id: source-002
-  type: doc
-  ref: 用户提供的 Markdown 布局设计文档（原始项目出处已按要求抹除，业务实体已泛化）
-  revision: 0aedb680ecdf61aa8eafdb5d80e6b58edba63df5
-  captured_at: '2026-08-30T00:00:00Z'
-captured_at: '2026-09-03'
+  ref: https://github.com/multica-ai/multica @ upstream 200dcb44cc1527ef24a1c892e9c3e5508377b386; capture-graph commit 3c2c295fe384f27ca0ada58c204df20618c95add
+  revision: 3c2c295fe384f27ca0ada58c204df20618c95add
+  captured_at: '2026-09-08T09:31:01+00:00'
+captured_at: '2026-09-08'
 platforms:
 - web
-- mobile
-- desktop
 tags:
 - workbench
-- dashboard
 - app-shell
-- compact
 - dual-theme
-- neutral
-- blue
-- responsive
+- sidebar
+- dense-ui
 confidence:
-  overall: medium
-  layout: medium
+  overall: high
+  layout: high
   visual: high
-  components: medium
+  components: high
 coverage:
   platforms:
     declared:
-    - desktop
-    - mobile
     - web
     observed:
-    - desktop
-    - mobile
     - web
     defaulted: []
-    unsupported: []
+    unsupported:
+    - mobile
+    - desktop
   viewports:
     declared:
+    - compact
     - desktop
-    - mobile
-    - tablet
+    - wide
     observed:
+    - compact
     - desktop
-    - mobile
-    - tablet
+    - wide
     defaulted: []
     unsupported: []
   themes:
     declared:
-    - dark
     - light
+    - dark
     observed:
-    - dark
     - light
+    - dark
     defaulted: []
     unsupported: []
   page_modes:
     declared:
-    - A
-    - B
-    - C
-    - D
-    - E
+    - dashboard
+    - collection
+    - detail
+    - modal
     observed:
-    - A
-    - B
-    - C
-    - D
-    - E
+    - dashboard
+    - collection
+    - detail
+    - modal
     defaulted: []
     unsupported: []
   components:
     declared:
-    - app-shell
-    - avatar
-    - badge
-    - board
-    - breadcrumb
+    - nav-item
     - button
-    - calendar
-    - card
-    - checkbox
-    - collection-header
-    - combobox
-    - command-palette
-    - date-picker
-    - dialog
-    - empty-state
-    - floating-chat-fab
-    - icon-button
     - input
-    - list-grid
-    - metric-card
-    - native-table
-    - navigation-progress
-    - page-header
-    - pagination
-    - popover
-    - progress
-    - select
-    - sheet
-    - sidebar
-    - skeleton
-    - slider
-    - swimlane
-    - switch
-    - tabs
-    - toast
-    - toolbar
-    - tooltip
+    - panel
+    - chat-fab
     observed:
-    - app-shell
-    - badge
-    - board
-    - breadcrumb
-    - button
-    - card
-    - collection-header
-    - dialog
-    - empty-state
-    - floating-chat-fab
-    - icon-button
-    - input
-    - list-grid
-    - native-table
-    - navigation-progress
+    - nav-item
+    - chat-fab
     - page-header
-    - popover
-    - sheet
-    - sidebar
-    - skeleton
-    - swimlane
-    - tabs
-    - toolbar
-    - tooltip
+    - panel
+    - link
     defaulted:
-    - avatar
-    - calendar
-    - checkbox
-    - combobox
-    - command-palette
-    - date-picker
-    - metric-card
-    - pagination
-    - progress
-    - select
-    - slider
-    - switch
-    - toast
+    - button
+    - input
     unsupported: []
   states:
     declared:
-    - active
     - default
-    - disabled
-    - dragging
-    - empty
-    - error
-    - focus-visible
     - hover
-    - invalid
-    - loading
-    - read-only
-    - resized
-    - selected
+    - focus-visible
+    - active
+    - disabled
+    - open
     observed:
-    - active
     - default
-    - disabled
-    - empty
-    - error
-    - focus-visible
     - hover
-    - loading
-    - selected
+    - active
     defaulted:
-    - dragging
-    - invalid
-    - read-only
-    - resized
+    - focus-visible
+    - disabled
+    - open
     unsupported: []
-schema: design-system-meta/v1
-version: 3.0.0

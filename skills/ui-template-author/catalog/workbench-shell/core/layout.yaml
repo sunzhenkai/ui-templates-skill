@@ -1,67 +1,62 @@
 schema: design-system-layout/v1
 items:
-- id: route/page-mode-a
-  name: Route mode A
-  page_type: page-type/page-mode-a
+- id: route/dashboard-shell
+  name: Dashboard shell
+  page_type: page-type/dashboard
   slots:
-  - app-shell
+  - workspace-switcher
+  - search
+  - compose
+  - nav-group
+  - pin-list
+  - rail
   - page-header
-  - content
+  - page-toolbar
+  - page-canvas
+  - footer-utility
+  - chat-fab
   breakpoints:
-  - narrow
-  - compact
-  - wide
+  - compact sheet below lg
+  - inset shell from lg
+  - rail trigger hidden from xl
   rule_refs:
-  - rule/NN-004
-- id: route/page-mode-b
-  name: Route mode B
-  page_type: page-type/page-mode-b
+  - rule/LAYOUT-101
+  - rule/LAYOUT-103
+  - rule/LAYOUT-104
+- id: route/collection-board
+  name: Collection board
+  page_type: page-type/collection
   slots:
-  - app-shell
   - page-header
-  - content
+  - page-toolbar
+  - page-canvas
   breakpoints:
-  - narrow
-  - compact
-  - wide
+  - full bleed with 16px page gutter
+  - 1440px detail rail
   rule_refs:
-  - rule/NN-004
-- id: route/page-mode-c
-  name: Route mode C
-  page_type: page-type/page-mode-c
+  - rule/LAYOUT-102
+  - rule/LAYOUT-106
+- id: route/detail-document
+  name: Detail document
+  page_type: page-type/detail
   slots:
-  - app-shell
   - page-header
-  - content
+  - page-toolbar
+  - master-pane
+  - detail-pane
   breakpoints:
-  - narrow
-  - compact
-  - wide
+  - 1440px centered rail
+  - block scroll in detail
   rule_refs:
-  - rule/NN-004
-- id: route/page-mode-d
-  name: Route mode D
-  page_type: page-type/page-mode-d
+  - rule/LAYOUT-105
+- id: route/modal-task
+  name: Modal task
+  page_type: page-type/modal
   slots:
-  - app-shell
-  - page-header
-  - content
+  - overlay
+  - dialog-content
   breakpoints:
-  - narrow
-  - compact
-  - wide
+  - viewport overlay
   rule_refs:
-  - rule/NN-004
-- id: route/page-mode-e
-  name: Route mode E
-  page_type: page-type/page-mode-e
-  slots:
-  - app-shell
-  - page-header
-  - content
-  breakpoints:
-  - narrow
-  - compact
-  - wide
-  rule_refs:
-  - rule/NN-004
+  - rule/LAYOUT-105
+  - rule/AX-101

@@ -1,47 +1,43 @@
 schema: design-system-patterns/v1
 items:
-- id: pattern/page-mode-a
-  name: Page mode A
+- id: pattern/dashboard-shell
+  name: Inset dashboard shell
+  primitives:
+  - primitive/nav-item
+  - primitive/panel
+  - primitive/chat-fab
+  page_type: page-type/dashboard
+  rule_refs:
+  - rule/LAYOUT-101
+  - rule/LAYOUT-102
+  - rule/LAYOUT-103
+  - rule/LAYOUT-104
+  forbidden:
+  - global horizontal page scroll
+  - content under the floating chat launcher corner
+- id: pattern/page-chrome
+  name: Page header and toolbar
   primitives:
   - primitive/button
-  page_type: page-type/page-mode-a
+  - primitive/panel
+  page_type: page-type/collection
   rule_refs:
-  - rule/NN-005
-  forbidden:
-  - domain-imports
-- id: pattern/page-mode-b
-  name: Page mode B
+  - rule/LAYOUT-106
+  - rule/NN-102
+- id: pattern/master-detail
+  name: Master detail surface
   primitives:
-  - primitive/button
-  page_type: page-type/page-mode-b
+  - primitive/panel
+  page_type: page-type/detail
   rule_refs:
-  - rule/NN-005
-  forbidden:
-  - domain-imports
-- id: pattern/page-mode-c
-  name: Page mode C
+  - rule/LAYOUT-102
+  - rule/LAYOUT-105
+- id: pattern/modal
+  name: Modal dialog
   primitives:
+  - primitive/panel
   - primitive/button
-  page_type: page-type/page-mode-c
+  page_type: page-type/modal
   rule_refs:
-  - rule/NN-005
-  forbidden:
-  - domain-imports
-- id: pattern/page-mode-d
-  name: Page mode D
-  primitives:
-  - primitive/button
-  page_type: page-type/page-mode-d
-  rule_refs:
-  - rule/NN-005
-  forbidden:
-  - domain-imports
-- id: pattern/page-mode-e
-  name: Page mode E
-  primitives:
-  - primitive/button
-  page_type: page-type/page-mode-e
-  rule_refs:
-  - rule/NN-005
-  forbidden:
-  - domain-imports
+  - rule/LAYOUT-105
+  - rule/AX-101

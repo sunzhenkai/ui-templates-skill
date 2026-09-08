@@ -99,12 +99,15 @@ def validate(root: Path, report_dir: Path) -> dict:
         production_validator,
         cwd=root, stdout_path=report_dir / "design-system-production-validation.json", label="production package validator",
     )
+    catalog_validator = [
+        python, "scripts/validate_design_system.py", "validate",
+        "skills/ui-template-author/catalog/workbench-shell", "--kind", "package", "--json",
+    ]
+    catalog_migration = root / "skills/ui-template-author/catalog/workbench-shell/migration.yaml"
+    if catalog_migration.is_file():
+        catalog_validator.extend(["--migration", catalog_migration.relative_to(root).as_posix()])
     run(
-        [
-            python, "scripts/validate_design_system.py", "validate",
-            "skills/ui-template-author/catalog/workbench-shell", "--kind", "package",
-            "--migration", "skills/ui-template-author/catalog/workbench-shell/migration.yaml", "--json",
-        ],
+        catalog_validator,
         cwd=root, stdout_path=report_dir / "design-system-catalog-validation.json", label="catalog package validator",
     )
     run(

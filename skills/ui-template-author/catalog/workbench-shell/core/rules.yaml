@@ -1,34 +1,56 @@
 schema: design-system-rules/v1
 items:
-- id: rule/NN-001
-  statement: 'Maintain section contract: 0. 不可协商规则（Non-negotiables）'
+- id: rule/NN-101
+  statement: Reserve filled surfaces for bounded content; keep shell and canvas quiet.
   severity: must
   status: active
-- id: rule/NN-002
-  statement: 'Maintain section contract: 1. 整体风格'
+- id: rule/NN-102
+  statement: Every page band shares the 16px page gutter; full-width borders stay on the outer band.
   severity: must
   status: active
-- id: rule/NN-003
-  statement: 'Maintain section contract: 2. 配色'
+- id: rule/LAYOUT-101
+  statement: The dashboard is a non-wrapping horizontal inset shell with a vertical sidebar and fill-sized canvas.
   severity: must
   status: active
-- id: rule/NN-004
-  statement: 'Maintain section contract: 3. 字体'
+- id: rule/LAYOUT-102
+  statement: Page canvas or detail region owns block scrolling; the shell root does not scroll.
   severity: must
   status: active
-- id: rule/NN-005
-  statement: 'Maintain section contract: 4. 间距与布局'
+- id: rule/LAYOUT-103
+  statement: 'Shell chrome follows the fixed slot order: workspace switcher, search, compose, navigation, pins, rail, page
+    header, toolbar, canvas, footer utility.'
   severity: must
   status: active
-- id: rule/NN-006
-  statement: 'Maintain section contract: 5. 页面模式与组件'
+- id: rule/LAYOUT-104
+  statement: The floating chat launcher overlays the viewport from the bottom right and content preserves its clearance.
   severity: must
   status: active
-- id: rule/NN-007
-  statement: 'Maintain section contract: 6. 其他特征'
+- id: rule/LAYOUT-105
+  statement: Dialogs overlay the viewport; detail documents use a centered 1440px rail with block scrolling in the detail
+    region.
   severity: must
   status: active
-- id: rule/NN-008
-  statement: 'Maintain section contract: 7. 还原要点'
+- id: rule/LAYOUT-106
+  statement: Page headers and toolbars are 48 pixels tall and share the same leading edge.
+  severity: must
+  status: active
+- id: rule/AX-101
+  statement: Interactive controls expose visible hover and focus-visible treatment without relying on color alone.
+  severity: must
+  status: active
+- id: rule/RESP-101
+  statement: Below the compact breakpoint navigation becomes a sheet and floating overlays remain within viewport insets.
+  severity: must
+  status: active
+- id: rule/QUALITY-101
+  statement: Use the declared spacing, size and radius scale for controls and chrome geometry.
+  severity: must
+  status: active
+- id: rule/QUALITY-102
+  statement: Bounded panels use one hairline border and the surface shadow; overlays use the floating shadow.
+  severity: must
+  status: active
+- id: rule/QUALITY-103
+  statement: Navigation links use filled hover and active states with no text underline.
   severity: must
   status: active
