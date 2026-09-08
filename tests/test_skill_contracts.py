@@ -71,8 +71,16 @@ class SkillContractTests(unittest.TestCase):
         repo = self.read("skills/ui-template-author/references/source-repo.md")
         self.assertIn("已发布模板没有 session source 时", repo)
         self.assertIn("不得停下来要求用户提供路径", repo)
-        result = validate_paths([ROOT / "templates/workbench-shell"], ROOT, index=ROOT / "templates/INDEX.md")
-        self.assertEqual(0, result.to_dict()["exit_code"], result.to_dict()["findings"])
+        import json
+        import subprocess
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/validate_design_system.py"), "validate",
+             str(ROOT / "templates/workbench-shell"), "--kind", "package", "--json"],
+            cwd=ROOT, text=True, capture_output=True, check=False,
+        )
+        payload = json.loads(result.stdout)
+        self.assertEqual(0, result.returncode, payload)
+        self.assertTrue(payload["valid"], payload)
         index = self.read("templates/INDEX.md")
         self.assertIn(meta["name"], index)
         self.assertIn(meta["description"], index)

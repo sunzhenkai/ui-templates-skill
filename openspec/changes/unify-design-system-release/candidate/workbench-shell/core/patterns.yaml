@@ -1,0 +1,47 @@
+schema: design-system-patterns/v1
+items:
+- id: pattern/page-mode-a
+  name: Page mode A
+  primitives:
+  - primitive/button
+  page_type: page-type/page-mode-a
+  rule_refs:
+  - rule/NN-005
+  forbidden:
+  - domain-imports
+- id: pattern/page-mode-b
+  name: Page mode B
+  primitives:
+  - primitive/button
+  page_type: page-type/page-mode-b
+  rule_refs:
+  - rule/NN-005
+  forbidden:
+  - domain-imports
+- id: pattern/page-mode-c
+  name: Page mode C
+  primitives:
+  - primitive/button
+  page_type: page-type/page-mode-c
+  rule_refs:
+  - rule/NN-005
+  forbidden:
+  - domain-imports
+- id: pattern/page-mode-d
+  name: Page mode D
+  primitives:
+  - primitive/button
+  page_type: page-type/page-mode-d
+  rule_refs:
+  - rule/NN-005
+  forbidden:
+  - domain-imports
+- id: pattern/page-mode-e
+  name: Page mode E
+  primitives:
+  - primitive/button
+  page_type: page-type/page-mode-e
+  rule_refs:
+  - rule/NN-005
+  forbidden:
+  - domain-imports

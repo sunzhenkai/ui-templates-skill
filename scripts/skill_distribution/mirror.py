@@ -15,7 +15,7 @@ MIRROR_MANIFEST = ".ui-template-public-manifest.yaml"
 ReplaceFunction = Callable[[str | bytes | os.PathLike[str] | os.PathLike[bytes], str | bytes | os.PathLike[str] | os.PathLike[bytes]], None]
 MANAGED_DIRECTORIES = {
     "ui-template-author": frozenset({"references", "evals", "runtime", "catalog"}),
-    "ui-template-apply": frozenset({"references", "evals"}),
+    "ui-template-apply": frozenset({"references", "evals", "runtime"}),
     "ui-template-design": frozenset({"references", "evals", "runtime"}),
 }
 

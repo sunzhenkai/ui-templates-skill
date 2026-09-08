@@ -6,6 +6,12 @@
 
 ```yaml
 task_class: refactor
+source_origin:
+  kind: legacy-freeze-migration
+  package: null
+  migration:
+    receipt: migration.yaml
+    source_digest: <sha256-file>
 site: existing
 output_root: .
 change_set:
@@ -101,6 +107,53 @@ coverage:
   patterns:
     - pattern: ListPage
       states_shown: [idle, loading, success, empty, error]
+```
+
+## binding.yaml
+
+```yaml
+schema: design-system-binding/v1
+contract_id: active-increment
+contract_version: 1.0.0
+output_root: app
+stack:
+  language: typescript
+  ui_framework: react
+  styling: tailwind
+  component_system: shadcn
+primitive_paths:
+  primitive/button: app/ui/button.tsx
+projections:
+  - name: css-variables
+    target: app/theme.css
+    mechanism: css-variables
+    mappings:
+      - token: token/color.primary
+        native_key: ":root.--color-primary"
+    digest: {algorithm: sha256-canonical-json-v1, value: <projection-digest>}
+binding_digest: {algorithm: sha256-canonical-json-v1, value: <binding-digest>}
+updated_at: "2026-09-08T00:00:00Z"
+```
+
+## design-system.yaml
+
+```yaml
+schema: design-system/v1
+id: active-increment
+version: 1.0.0
+status: frozen
+capability: page-system
+layers:
+  tokens: core/tokens.yaml
+  primitives: core/primitives.yaml
+  patterns: core/patterns.yaml
+  page-types: core/page-types.yaml
+  layout: core/layout.yaml
+  rules: core/rules.yaml
+  evidence: core/evidence.yaml
+layer_digests:
+  tokens: {algorithm: sha256-canonical-json-v1, value: <layer-digest>}
+contract_digest: {algorithm: sha256-canonical-json-v1, value: <contract-digest>}
 ```
 
 ## freeze.yaml

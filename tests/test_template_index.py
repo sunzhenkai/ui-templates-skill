@@ -20,11 +20,18 @@ class TemplateIndexTests(unittest.TestCase):
         return dest
 
     def test_production_index_has_published_status(self) -> None:
+        import json
         text = (ROOT / "templates/INDEX.md").read_text(encoding="utf-8")
         self.assertIn("| 状态 |", text)
         self.assertIn("| published |", text)
-        result = validate_paths([ROOT / "templates"], ROOT, index=ROOT / "templates/INDEX.md")
-        self.assertEqual(0, result.to_dict()["exit_code"], result.to_dict()["findings"])
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/validate_design_system.py"), "validate",
+             str(ROOT / "templates/workbench-shell"), "--kind", "package", "--json"],
+            cwd=ROOT, text=True, capture_output=True, check=False,
+        )
+        payload = json.loads(result.stdout)
+        self.assertEqual(0, result.returncode, payload)
+        self.assertTrue(payload["valid"], payload)
 
     def test_missing_status_column_fails(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
@@ -122,10 +129,10 @@ class TemplateIndexTests(unittest.TestCase):
             empty_index = empty / "INDEX.md"
             first = ensure_published(empty_index, empty, "workbench-shell", catalog)
             self.assertTrue(first["ok"], first)
-            self.assertTrue((empty / "workbench-shell/spec.md").is_file())
-            (empty / "workbench-shell/spec.md").write_text("owned\n", encoding="utf-8")
+            self.assertTrue((empty / "workbench-shell/design-system.yaml").is_file())
+            (empty / "workbench-shell/design-system.yaml").write_text("owned\n", encoding="utf-8")
             skipped = seed_from_catalog(catalog, empty_index, empty, ["workbench-shell"])
-            self.assertEqual("owned\n", (empty / "workbench-shell/spec.md").read_text(encoding="utf-8"))
+            self.assertEqual("owned\n", (empty / "workbench-shell/design-system.yaml").read_text(encoding="utf-8"))
             self.assertEqual(["workbench-shell"], [item["name"] for item in skipped["skipped"]])
             retired_root = Path(temp) / "retired"
             retired_index = retired_root / "INDEX.md"
@@ -224,12 +231,12 @@ class TemplateIndexTests(unittest.TestCase):
             )
             self.assertEqual(0, retired.returncode, retired.stderr + retired.stdout)
             self.assertIn("retired", index.read_text(encoding="utf-8"))
-            self.assertTrue((project / "workbench-shell/spec.md").is_file())
+            self.assertTrue((project / "workbench-shell/design-system.yaml").is_file())
 
             orphan = Path(temp) / "orphan"
             orphan.mkdir()
             (orphan / "workbench-shell").mkdir()
-            (orphan / "workbench-shell/spec.md").write_text("user-owned\n", encoding="utf-8")
+            (orphan / "workbench-shell/design-system.yaml").write_text("user-owned\n", encoding="utf-8")
             blocked = subprocess.run(
                 [sys.executable, str(script), "retire", "workbench-shell", "--reason", "test",
                  "--catalog", str(catalog), "--index", str(orphan / "INDEX.md"), "--templates", str(orphan)],
@@ -237,7 +244,7 @@ class TemplateIndexTests(unittest.TestCase):
             )
             self.assertEqual(1, blocked.returncode)
             self.assertIn("INDEX_MISSING", blocked.stderr)
-            self.assertEqual("user-owned\n", (orphan / "workbench-shell/spec.md").read_text(encoding="utf-8"))
+            self.assertEqual("user-owned\n", (orphan / "workbench-shell/design-system.yaml").read_text(encoding="utf-8"))
 
             deleted_root = Path(temp) / "deleted"
             deleted_root.mkdir()
@@ -252,7 +259,7 @@ class TemplateIndexTests(unittest.TestCase):
             )
             self.assertEqual(1, remove.returncode)
             self.assertIn("DELETE_REQUIRES_RETIRED", remove.stderr)
-            self.assertTrue((deleted_root / "workbench-shell/spec.md").is_file())
+            self.assertTrue((deleted_root / "workbench-shell/design-system.yaml").is_file())
 
             catalog_only_delete = Path(temp) / "catalog-only-delete"
             catalog_only_delete.mkdir()

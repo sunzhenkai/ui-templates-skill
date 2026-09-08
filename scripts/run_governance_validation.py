@@ -89,12 +89,38 @@ def validate(root: Path, report_dir: Path) -> dict:
         cwd=root, label="active/release checker",
     )
     run(
-        [python, "scripts/validate_templates.py", "templates", "--json"],
-        cwd=root, stdout_path=report_dir / "template-validation.json", label="template validator",
+        [
+            python, "scripts/validate_design_system.py", "validate", "templates/workbench-shell",
+            "--kind", "package", "--migration", "templates/workbench-shell/migration.yaml", "--json",
+        ],
+        cwd=root, stdout_path=report_dir / "design-system-production-validation.json", label="production package validator",
     )
     run(
-        [python, "scripts/validate_templates.py", "skills/ui-template-author/catalog", "--json"],
-        cwd=root, stdout_path=report_dir / "catalog-validation.json", label="catalog validator",
+        [
+            python, "scripts/validate_design_system.py", "validate",
+            "skills/ui-template-author/catalog/workbench-shell", "--kind", "package",
+            "--migration", "skills/ui-template-author/catalog/workbench-shell/migration.yaml", "--json",
+        ],
+        cwd=root, stdout_path=report_dir / "design-system-catalog-validation.json", label="catalog package validator",
+    )
+    run(
+        [
+            python,
+            "scripts/validate_design_system.py",
+            "validate",
+            "tests/fixtures/design-system/active/increment",
+            "--kind",
+            "active",
+            "--migration",
+            "tests/fixtures/design-system/migration/receipt.yaml",
+            "--migration-target",
+            "tests/fixtures/design-system/packages/tokens-only-fixture",
+            "--vendor",
+            "tests/fixtures/design-system/vendor/vendor.yaml",
+        ],
+        cwd=root,
+        stdout_path=report_dir / "design-system-validation.json",
+        label="design-system validator",
     )
     run(
         [python, "scripts/manage_skill_distribution.py", "catalog", "--check"],
@@ -112,6 +138,11 @@ def validate(root: Path, report_dir: Path) -> dict:
     run(
         [python, "scripts/run_contract_evals.py", "--json-out", f"{report_relative}/eval.json", "--junit-out", f"{report_relative}/eval.xml"],
         cwd=root, label="contract eval",
+    )
+    run(
+        [python, "scripts/run_design_system_evals.py", "--json-out", f"{report_relative}/design-system-eval.json"],
+        cwd=root,
+        label="design-system contract eval",
     )
     run(["openspec", "validate", "--all", "--strict"], cwd=root, label="OpenSpec strict")
 

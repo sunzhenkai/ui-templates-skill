@@ -1,6 +1,6 @@
 # Authoring feedback 生命周期
 
-本文件定义 `ui-template-author` 消费 Apply feedback 的规则；记录结构由 schema v2 `feedback.schema.json` 定义。
+本文件定义 `ui-template-author` 消费 Apply feedback 的规则。package ownership 记录使用 `design-system-feedback/v1`；旧 schema v2 template feedback 仅用于迁移或旧 inbox 读取。
 
 ## 项目库领养 gate
 
@@ -10,7 +10,7 @@ feedback 指向 catalog pin 且用户接受处置需要修改模板时，先确�
 
 更新模板前必须扫描并去重：1）用户显式给出的 feedback 文件/目录；2）用户指定消费项目的 `.ui-template-apply/feedback/*.{yaml,yml}`；3）当前工作区中已明确属于该模板的 inbox。不得递归扫描未知目录或读取无授权项目。没有发现记录也要在 Report 说明扫描范围。
 
-仅接受 `schema_version: 2` 且模板 name/version/source revision 可核对的记录；`<uuid>.yaml`/`<uuid>.yml` 的 filename stem 必须等于记录 `id`。每条记录的 `evidence_refs` 必须非空，并在消费项目上下文中作为相对 `.ui-template-apply/` 根的现存文件解析，禁止绝对路径、`..`、符号链接越界和缺失文件。非空 `targets` 必须在模板完整 `known_rule_ids` 上逐项校验；有 targets 却无法取得规则上下文时必须 fail closed。除初始 `null → proposed` 外，每个 `status_history` 迁移自身都必须带非空 `reason`，不能只靠顶层 reason 代替。未知 schema、非法 UUID、filename/ID 不一致、fingerprint 不匹配、空或悬空 evidence/rule ID、缺少迁移理由或非法状态历史一律 fail closed。
+仅接受 `schema_version: 2` 且模板 name/version/source revision 可核对的记录；`<uuid>.yaml`/`<uuid>.yml` 的 filename stem 必须等于记录 `id`。package feedback 必须携带 package name/version/capability/contract digest；每条记录的 `evidence_refs` 必须非空，并在消费项目上下文中作为相对 `.ui-template-apply/` 根的现存文件解析，禁止绝对路径、`..`、符号链接越界和缺失文件。package feedback 的非空 `targets` 必须在 package 全量 Stable Entity ID 上逐项校验；旧 v2 feedback 的非空 targets 必须在完整 `known_rule_ids` 上逐项校验；有 targets 却无法取得规则上下文时必须 fail closed。除初始 `null → proposed` 外，每个 `status_history` 迁移自身都必须带非空 `reason`，不能只靠顶层 reason 代替。未知 schema、非法 UUID、filename/ID 不一致、fingerprint 不匹配、空或悬空 evidence/rule ID、缺少迁移理由或非法状态历史一律 fail closed。
 
 ## UUID 与 fingerprint 幂等
 

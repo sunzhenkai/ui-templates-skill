@@ -1,0 +1,200 @@
+schema: design-system-primitives/v1
+items:
+- id: primitive/app-shell
+  name: app-shell
+  states: &id001
+  - active
+  - default
+  - disabled
+  - dragging
+  - empty
+  - error
+  - focus-visible
+  - hover
+  - invalid
+  - loading
+  - read-only
+  - resized
+  - selected
+  rule_refs:
+  - rule/NN-001
+- id: primitive/avatar
+  name: avatar
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/badge
+  name: badge
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/board
+  name: board
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/breadcrumb
+  name: breadcrumb
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/button
+  name: button
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/calendar
+  name: calendar
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/card
+  name: card
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/checkbox
+  name: checkbox
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/collection-header
+  name: collection-header
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/combobox
+  name: combobox
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/command-palette
+  name: command-palette
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/date-picker
+  name: date-picker
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/dialog
+  name: dialog
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/empty-state
+  name: empty-state
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/floating-chat-fab
+  name: floating-chat-fab
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/icon-button
+  name: icon-button
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/input
+  name: input
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/list-grid
+  name: list-grid
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/metric-card
+  name: metric-card
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/native-table
+  name: native-table
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/navigation-progress
+  name: navigation-progress
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/page-header
+  name: page-header
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/pagination
+  name: pagination
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/popover
+  name: popover
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/progress
+  name: progress
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/select
+  name: select
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/sheet
+  name: sheet
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/sidebar
+  name: sidebar
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/skeleton
+  name: skeleton
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/slider
+  name: slider
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/swimlane
+  name: swimlane
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/switch
+  name: switch
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/tabs
+  name: tabs
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/toast
+  name: toast
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/toolbar
+  name: toolbar
+  states: *id001
+  rule_refs:
+  - rule/NN-001
+- id: primitive/tooltip
+  name: tooltip
+  states: *id001
+  rule_refs:
+  - rule/NN-001

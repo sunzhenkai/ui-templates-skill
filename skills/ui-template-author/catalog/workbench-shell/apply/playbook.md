@@ -1,6 +1,6 @@
 # apply/playbook
 
-本指南只把 workbench-shell 规则映射到通用 Apply Phase 0–9。checkpoint 只使用通用 phase ID；expected 从 [`../tokens.yaml`](../tokens.yaml) 与设计规则读取，provenance 从 [`../evidence.yaml`](../evidence.yaml) 读取。证据遵循通用 Apply 的 current-build 结构，不维护第二份报告。
+本指南只把 workbench-shell 规则映射到通用 Apply Phase 0–9。checkpoint 只使用通用 phase ID；expected 从 [`../core/tokens.yaml`](../core/tokens.yaml) 与设计规则读取，provenance 从 [`../core/evidence.yaml`](../core/evidence.yaml) 读取。证据遵循通用 Apply 的 current-build 结构，不维护第二份报告。
 
 | Phase | 检查对象 | Rule IDs | 取证 | 通过条件 |
 | --- | --- | --- | --- | --- |

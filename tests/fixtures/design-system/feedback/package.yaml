@@ -1,0 +1,26 @@
+schema: design-system-feedback/v1
+id: 123e4567-e89b-42d3-a456-426614174000
+fingerprint:
+  algorithm: sha256-canonical-json-v1
+  value: "1111111111111111111111111111111111111111111111111111111111111111"
+package:
+  name: ui-kit-fixture
+  version: 1.0.0
+  capability: ui-kit
+  digest:
+    algorithm: sha256-canonical-json-v1
+    value: b6aa7caf1db94321fb4280bad914d40154ae4c74c16dc88f3eeb141737118918
+ownership: package
+scenario: Button loading state is missing.
+suggestion: Add loading to primitive states.
+status: proposed
+targets:
+  - primitive/button
+evidence_refs:
+  - evidence.md
+created_at: "2026-09-08T00:00:00Z"
+updated_at: "2026-09-08T00:00:00Z"
+status_history:
+  - from: null
+    to: proposed
+    at: "2026-09-08T00:00:00Z"

@@ -1,0 +1,6 @@
+schema: spec-driven
+created: 2026-09-08
+goal: 统一 ui-template-author、ui-template-design 与 ui-template-apply 的 Design
+  System 契约：以统一 Design System Contract 为唯一语义真相，分离 portable core 与 project
+  binding，Apply 按项目 active Design System 实施初始化与增量更新，并按技术栈条件引入 vendor 参考规则
+skip_specs: true

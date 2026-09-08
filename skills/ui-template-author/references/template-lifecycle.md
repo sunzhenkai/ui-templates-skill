@@ -54,3 +54,7 @@ python3 scripts/manage_template_index.py require-published <name>
 ```
 
 未传 `--index` / `--templates` 时使用当前工作目录的 `templates/`，不是 skill 根。`seed <name>` / `adopt <name>` 是显式领养，从 `--catalog` 或已安装 `ui-template-author/catalog/` 拷贝该 published 模板；已有同名行或目录不覆盖，retired 行不救回。update、feedback 落库、retire/delete 在项目完全缺失该条目时可先执行同一领养；Report 必须写明 `catalog_adopted: true` 与来源 identity。`require-published` 默认等价 resolve，只返回项目/catalog pin，不播种。安装环境把 `scripts/manage_template_index.py` 换成 `ui-template-author/runtime/manage_template_index.py`。Authoring 的 create/update/retire/delete 只写项目库，不得改 catalog。delete 前必须已 retired。成功后立刻对剩余项目 `templates/` 跑 portable validator。
+
+## Package identity
+
+`design-system/v1` package 的 INDEX identity 读取 `meta.yaml` 的 `name` 与 `version`；旧 schema v2 继续读取 `template_version`。publish 前必须通过统一 validator，且 `design-system.yaml` 的 `status` 必须为 `frozen`。retire 只改 INDEX 状态；retired package 不能被新消费领养。candidate-only：validation 失败时 production INDEX 保持原字节。

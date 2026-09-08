@@ -1,6 +1,6 @@
 # apply/quality
 
-本矩阵只定义 workbench-shell 的 rule ID、检查对象、取证和通过条件。expected 读取 [`../tokens.yaml`](../tokens.yaml) 当前声明及 [`../evidence.yaml`](../evidence.yaml) active provenance；结果写入通用 Phase 8/9 current-build records。检查数量由 included scope、coverage、动态 token scale 与适用 rule IDs 生成。
+本矩阵只定义 workbench-shell 的 rule ID、检查对象、取证和通过条件。expected 读取 [`../core/tokens.yaml`](../core/tokens.yaml) 当前声明及 [`../core/evidence.yaml`](../core/evidence.yaml) active provenance；结果写入通用 Phase 8/9 current-build records。检查数量由 included scope、coverage、动态 token scale 与适用 rule IDs 生成。
 
 ## Tokens 与视觉
 

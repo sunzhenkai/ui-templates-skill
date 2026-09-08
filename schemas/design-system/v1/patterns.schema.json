@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/patterns.schema.json",
+  "title": "Design System patterns v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "items"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-patterns/v1"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "primitives"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/entityId"
+          },
+          "name": {
+            "type": "string"
+          },
+          "primitives": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/entityId"
+            }
+          },
+          "page_type": {
+            "$ref": "common.schema.json#/$defs/entityId"
+          },
+          "rule_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/entityId"
+            }
+          },
+          "forbidden": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

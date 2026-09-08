@@ -1,0 +1,11 @@
+schema: design-system-patterns/v1
+items:
+- id: pattern/list-page
+  name: List page
+  primitives:
+  - primitive/button
+  page_type: page-type/detail
+  rule_refs:
+  - rule/NN-001
+  forbidden:
+  - domain-imports

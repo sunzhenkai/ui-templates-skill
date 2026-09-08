@@ -99,9 +99,9 @@ class SkillDistributionTests(unittest.TestCase):
 
     def test_versioned_allowlist_and_explicit_exclusions(self) -> None:
         config = load_config(self.repo)
-        self.assertEqual("2.2.0", config.bundle_version)
-        self.assertEqual({"ui-template-author": "2.2.0", "ui-template-apply": "2.2.0", "ui-template-design": "2.2.0"}, config.skill_versions)
-        self.assertEqual((2, 2), (config.template_schema_minimum, config.template_schema_maximum))
+        self.assertEqual("3.0.0", config.bundle_version)
+        self.assertEqual({"ui-template-author": "3.0.0", "ui-template-apply": "3.0.0", "ui-template-design": "3.0.0"}, config.skill_versions)
+        self.assertEqual((1, 1), (config.template_schema_minimum, config.template_schema_maximum))
         exclusions = set(config.exclusions)
         for required in (
             ".agents/skills/ui-template-manager/**", ".agents/skills/openspec-*/**",
@@ -118,12 +118,13 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertEqual("unsupported-explicit-migration-required", compatibility["compatibility"][1]["status"])
         self.assertEqual(1, compatibility["fidelity_schema"]["minimum"])
         self.assertEqual(1, compatibility["fidelity_schema"]["maximum"])
-        self.assertEqual(["repo-structural-v1"], compatibility["fidelity_profile"]["supported"])
-        self.assertEqual("legacy-baseline", compatibility["fidelity_profile"]["baseline"])
-        self.assertEqual("fail-closed", compatibility["fidelity_profile"]["unknown"])
-        self.assertIn("fidelity-profile-unknown-fail-closed", compatibility["breaking_boundaries"])
+        self.assertEqual("design-system/v1", compatibility["contract_family"]["current"])
+        self.assertEqual("migration-only", compatibility["legacy_sources"]["template-v2"])
+        self.assertEqual("migration-only", compatibility["legacy_sources"]["design-freeze-v1"])
+        self.assertIn("schema-v2-migration-only", compatibility["breaking_boundaries"])
+        self.assertIn("design-freeze-v1-migration-only", compatibility["breaking_boundaries"])
         self.assertIn("破坏性版本", (release / "CHANGELOG.md").read_text())
-        self.assertIn("不会静默读取 v1", (release / "MIGRATION-v1-to-v2.md").read_text())
+        self.assertIn("migration source", (release / "MIGRATION-v2-to-design-system-v1.md").read_text())
         self.assertIn("任一目录替换失败", (release / "ROLLBACK.md").read_text())
 
     def test_reproducible_bundle_manifest_tar_metadata_and_forbidden_data(self) -> None:
@@ -160,7 +161,7 @@ class SkillDistributionTests(unittest.TestCase):
         self.assertIn("skills/ui-template-author/runtime/template_apply_state/fidelity.py", paths)
         self.assertIn("skills/ui-template-author/runtime/manage_template_index.py", paths)
         self.assertIn("skills/ui-template-author/catalog/INDEX.md", paths)
-        self.assertIn("skills/ui-template-author/catalog/workbench-shell/spec.md", paths)
+        self.assertIn("skills/ui-template-author/catalog/workbench-shell/design-system.yaml", paths)
         self.assertIn("skills/ui-template-apply/SKILL.md", paths)
         self.assertIn("skills/ui-template-design/SKILL.md", paths)
         self.assertIn("skills/ui-template-design/runtime/check_design_freeze.py", paths)
@@ -194,12 +195,12 @@ class SkillDistributionTests(unittest.TestCase):
         unrelated.parent.mkdir(parents=True)
         unrelated.write_text("keep", encoding="utf-8")
         result = install_bundle(built.artifact, target)
-        self.assertEqual("2.2.0", result["bundle_version"])
+        self.assertEqual("3.0.0", result["bundle_version"])
         self.assertTrue((target / "ui-template-author/SKILL.md").is_file())
         self.assertTrue((target / "ui-template-apply/SKILL.md").is_file())
         self.assertFalse((target / "ui-template-design").exists())
         self.assertTrue((target / "ui-template-author/catalog/INDEX.md").is_file())
-        self.assertTrue((target / "ui-template-author/catalog/workbench-shell/spec.md").is_file())
+        self.assertTrue((target / "ui-template-author/catalog/workbench-shell/design-system.yaml").is_file())
         project = target.parent.parent
         resolved = subprocess.run(
             [

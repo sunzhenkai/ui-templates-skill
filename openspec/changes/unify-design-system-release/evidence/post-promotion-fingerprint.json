@@ -1,0 +1,19 @@
+{
+  "catalog_index_sha256": "db3624a8be6b8c8cc64857da2e5dc2187167dd9882443251944d7633a9b7c89f",
+  "catalog_workbench_shell": {
+    "apply/playbook.md": "3db1376cb3291c00e6fdda45bc49d4ec5e0c233bfa5637a6b9fc5888cfc773e5",
+    "apply/quality.md": "ef5aa676e2fedf8bce49482cb11c03b4baf173d399fc57c3c497895f2e458650",
+    "core/evidence.yaml": "ee23c861084dc4cc02be35fe732e6d3378856172fc8fba4e314b7ddaca8d76e8",
+    "core/layout.yaml": "47dbdf870bb7e5a839c16d94cd462992929492ba18b2c135284dabfc0a8cc788",
+    "core/page-types.yaml": "6f5789b6950730aef4f7aadad654eac7ff3365ceef192dc3f5b68f232a9943df",
+    "core/patterns.yaml": "a6c111dbd362b85fa78c13f3db239df078916767c9db6294b9c68d2c50963183",
+    "core/primitives.yaml": "6d8d701282e25db6124b128c1c2919a789f6c99ac6c084ba6fc053636b5e084e",
+    "core/rules.yaml": "10c24b9c712645cdd4b05301b81a6e4fb144f99db31b30ee91a35330f89e1b61",
+    "core/tokens.yaml": "7e0e1157f70c9e6f816777ee9a488b98087cd5b38e0b893ff8e3d44ad87ed1d1",
+    "design-system.yaml": "3c32e4758407419425a666b6866b070bbc55ef23f282ffc48b1ee5717d7d0faa",
+    "meta.yaml": "f8eb069c06248def74c66c482c5fad0d06de1cc96ded3feef3618842f4af4ef6",
+    "migration.yaml": "5a5fed3f0f11487691789f7f96fba85702230e6395dd8dedeb48a47b4835ce23"
+  },
+  "templates_index_sha256": "db3624a8be6b8c8cc64857da2e5dc2187167dd9882443251944d7633a9b7c89f",
+  "templates_workbench_shell": {}
+}

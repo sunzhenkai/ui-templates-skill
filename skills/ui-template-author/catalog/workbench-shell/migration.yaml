@@ -1,0 +1,46 @@
+schema: design-system-migration/v1
+source:
+  kind: template-v2
+  identity: workbench-shell@2.0.1
+  digest:
+    algorithm: sha256-file-v1
+    value: 4ba7314d9a693f1f026349bc862b00fd178c1159f3c7431a2867b0f4b740781b
+target:
+  kind: package
+  identity: workbench-shell@3.0.0
+  digest:
+    algorithm: sha256-file-v1
+    value: f44c15bbfec430af287ab70464592072ffb9e72c9bfe575ee7d033e8caf2d297
+status: completed
+changes:
+- layer: tokens
+  action: mapped
+  source: schema-v2:tokens
+  target: core/tokens.yaml
+- layer: primitives
+  action: mapped
+  source: schema-v2:primitives
+  target: core/primitives.yaml
+- layer: patterns
+  action: mapped
+  source: schema-v2:patterns
+  target: core/patterns.yaml
+- layer: page-types
+  action: mapped
+  source: schema-v2:page-types
+  target: core/page-types.yaml
+- layer: layout
+  action: mapped
+  source: schema-v2:layout
+  target: core/layout.yaml
+- layer: rules
+  action: mapped
+  source: schema-v2:rules
+  target: core/rules.yaml
+- layer: evidence
+  action: mapped
+  source: schema-v2:evidence
+  target: core/evidence.yaml
+unresolved: []
+errors: []
+completed_at: '2026-09-08T00:00:00Z'

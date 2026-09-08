@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/apply-checkpoint.schema.json",
+  "title": "Design System Apply checkpoint v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "mode", "change_set", "contract", "binding_digest", "output_root", "build_identity", "phases"],
+  "properties": {
+    "schema": {"const": "design-system-apply-checkpoint/v1"},
+    "mode": {"enum": ["bootstrap", "increment"]},
+    "change_set": {"type": "array", "items": {"type": "string"}},
+    "contract": {
+      "type": "object", "additionalProperties": false, "required": ["id", "version", "digest"],
+      "properties": {"id": {"$ref": "common.schema.json#/$defs/slug"}, "version": {"$ref": "common.schema.json#/$defs/semver"}, "digest": {"$ref": "common.schema.json#/$defs/digest"}}
+    },
+    "binding_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "projection_digests": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["name", "digest"], "properties": {"name": {"type": "string"}, "digest": {"$ref": "common.schema.json#/$defs/digest"}}}},
+    "stable_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "common.schema.json#/$defs/entityId"}},
+    "output_root": {"type": "string", "minLength": 1},
+    "build_identity": {"type": "string", "minLength": 1},
+    "phases": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "status"], "properties": {"id": {"type": "integer", "minimum": 0, "maximum": 9}, "status": {"enum": ["pending", "in-progress", "complete", "stale", "blocked"]}, "artifacts": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["path", "digest"], "properties": {"path": {"$ref": "common.schema.json#/$defs/path"}, "digest": {"$ref": "common.schema.json#/$defs/digest"}}}}}}}
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "catalog_index_sha256": "db3624a8be6b8c8cc64857da2e5dc2187167dd9882443251944d7633a9b7c89f",
+  "catalog_workbench_shell": {
+    "apply/playbook.md": "3db1376cb3291c00e6fdda45bc49d4ec5e0c233bfa5637a6b9fc5888cfc773e5",
+    "apply/quality.md": "ef5aa676e2fedf8bce49482cb11c03b4baf173d399fc57c3c497895f2e458650",
+    "components.md": "8be3b78f40ce8812f69b3f32d41c184198e9659f9c5578587dacfd72d022b289",
+    "evidence.yaml": "540f628051c87829c24eb7829fe5f421eb1eea149ae9b1d7f6b1575dd918d265",
+    "meta.yaml": "8961bcd061a97d0c2bcc2095de98038be9fa5a38591f955b244fffeca8626bdb",
+    "platforms/desktop.md": "8cd998e92ae8163bf4e367667932c7548720949b5faab64df1b4f7da6a6d1588",
+    "platforms/mobile.md": "4c27a57e8faa0ab5d36b6a5ec01834293a10eddb112bee6d28e165a8ea5dac79",
+    "platforms/web.md": "c81403aca299d0f932dfc56f13c47abde87fb1d403761cbce212e390becfb8fd",
+    "routes-and-layouts.md": "bcec20ebbef7aa6646823688b8242c094a7d3dfb3f27c42a1817acab695baa67",
+    "spec.md": "580eb9e0d6d303cca4b0babb29c2ff155237fc54299f3c326684e7dd2c43b28f",
+    "tokens.yaml": "aedf590f02b308881f5b9982bf145e763e83800cc54ed649cfe01db09b511476"
+  },
+  "templates_index_sha256": "db3624a8be6b8c8cc64857da2e5dc2187167dd9882443251944d7633a9b7c89f",
+  "templates_workbench_shell": {
+    "apply/playbook.md": "3db1376cb3291c00e6fdda45bc49d4ec5e0c233bfa5637a6b9fc5888cfc773e5",
+    "apply/quality.md": "ef5aa676e2fedf8bce49482cb11c03b4baf173d399fc57c3c497895f2e458650",
+    "components.md": "8be3b78f40ce8812f69b3f32d41c184198e9659f9c5578587dacfd72d022b289",
+    "evidence.yaml": "540f628051c87829c24eb7829fe5f421eb1eea149ae9b1d7f6b1575dd918d265",
+    "meta.yaml": "8961bcd061a97d0c2bcc2095de98038be9fa5a38591f955b244fffeca8626bdb",
+    "platforms/desktop.md": "8cd998e92ae8163bf4e367667932c7548720949b5faab64df1b4f7da6a6d1588",
+    "platforms/mobile.md": "4c27a57e8faa0ab5d36b6a5ec01834293a10eddb112bee6d28e165a8ea5dac79",
+    "platforms/web.md": "c81403aca299d0f932dfc56f13c47abde87fb1d403761cbce212e390becfb8fd",
+    "routes-and-layouts.md": "bcec20ebbef7aa6646823688b8242c094a7d3dfb3f27c42a1817acab695baa67",
+    "spec.md": "580eb9e0d6d303cca4b0babb29c2ff155237fc54299f3c326684e7dd2c43b28f",
+    "tokens.yaml": "aedf590f02b308881f5b9982bf145e763e83800cc54ed649cfe01db09b511476"
+  }
+}

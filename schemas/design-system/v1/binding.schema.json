@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/binding.schema.json",
+  "title": "Design System project binding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "contract_id",
+    "contract_version",
+    "output_root",
+    "stack",
+    "binding_digest"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-binding/v1"
+    },
+    "contract_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "contract_version": {
+      "$ref": "common.schema.json#/$defs/semver"
+    },
+    "output_root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "ui_framework",
+        "styling"
+      ],
+      "properties": {
+        "language": {
+          "type": "string"
+        },
+        "ui_framework": {
+          "type": "string"
+        },
+        "bundler": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "routing": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "styling": {
+          "type": "string"
+        },
+        "component_system": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "package_manager": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "primitive_paths": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "common.schema.json#/$defs/path"
+      },
+      "propertyNames": {
+        "$ref": "common.schema.json#/$defs/entityId"
+      }
+    },
+    "projections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "target",
+          "mechanism",
+          "mappings",
+          "digest"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "target": {
+            "$ref": "common.schema.json#/$defs/path"
+          },
+          "mechanism": {
+            "type": "string"
+          },
+          "mappings": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "token",
+                "native_key"
+              ],
+              "properties": {
+                "token": {
+                  "type": "string"
+                },
+                "native_key": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "digest": {
+            "$ref": "common.schema.json#/$defs/digest",
+            "description": "sha256-canonical-json-v1 over canonical parsed projection target JSON."
+          }
+        }
+      }
+    },
+    "binding_digest": {
+      "$ref": "common.schema.json#/$defs/digest",
+      "description": "sha256-canonical-json-v1 over canonical binding JSON after removing binding_digest."
+    },
+    "updated_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    }
+  },
+  "description": "Project binding for active instances. binding_digest excludes only binding_digest and covers all other canonical binding members. Projection digest is canonical parsed JSON of the projection target."
+}

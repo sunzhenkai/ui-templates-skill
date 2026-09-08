@@ -6,12 +6,12 @@ L0–L6 只是变更集合的标签，不是七层完成仪式。从源创建或
 
 | 标签 | 典型路径 |
 | --- | --- |
-| L0 身份 | `meta.yaml` 的 sources / revision / conformance |
-| L1 壳 / chrome | `fidelity.yaml` layout_scenes |
-| L2 Token | `tokens.yaml`、`evidence.yaml` |
-| L3 Scene / 路由 | `routes-and-layouts.md` |
-| L4 原子组件 | `components.md` 基础控件 |
-| L5 复合组件 | page-header、list-grid、dialog 等 |
+| L0 身份 | `design-system.yaml` + `meta.yaml`；旧 v2 为 `meta.yaml` sources / revision / conformance |
+| L1 壳 / chrome | `core/layout.yaml`；旧 v2 为 `fidelity.yaml` layout_scenes |
+| L2 Token | `core/tokens.yaml`、`core/evidence.yaml`；旧 v2 为 `tokens.yaml`、`evidence.yaml` |
+| L3 Scene / 路由 | `core/layout.yaml` + `core/page-types.yaml`；旧 v2 为 `routes-and-layouts.md` |
+| L4 原子组件 | `core/primitives.yaml`；旧 v2 为 `components.md` 基础控件 |
+| L5 复合组件 | `core/patterns.yaml`；旧 v2 为 page-header、list-grid、dialog 等 |
 | L6 Apply 映射 | `apply/playbook.md`、`quality.md` |
 
 ## 壳展示形态（来源出现才写）
@@ -28,7 +28,7 @@ L1 只记录槽位/拓扑；同一壳如何展示写在 L3 / `platforms/*.md`。
 
 ## Intake
 
-本次从源导入或从源更新开始前必须冻结并报告：
+本次从源导入或从源更新开始前必须冻结并报告 capability（`tokens-only | ui-kit | page-system`）、
 
 - session source 与将写入的 source ID / revision；
 - **本次变更集合**（路径和/或组件名单；可用上表标签分组）；

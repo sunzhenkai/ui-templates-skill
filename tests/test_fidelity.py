@@ -308,18 +308,21 @@ class FidelityContractTests(unittest.TestCase):
             self.assertFalse(result.failed, [finding.to_dict() for finding in result.findings])
             self.assertFalse(any(finding.code == "CHROME_COMPOSITION_INCOMPLETE" for finding in result.findings))
 
-    def test_workbench_stays_legacy_baseline_without_source_root(self) -> None:
-        result = validate_paths([ROOT / "templates/workbench-shell"], ROOT, index=ROOT / "templates/INDEX.md")
-        payload = result.to_dict()
-        self.assertEqual(0, payload["exit_code"], payload["findings"])
-        self.assertFalse((ROOT / "templates/workbench-shell/fidelity.yaml").exists())
-        self.assertEqual("legacy-baseline", payload["templates"][0]["fidelity"]["conformance"])
-        self.assertEqual(
-            "medium",
-            yaml.safe_load((ROOT / "templates/workbench-shell/meta.yaml").read_text(encoding="utf-8"))["confidence"]["layout"],
+    def test_workbench_design_system_package_is_valid(self) -> None:
+        import json
+        import subprocess
+        process = subprocess.run(
+            [
+                sys.executable, str(ROOT / "scripts/validate_design_system.py"), "validate",
+                str(ROOT / "templates/workbench-shell"), "--kind", "package",
+                "--migration", str(ROOT / "templates/workbench-shell/migration.yaml"), "--json",
+            ],
+            cwd=ROOT, text=True, capture_output=True, check=False,
         )
-        self.assertEqual("not-run", payload["templates"][0]["fidelity"]["replay"]["status"])
-        self.assertNotIn("请提供本地绝对路径", json.dumps(payload, ensure_ascii=False))
+        payload = json.loads(process.stdout)
+        self.assertEqual(0, process.returncode, payload)
+        self.assertTrue(payload["valid"], payload)
+        self.assertTrue(payload["results"][0]["valid"])
 
     def test_classify_helpers(self) -> None:
         self.assertEqual("legacy-baseline", classify_sidecar(None, present=False))

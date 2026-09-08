@@ -1,0 +1,13 @@
+schema: design-system-layout/v1
+items:
+- id: route/detail
+  name: Detail route
+  page_type: page-type/detail
+  slots:
+  - header
+  - body
+  breakpoints:
+  - narrow
+  - wide
+  rule_refs:
+  - rule/NN-001

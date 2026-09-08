@@ -1,5 +1,3 @@
-schema_version: 2
-template_version: 2.0.1
 name: workbench-shell
 description: 中性浅暗双主题的工作台 App Shell：外壳安静、画布承载内容、紧凑 14px 界面、1px 分区分隔、蓝色品牌色克制出现。
 sources:
@@ -14,8 +12,6 @@ sources:
   revision: 0aedb680ecdf61aa8eafdb5d80e6b58edba63df5
   captured_at: '2026-08-30T00:00:00Z'
 captured_at: '2026-09-03'
-tokens: tokens.yaml
-evidence: evidence.yaml
 platforms:
 - web
 - mobile
@@ -191,3 +187,5 @@ coverage:
     - read-only
     - resized
     unsupported: []
+schema: design-system-meta/v1
+version: 3.0.0

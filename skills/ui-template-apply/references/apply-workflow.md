@@ -1,10 +1,10 @@
-# Template Apply Phase 0–9 与状态产物
+# Active Instance Apply Phase 0–9 与状态产物
 
-执行前读取 `template-contract.md`。阶段不可跳过；“有页面文件/任务打勾”不等于完成，checkpoint 中 complete 必须由存在且 digest 匹配的 artifact 和证据支撑。
+执行前读取 `active-implementation.md`；schema v2 `template-contract.md` 仅用于显式迁移读取。阶段不可跳过；阶段不可跳过；“有页面文件/任务打勾”不等于完成，checkpoint 中 complete 必须由存在且 digest 匹配的 artifact 和证据支撑。
 
 ## 目录
 
-1. 可选 design freeze
+1. Active truth 与 apply mode
 2. 标准目录
 3. Phase 0 — Intake
 4. Phase 1 — Design direction & token freeze
@@ -18,13 +18,17 @@
 12. 恢复：从最早失效 phase 重新打开
 13. Feedback：UUID + normalized fingerprint
 
-## 可选 design freeze
+## Active truth 与 apply mode
 
-Intake 只读取消费项目根 `.ui-template-design/freeze.yaml`，不 import Design skill runtime 或 references。
+Intake 只消费 `.ui-template-design/design-system.yaml`、`core/`、`binding.yaml`。必须声明 `mode: bootstrap | increment` 并运行统一 validator：
 
-- 文件不存在：按现行 Phase 0–9；缺少 Design skill 或 freeze 不是失败。
-- 文件存在、schema 受支持且 digest 与当前设计系统本体一致：把 token 语义、Primitive/Pattern 边界和 Page Type 投影到 Phase 1–4；不得另造 PageHeader/ListPage 或未映射 token。
-- digest 不匹配或 schema 不受支持：停止，要求重新 freeze；用户确认忽略过期 freeze 后走现行工作流，不得静默混用。
+```bash
+python3 skills/ui-template-apply/runtime/check_active_instance.py validate .ui-template-design --kind active --json
+```
+
+- increment：缺失、未知 schema、capability 不足、contract/binding/projection digest 失配都停止。
+- bootstrap：可从 published frozen package adopt-only 复制 core 并生成 binding；不得改 package identity、stable IDs 或 core 值。
+- 旧 schema v2 template 和 `design-freeze/v1` 是 migration source，不是可直接实施输入。
 
 digest 算法为 `sha256-canonical-json-v1`。
 
@@ -105,7 +109,7 @@ Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可�
 
 `09-review.md` 必须以 YAML front matter 开头；front matter 使用同一 verification schema，`kind: phase-9-review`，顶层同样必须绑定执行复验的 `browser_identity`。每条记录仅允许 `recheck-passed | recheck-failed`，并以 `phase8_record_id` 引用一条 Phase 8 UUID；引用的 rule ID、expected、route、viewport、theme、state 必须一致，`actual` 与 evidence refs 记录修复后的 current-build 复验结果。一个 Phase 8 record 最多对应一条 Phase 9 record，未知或重复引用均 fail closed。保留的 Phase 8 `failed` 仅在其关联记录为 `recheck-passed` 且 Phase 9 记录整体有效时闭合；未关联、`recheck-failed` 或身份过期仍阻止完成。正文可写 P0/P1/P2 解释与取舍。
 
-可复用模板缺口在 `feedback/<uuid>.yaml` 创建 schema v2 proposed 记录，引用 profile record/rule/current-build identities；项目/技术栈专属问题只留当前项目。创建/合并规则见本文件“Feedback”。
+Phase 9 先分类 feedback ownership：`package` 写 `design-system-feedback/v1` proposed 记录并移交 Author；`binding` 只按用户确认的 binding change set 修复；`apply-skill` 回写本 skill。旧 schema v2 feedback 只用于迁移读取。创建/合并规则见本文件“Feedback”。
 
 Phase 9 有效通过且 feedback inbox 没有 `proposed` 时，会话才 `closed`。最终汇报必须输出 `session_closed: true`、`may_delete_apply_root: true`，以及固定句子：「可以删除整个 .ui-template-apply/；删除后生成页面不受影响；再次 Apply 视为新 Intake。」本次未领养项目库时还必须说明本仓不应存在 `templates/`。Apply 不自动删除任何目录。可用只读检查：
 
@@ -115,9 +119,9 @@ python3 ui-template-author/runtime/manage_template_index.py apply-close --apply-
 
 ## checkpoint 与身份
 
-`checkpoint.yaml` 符合 schema v2，固定含 0–9 十个有序 phase、template name/version/digest、scope、tokens digest、artifact digest、source identity、build identity、updated_at。恢复校验必须把 checkpoint `template.name`/`template.version` 分别绑定当前模板 meta 的 `name`/`template_version`（兼容显式 envelope 的 `version` 字段）；任一 identity 字段不一致均为 Phase 0 失效，不能只靠可伪造的 digest 通过。digest 统一为：安全解析值 → UTF-8 sorted-key canonical JSON（`ensure_ascii=false`、无多余空白、拒绝 NaN）→ SHA-256，算法标识 `sha256-canonical-json-v1`。因此 YAML 格式/键序变化不使 tokens 失效，语义变化会。
+新会话 `checkpoint.yaml` 符合 `design-system-apply-checkpoint/v1`，固定含 mode、0–9 十个有序 phase、contract id/version/digest、binding digest、projection digests、stable IDs、change set、output root、artifact digest、source identity、build identity、updated_at；旧 schema v2 checkpoint 只用于迁移或只读恢复审计。恢复校验必须把 checkpoint `template.name`/`template.version` 分别绑定当前模板 meta 的 `name`/`template_version`（兼容显式 envelope 的 `version` 字段）；任一 identity 字段不一致均为 Phase 0 失效，不能只靠可伪造的 digest 通过。digest 统一为：安全解析值 → UTF-8 sorted-key canonical JSON（`ensure_ascii=false`、无多余空白、拒绝 NaN）→ SHA-256，算法标识 `sha256-canonical-json-v1`。因此 YAML 格式/键序变化不使 tokens 失效，语义变化会。
 
-source identity：有 Git 时记录 commit + dirty diff digest；无 Git 时记录目标源码快照 digest。build identity 来自目标项目声明的构建命令/产物，必须非空且可复现；不得写“latest”。
+恢复用 `check_apply_resume.py` 计算 Impact-based Resume：digest 失配全量重开；否则按 change set 依赖面重开最早 phase。source identity：有 Git 时记录 commit + dirty diff digest；无 Git 时记录目标源码快照 digest。build identity 来自目标项目声明的构建命令/产物，必须非空且可复现；不得写“latest”。
 
 仓库工具入口（存在时）：
 
