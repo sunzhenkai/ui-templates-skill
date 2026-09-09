@@ -391,7 +391,7 @@ class SkillDistributionTests(unittest.TestCase):
         )
         self.assertEqual(0, eval_proc.returncode, eval_proc.stderr + eval_proc.stdout)
         report = json.loads(eval_proc.stdout)
-        self.assertEqual({"declared": 47, "parsed": 47, "executed": 47, "script": 45, "llm": 2}, report["counts"])
+        self.assertEqual({"declared": 50, "parsed": 50, "executed": 50, "script": 48, "llm": 2}, report["counts"])
         self.assertTrue(report["discovery"]["example_excluded"])
         self.assertIn("example/**", report["discovery"]["exclusions"])
         portable_templates = self.base / "project/templates"

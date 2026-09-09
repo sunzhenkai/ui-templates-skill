@@ -48,6 +48,101 @@ def result(case_id: str, expected_valid: bool, report: dict, required_codes: lis
 
 
 
+def certification_cases(root_tmp: Path) -> list[dict[str, object]]:
+    """Fidelity certification report stability and fail-closed behavior."""
+    fixtures = FIXTURES / "certification"
+    installed_validator = ROOT / "skills/ui-template-apply/runtime/shared_validate_design_system.py"
+    cases: list[dict[str, object]] = []
+
+    def run_cert(validator: Path, report: Path, package: Path | None) -> dict:
+        command = [
+            sys.executable, str(validator), "validate-certification", str(report),
+            "--inventory", str(fixtures / "inventory.yaml"),
+        ]
+        if package is not None:
+            command += ["--package-root", str(package)]
+        process = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
+        return json.loads(process.stdout)
+
+    valid_report = fixtures / "valid/report.yaml"
+    candidate = fixtures / "candidate-package"
+    expected = run_cert(VALIDATOR, valid_report, candidate)
+    cases.append(result("certification-valid-report-accepted", True, expected, []))
+
+    # Schema stability: the installed shared validator must reach the same verdict.
+    installed = run_cert(installed_validator, valid_report, candidate)
+    same = installed.get("valid") == expected.get("valid") and [
+        error["code"] for error in installed.get("errors", [])
+    ] == [error["code"] for error in expected.get("errors", [])]
+    cases.append({
+        "id": "certification-installed-validator-parity",
+        "passed": bool(same),
+        "repo_valid": expected.get("valid"),
+        "installed_valid": installed.get("valid"),
+    })
+
+    invalid_expectations = (
+        ("missing-record", ["CERT_RECORD_MISSING"]),
+        ("stale-build", ["CERT_BUILD_STALE"]),
+        ("screenshot-only", ["CERT_ASSERTION_NOT_MEASURABLE"]),
+        ("failed-assertion", ["CERT_VERDICT_CONTRADICTED"]),
+    )
+    for name, codes in invalid_expectations:
+        report = run_cert(VALIDATOR, fixtures / "invalid" / name / "report.yaml", candidate)
+        cases.append(result(f"certification-{name}-rejected", False, report, codes))
+
+    report = run_cert(
+        VALIDATOR,
+        fixtures / "invalid/over-fragmented/report.yaml",
+        fixtures / "invalid/over-fragmented/candidate-package",
+    )
+    cases.append(result("certification-over-fragmented-rejected", False, report, ["CERT_OVER_FRAGMENTED"]))
+    return cases
+
+
+def closure_cases(root_tmp: Path) -> list[dict[str, object]]:
+    """Derived Component Family closure behavior across fixtures."""
+    fixtures = FIXTURES / "closure"
+    cases: list[dict[str, object]] = []
+
+    def run(target: Path, *, require: bool = False) -> dict:
+        command = [sys.executable, str(VALIDATOR), "validate", str(target), "--kind", "package"]
+        if require:
+            command.append("--require-component-family")
+        process = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
+        return json.loads(process.stdout)
+
+    valid = fixtures / "valid-page-system"
+    report = run(valid)
+    cases.append(result("closure-valid-page-system", True, report, []))
+    report = run(valid, require=True)
+    cases.append(result("closure-valid-page-system-with-evidence", True, report, []))
+
+    report = run(fixtures / "dangling-pattern")
+    cases.append(result("closure-dangling-pattern-rejected", False, report, ["REFERENCE_DANGLING"]))
+    report = run(fixtures / "missing-evidence", require=True)
+    cases.append(result("closure-missing-evidence-rejected", False, report, ["FAMILY_EVIDENCE_MISSING"]))
+    report = run(fixtures / "capability-mismatch")
+    cases.append(result("closure-capability-mismatch-rejected", False, report, ["CAPABILITY_LAYER_FORBIDDEN"]))
+
+    # Structured output reports family members, dangling targets and unresolved evidence.
+    production = json.loads(
+        subprocess.run(
+            [sys.executable, str(VALIDATOR), "validate", "templates/workbench-shell", "--kind", "package"],
+            cwd=ROOT, text=True, capture_output=True, check=False,
+        ).stdout
+    )
+    family = production.get("component_family", {})
+    structured_ok = (
+        production.get("valid") is True
+        and len(family.get("families", [])) >= 1
+        and "dangling" in family
+        and "unresolved_evidence" in family
+    )
+    cases.append({"id": "closure-structured-output-present", "passed": bool(structured_ok)})
+    return cases
+
+
 def authoring_cases(root_tmp: Path) -> list[dict[str, object]]:
     cases: list[dict[str, object]] = []
     target = root_tmp / "author-candidate"
@@ -86,6 +181,8 @@ def authoring_cases(root_tmp: Path) -> list[dict[str, object]]:
 
 def evaluate(root_tmp: Path) -> dict[str, object]:
     cases: list[dict[str, object]] = authoring_cases(root_tmp)
+    cases.extend(certification_cases(root_tmp))
+    cases.extend(closure_cases(root_tmp))
 
     positive_fixtures = (
         ("tokens-only-valid", FIXTURES / "packages/tokens-only-fixture", "package"),

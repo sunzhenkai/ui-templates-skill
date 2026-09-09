@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/fidelity-certification.schema.json",
+  "title": "Design System fidelity certification v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "gate",
+    "status",
+    "records"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-fidelity-certification/v1"
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "oracle",
+        "prompts_digest",
+        "build",
+        "apply_mode"
+      ],
+      "properties": {
+        "package": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "digest"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "common.schema.json#/$defs/slug"
+            },
+            "version": {
+              "$ref": "common.schema.json#/$defs/semver"
+            },
+            "digest": {
+              "$ref": "common.schema.json#/$defs/digest"
+            }
+          }
+        },
+        "oracle": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "revision"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "git-revision",
+                "deployed-preview"
+              ]
+            },
+            "revision": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8,64}$"
+            },
+            "locator": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^(?!/)(?!file:)[^\\\\]+$",
+              "description": "Replayable non-absolute locator; local absolute paths are forbidden."
+            }
+          }
+        },
+        "prompts_digest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "value"],
+          "properties": {
+            "algorithm": {
+              "enum": ["sha256-canonical-json-v1", "sha256-file-v1", "sha256-tree-v1"]
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        "build": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "identity",
+            "output_root",
+            "generated_at"
+          ],
+          "properties": {
+            "identity": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^(?!latest$)[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+            },
+            "output_root": {
+              "$ref": "common.schema.json#/$defs/path"
+            },
+            "generated_at": {
+              "$ref": "common.schema.json#/$defs/timestamp"
+            }
+          }
+        },
+        "apply_mode": {
+          "enum": [
+            "bootstrap",
+            "increment"
+          ]
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "failed"
+      ]
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "pattern",
+          "package_digest",
+          "build_identity",
+          "oracle_revision",
+          "route",
+          "state",
+          "theme",
+          "viewport",
+          "verdict",
+          "assertions",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^cert-[0-9a-zA-Z-]{3,80}$"
+          },
+          "pattern": {
+            "$ref": "common.schema.json#/$defs/entityId"
+          },
+          "package_digest": {
+            "$ref": "common.schema.json#/$defs/digest"
+          },
+          "build_identity": {
+            "type": "string",
+            "minLength": 1
+          },
+          "oracle_revision": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8,64}$"
+          },
+          "route": {
+            "type": "string",
+            "minLength": 1
+          },
+          "composition": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/entityId"
+            }
+          },
+          "state": {
+            "type": "string",
+            "minLength": 1
+          },
+          "theme": {
+            "enum": [
+              "light",
+              "dark"
+            ]
+          },
+          "viewport": {
+            "enum": [
+              "desktop",
+              "compact",
+              "mobile"
+            ]
+          },
+          "verdict": {
+            "enum": [
+              "passed",
+              "failed"
+            ]
+          },
+          "assertions": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "dimension",
+                "result",
+                "method"
+              ],
+              "properties": {
+                "dimension": {
+                  "enum": [
+                    "structure",
+                    "hierarchy",
+                    "spacing",
+                    "density",
+                    "typography",
+                    "color",
+                    "surface",
+                    "border",
+                    "divider"
+                  ]
+                },
+                "result": {
+                  "enum": [
+                    "passed",
+                    "failed"
+                  ]
+                },
+                "method": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tolerance": {
+                  "type": "string"
+                },
+                "expected": {
+                  "type": "string"
+                },
+                "observed": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "current_screenshot",
+              "oracle_screenshot"
+            ],
+            "properties": {
+              "current_screenshot": {
+                "$ref": "common.schema.json#/$defs/path"
+              },
+              "oracle_screenshot": {
+                "$ref": "common.schema.json#/$defs/path"
+              },
+              "refs": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/path"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

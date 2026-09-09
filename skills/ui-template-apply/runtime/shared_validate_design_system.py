@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -27,6 +28,14 @@ def schema_dir() -> Path:
 SCHEMA_DIR = schema_dir()
 CANONICAL = "sha256-canonical-json-v1"
 RAW = "sha256-file-v1"
+INVENTORY_SCHEMA = "design-system-certification-inventory/v1"
+MEASURABLE_ASSERTION_METHODS = frozenset({
+    "dom-geometry",
+    "computed-style",
+    "layout-tree",
+    "dom-order",
+    "framework-a11y-tree",
+})
 CAPABILITY_LAYERS = {
     "tokens-only": ("tokens", "rules", "evidence"),
     "ui-kit": ("tokens", "primitives", "rules", "evidence"),
@@ -105,6 +114,9 @@ class Report:
         self.errors: list[dict[str, str]] = []
         self.warnings: list[dict[str, str]] = []
         self.digests: dict[str, Any] = {}
+        self.component_family: dict[str, Any] = {}
+        self.inventory_patterns: list[str] | None = None
+        self.inventory_expected_primitives: dict[str, int] = {}
 
     def add(self, code: str, path: str, message: str) -> None:
         self.errors.append({"code": code, "path": path, "message": message})
@@ -113,7 +125,7 @@ class Report:
         self.warnings.append({"code": code, "path": path, "message": message})
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "schema_version": 1,
             "target": self.target.as_posix(),
             "kind": self.kind,
@@ -122,6 +134,12 @@ class Report:
             "warnings": sorted(self.warnings, key=lambda item: (item["code"], item["path"], item["message"])),
             "digests": self.digests,
         }
+        if self.component_family:
+            payload["component_family"] = self.component_family
+        return payload
+        if self.component_family:
+            payload["component_family"] = self.component_family
+        return payload
 
 
 def safe_relative(root: Path, value: str, report: Report, where: str) -> Path | None:
@@ -290,6 +308,269 @@ def validate_references(ids: dict[str, str], refs: dict[str, list[str]], report:
                 report.add("REFERENCE_DANGLING", f"entities.{source_id}", f"unknown stable ID: {target}")
 
 
+def derive_component_family(
+    manifest: dict[str, Any],
+    layers: dict[str, Path],
+    ids: dict[str, str],
+) -> dict[str, Any]:
+    """Derive Page Type → Pattern → Primitive closure without an eighth layer."""
+    capability = manifest.get("capability")
+    result: dict[str, Any] = {
+        "capability": capability,
+        "families": [],
+        "dangling": [],
+        "unresolved_evidence": [],
+    }
+    if capability not in {"ui-kit", "page-system"}:
+        return result
+    evidence_targets: set[str] = set()
+    evidence_layer = layers.get("evidence")
+    if evidence_layer is not None and evidence_layer.is_file():
+        for item in load_document(evidence_layer).get("items", []):
+            if not isinstance(item, dict) or item.get("status", "active") != "active":
+                continue
+            target = item.get("target")
+            if isinstance(target, str):
+                evidence_targets.add(target)
+    primitive_ids: list[str] = []
+    primitives_layer = layers.get("primitives")
+    if primitives_layer is not None and primitives_layer.is_file():
+        primitive_ids = [
+            item.get("id")
+            for item in load_document(primitives_layer).get("items", [])
+            if isinstance(item, dict) and isinstance(item.get("id"), str)
+        ]
+    pattern_primitives: dict[str, list[str]] = {}
+    patterns_layer = layers.get("patterns")
+    if patterns_layer is not None and patterns_layer.is_file():
+        for item in load_document(patterns_layer).get("items", []):
+            if not isinstance(item, dict):
+                continue
+            pattern_id = item.get("id")
+            if isinstance(pattern_id, str):
+                pattern_primitives[pattern_id] = [
+                    ref for ref in item.get("primitives", []) if isinstance(ref, str)
+                ]
+    page_types_layer = layers.get("page-types")
+    page_types = (
+        load_document(page_types_layer).get("items", [])
+        if page_types_layer is not None and page_types_layer.is_file()
+        else []
+    )
+    for item in page_types:
+        if not isinstance(item, dict):
+            continue
+        page_type = item.get("id")
+        if not isinstance(page_type, str):
+            continue
+        closure_patterns: list[str] = []
+        closure_primitives: set[str] = set()
+        for pattern in item.get("patterns", []):
+            if not isinstance(pattern, str):
+                continue
+            if pattern not in ids:
+                result["dangling"].append({"source": page_type, "target": pattern})
+                continue
+            closure_patterns.append(pattern)
+            for primitive in pattern_primitives.get(pattern, []):
+                if primitive not in ids:
+                    result["dangling"].append({"source": pattern, "target": primitive})
+                    continue
+                closure_primitives.add(primitive)
+        members = [page_type, *closure_patterns, *sorted(closure_primitives)]
+        result["families"].append({
+            "page_type": page_type,
+            "patterns": closure_patterns,
+            "primitives": sorted(closure_primitives),
+            "members": members,
+        })
+        result["unresolved_evidence"].extend(
+            {"entity": member, "page_type": page_type}
+            for member in members
+            if member not in evidence_targets
+        )
+    if capability == "ui-kit":
+        for primitive in primitive_ids:
+            if primitive not in evidence_targets:
+                result["unresolved_evidence"].append({"entity": primitive, "page_type": None})
+    return result
+
+
+def enforce_family_closure(component_family: dict[str, Any], report: Report) -> None:
+    """Fail closed when a family member cannot enter a published Component Family."""
+    for dangling in component_family.get("dangling", []):
+        report.add(
+            "FAMILY_DANGLING_REFERENCE",
+            f"component_family.{dangling.get('source')}",
+            f"unknown stable ID: {dangling.get('target')}",
+        )
+    for item in component_family.get("unresolved_evidence", []):
+        report.add(
+            "FAMILY_EVIDENCE_MISSING",
+            f"component_family.{item.get('entity')}",
+            "family member lacks resolvable evidence and cannot enter a published Component Family",
+        )
+
+
+def validate_inventory(path: Path) -> Report:
+    report = Report("certification-inventory", path)
+    try:
+        document = load_document(path)
+    except Exception as exc:
+        report.add("DOCUMENT_UNREADABLE", "inventory", str(exc))
+        return report
+    if document.get("schema") != INVENTORY_SCHEMA:
+        report.add("SCHEMA_UNSUPPORTED", "schema", f"only {INVENTORY_SCHEMA} is supported")
+        return report
+    oracle = document.get("oracle")
+    revision = oracle.get("revision") if isinstance(oracle, dict) else None
+    if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{8,64}", revision):
+        report.add("INVENTORY_ORACLE_MISSING", "oracle.revision", "inventory requires a replayable oracle revision")
+    patterns = document.get("patterns")
+    if not isinstance(patterns, list) or not patterns:
+        report.add("INVENTORY_EMPTY", "patterns", "inventory must list at least one pattern")
+        patterns = []
+    seen: set[str] = set()
+    expected_primitives: dict[str, int] = {}
+    for index, item in enumerate(patterns):
+        where = f"patterns.{index}"
+        if not isinstance(item, dict):
+            report.add("INVENTORY_PATTERN_INVALID", where, "pattern entry must be an object")
+            continue
+        pattern_id = item.get("id")
+        if not isinstance(pattern_id, str) or not pattern_id.startswith("pattern/"):
+            report.add("INVENTORY_PATTERN_INVALID", f"{where}.id", f"invalid pattern id: {pattern_id}")
+        elif pattern_id in seen:
+            report.add("INVENTORY_DUPLICATE", f"{where}.id", f"duplicate inventory pattern: {pattern_id}")
+        else:
+            seen.add(pattern_id)
+        facts = item.get("source_facts")
+        if (
+            not isinstance(facts, list)
+            or not facts
+            or not all(isinstance(fact, str) and fact and not fact.startswith("/") for fact in facts)
+        ):
+            report.add("INVENTORY_PROVENANCE_MISSING", f"{where}.source_facts", "pattern requires replayable, non-absolute source facts")
+        page_type = item.get("page_type")
+        if page_type is not None and (not isinstance(page_type, str) or not page_type.startswith("page-type/")):
+            report.add("INVENTORY_PATTERN_INVALID", f"{where}.page_type", f"invalid page type id: {page_type}")
+        max_primitives = item.get("expected_member_primitives")
+        if max_primitives is not None and (not isinstance(max_primitives, int) or isinstance(max_primitives, bool) or max_primitives < 1):
+            report.add("INVENTORY_PATTERN_INVALID", f"{where}.expected_member_primitives", "expected_member_primitives must be a positive integer")
+        elif isinstance(max_primitives, int) and isinstance(pattern_id, str):
+            expected_primitives[pattern_id] = max_primitives
+    report.inventory_patterns = sorted(seen)
+    report.inventory_expected_primitives = expected_primitives
+    return report
+
+
+def validate_certification(
+    path: Path,
+    *,
+    inventory: Path | None = None,
+    package_root: Path | None = None,
+    evidence_root: Path | None = None,
+) -> dict[str, Any]:
+    report = Report("certification", path)
+    document = validate_schema_document(path, "fidelity-certification.schema.json", report, "certification")
+    if document is None:
+        return report.to_dict()
+    gate = document["gate"]
+    records = document.get("records", [])
+    gate_package_digest = gate["package"].get("digest")
+    build_identity = gate["build"].get("identity")
+    oracle_revision = gate["oracle"].get("revision")
+
+    if package_root is not None:
+        manifest_path = package_root / "design-system.yaml"
+        if not manifest_path.is_file():
+            report.add("MANIFEST_MISSING", "design-system.yaml", "candidate design-system.yaml is required")
+        else:
+            manifest = load_document(manifest_path)
+            if manifest.get("id") != gate["package"]["id"] or manifest.get("version") != gate["package"]["version"]:
+                report.add("CERT_PACKAGE_IDENTITY_MISMATCH", "gate.package", "candidate id/version does not match the certification gate")
+            digest_input = dict(manifest)
+            digest_input.pop("contract_digest", None)
+            if gate_package_digest and gate_package_digest.get("value") != canonical_digest(digest_input):
+                report.add("CERT_PACKAGE_DIGEST_MISMATCH", "gate.package.digest", "candidate package digest does not match the certification gate")
+
+    inventory_patterns: list[str] | None = None
+    inventory_expected_primitives: dict[str, int] = {}
+    if inventory is not None:
+        inventory_report = validate_inventory(inventory)
+        if inventory_report.errors:
+            report.add("INVENTORY_INVALID", "inventory", "certification inventory failed validation")
+        else:
+            inventory_patterns = inventory_report.inventory_patterns
+            inventory_expected_primitives = inventory_report.inventory_expected_primitives
+
+    pattern_primitive_counts: dict[str, int] = {}
+    if package_root is not None and (package_root / "design-system.yaml").is_file():
+        manifest = load_document(package_root / "design-system.yaml")
+        layer_paths: dict[str, Path] = {}
+        for name, relative in manifest.get("layers", {}).items():
+            layer_candidate = safe_relative(package_root, relative, report, f"layers.{name}")
+            if layer_candidate is not None and layer_candidate.is_file():
+                layer_paths[name] = layer_candidate
+        patterns_layer = layer_paths.get("patterns")
+        if patterns_layer is not None and patterns_layer.is_file():
+            for item in load_document(patterns_layer).get("items", []):
+                if isinstance(item, dict) and isinstance(item.get("id"), str):
+                    pattern_primitive_counts[item["id"]] = len([
+                        ref for ref in item.get("primitives", []) if isinstance(ref, str)
+                    ])
+
+    root = (evidence_root or path.parent).resolve()
+    passed_patterns: set[str] = set()
+    failed_records = False
+    for index, record in enumerate(records):
+        where = f"records.{index}"
+        if gate_package_digest and record.get("package_digest") != gate_package_digest:
+            report.add("CERT_RECORD_PACKAGE_DIGEST_MISMATCH", f"{where}.package_digest", "record is bound to a different package digest")
+        if record.get("build_identity") != build_identity:
+            report.add("CERT_BUILD_STALE", f"{where}.build_identity", "record build identity does not match the gate build")
+        if record.get("oracle_revision") != oracle_revision:
+            report.add("CERT_ORACLE_STALE", f"{where}.oracle_revision", "record oracle revision does not match the gate oracle")
+        assertions = record.get("assertions", [])
+        if record.get("verdict") == "passed":
+            if not any(isinstance(a, dict) and a.get("method") in MEASURABLE_ASSERTION_METHODS for a in assertions):
+                report.add("CERT_ASSERTION_NOT_MEASURABLE", f"{where}.assertions", "screenshot-only evidence cannot pass; at least one measurable assertion is required")
+            if any(isinstance(a, dict) and a.get("result") == "failed" for a in assertions):
+                report.add("CERT_VERDICT_CONTRADICTED", f"{where}.verdict", "passed record contains failed assertions")
+        evidence = record.get("evidence", {})
+        for key in ("current_screenshot", "oracle_screenshot"):
+            ref = evidence.get(key)
+            if not ref:
+                report.add("CERT_EVIDENCE_MISSING", f"{where}.evidence.{key}", "screenshot evidence ref is required")
+                continue
+            candidate = safe_relative(root, ref, report, f"{where}.evidence.{key}")
+            if candidate is not None and not candidate.is_file():
+                report.add("CERT_EVIDENCE_MISSING", f"{where}.evidence.{key}", f"evidence file does not exist: {ref}")
+        if inventory_patterns is not None and record.get("pattern") not in inventory_patterns:
+            report.add("CERT_RECORD_NOT_IN_INVENTORY", f"{where}.pattern", "record pattern is not part of the certification inventory")
+        pattern_id = record.get("pattern")
+        if isinstance(pattern_id, str) and pattern_id in inventory_expected_primitives:
+            expected = inventory_expected_primitives[pattern_id]
+            actual = pattern_primitive_counts.get(pattern_id, 0)
+            if actual > expected:
+                report.add(
+                    "CERT_OVER_FRAGMENTED",
+                    f"{where}.pattern",
+                    f"candidate splits one source pattern into {actual} primitives; inventory expects at most {expected}",
+                )
+        if record.get("verdict") == "passed":
+            passed_patterns.add(record.get("pattern"))
+        else:
+            failed_records = True
+    if inventory_patterns is not None:
+        for pattern in inventory_patterns:
+            if pattern not in passed_patterns:
+                report.add("CERT_RECORD_MISSING", f"inventory.{pattern}", "inventory pattern has no passed Pattern Equivalence Record")
+    if document.get("status") == "passed" and (failed_records or (inventory_patterns is not None and any(pattern not in passed_patterns for pattern in inventory_patterns))):
+        report.add("CERT_STATUS_CONTRADICTED", "status", "passed gate contains failed or missing records")
+    return report.to_dict()
+
+
 def validate_binding(root: Path, manifest: dict[str, Any], layers: dict[str, Path], report: Report) -> dict[str, Any] | None:
     binding_path = root / "binding.yaml"
     if not binding_path.is_file():
@@ -337,7 +618,7 @@ def validate_binding(root: Path, manifest: dict[str, Any], layers: dict[str, Pat
     return binding
 
 
-def validate_target(target: Path, kind: str) -> dict[str, Any]:
+def validate_target(target: Path, kind: str, *, require_component_family: bool = False) -> dict[str, Any]:
     report = Report(kind, target)
     manifest_path = target / "design-system.yaml"
     if not manifest_path.is_file():
@@ -354,6 +635,9 @@ def validate_target(target: Path, kind: str) -> dict[str, Any]:
     validate_package_identity(target, manifest, report)
     ids, refs, _ = collect_entities(layers, report)
     validate_references(ids, refs, report)
+    report.component_family = derive_component_family(manifest, layers, ids)
+    if require_component_family:
+        enforce_family_closure(report.component_family, report)
     if kind == "active":
         validate_binding(target, manifest, layers, report)
     return report.to_dict()
@@ -451,6 +735,11 @@ def main(argv: list[str] | None = None) -> int:
     validate = sub.add_parser("validate")
     validate.add_argument("target", type=Path)
     validate.add_argument("--kind", choices=("package", "active"), required=True)
+    validate.add_argument(
+        "--require-component-family",
+        action="store_true",
+        help="fail closed when family members lack evidence or have dangling references",
+    )
     validate.add_argument("--migration", type=Path)
     validate.add_argument("--migration-target", type=Path)
     validate.add_argument("--vendor", type=Path)
@@ -460,6 +749,13 @@ def main(argv: list[str] | None = None) -> int:
     feedback = sub.add_parser("validate-feedback")
     feedback.add_argument("record", type=Path)
     feedback.add_argument("--evidence-root", type=Path)
+    certification = sub.add_parser("validate-certification")
+    certification.add_argument("report", type=Path)
+    certification.add_argument("--inventory", type=Path)
+    certification.add_argument("--package-root", type=Path)
+    certification.add_argument("--evidence-root", type=Path)
+    inventory = sub.add_parser("validate-inventory")
+    inventory.add_argument("document", type=Path)
     args = parser.parse_args(argv)
     if args.command == "compute-digest":
         print(json.dumps(compute_manifest_digest(args.manifest), ensure_ascii=False, sort_keys=True, indent=2))
@@ -467,8 +763,21 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "validate-feedback":
         print(json.dumps(validate_feedback(args.record.resolve(), args.evidence_root.resolve() if args.evidence_root else None), ensure_ascii=False, sort_keys=True, indent=2))
         return 0 if validate_feedback(args.record.resolve(), args.evidence_root.resolve() if args.evidence_root else None)["valid"] else 1
+    if args.command == "validate-certification":
+        payload = validate_certification(
+            args.report.resolve(),
+            inventory=args.inventory.resolve() if args.inventory else None,
+            package_root=args.package_root.resolve() if args.package_root else None,
+            evidence_root=args.evidence_root.resolve() if args.evidence_root else None,
+        )
+        print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
+        return 0 if payload["valid"] else 1
+    if args.command == "validate-inventory":
+        payload = validate_inventory(args.document.resolve()).to_dict()
+        print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
+        return 0 if payload["valid"] else 1
 
-    reports = [validate_target(args.target.resolve(), args.kind)]
+    reports = [validate_target(args.target.resolve(), args.kind, require_component_family=args.require_component_family)]
     if args.migration:
         reports.append(validate_migration(args.migration.resolve(), args.migration_target.resolve() if args.migration_target else None))
     if args.vendor:

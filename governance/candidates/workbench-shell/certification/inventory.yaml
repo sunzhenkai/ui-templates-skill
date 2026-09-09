@@ -1,0 +1,80 @@
+schema: design-system-certification-inventory/v1
+oracle:
+  revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  locator: workbench-shell-visual-oracle (upstream repo snapshot)
+patterns:
+- id: pattern/dashboard-shell
+  page_type: page-type/dashboard
+  source_facts:
+  - packages/views/layout/dashboard-layout.tsx#scene.shell
+  expected_member_primitives: 3
+- id: pattern/page-chrome
+  page_type: page-type/collection
+  source_facts:
+  - packages/views/layout/page-header.tsx#scene.page-header
+  expected_member_primitives: 2
+- id: pattern/master-detail
+  page_type: page-type/detail
+  source_facts:
+  - packages/views/detail#scene.master-detail
+  expected_member_primitives: 1
+- id: pattern/modal
+  page_type: page-type/modal
+  source_facts:
+  - packages/views/modal#scene.modal
+  expected_member_primitives: 2
+- id: pattern/global-search
+  page_type: page-type/dashboard
+  source_facts:
+  - packages/views/shell#scene.global-search
+  expected_member_primitives: 3
+- id: pattern/data-table
+  page_type: page-type/collection
+  source_facts:
+  - packages/views/collection#scene.data-table
+  expected_member_primitives: 5
+- id: pattern/board-column
+  page_type: page-type/collection
+  source_facts:
+  - packages/views/board#scene.board-column
+  expected_member_primitives: 3
+- id: pattern/board-card
+  page_type: page-type/collection
+  source_facts:
+  - packages/views/board#scene.board-card
+  expected_member_primitives: 4
+- id: pattern/service-card
+  page_type: page-type/collection
+  source_facts:
+  - packages/views/services#scene.service-card
+  expected_member_primitives: 4
+- id: pattern/calendar-card
+  page_type: page-type/collection
+  source_facts:
+  - packages/views/calendar#scene.calendar-card
+  expected_member_primitives: 3
+- id: pattern/stat-card
+  page_type: page-type/dashboard
+  source_facts:
+  - packages/views/analytics#scene.stat-card
+  expected_member_primitives: 2
+- id: pattern/chart-legend
+  page_type: page-type/dashboard
+  source_facts:
+  - packages/views/analytics#scene.chart-legend
+  expected_member_primitives: 2
+- id: pattern/empty-state
+  page_type: page-type/collection
+  source_facts:
+  - packages/views/shared#scene.empty-state
+  expected_member_primitives: 3
+- id: pattern/toast
+  page_type: page-type/modal
+  source_facts:
+  - packages/views/shared#scene.toast
+  expected_member_primitives: 3
+- id: pattern/confirm-dialog
+  page_type: page-type/modal
+  source_facts:
+  - packages/views/shared#scene.confirm-dialog
+  expected_member_primitives: 3

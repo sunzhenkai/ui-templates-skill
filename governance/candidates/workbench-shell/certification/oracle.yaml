@@ -1,0 +1,23 @@
+schema: design-system-certification-source-freeze/v1
+oracle:
+  kind: git-revision
+  revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  locator: workbench-shell-visual-oracle (upstream repo snapshot; see meta.sources[].ref
+    for provenance)
+layout_design_doc:
+  kind: git-revision
+  revision: 0aedb680ecdf61aa8eafdb5d80e6b58edba63df5
+  locator: workbench-shell-layout-design (user markdown; business entities generalized)
+candidate_scope:
+  package_id: workbench-shell
+  package_version: 1.2.0
+  page_types:
+  - page-type/dashboard
+  - page-type/collection
+  - page-type/detail
+  - page-type/modal
+  capability: page-system
+prompts: prompts/
+notes:
+- No local absolute paths are stored; replay resolves the oracle from the frozen revisions.
+- The oracle is a certification input only and never enters Apply implementation.

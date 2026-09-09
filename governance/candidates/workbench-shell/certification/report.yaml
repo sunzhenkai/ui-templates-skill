@@ -1,0 +1,487 @@
+schema: design-system-fidelity-certification/v1
+gate:
+  package:
+    id: workbench-shell
+    version: 1.2.0
+    digest: &id001
+      algorithm: sha256-canonical-json-v1
+      value: ef784cf4bbb313ea632fa07268f7d473b7b984103b2e54a55b35d6fc1b1d0b86
+  oracle:
+    kind: git-revision
+    revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  prompts_digest:
+    algorithm: sha256-tree-v1
+    value: d3e423f5b69a73b9acd812b658319ab248d6127dfc56f64242746586b8726e29
+  build:
+    generated_at: '2026-09-09T14:33:09Z'
+    identity: workbench-cert-build-2026-09-09-a
+    output_root: governance/candidates/workbench-shell/certification/output
+  apply_mode: bootstrap
+status: passed
+records:
+- id: cert-dashboard-shell
+  pattern: pattern/dashboard-shell
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: / (dashboard)
+  composition:
+  - pattern/dashboard-shell
+  - primitive/nav-item
+  - primitive/panel
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: hierarchy
+    result: passed
+    method: dom-geometry
+  - dimension: spacing
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    observed: sidebar 256px, canvas inset fill
+  - dimension: surface
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-dashboard.png
+    oracle_screenshot: .certification/evidence/oracle-dashboard-shell.provenance.json
+- id: cert-page-chrome
+  pattern: pattern/page-chrome
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: /events
+  composition:
+  - pattern/page-chrome
+  - primitive/button
+  - primitive/panel
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: spacing
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    observed: header 48px, 16px gutter
+  - dimension: divider
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-data-table.png
+    oracle_screenshot: .certification/evidence/oracle-page-chrome.provenance.json
+- id: cert-data-table
+  pattern: pattern/data-table
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: /events
+  composition:
+  - pattern/data-table
+  - primitive/checkbox
+  - primitive/badge
+  - primitive/pagination
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: density
+    result: passed
+    method: dom-geometry
+    observed: row height 40px
+  - dimension: typography
+    result: passed
+    method: computed-style
+  - dimension: color
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-data-table.png
+    oracle_screenshot: .certification/evidence/oracle-data-table.provenance.json
+- id: cert-board-column
+  pattern: pattern/board-column
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: /board
+  composition:
+  - pattern/board-column
+  - primitive/panel
+  - primitive/badge
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: spacing
+    result: passed
+    method: computed-style
+  - dimension: border
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-board.png
+    oracle_screenshot: .certification/evidence/oracle-board-column.provenance.json
+- id: cert-board-card
+  pattern: pattern/board-card
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: /board
+  composition:
+  - pattern/board-card
+  - primitive/avatar
+  - primitive/badge
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: density
+    result: passed
+    method: dom-geometry
+    observed: card padding 12px
+  - dimension: color
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-board.png
+    oracle_screenshot: .certification/evidence/oracle-board-card.provenance.json
+- id: cert-service-card
+  pattern: pattern/service-card
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: /services
+  composition:
+  - pattern/service-card
+  - primitive/button
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: spacing
+    result: passed
+    method: computed-style
+  - dimension: surface
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-services.png
+    oracle_screenshot: .certification/evidence/oracle-service-card.provenance.json
+- id: cert-calendar-card
+  pattern: pattern/calendar-card
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: /calendar
+  composition:
+  - pattern/calendar-card
+  - primitive/badge
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: spacing
+    result: passed
+    method: computed-style
+  - dimension: typography
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-calendar.png
+    oracle_screenshot: .certification/evidence/oracle-calendar-card.provenance.json
+- id: cert-stat-card
+  pattern: pattern/stat-card
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: / (dashboard)
+  composition:
+  - pattern/stat-card
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: typography
+    result: passed
+    method: computed-style
+  - dimension: color
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-dashboard.png
+    oracle_screenshot: .certification/evidence/oracle-stat-card.provenance.json
+- id: cert-chart-legend
+  pattern: pattern/chart-legend
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: / (dashboard)
+  composition:
+  - pattern/chart-legend
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: color
+    result: passed
+    method: computed-style
+  - dimension: spacing
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-dashboard.png
+    oracle_screenshot: .certification/evidence/oracle-chart-legend.provenance.json
+- id: cert-global-search
+  pattern: pattern/global-search
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: / (header)
+  composition:
+  - pattern/global-search
+  - primitive/search-input
+  state: focus
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: spacing
+    result: passed
+    method: computed-style
+  - dimension: surface
+    result: passed
+    method: computed-style
+    observed: popover shadow menu tier
+  evidence:
+    current_screenshot: .certification/evidence/current-dashboard.png
+    oracle_screenshot: .certification/evidence/oracle-global-search.provenance.json
+- id: cert-modal-dialog
+  pattern: pattern/modal
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: dialog (create incident)
+  composition:
+  - pattern/modal
+  - primitive/panel
+  - primitive/button
+  state: open
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: surface
+    result: passed
+    method: computed-style
+    observed: floating shadow tier
+  - dimension: typography
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-dialog.png
+    oracle_screenshot: .certification/evidence/oracle-modal.provenance.json
+- id: cert-toast
+  pattern: pattern/toast
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: global (archive action)
+  composition:
+  - pattern/toast
+  - primitive/icon-button
+  state: visible
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: color
+    result: passed
+    method: computed-style
+    observed: status signal pairs color with text
+  - dimension: spacing
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-toast.png
+    oracle_screenshot: .certification/evidence/oracle-toast.provenance.json
+- id: cert-confirm-dialog
+  pattern: pattern/confirm-dialog
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: alertdialog (archive)
+  composition:
+  - pattern/confirm-dialog
+  - primitive/button
+  state: open
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: surface
+    result: passed
+    method: computed-style
+  - dimension: divider
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-toast.png
+    oracle_screenshot: .certification/evidence/oracle-confirm-dialog.provenance.json
+- id: cert-dashboard-dark
+  pattern: pattern/dashboard-shell
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: / (dashboard)
+  composition:
+  - pattern/dashboard-shell
+  state: ready
+  theme: dark
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: color
+    result: passed
+    method: computed-style
+    observed: dark theme tokens applied
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: hierarchy
+    result: passed
+    method: dom-geometry
+  evidence:
+    current_screenshot: .certification/evidence/current-dashboard-dark.png
+    oracle_screenshot: .certification/evidence/oracle-dashboard-shell.provenance.json
+- id: cert-dashboard-mobile
+  pattern: pattern/dashboard-shell
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: / (dashboard)
+  composition:
+  - pattern/dashboard-shell
+  state: ready
+  theme: light
+  viewport: mobile
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+    observed: sidebar collapses to off-canvas sheet
+  - dimension: spacing
+    result: passed
+    method: computed-style
+  - dimension: density
+    result: passed
+    method: dom-geometry
+  evidence:
+    current_screenshot: .certification/evidence/current-dashboard-mobile.png
+    oracle_screenshot: .certification/evidence/oracle-dashboard-shell.provenance.json
+- id: cert-master-detail
+  pattern: pattern/master-detail
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: /events → detail
+  composition:
+  - pattern/master-detail
+  - primitive/panel
+  - primitive/nav-item
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+    observed: 280px master rail + detail document column
+  - dimension: spacing
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+  - dimension: surface
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-master-detail.png
+    oracle_screenshot: .certification/evidence/oracle-master-detail.provenance.json
+- id: cert-empty-state
+  pattern: pattern/empty-state
+  package_digest: *id001
+  build_identity: workbench-cert-build-2026-09-09-a
+  oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+  route: /services (no match)
+  composition:
+  - pattern/empty-state
+  - primitive/button
+  state: empty
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+    observed: icon + title + hint + next action, centered
+  - dimension: typography
+    result: passed
+    method: computed-style
+  - dimension: spacing
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: .certification/evidence/current-empty-state.png
+    oracle_screenshot: .certification/evidence/oracle-empty-state.provenance.json

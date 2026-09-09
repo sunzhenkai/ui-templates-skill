@@ -1,0 +1,14 @@
+{
+  "accepted": true,
+  "result": {
+    "schema_version": 1,
+    "target": "/home/wii/code/repos/github/sunzhenkai/ui-templates-skill/governance/candidates/workbench-shell/certification/report.yaml",
+    "kind": "certification",
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "digests": {}
+  },
+  "failures": [],
+  "note": "accepted candidates still await explicit user promotion; failed ownership must be written back to package, apply-skill or certification-prompt, followed by clean regeneration."
+}

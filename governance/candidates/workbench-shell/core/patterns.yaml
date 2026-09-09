@@ -1,0 +1,166 @@
+schema: design-system-patterns/v1
+items:
+- id: pattern/dashboard-shell
+  name: Inset dashboard shell
+  primitives:
+  - primitive/nav-item
+  - primitive/panel
+  - primitive/chat-fab
+  page_type: page-type/dashboard
+  rule_refs:
+  - rule/LAYOUT-101
+  - rule/LAYOUT-102
+  - rule/LAYOUT-103
+  - rule/LAYOUT-104
+  forbidden:
+  - global horizontal page scroll
+  - content under the floating chat launcher corner
+- id: pattern/page-chrome
+  name: Page header and toolbar
+  primitives:
+  - primitive/button
+  - primitive/panel
+  page_type: page-type/collection
+  rule_refs:
+  - rule/LAYOUT-106
+  - rule/NN-102
+- id: pattern/master-detail
+  name: Master detail surface
+  primitives:
+  - primitive/panel
+  page_type: page-type/detail
+  rule_refs:
+  - rule/LAYOUT-102
+  - rule/LAYOUT-105
+- id: pattern/modal
+  name: Modal dialog
+  primitives:
+  - primitive/panel
+  - primitive/button
+  page_type: page-type/modal
+  rule_refs:
+  - rule/LAYOUT-105
+  - rule/AX-101
+- id: pattern/global-search
+  name: Global search combo
+  primitives:
+  - primitive/search-input
+  - primitive/menu
+  - primitive/panel
+  page_type: page-type/dashboard
+  rule_refs:
+  - rule/LAYOUT-103
+  - rule/AX-104
+  forbidden:
+  - search results without keyboard activation
+- id: pattern/data-table
+  name: Dense data table with toolbar
+  primitives:
+  - primitive/panel
+  - primitive/button
+  - primitive/checkbox
+  - primitive/badge
+  - primitive/pagination
+  page_type: page-type/collection
+  rule_refs:
+  - rule/LAYOUT-102
+  - rule/LAYOUT-106
+  - rule/AX-101
+  - rule/RESP-102
+  forbidden:
+  - row height above the dense 40px rhythm
+- id: pattern/board-column
+  name: Board column header and drop zone
+  primitives:
+  - primitive/panel
+  - primitive/badge
+  - primitive/icon-button
+  page_type: page-type/collection
+  rule_refs:
+  - rule/LAYOUT-102
+  - rule/AX-103
+  - rule/RESP-102
+- id: pattern/board-card
+  name: Draggable board card
+  primitives:
+  - primitive/panel
+  - primitive/badge
+  - primitive/avatar
+  - primitive/icon-button
+  page_type: page-type/collection
+  rule_refs:
+  - rule/AX-103
+  - rule/RESP-102
+  forbidden:
+  - drag as the only move affordance
+- id: pattern/service-card
+  name: Service summary card
+  primitives:
+  - primitive/panel
+  - primitive/badge
+  - primitive/button
+  - primitive/icon-button
+  page_type: page-type/collection
+  rule_refs:
+  - rule/RESP-102
+  - rule/AX-101
+- id: pattern/calendar-card
+  name: Calendar day card
+  primitives:
+  - primitive/panel
+  - primitive/badge
+  - primitive/button
+  page_type: page-type/collection
+  rule_refs:
+  - rule/RESP-102
+  - rule/NN-101
+- id: pattern/stat-card
+  name: Statistic card with trend
+  primitives:
+  - primitive/panel
+  - primitive/badge
+  page_type: page-type/dashboard
+  rule_refs:
+  - rule/RESP-102
+  - rule/AX-102
+- id: pattern/chart-legend
+  name: Trend chart legend
+  primitives:
+  - primitive/panel
+  - primitive/badge
+  page_type: page-type/dashboard
+  rule_refs:
+  - rule/AX-102
+  - rule/RESP-102
+- id: pattern/empty-state
+  name: Empty state with next action
+  primitives:
+  - primitive/panel
+  - primitive/button
+  - primitive/icon-button
+  page_type: page-type/collection
+  rule_refs:
+  - rule/AX-101
+  - rule/NN-101
+- id: pattern/toast
+  name: Toast notification
+  primitives:
+  - primitive/panel
+  - primitive/icon-button
+  - primitive/button
+  page_type: page-type/modal
+  rule_refs:
+  - rule/AX-104
+  - rule/AX-102
+  forbidden:
+  - toast without dismiss control
+- id: pattern/confirm-dialog
+  name: Confirmation dialog
+  primitives:
+  - primitive/panel
+  - primitive/button
+  - primitive/icon-button
+  page_type: page-type/modal
+  rule_refs:
+  - rule/LAYOUT-105
+  - rule/AX-104

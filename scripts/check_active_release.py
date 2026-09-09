@@ -429,6 +429,79 @@ def check_local_skill_boundary(root: Path, target: str = ".agents/skills") -> li
     return findings
 
 
+def check_certification_evidence(root: Path) -> list[Finding]:
+    """A promotion request for a candidate requires a current accepted certification report.
+
+    The certification report must bind the current candidate contract digest, the
+    fixed oracle revision recorded in the request and the fixed prompts digest;
+    otherwise the report is stale and promotion stays blocked.
+    """
+    import hashlib
+    import json as _json
+
+    findings: list[Finding] = []
+    candidates_root = root / "governance/candidates"
+    if not candidates_root.is_dir():
+        return findings
+    for request in sorted(candidates_root.glob("*/promotion-request.yaml")):
+        candidate_root = request.parent
+        try:
+            request_data = yaml.safe_load(request.read_text(encoding="utf-8"))
+        except (OSError, yaml.YAMLError, UnicodeError) as exc:
+            findings.append(Finding("CERTIFICATION_REQUEST_UNREADABLE", request.relative_to(root).as_posix(), str(exc)))
+            continue
+        if not isinstance(request_data, dict) or request_data.get("target") != "production-catalog":
+            continue
+        oracle_revision = str(request_data.get("oracle_revision", ""))
+        prompts_digest = str(request_data.get("prompts_digest", ""))
+        if not re.fullmatch(r"[0-9a-f]{8,64}", oracle_revision) or not re.fullmatch(r"[0-9a-f]{64}", prompts_digest):
+            findings.append(Finding(
+                "CERTIFICATION_REQUEST_INVALID",
+                request.relative_to(root).as_posix(),
+                "promotion request requires a fixed oracle revision and prompts digest",
+            ))
+            continue
+        report_path = candidate_root / "certification/report.yaml"
+        if not report_path.is_file():
+            findings.append(Finding(
+                "CERTIFICATION_EVIDENCE_MISSING",
+                report_path.relative_to(root).as_posix(),
+                "promotion requires a current accepted certification report",
+            ))
+            continue
+        try:
+            report = yaml.safe_load(report_path.read_text(encoding="utf-8"))
+        except (OSError, yaml.YAMLError, UnicodeError) as exc:
+            findings.append(Finding("CERTIFICATION_REPORT_UNREADABLE", report_path.relative_to(root).as_posix(), str(exc)))
+            continue
+        gate = report.get("gate", {}) if isinstance(report, dict) else {}
+        stale = (
+            report.get("status") != "passed"
+            or gate.get("oracle", {}).get("revision") != oracle_revision
+            or gate.get("prompts_digest", {}).get("value") != prompts_digest
+        )
+        package_digest = gate.get("package", {}).get("digest", {})
+        manifest_path = candidate_root / "design-system.yaml"
+        if manifest_path.is_file() and package_digest.get("value"):
+            try:
+                manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+                manifest = dict(manifest)
+                manifest.pop("contract_digest", None)
+                canonical = _json.dumps(manifest, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+                digest_input = canonical.encode("utf-8")
+                stale = stale or package_digest.get("value") != hashlib.sha256(digest_input).hexdigest()
+            except (OSError, yaml.YAMLError, UnicodeError, ValueError) as exc:
+                findings.append(Finding("CERTIFICATION_PACKAGE_UNREADABLE", manifest_path.relative_to(root).as_posix(), str(exc)))
+                continue
+        if stale:
+            findings.append(Finding(
+                "CERTIFICATION_STALE",
+                report_path.relative_to(root).as_posix(),
+                "certification report no longer matches candidate, oracle or prompts; re-certification is required",
+            ))
+    return findings
+
+
 def check_repository(root: Path, scope_path: Path) -> dict:
     config = load_yaml(scope_path)
     paths = {path for path in git_paths(root) if (root / path).exists() or (root / path).is_symlink()}
@@ -497,6 +570,7 @@ def check_repository(root: Path, scope_path: Path) -> dict:
     findings.extend(check_shared_validator_copies(root))
     findings.extend(check_local_skill_boundary(root))
     findings.extend(check_versions(root))
+    findings.extend(check_certification_evidence(root))
     mirror_target = checks.get("mirror_target")
     if mirror_target:
         findings.extend(check_mirror_state(root, str(mirror_target)))

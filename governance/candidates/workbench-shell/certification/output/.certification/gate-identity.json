@@ -1,0 +1,29 @@
+{
+  "apply_mode": "bootstrap",
+  "build": {
+    "generated_at": "2026-09-09T14:33:09Z",
+    "identity": "workbench-cert-build-2026-09-09-a",
+    "output_root": "governance/candidates/workbench-shell/certification/output"
+  },
+  "oracle": {
+    "kind": "git-revision",
+    "revision": "879d0de9166261c26ec35b69f5cec9382191eda1"
+  },
+  "package": {
+    "digest": {
+      "algorithm": "sha256-canonical-json-v1",
+      "value": "ef784cf4bbb313ea632fa07268f7d473b7b984103b2e54a55b35d6fc1b1d0b86"
+    },
+    "id": "workbench-shell",
+    "version": "1.2.0"
+  },
+  "prompts_digest": {
+    "algorithm": "sha256-tree-v1",
+    "value": "d3e423f5b69a73b9acd812b658319ab248d6127dfc56f64242746586b8726e29"
+  },
+  "schema": "template-certification-gate-identity/v1",
+  "source_blind": {
+    "apply_receives_oracle_paths": false,
+    "prior_generated_output_reused": false
+  }
+}

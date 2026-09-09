@@ -1,6 +1,4 @@
 {
-  "schema_version": 1,
-  "runner_version": "1.0.0",
   "cases": {
     "apply-catalog-adopt-portable": {
       "fixture_sha256": "1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c",
@@ -12,10 +10,6 @@
     },
     "apply-chrome-unavailable": {
       "fixture_sha256": "b18ae706ea77bf32fecebb044872dcf5d037f61fe3ec8047480f45c3e8a8bc02",
-      "status": "passed"
-    },
-    "apply-fidelity-compare-mode": {
-      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
       "status": "passed"
     },
     "apply-fidelity-facet-recovery": {
@@ -30,24 +24,40 @@
       "fixture_sha256": "9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2",
       "status": "passed"
     },
+    "apply-information-semantics-contract": {
+      "fixture_sha256": "82cb8395374efbdbafdb9383118c1550279f6c8f84a201b64acb63186942cd22",
+      "status": "passed"
+    },
+    "apply-missing-reusable-control-feedback": {
+      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "status": "passed"
+    },
+    "apply-no-patch-generated-web": {
+      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "status": "passed"
+    },
+    "apply-no-source-checkout": {
+      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "status": "passed"
+    },
     "apply-no-template-only-when-absent-from-catalog": {
       "fixture_sha256": "1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c",
       "status": "passed"
     },
-    "apply-session-closed-delete-hint": {
-      "fixture_sha256": "9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2",
-      "status": "passed"
-    },
-    "apply-no-patch-generated-web": {
-      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
-      "status": "passed"
-    },
-    "apply-no-source-checkout": {
-      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
+    "apply-original-alignment-handoff": {
+      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
       "status": "passed"
     },
     "apply-out-of-scope-rejected": {
       "fixture_sha256": "fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c",
+      "status": "passed"
+    },
+    "apply-pattern-bound-composition": {
+      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "status": "passed"
+    },
+    "apply-placement-review-contract": {
+      "fixture_sha256": "82cb8395374efbdbafdb9383118c1550279f6c8f84a201b64acb63186942cd22",
       "status": "passed"
     },
     "apply-requires-reference-reading": {
@@ -55,7 +65,19 @@
       "status": "passed"
     },
     "apply-retired-template-rejected": {
-      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
+      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "status": "passed"
+    },
+    "apply-session-closed-delete-hint": {
+      "fixture_sha256": "9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2",
+      "status": "passed"
+    },
+    "apply-source-blind-rejection": {
+      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "status": "passed"
+    },
+    "apply-style-consistency-contract": {
+      "fixture_sha256": "82cb8395374efbdbafdb9383118c1550279f6c8f84a201b64acb63186942cd22",
       "status": "passed"
     },
     "apply-token-freeze": {
@@ -67,7 +89,7 @@
       "status": "passed"
     },
     "authoring-layered-extraction": {
-      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
+      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
       "status": "passed"
     },
     "authoring-normalizes-and-fills-defaults": {
@@ -79,7 +101,7 @@
       "status": "passed"
     },
     "authoring-template-lifecycle-verbs": {
-      "fixture_sha256": "200ee3a4a615f10d4fd5043d1eba58c610428ddf2efaf815f0005b940a83924b",
+      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
       "status": "passed"
     },
     "authoring-updates-index": {
@@ -88,6 +110,46 @@
     },
     "browser-verification-evidence": {
       "fixture_sha256": "fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c",
+      "status": "passed"
+    },
+    "design-decision-gates": {
+      "fixture_sha256": "fe999c307854c07da771e8a3be7cccf9b559693c8bf3f74b644a5be47f3948ed",
+      "status": "passed"
+    },
+    "design-framework-alignment": {
+      "fixture_sha256": "fe999c307854c07da771e8a3be7cccf9b559693c8bf3f74b644a5be47f3948ed",
+      "status": "passed"
+    },
+    "design-handoff-apply": {
+      "fixture_sha256": "fe999c307854c07da771e8a3be7cccf9b559693c8bf3f74b644a5be47f3948ed",
+      "status": "passed"
+    },
+    "design-handoff-author": {
+      "fixture_sha256": "fe999c307854c07da771e8a3be7cccf9b559693c8bf3f74b644a5be47f3948ed",
+      "status": "passed"
+    },
+    "design-no-freeze-apply-optional": {
+      "fixture_sha256": "fe999c307854c07da771e8a3be7cccf9b559693c8bf3f74b644a5be47f3948ed",
+      "status": "passed"
+    },
+    "design-primitives-not-complete": {
+      "fixture_sha256": "fe999c307854c07da771e8a3be7cccf9b559693c8bf3f74b644a5be47f3948ed",
+      "status": "passed"
+    },
+    "design-raw-token-fail": {
+      "fixture_sha256": "fe999c307854c07da771e8a3be7cccf9b559693c8bf3f74b644a5be47f3948ed",
+      "status": "passed"
+    },
+    "design-scanner-gate-extended": {
+      "fixture_sha256": "fe999c307854c07da771e8a3be7cccf9b559693c8bf3f74b644a5be47f3948ed",
+      "status": "passed"
+    },
+    "design-standalone-complete": {
+      "fixture_sha256": "fe999c307854c07da771e8a3be7cccf9b559693c8bf3f74b644a5be47f3948ed",
+      "status": "passed"
+    },
+    "design-task-classes": {
+      "fixture_sha256": "fe999c307854c07da771e8a3be7cccf9b559693c8bf3f74b644a5be47f3948ed",
       "status": "passed"
     },
     "doc-source-routed-correctly": {
@@ -170,5 +232,7 @@
       "fixture_sha256": "fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c",
       "status": "passed"
     }
-  }
+  },
+  "runner_version": "1.0.0",
+  "schema_version": 1
 }

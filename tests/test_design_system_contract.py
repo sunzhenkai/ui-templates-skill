@@ -29,7 +29,7 @@ class DesignSystemContractTests(unittest.TestCase):
 
     def test_schema_family_is_parseable(self) -> None:
         documents = [json.loads(path.read_text(encoding="utf-8")) for path in sorted(SCHEMAS.glob("*.json"))]
-        self.assertEqual(15, len(documents))
+        self.assertEqual(16, len(documents))
         self.assertTrue(all(item["$id"].startswith("https://ui-templates-skill.local/schemas/design-system/v1/") for item in documents))
 
     def test_capability_fixtures_are_valid(self) -> None:

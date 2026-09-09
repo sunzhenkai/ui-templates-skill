@@ -29,6 +29,7 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 - “用模板实现页面/搭后台” → 停止 Authoring，移交 `ui-template-apply`。
 - “建立或重构项目级 Design System / 选择技术栈 / 生成 project binding” → 停止 Authoring，移交 `ui-template-design`。仅当用户明确要求把已冻结视觉发布为可复用 package 时，才把 `.ui-template-design/` 当作可选 session source；日常库动词不读不改该目录。
 - 官方 published 模板在本 skill 的只读 `catalog/`；消费项目可写库是项目根 `templates/`。项目库没有同名行时不得声称“没有模板”；只有用户要求写模板、落库 feedback、retire/delete 或明确「接到本仓」时，才从 catalog 领养到项目库。
+- 用户要求“对齐原版视觉”的发布级对照 → Template Certification Gate（`scripts/run_template_certification.py` + `governance/release/CERTIFICATION-v1.md`）：固定 Visual Oracle revision、candidate package 与固定 prompts，source-blind 干净 Apply 后按 Pattern 产生 Pattern Equivalence Records。认证输入不进入 Apply，也通过 checkpoint 校验拒绝进入实现。candidate 停留在 `governance/candidates/`；publish/upgrade/catalog replacement 必须附带当前 accepted certification report，production promotion 仍需用户单独确认。
 
 ## 不变量
 

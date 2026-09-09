@@ -37,6 +37,8 @@
 
 `core/tokens.yaml` 是 token 精确值唯一权威；原生 theming 是 binding 声明的 Token Projection，不得双向同步。capability 只允许 `tokens-only | ui-kit | page-system`。Stable Entity ID 用于跨层引用、Gallery、verification 和 feedback。package 禁止 `binding.yaml`、`implementation/`、stack adapter、工程目录、依赖、API/mock/data 分层、状态库选型和 runnable starter。未知 contract family、digest 不匹配、partial migration 或 unresolved receipt fail closed。
 
+Component Family 不新增第八层：validator 沿 `Page Type → Pattern → Primitive` 的 Stable Entity ID 引用与 evidence 推导闭集（`--require-component-family` fail closed）。Apply 只有 `bootstrap | increment` 两种 source-blind 实现 Mode；oracle identity、source-compare 输入或历史生成物进入 checkpoint 即 `SOURCE_BLIND_VIOLATION`。官方 package publish/upgrade 必须先通过 Template Certification Gate（`scripts/run_template_certification.py` + `governance/release/CERTIFICATION-v1.md`）；candidate 停留在 `governance/candidates/`，promotion 需用户单独确认。
+
 ### workbench-shell 出处
 
 `workbench-shell` 3.0.0 的来源继承 schema v2 时期的两项并列 source：固定 revision `879d0de9166261c26ec35b69f5cec9382191eda1` 的原版仓库源码，以及 revision `0aedb680ecdf61aa8eafdb5d80e6b58edba63df5` 的用户 Markdown 布局设计文档（出处已抹除、业务实体已泛化）。上游仓库/产品名只允许出现在 `meta.sources[].ref`、本段出处说明和 immutable archive；不得把来源产品写成对齐目标、本机依赖或更新协议主语。

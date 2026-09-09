@@ -36,7 +36,49 @@ _Avoid_: freeze 目录、阶段产物本体
 
 **Apply Mode**:
 Apply 会话的显式场景标签：`bootstrap` 表示建立并实施，`increment` 表示在既有 Active Instance 上更新。
-_Avoid_: greenfield 判断（那是站点形态，不是 Apply 流程模式）
+_Avoid_: `Mode A` / `Mode B`（那是淘汰的保真对照标签）；greenfield 判断（那是站点形态，不是 Apply 流程模式）
+
+### 保真闭环
+
+**Fidelity Contract**:
+从固定 revision 原版抽取出的可移植、机器可验证复现事实集；Template Package 中决定“能复现到什么程度”的语义载体。
+_Avoid_: 原版源码、实现参考、只写 token 的模板
+
+**Source-Blind Apply**:
+Apply 只消费 digest 一致 Active Instance；它与原版没有实现期信息通路。
+_Avoid_: 参考原版、读取 `meta.sources[]` 路径、用历史生成物补语义
+
+**Visual Oracle**:
+可部署的原版构建，只用于对已生成构建做保真对照；不是实现输入。
+_Avoid_: 原版 checkout、参考实现、样式抄写来源
+
+**Round-trip Fidelity Gate**:
+模板发布/升级侧的回归门禁：用更新后的契约干净生成构建，再对照 Visual Oracle；差异只能回写 package、skill 或 prompts 后重生。
+_Avoid_: `Mode B`、Apply 阶段、直接修补生成物
+
+**Visual Equivalence**:
+同一内容、状态、主题和 viewport 下，结构、层级、密度、间距节奏、色彩表面和组件形态保持基本一致；不要求 DOM、技术栈或像素完全相同。
+_Avoid_: pixel-perfect、视觉相似、主观还原
+
+**Pattern Equivalence**:
+以已声明 Pattern 为保真验收单元，比较其在干净生成构建与 Visual Oracle 中的视觉等价性；新业务页按所属 Pattern 验收，不按整页像素验收。
+_Avoid_: 整页复刻、业务页像素 diff、自由组合
+
+**Component Family**:
+由 Page Type → Pattern → Primitive 引用关系与对应 evidence 推导出的完整闭集；这是发布覆盖范围，不是独立清单，也不是穷举所有可能组件。
+_Avoid_: 第八层清单、组件清单、示例集合、按页面反向凑组件
+
+**Fidelity Granularity**:
+抽取粒度规则：独立可复用交互件记 Primitive，可复用组合/布局/状态语义记 Pattern，页面骨架记 Page Type；不按截图特例化，也不造不可复用巨对象。
+_Avoid_: 截图组件、整页模板、过度拆分
+
+**Pattern Equivalence Record**:
+一条 Pattern 在指定 route/composition、state、theme 和 viewport 下的保真验收记录；绑定 package/build/oracle identity，并引用截图与几何、间距、排版、色彩等 assertion。
+_Avoid_: 只有截图、口头一致、整页像素 diff
+
+**Template Certification Gate**:
+模板 publish/upgrade 前的治理门禁：使用固定 oracle revision、candidate package 和固定 prompts，通过 source-blind 干净 Apply 产生 Pattern Equivalence Records；通过后才可发布。
+_Avoid_: Apply 模式、业务上线门禁、改生成物后重判
 
 **Token Projection**:
 由 `core/tokens.yaml` 派生到原生主题机制的落地文件；project binding 记录目标路径、映射关系和 digest。

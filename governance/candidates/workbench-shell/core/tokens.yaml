@@ -1,0 +1,550 @@
+schema: design-system-tokens/v1
+tokens:
+  color:
+    light:
+      app-shell:
+        value: oklch(0.964435 0.001327 286.375)
+        origin: source
+      page-canvas:
+        value: oklch(0.988087 0 0)
+        origin: source
+      surface:
+        value: oklch(1 0 0)
+        origin: source
+      surface-foreground:
+        value: oklch(0.141 0.005 285.823)
+        origin: source
+      surface-raised:
+        value: oklch(1 0 0)
+        origin: source
+      surface-hover:
+        value: oklch(0.967 0.001 286.375)
+        origin: source
+      surface-selected:
+        value: oklch(0.95 0.002 286.375)
+        origin: source
+      surface-selected-foreground:
+        value: oklch(0.141 0.005 285.823)
+        origin: source
+      surface-border:
+        value: oklch(0.92 0.004 286.32)
+        origin: source
+      foreground:
+        value: oklch(0.141 0.005 285.823)
+        origin: source
+      card:
+        value: oklch(1 0 0)
+        origin: source
+      card-foreground:
+        value: oklch(0.141 0.005 285.823)
+        origin: source
+      popover:
+        value: oklch(1 0 0)
+        origin: source
+      popover-foreground:
+        value: oklch(0.141 0.005 285.823)
+        origin: source
+      primary:
+        value: oklch(0.21 0.006 285.885)
+        origin: source
+      primary-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      secondary:
+        value: oklch(0.967 0.001 286.375)
+        origin: source
+      secondary-foreground:
+        value: oklch(0.21 0.006 285.885)
+        origin: source
+      muted:
+        value: oklch(0.967 0.001 286.375)
+        origin: source
+      muted-foreground:
+        value: oklch(0.505 0.016 285.938)
+        origin: source
+      faint-foreground:
+        value: oklch(0.606 0.016 285.938)
+        origin: source
+      accent:
+        value: oklch(0.967 0.001 286.375)
+        origin: source
+      accent-foreground:
+        value: oklch(0.21 0.006 285.885)
+        origin: source
+      destructive:
+        value: oklch(0.577 0.245 27.325)
+        origin: source
+      border:
+        value: oklch(0.945 0.003 286.32)
+        origin: source
+      input:
+        value: oklch(0.92 0.004 286.32)
+        origin: source
+      ring:
+        value: oklch(0.705 0.015 286.067)
+        origin: source
+      sidebar:
+        value: oklch(0.964435 0.001327 286.375)
+        origin: source
+      sidebar-foreground:
+        value: oklch(0.141 0.005 285.823)
+        origin: source
+      sidebar-primary:
+        value: oklch(0.21 0.006 285.885)
+        origin: source
+      sidebar-primary-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      sidebar-accent:
+        value: oklch(0.935 0.003 286.375)
+        origin: source
+      sidebar-accent-foreground:
+        value: oklch(0.21 0.006 285.885)
+        origin: source
+      sidebar-border:
+        value: oklch(0.92 0.004 286.32)
+        origin: source
+      sidebar-ring:
+        value: oklch(0.705 0.015 286.067)
+        origin: source
+      brand:
+        value: oklch(0.55 0.16 255)
+        origin: source
+      brand-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      success:
+        value: oklch(0.55 0.16 145)
+        origin: source
+      warning:
+        value: oklch(0.75 0.16 85)
+        origin: source
+      info:
+        value: oklch(0.55 0.18 250)
+        origin: source
+      chart:
+        '1':
+          value: oklch(0.55 0.16 255)
+          origin: source
+        '2':
+          value: oklch(0.66 0.13 255)
+          origin: source
+        '3':
+          value: oklch(0.76 0.10 255)
+          origin: source
+        '4':
+          value: oklch(0.85 0.06 255)
+          origin: source
+        '5':
+          value: oklch(0.92 0.03 255)
+          origin: source
+      primary-hover:
+        value: color-mix(in oklab, oklch(0.21 0.006 285.885) 80%, transparent)
+        origin: computed
+      secondary-hover:
+        value: color-mix(in oklab, oklch(0.967 0.001 286.375) 80%, transparent)
+        origin: computed
+      destructive-surface:
+        value: color-mix(in oklab, oklch(0.577 0.245 27.325) 10%, transparent)
+        origin: computed
+      destructive-surface-hover:
+        value: color-mix(in oklab, oklch(0.577 0.245 27.325) 20%, transparent)
+        origin: computed
+      ring-focus:
+        value: color-mix(in oklab, oklch(0.705 0.015 286.067) 50%, transparent)
+        origin: computed
+      brand-subtle:
+        value: color-mix(in oklab, oklch(0.55 0.16 255) 7%, transparent)
+        origin: computed
+      brand-subtle-hover:
+        value: color-mix(in oklab, oklch(0.55 0.16 255) 12%, transparent)
+        origin: computed
+    dark:
+      app-shell:
+        value: oklch(0.155 0.005 285.823)
+        origin: source
+      page-canvas:
+        value: oklch(0.18 0.005 285.823)
+        origin: source
+      surface:
+        value: oklch(0.21 0.006 285.885)
+        origin: source
+      surface-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      surface-raised:
+        value: oklch(0.235 0.007 285.885)
+        origin: source
+      surface-hover:
+        value: oklch(0.274 0.006 286.033)
+        origin: source
+      surface-selected:
+        value: oklch(0.3 0.006 286.033)
+        origin: source
+      surface-selected-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      surface-border:
+        value: oklch(1 0 0 / 10%)
+        origin: source
+      foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      card:
+        value: oklch(0.21 0.006 285.885)
+        origin: source
+      card-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      popover:
+        value: oklch(0.235 0.007 285.885)
+        origin: source
+      popover-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      primary:
+        value: oklch(0.92 0.004 286.32)
+        origin: source
+      primary-foreground:
+        value: oklch(0.21 0.006 285.885)
+        origin: source
+      secondary:
+        value: oklch(0.274 0.006 286.033)
+        origin: source
+      secondary-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      muted:
+        value: oklch(0.274 0.006 286.033)
+        origin: source
+      muted-foreground:
+        value: oklch(0.705 0.015 286.067)
+        origin: source
+      faint-foreground:
+        value: oklch(0.60 0.015 286.067)
+        origin: source
+      accent:
+        value: oklch(0.274 0.006 286.033)
+        origin: source
+      accent-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      destructive:
+        value: oklch(0.704 0.191 22.216)
+        origin: source
+      border:
+        value: oklch(1 0 0 / 6%)
+        origin: source
+      input:
+        value: oklch(1 0 0 / 15%)
+        origin: source
+      ring:
+        value: oklch(0.552 0.016 285.938)
+        origin: source
+      sidebar:
+        value: oklch(0.21 0.006 285.885)
+        origin: source
+      sidebar-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      sidebar-primary:
+        value: oklch(0.488 0.243 264.376)
+        origin: source
+      sidebar-primary-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      sidebar-accent:
+        value: oklch(0.274 0.006 286.033)
+        origin: source
+      sidebar-accent-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      sidebar-border:
+        value: oklch(1 0 0 / 10%)
+        origin: source
+      sidebar-ring:
+        value: oklch(0.552 0.016 285.938)
+        origin: source
+      brand:
+        value: oklch(0.65 0.16 255)
+        origin: source
+      brand-foreground:
+        value: oklch(0.985 0 0)
+        origin: source
+      success:
+        value: oklch(0.65 0.15 145)
+        origin: source
+      warning:
+        value: oklch(0.70 0.16 85)
+        origin: source
+      info:
+        value: oklch(0.65 0.18 250)
+        origin: source
+      chart:
+        '1':
+          value: oklch(0.72 0.16 255)
+          origin: source
+        '2':
+          value: oklch(0.62 0.13 255)
+          origin: source
+        '3':
+          value: oklch(0.52 0.10 255)
+          origin: source
+        '4':
+          value: oklch(0.42 0.06 255)
+          origin: source
+        '5':
+          value: oklch(0.32 0.03 255)
+          origin: source
+      primary-hover:
+        value: color-mix(in oklab, oklch(0.92 0.004 286.32) 80%, transparent)
+        origin: computed
+      secondary-hover:
+        value: color-mix(in oklab, oklch(0.274 0.006 286.033) 80%, transparent)
+        origin: computed
+      destructive-surface:
+        value: color-mix(in oklab, oklch(0.704 0.191 22.216) 20%, transparent)
+        origin: computed
+      destructive-surface-hover:
+        value: color-mix(in oklab, oklch(0.704 0.191 22.216) 30%, transparent)
+        origin: computed
+      ring-focus:
+        value: color-mix(in oklab, oklch(0.552 0.016 285.938) 50%, transparent)
+        origin: computed
+      brand-subtle:
+        value: color-mix(in oklab, oklch(0.65 0.16 255) 12%, transparent)
+        origin: computed
+      brand-subtle-hover:
+        value: color-mix(in oklab, oklch(0.65 0.16 255) 18%, transparent)
+        origin: computed
+  typography:
+    micro:
+      value: 11
+      origin: source
+      unit: px
+    caption:
+      value: 12
+      origin: source
+      unit: px
+    label:
+      value: 13
+      origin: source
+      unit: px
+    body:
+      value: 14
+      origin: source
+      unit: px
+    body-lg:
+      value: 15
+      origin: source
+      unit: px
+    title-sm:
+      value: 16
+      origin: source
+      unit: px
+    title:
+      value: 18
+      origin: source
+      unit: px
+    title-lg:
+      value: 20
+      origin: source
+      unit: px
+    display-sm:
+      value: 24
+      origin: source
+      unit: px
+    display:
+      value: 36
+      origin: source
+      unit: px
+    micro-line-height:
+      value: 15
+      origin: source
+      unit: px
+    caption-line-height:
+      value: 16
+      origin: source
+      unit: px
+    label-line-height:
+      value: 18
+      origin: source
+      unit: px
+    body-line-height:
+      value: 20
+      origin: source
+      unit: px
+    body-lg-line-height:
+      value: 22
+      origin: source
+      unit: px
+    title-sm-line-height:
+      value: 24
+      origin: source
+      unit: px
+    title-line-height:
+      value: 28
+      origin: source
+      unit: px
+    title-lg-line-height:
+      value: 28
+      origin: source
+      unit: px
+    display-sm-line-height:
+      value: 32
+      origin: source
+      unit: px
+    display-line-height:
+      value: 40
+      origin: source
+      unit: px
+  space:
+    '0':
+      value: 0
+      origin: source
+      unit: px
+    '1':
+      value: 4
+      origin: source
+      unit: px
+    '2':
+      value: 8
+      origin: source
+      unit: px
+    '3':
+      value: 12
+      origin: source
+      unit: px
+    '4':
+      value: 16
+      origin: source
+      unit: px
+    '5':
+      value: 20
+      origin: source
+      unit: px
+    '6':
+      value: 24
+      origin: source
+      unit: px
+    '8':
+      value: 32
+      origin: source
+      unit: px
+    header-height:
+      value: 48
+      origin: source
+      unit: px
+    toolbar-height:
+      value: 48
+      origin: source
+      unit: px
+    chat-launcher-size:
+      value: 40
+      origin: source
+      unit: px
+    chat-launcher-inset:
+      value: 8
+      origin: source
+      unit: px
+    0-5:
+      value: 2
+      origin: source
+      unit: px
+    1-5:
+      value: 6
+      origin: source
+      unit: px
+    2-5:
+      value: 10
+      origin: source
+      unit: px
+    3-5:
+      value: 14
+      origin: source
+      unit: px
+    '7':
+      value: 28
+      origin: source
+      unit: px
+  radius:
+    sm:
+      value: 6
+      origin: computed
+      unit: px
+    md:
+      value: 8
+      origin: computed
+      unit: px
+    lg:
+      value: 10
+      origin: source
+      unit: px
+    full:
+      value: 999
+      origin: source
+      unit: px
+    xl:
+      value: 14
+      origin: computed
+      unit: px
+    2xl:
+      value: 18
+      origin: computed
+      unit: px
+    3xl:
+      value: 22
+      origin: computed
+      unit: px
+    4xl:
+      value: 26
+      origin: computed
+      unit: px
+  shadow:
+    surface:
+      value: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 1px rgb(15 23 42 / 0.03)
+      origin: source
+    menu:
+      value: 0 8px 24px rgb(15 23 42 / 0.08), 0 2px 6px rgb(15 23 42 / 0.05)
+      origin: source
+    floating:
+      value: 0 16px 40px rgb(15 23 42 / 0.14), 0 3px 10px rgb(15 23 42 / 0.08)
+      origin: source
+    dark-surface:
+      value: 0 1px 2px rgb(0 0 0 / 0.20), 0 1px 1px rgb(0 0 0 / 0.16)
+      origin: source
+    dark-menu:
+      value: 0 10px 28px rgb(0 0 0 / 0.30), 0 2px 8px rgb(0 0 0 / 0.18)
+      origin: source
+    dark-floating:
+      value: 0 20px 48px rgb(0 0 0 / 0.46), 0 4px 12px rgb(0 0 0 / 0.28)
+      origin: source
+  size:
+    sidebar-default:
+      value: 256
+      origin: source
+      unit: px
+    sidebar-min:
+      value: 200
+      origin: source
+      unit: px
+    sidebar-max:
+      value: 360
+      origin: source
+      unit: px
+    icon-sm:
+      value: 16
+      origin: source
+      unit: px
+    control-sm:
+      value: 28
+      origin: source
+      unit: px
+    control-md:
+      value: 32
+      origin: source
+      unit: px
+    control-lg:
+      value: 36
+      origin: source
+      unit: px

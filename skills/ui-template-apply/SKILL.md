@@ -7,18 +7,18 @@ description: 消费 `design-system/v1` Active Instance 按 Phase 0–9 实现真
 
 本 skill 只消费已有模板，不创建、迁移或索引模板；在统一契约下只消费有效 Active Instance 或从 published package 显式 adopt-only 建立 Active Instance。Authoring 由 `ui-template-author` 所有；完整 Design System 编辑由 `ui-template-design` 所有。官方 package 随 Author `catalog/` 安装；Apply 对项目库默认只读 pin，不写入项目 `templates/`；空项目缺 `templates/` 不是失败。
 
-## 模式与移交
+## Apply Mode 与移交
 
 - 已有有效 Active Instance 且要求实现页面 → 进入 Phase 0–9，并声明 `mode: bootstrap | increment`。
 - 无 Active Instance 且 greenfield bootstrap → 只能先从 **published** package adopt-only 建立 Active Instance，再写业务源码。
-- 用户明确要求对齐原版视觉 → 仍只读模板实现，另按模式 B 对照可部署 oracle，见 [fidelity-compare.md](references/fidelity-compare.md)；差异回写 skill/模板后重生，不得改生成物。
+- 用户明确要求对齐原版视觉 → 仍只读模板实现，并移交模板认证链路处理对照，见 [source-blind-boundary.md](references/source-blind-boundary.md)；Apply 不执行 source oracle 对照，差异回写 skill/模板后重生，不得改生成物。
 - “做成模板/提取风格/导入模板/退役或删除模板” → 移交 `ui-template-author`。
 - “建立或重构项目级 Design System / 统一 token 与 Pattern” → 移交 `ui-template-design`。没有 freeze 时本 skill 仍按现行 Phase 0–9 执行。
 
 ## 启动边界
 
-- 已选 **published** 模板并要求实现页面 → 进入本流程（默认模式 A：干净实现）。
-- 用户明确要求对齐原版视觉 → 仍只读模板实现，另按模式 B 对照可部署 oracle；差异回写 skill/模板后重生，不得改生成物。
+- 已选 **published** 模板并要求实现页面 → 进入本流程（source-blind 干净实现）。
+- 用户明确要求对齐原版视觉 → 仍只读模板实现，并移交模板认证链路处理对照；Apply 不执行 source oracle 对照，差异回写 skill/模板后重生，不得改生成物。
 - “做成模板/提取风格/导入模板/退役或删除模板” → 移交 `ui-template-author`。
 - “建立或重构项目级 Design System / 统一 token 与 Pattern / 修改 core 或 project binding 语义” → 移交 `ui-template-design`。
 - 项目根必须有 digest 一致的 `design-system/v1` Active Instance；schema v2 template 与旧 freeze 都是 migration-only source。increment 缺 Active Instance 停止。bootstrap 可按 [active-implementation.md](references/active-implementation.md) adopt-only。校验走 `runtime/check_active_instance.py`（discovery wrapper）→ `runtime/shared_validate_design_system.py`；禁止把 wrapper 写入 `UI_DESIGN_SYSTEM_VALIDATOR`。

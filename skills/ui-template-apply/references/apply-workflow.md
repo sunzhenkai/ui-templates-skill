@@ -52,7 +52,6 @@ digest 算法为 `sha256-canonical-json-v1`。
 ├── 08-verification.json
 ├── evidence/
 ├── 09-review.md
-├── source-compare.yaml      # 仅模式 B
 └── feedback/
 ```
 
@@ -68,7 +67,7 @@ digest 算法为 `sha256-canonical-json-v1`。
    - `existing`：仅在该输出根已有依赖清单或实质源码时成立，只记录观察到的栈。
 4. coverage 决定：对 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。
 5. `fidelity.yaml` 检测：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。checkpoint `template.digest` 必须绑定 `{template: meta, fidelity: profile}` 的 canonical digest；有 sidecar 但缺该绑定不得进入 Phase 5。
-6. Gate：schema/origin/checker 通过，范围与非目标经确认。不得把原版源码或已有生成物写入 intake 作为实现输入；生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。用户要求对齐原版时只记录 oracle 身份，对照手续见 [fidelity-compare.md](fidelity-compare.md)。
+6. Gate：schema/origin/checker 通过，范围与非目标经确认。不得把原版源码或已有生成物写入 intake 作为实现输入；生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。用户要求对齐原版时仍只消费 Active Instance，并把对照需求移交模板认证链路（见 [source-blind-boundary.md](source-blind-boundary.md)）；不得读取原版或记录 oracle 实现输入。
 
 `00-architecture.yaml` 使用 `architecture.schema.json`：必填 `output_root`（相对消费项目根，禁止 `..`）；`site` 为 `greenfield | existing` 且必须与对该输出根的探测一致；`layers` 固定为 language、UI framework、bundler、routing、styling、client/server state、data access、unit/browser verification、package manager、repo shape；greenfield 必须有 `confirmed_by_user: true` 与预声明 `build_identity`，可记录拟用 `init_command` 与 `observed_constraints`；existing 必须记录 `observed_stack`。greenfield 未确认前只允许写 `.ui-template-apply/`，不得写依赖清单、工程配置或应用源码；后续任何 phase 不得 complete。
 

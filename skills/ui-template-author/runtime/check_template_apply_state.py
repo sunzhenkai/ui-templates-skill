@@ -21,6 +21,26 @@ from template_apply_state import (
 )
 
 
+def collect_active_layers(active_instance: Path) -> dict[str, set[str]] | None:
+    """Load declared Stable Entity IDs from an Active Instance for route binding."""
+    core = active_instance / "core"
+    layers: dict[str, set[str]] = {}
+    for layer, filename in (
+        ("page_types", "page-types.yaml"),
+        ("patterns", "patterns.yaml"),
+        ("primitives", "primitives.yaml"),
+    ):
+        path = core / filename
+        if not path.is_file():
+            continue
+        data = load_structured(path)
+        items = data.get("items", []) if isinstance(data, dict) else []
+        layers[layer] = {
+            item.get("id") for item in items if isinstance(item, dict) and isinstance(item.get("id"), str)
+        }
+    return layers or None
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser()
     sub = result.add_subparsers(dest="command", required=True)
@@ -57,6 +77,11 @@ def parser() -> argparse.ArgumentParser:
     checkpoint.add_argument("--previous-fidelity", type=Path)
     checkpoint.add_argument("--source-identity", required=True)
     checkpoint.add_argument("--build-identity", required=True)
+    checkpoint.add_argument(
+        "--active-instance",
+        type=Path,
+        help="Active Instance 根目录；提供时校验 Pattern-bound route composition",
+    )
     checkpoint.add_argument("--known-rule-id", action="append", default=None)
     return result
 
@@ -120,6 +145,7 @@ def main() -> int:
             known_rule_ids=known_rule_ids,
             fidelity_value=load_structured(args.fidelity) if args.fidelity else None,
             previous_fidelity=load_structured(args.previous_fidelity) if args.previous_fidelity else None,
+            active_layers=collect_active_layers(args.active_instance) if getattr(args, "active_instance", None) else None,
         )
         payload = recovery_decision(findings, checkpoint)
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))

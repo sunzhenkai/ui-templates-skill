@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Template Certification Gate — Unreleased
+
+Source-blind Apply 边界硬化与模板保真认证闭环。
+
+- Apply 公开流程移除 `Mode A / Mode B` 与 `source-compare.yaml`；Apply Mode 只保留 `bootstrap | increment`，实现期禁止 oracle identity、source-compare 输入与历史生成物，checkpoint 校验以 `SOURCE_BLIND_VIOLATION` fail closed。旧会话迁移：依赖 source-compare 的对照需求改走 Template Certification Gate。
+- 新增 `design-system-fidelity-certification/v1`：gate run + Pattern Equivalence Records 绑定 package digest、build identity、oracle revision，fail closed 校验身份、evidence 与 verdict；共享 validator（repo-root 与安装态）行为一致。
+- Component Family 为派生闭集：validator 沿 Stable Entity ID 推导 Page Type → Pattern → Primitive 并输出 `component_family`；`--require-component-family` 对缺证据/悬空 fail closed。
+- 新增 Template Certification Gate runner（prepare / verify / validate-inventory）：clean output root、fresh build identity、source-blind 扫描与 `package | apply-skill | certification-prompt` 失败归属。
+- 官方 package publish/upgrade 需当前 accepted certification report（promotion-request release check）；candidate 停留在 `governance/candidates/`，生产 promotion 单独确认。
+- `workbench-shell` 1.2.0 candidate 升级为完整 Component Family（20 primitives、15 patterns、4 page types），停留在 candidate，未进入生产 catalog。
+
 ## workbench-shell 1.1.0 — Unreleased
 
 保真补丁：把组件级几何/状态纳入 portable contract，并让 Apply 按 fidelity 派生场景 fail closed。

@@ -32,7 +32,13 @@ breaking_boundaries:
 - vendor-allowlist
 - schema-v2-migration-only
 - design-freeze-v1-migration-only
+- apply-source-blind-certification-gate
 notes:
 - Author+Apply remain paired; Design remains independently installable and upgradeable.
 - Published official workbench-shell must migrate only after separate user promotion
   confirmation.
+- 'BREAKING: Apply no longer offers a source-compare/Mode B oracle flow; sessions
+  that previously relied on it must route alignment requests through the Template
+  Certification Gate (fixed oracle revision + candidate package + fixed prompts, clean
+  regeneration and Pattern Equivalence Records). Existing checkpoints without oracle
+  references stay valid.'

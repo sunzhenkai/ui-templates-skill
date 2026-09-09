@@ -1,0 +1,140 @@
+schema: design-system-meta/v1
+name: workbench-shell
+version: 1.2.0
+description: Neutral dual-theme workbench app shell with a quiet inset sidebar, dense
+  14px interface, crisp 1px separation and restrained blue accents.
+sources:
+- id: source-001
+  type: repo
+  ref: https://github.com/multica-ai/multica @ upstream 200dcb44cc1527ef24a1c892e9c3e5508377b386;
+    capture-graph commit 3c2c295fe384f27ca0ada58c204df20618c95add
+  revision: 3c2c295fe384f27ca0ada58c204df20618c95add
+  captured_at: '2026-09-08T09:31:01+00:00'
+captured_at: '2026-09-08'
+platforms:
+- web
+tags:
+- workbench
+- app-shell
+- dual-theme
+- sidebar
+- dense-ui
+confidence:
+  overall: high
+  layout: high
+  visual: high
+  components: high
+coverage:
+  platforms:
+    declared:
+    - web
+    observed:
+    - web
+    defaulted: []
+    unsupported:
+    - mobile
+    - desktop
+  viewports:
+    declared:
+    - compact
+    - desktop
+    - wide
+    observed:
+    - compact
+    - desktop
+    - wide
+    defaulted: []
+    unsupported: []
+  themes:
+    declared:
+    - light
+    - dark
+    observed:
+    - light
+    - dark
+    defaulted: []
+    unsupported: []
+  page_modes:
+    declared:
+    - dashboard
+    - collection
+    - detail
+    - modal
+    observed:
+    - dashboard
+    - collection
+    - detail
+    - modal
+    defaulted: []
+    unsupported: []
+  components:
+    declared:
+    - avatar
+    - badge
+    - board-card
+    - board-column
+    - button
+    - calendar-card
+    - chart-legend
+    - chat-fab
+    - checkbox
+    - confirm-dialog
+    - create-button
+    - dashboard-shell
+    - data-table
+    - empty-state
+    - global-search
+    - icon-button
+    - input
+    - master-detail
+    - menu
+    - modal
+    - nav-item
+    - page-chrome
+    - pagination
+    - panel
+    - search-input
+    - select
+    - service-card
+    - skeleton
+    - stat-card
+    - switch
+    - tabs
+    - textarea
+    - toast
+    - tooltip
+    - workspace-switcher
+    observed:
+    - avatar
+    - badge
+    - board-card
+    - button
+    - chat-fab
+    - data-table
+    - empty-state
+    - input
+    - nav-item
+    - panel
+    - stat-card
+    - toast
+    defaulted:
+    - button
+    - input
+    unsupported: []
+  states:
+    declared:
+    - default
+    - hover
+    - focus-visible
+    - active
+    - disabled
+    - open
+    observed:
+    - default
+    - hover
+    - active
+    defaulted:
+    - focus-visible
+    - disabled
+    - open
+    unsupported: []

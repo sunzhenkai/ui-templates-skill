@@ -24,6 +24,11 @@ except ModuleNotFoundError:  # unittest 从仓库根导入 scripts.*
 
 DIGEST_ALGORITHM = "sha256-canonical-json-v1"
 RULE_ID = re.compile(r"^(?:NN|TOKEN|LAYOUT|ROUTE|AX|RESP|QUALITY)-[0-9]{3}$")
+SOURCE_BLIND_TOKEN = re.compile(
+    r"source[-_]compare|visual[- ]oracle|oracle[-_](?:revision|identity|path|locator)|meta\.sources",
+    re.I,
+)
+HISTORICAL_OUTPUT_TOKEN = re.compile(r"(?:^|/)example/|(?:^|/)web-v[0-9]+(?:/|$)", re.I)
 LEGAL_FEEDBACK = {
     None: {"proposed"},
     "proposed": {"accepted", "known-gap", "rejected"},
@@ -418,9 +423,11 @@ def validate_checkpoint(
     schema_dir: Path | None = None,
     fidelity_value: Any | None = None,
     previous_fidelity: Any | None = None,
+    active_layers: dict[str, set[str]] | None = None,
 ) -> list[Finding]:
     root = apply_root.resolve()
     findings = _schema_findings("checkpoint", checkpoint, "checkpoint.yaml", schema_dir)
+    findings.extend(_source_blind_findings(checkpoint, root))
     identity_value = template_value if fidelity_value is None else {"template": template_value, "fidelity": fidelity_value}
     template_digest = canonical_digest(identity_value)
     tokens_digest = canonical_digest(tokens_value)
@@ -458,6 +465,7 @@ def validate_checkpoint(
     phases = checkpoint.get("phases", []) if isinstance(checkpoint.get("phases"), list) else []
     by_id = {phase.get("id"): phase for phase in phases if isinstance(phase, dict) and isinstance(phase.get("id"), int)}
     findings.extend(_architecture_findings(root, by_id, schema_dir))
+    findings.extend(_route_composition_findings(root, by_id, active_layers))
     if isinstance(checkpoint_template, dict):
         origin = checkpoint_template.get("origin")
         resolved_path = checkpoint_template.get("resolved_path")
@@ -572,6 +580,109 @@ def validate_checkpoint(
             schema_dir=schema_dir,
         ))
     return _sorted_findings(findings)
+
+
+def _source_blind_findings(checkpoint: dict[str, Any], apply_root: Path) -> list[Finding]:
+    """Fail closed on oracle identity, source-compare or historical output inputs."""
+    findings: list[Finding] = []
+
+    def walk(node: Any, path: str) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                walk(value, f"{path}.{key}")
+        elif isinstance(node, list):
+            for index, value in enumerate(node):
+                walk(value, f"{path}.{index}")
+        elif isinstance(node, str) and SOURCE_BLIND_TOKEN.search(node):
+            findings.append(Finding(
+                "SOURCE_BLIND_VIOLATION",
+                f"checkpoint.yaml#{path}",
+                "checkpoint 不得引用 source oracle、source-compare 或 meta.sources 实现输入",
+                0,
+            ))
+
+    walk(checkpoint, "")
+    output_root = checkpoint.get("output_root")
+    if isinstance(output_root, str) and HISTORICAL_OUTPUT_TOKEN.search(output_root):
+        findings.append(Finding(
+            "SOURCE_BLIND_VIOLATION",
+            "checkpoint.yaml#output_root",
+            "output_root 不得指向 example/** 或历史 web-v* 生成物",
+            0,
+        ))
+    stray = apply_root / "source-compare.yaml"
+    if stray.exists():
+        findings.append(Finding(
+            "SOURCE_BLIND_VIOLATION",
+            "source-compare.yaml",
+            "Apply 根不得保存 source-compare 对照 artifact；对照属于模板认证链路",
+            0,
+        ))
+    return findings
+
+
+def _route_composition_findings(
+    apply_root: Path,
+    by_id: dict[int, dict[str, Any]],
+    active_layers: dict[str, set[str]] | None,
+) -> list[Finding]:
+    """Pattern-bound composition: routes map to declared page types and resolvable refs."""
+    findings: list[Finding] = []
+    if not active_layers:
+        return findings
+
+    def entries(path: Path) -> list[dict[str, Any]]:
+        if not path.is_file():
+            return []
+        try:
+            data = load_structured(path)
+        except (ApplyStateError, OSError):
+            return []
+        if isinstance(data, dict) and isinstance(data.get("routes"), list):
+            return [item for item in data["routes"] if isinstance(item, dict)]
+        return []
+
+    for raw in entries(apply_root / "02-routes.yaml"):
+        route_path = raw.get("path", "<route>")
+        page_type = raw.get("page_type")
+        if page_type is None:
+            findings.append(Finding(
+                "ROUTE_PAGE_TYPE_MISSING",
+                f"02-routes.yaml#{route_path}",
+                "included route 必须映射到已声明 Page Type",
+                2,
+            ))
+        elif page_type not in active_layers.get("page_types", set()):
+            findings.append(Finding(
+                "ROUTE_PAGE_TYPE_DANGLING",
+                f"02-routes.yaml#{route_path}",
+                f"unknown page type: {page_type}",
+                2,
+            ))
+    for raw in entries(apply_root / "04-components.yaml"):
+        name = raw.get("id") or raw.get("name") or "<component>"
+        refs: list[str] = []
+        for field in ("pattern", "page_type"):
+            value = raw.get(field)
+            if isinstance(value, str):
+                refs.append(value)
+        for field in ("patterns", "primitives"):
+            value = raw.get(field)
+            if isinstance(value, list):
+                refs.extend(item for item in value if isinstance(item, str))
+        for ref in refs:
+            prefix = ref.split("/", 1)[0] if "/" in ref else ""
+            layer = {"pattern": "patterns", "primitive": "primitives", "page-type": "page_types"}.get(prefix)
+            if layer is None:
+                continue
+            if ref not in active_layers.get(layer, set()):
+                findings.append(Finding(
+                    "COMPONENT_REF_DANGLING",
+                    f"04-components.yaml#{name}",
+                    f"unknown stable ID: {ref}",
+                    4,
+                ))
+    return findings
 
 
 def recovery_decision(findings: Iterable[Finding], checkpoint: dict[str, Any]) -> dict[str, Any]:

@@ -67,22 +67,16 @@ L0–L6 只是变更集合标签。Intake 必须冻结**本次改哪些路径/�
 
 ### 4.2 应用（Apply）
 
-**模式 A — 干净实现（默认）**
+Apply 只有一种 source-blind 实现心智，Apply Mode 只有 `bootstrap | increment`；不存在 source oracle 对照模式。
 
 - 输入：digest 一致 Active Design System + 用户需求；`bootstrap` 可从 published package adopt-only 建立 Active Instance。
 - Intake：Active Instance 优先；缺 Active Instance 时只允许 `bootstrap` 从 published package adopt-only 建立；increment 停止。
 - greenfield：判定只看本次前端输出根。仓库已初始化但输出根仍是新应用时仍要先确认闭集技术架构；未确认不得写应用源码/依赖/工程配置。兄弟应用或功能规格不得自动确认。existing 只在该输出根已有栈时记录 observed stack。
-- 禁止：原版 checkout、历史生成物。
+- 禁止：原版 checkout、`meta.sources[]` 实现路径、source oracle 身份、`.ui-template-apply/source-compare.yaml` 与历史生成物；runtime 校验发现即 `SOURCE_BLIND_VIOLATION` fail closed。
+- Pattern-bound composition：included route 必须映射到已声明 Page Type，引用的 Pattern/Primitive 必须可解析；缺少可复用控件时停止该层实现并生成 package feedback。
 - 完成：Phase 8/9 对**模板 expected** 通过。
 - 收尾：Phase 9 通过且无 proposed feedback 才 closed；提示可删 `.ui-template-apply/`，未领养则本仓不应有 `templates/`，但绝不自动删除。
-
-**模式 B — 保真对照（仅“对齐原版”任务）**
-
-- 额外输入：本会话可部署原版，只作视觉 oracle。
-- 产物：`.ui-template-apply/source-compare.yaml`（不是第 10 个 phase）。
-- Δ 分类只有三档：`spec` / `apply` / `prompt-or-accept`。
-- 禁止把对照失败修进生成物。
-- 回写后至少干净重生一次。
+- 用户要求“对齐原版视觉”时：仍只读模板实现，并把对照需求移交 Template Certification Gate（见 4.4）。
 
 ### 4.3 移交
 
@@ -91,6 +85,14 @@ L0–L6 只是变更集合标签。Intake 必须冻结**本次改哪些路径/�
 - 项目库缺同名行但 Author catalog 已有官方模板 → Apply 只读 catalog pin；需要写模板、落库 feedback、retire/delete 或用户明确「接到本仓」时，Authoring 才显式领养到项目库。
 - 项目库与 catalog 都没有目标 published 模板 → 先 Author 声明变更集合过 gate，再 Apply。
 - schema 不支持、origin 未知、项目 `retired`、validation 失败 → Apply 停止。catalog 不得救回 retired 行。
+
+### 4.4 Template Certification Gate 与 Derived Component Family
+
+- Component Family 不新增第八层，也不维护手工清单；validator 沿 `page-types → patterns → primitives` 的 Stable Entity ID 引用与 evidence 推导闭集，悬空、重复、缺证据或 capability 不足 fail closed。
+- 官方 package publish/upgrade 前必须通过 Template Certification Gate：固定 Visual Oracle revision、candidate package 与固定 prompts，先 source-blind 干净 Apply，再按 Pattern 产生 Pattern Equivalence Records。
+- 验收采用 Visual Equivalence（结构、层级、密度、间距、排版、色彩/表面、边框/分隔线 assertions），不是整页像素克隆；截图-only 或主观“一致”不能通过。
+- 失败差异只能归类 `package | apply-skill | certification-prompt` 回写，然后丢弃旧生成物、fresh build identity 干净重生；修补上一轮生成物永远无效。
+- gate 命令与 promotion request 规则见 `governance/release/CERTIFICATION-v1.md`；candidate 停留在 `governance/candidates/`，生产 catalog 切换需用户单独确认。
 
 ## 5. 模板管理闭环
 
@@ -131,13 +133,13 @@ INDEX 表头固定为：名称、风格描述、来源类型、采集日期、�
 - Apply **MUST NOT** 依赖原版源文件。
 - 可部署临时原版只作视觉对照。
 
-执行顺序：
+执行顺序（即 Template Certification Gate 的失败回写循环，见 4.4）：
 
-1. 冻结对照物：原版 revision、prompts、当前 published 模板。
-2. 按 `spec` / `apply` / `prompt-or-accept` 分类差异，禁止先改生成物。
-3. 只改归属面：壳/token/组件 → 模板或 Author skill；阶段/取证不稳定 → Apply skill；业务缺页或书面接受 → prompts。
+1. 冻结对照物：原版 revision、prompts、candidate package。
+2. 失败差异按 `package | apply-skill | certification-prompt` 归类，禁止先改生成物。
+3. 只改归属面：壳/token/组件/evidence → candidate package 或 Author skill；阶段/取证/source-blind 不稳 → Apply skill；固定 prompts 或 assertion 设计不足 → certification-prompt。
 4. 有 session source 才允许抬升 observed / 写 fidelity。
-5. 空目录干净 Apply，对照原版，Δ 回写，再重生一次。
+5. 干净 output root + fresh build identity 重新 source-blind Apply，重跑完整 gate；两次干净重生稳定才算闭环。
 
 `openspec/specs/workbench-shell-implementation/` 是**该模板实例附录**，不是产品级契约。第二个模板不得继承其 A–E / Shell 假设。
 

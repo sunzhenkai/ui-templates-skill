@@ -6,7 +6,7 @@
 - **`ui-template-apply`**：消费 digest 一致的 Active Design System，按 `bootstrap | increment` 与 Phase 0–9 在目标项目实现 UI，维护 checkpoint、current-build 浏览器证据、review 与 feedback。
 - **`ui-template-design`**：在消费项目创建、领养、重构、迭代并冻结 `design-system/v1` Active Instance（portable core、project binding、Token Projection、Primitive、Pattern、Page Type、Gallery）。可单独安装，不要求 Author/Apply、catalog 或项目 `templates/`。
 
-模板产品必须同时安装 Author 与 Apply。Design 是可选第三条 skill，不加入「必须与模板对同时安装」约束。仓库内 `.agents/skills/ui-template-manager/` 是唯一的 repository-only 路由薄封装，不进入公开 bundle，也不用于存放公开 skill 镜像。现行功能闭环、模板生命周期与防回退规约见 [`governance/FUNCTIONAL-LOOP.md`](governance/FUNCTIONAL-LOOP.md)。`docs/ui-template-design.md` 是规划草案，不是发布能力证据。
+模板产品必须同时安装 Author 与 Apply。Design 是可选第三条 skill，不加入「必须与模板对同时安装」约束。仓库内 `.agents/skills/ui-template-manager/` 是唯一的 repository-only 路由薄封装，不进入公开 bundle，也不用于存放公开 skill 镜像。Apply 是 source-blind 的：实现期只消费 Active Instance，不读取原版 checkout、`meta.sources[]` 实现路径或历史生成物；对齐原版视觉的对照由模板发布侧的 Template Certification Gate 执行（固定 Visual Oracle revision、candidate package 与固定 prompts，Pattern 级 Visual Equivalence 验收），candidate 停留在 `governance/candidates/`，生产 catalog promotion 需用户单独确认。现行功能闭环、模板生命周期与防回退规约见 [`governance/FUNCTIONAL-LOOP.md`](governance/FUNCTIONAL-LOOP.md)，认证门禁见 [`governance/release/CERTIFICATION-v1.md`](governance/release/CERTIFICATION-v1.md)。`docs/ui-template-design.md` 是规划草案，不是发布能力证据。
 
 ## 模板契约
 

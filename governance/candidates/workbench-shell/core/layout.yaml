@@ -1,0 +1,62 @@
+schema: design-system-layout/v1
+items:
+- id: route/dashboard-shell
+  name: Dashboard shell
+  page_type: page-type/dashboard
+  slots:
+  - workspace-switcher
+  - search
+  - compose
+  - nav-group
+  - pin-list
+  - rail
+  - page-header
+  - page-toolbar
+  - page-canvas
+  - footer-utility
+  - chat-fab
+  breakpoints:
+  - compact sheet below lg
+  - inset shell from lg
+  - rail trigger hidden from xl
+  rule_refs:
+  - rule/LAYOUT-101
+  - rule/LAYOUT-103
+  - rule/LAYOUT-104
+- id: route/collection-board
+  name: Collection board
+  page_type: page-type/collection
+  slots:
+  - page-header
+  - page-toolbar
+  - page-canvas
+  breakpoints:
+  - full bleed with 16px page gutter
+  - 1440px detail rail
+  rule_refs:
+  - rule/LAYOUT-102
+  - rule/LAYOUT-106
+- id: route/detail-document
+  name: Detail document
+  page_type: page-type/detail
+  slots:
+  - page-header
+  - page-toolbar
+  - master-pane
+  - detail-pane
+  breakpoints:
+  - 1440px centered rail
+  - block scroll in detail
+  rule_refs:
+  - rule/LAYOUT-105
+- id: route/modal-task
+  name: Modal task
+  page_type: page-type/modal
+  slots:
+  - overlay
+  - dialog-content
+  breakpoints:
+  - viewport overlay
+  rule_refs:
+  - rule/LAYOUT-105
+  - rule/AX-101

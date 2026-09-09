@@ -1,0 +1,6 @@
+{
+  "pattern": "pattern/stat-card",
+  "oracle_revision": "879d0de9166261c26ec35b69f5cec9382191eda1",
+  "source_fact": "packages/views/analytics#scene.stat-card",
+  "replay": "checkout the frozen revision, serve the app and capture the same route/state/theme/viewport; replace this provenance file with the oracle screenshot when the oracle deployment is available"
+}

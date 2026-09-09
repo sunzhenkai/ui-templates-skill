@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>交付与运维事件协作中心 — workbench-shell certification build</title>
+<style>
+:root{
+  --app-shell:oklch(0.964435 0.001327 286.375); --page-canvas:oklch(0.988087 0 0);
+  --surface:oklch(1 0 0); --surface-fg:oklch(0.141 0.005 285.823);
+  --surface-raised:oklch(1 0 0); --surface-hover:oklch(0.967 0.001 286.375);
+  --surface-selected:oklch(0.95 0.002 286.375); --surface-border:oklch(0.92 0.004 286.32);
+  --fg:oklch(0.141 0.005 285.823); --card:oklch(1 0 0); --card-fg:oklch(0.141 0.005 285.823);
+  --popover:oklch(1 0 0); --popover-fg:oklch(0.141 0.005 285.823);
+  --primary:oklch(0.21 0.006 285.885); --primary-fg:oklch(0.985 0 0);
+  --primary-hover:color-mix(in oklab, oklch(0.21 0.006 285.885) 80%, transparent);
+  --secondary:oklch(0.967 0.001 286.375); --muted:oklch(0.967 0.001 286.375);
+  --muted-fg:oklch(0.505 0.016 285.938); --input:oklch(0.92 0.004 286.32);
+  --ring:oklch(0.705 0.015 286.067); --ring-focus:color-mix(in oklab, oklch(0.705 0.015 286.067) 50%, transparent);
+  --brand:oklch(0.55 0.16 255); --brand-subtle:color-mix(in oklab, oklch(0.55 0.16 255) 7%, transparent);
+  --destructive:oklch(0.577 0.245 27.325); --destructive-surface:color-mix(in oklab, oklch(0.577 0.245 27.325) 10%, transparent);
+  --success:oklch(0.55 0.16 145); --warning:oklch(0.75 0.16 85); --info:oklch(0.55 0.18 250);
+  --chart-1:oklch(0.55 0.16 255); --chart-2:oklch(0.66 0.13 255); --chart-3:oklch(0.76 0.10 255);
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px; --space-6:24px;
+  --radius-sm:6px; --radius-md:8px; --radius-lg:10px; --radius-full:999px;
+  --control-sm:28px; --control-md:32px; --control-lg:36px; --icon-sm:16px;
+  --sidebar-w:256px; --header-h:48px;
+  --text-body:14px; --lh-body:20px; --text-label:13px; --lh-label:18px;
+  --text-caption:12px; --lh-caption:16px; --text-micro:11px; --lh-micro:15px;
+  --text-title:18px; --lh-title:28px; --text-title-sm:16px; --lh-title-sm:24px;
+  --shadow-surface:0 1px 2px rgb(15 23 42 / 0.04), 0 1px 1px rgb(15 23 42 / 0.03);
+  --shadow-menu:0 8px 24px rgb(15 23 42 / 0.08), 0 2px 6px rgb(15 23 42 / 0.05);
+  --shadow-floating:0 16px 40px rgb(15 23 42 / 0.14), 0 3px 10px rgb(15 23 42 / 0.08);
+}
+[data-theme="dark"]{
+  --app-shell:oklch(0.155 0.005 285.823); --page-canvas:oklch(0.18 0.005 285.823);
+  --surface:oklch(0.21 0.006 285.885); --surface-fg:oklch(0.985 0 0);
+  --surface-raised:oklch(0.235 0.007 285.885); --surface-hover:oklch(0.274 0.006 286.033);
+  --surface-selected:oklch(0.3 0.006 286.033); --surface-border:oklch(1 0 0 / 10%);
+  --fg:oklch(0.985 0 0); --card:oklch(0.21 0.006 285.885); --card-fg:oklch(0.985 0 0);
+  --popover:oklch(0.235 0.007 285.885); --popover-fg:oklch(0.985 0 0);
+  --primary:oklch(0.92 0.004 286.32); --primary-fg:oklch(0.21 0.006 285.885);
+  --primary-hover:color-mix(in oklab, oklch(0.92 0.004 286.32) 80%, transparent);
+  --secondary:oklch(0.274 0.006 286.033); --muted:oklch(0.274 0.006 286.033);
+  --muted-fg:oklch(0.705 0.015 286.067); --input:oklch(1 0 0 / 15%);
+  --ring:oklch(0.552 0.016 285.938); --ring-focus:color-mix(in oklab, oklch(0.552 0.016 285.938) 50%, transparent);
+  --brand:oklch(0.65 0.16 255); --brand-subtle:color-mix(in oklab, oklch(0.65 0.16 255) 12%, transparent);
+  --destructive:oklch(0.704 0.191 22.216);
+  --success:oklch(0.65 0.15 145); --warning:oklch(0.70 0.16 85); --info:oklch(0.65 0.18 250);
+  --chart-1:oklch(0.65 0.16 255); --chart-2:oklch(0.72 0.13 255); --chart-3:oklch(0.79 0.10 255);
+  --shadow-surface:0 1px 2px rgb(0 0 0 / 0.20), 0 1px 1px rgb(0 0 0 / 0.16);
+  --shadow-menu:0 10px 28px rgb(0 0 0 / 0.30), 0 2px 8px rgb(0 0 0 / 0.18);
+  --shadow-floating:0 20px 48px rgb(0 0 0 / 0.46), 0 4px 12px rgb(0 0 0 / 0.28);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page-canvas);color:var(--fg);font:var(--text-body)/var(--lh-body) system-ui,sans-serif}
+button{font:inherit;cursor:pointer}
+a{color:var(--brand)}
+:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+/* shell */
+.shell{display:flex;min-height:100vh;background:var(--app-shell)}
+.sidebar{width:var(--sidebar-w);flex:none;background:var(--surface);border-right:1px solid var(--surface-border);
+  display:flex;flex-direction:column;padding:var(--space-3)}
+.sidebar-header{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-3)}
+.nav-item{display:flex;align-items:center;gap:var(--space-2);width:100%;height:var(--control-md);
+  padding:0 var(--space-3);border:0;background:none;border-radius:var(--radius-md);color:var(--muted-fg);text-align:left}
+.nav-item:hover{background:var(--surface-hover);color:var(--fg)}
+.nav-item[aria-current="page"]{background:var(--brand-subtle);color:var(--fg);font-weight:600}
+.nav-group-label{font-size:var(--text-micro);line-height:var(--lh-micro);color:var(--muted-fg);
+  text-transform:uppercase;letter-spacing:.05em;margin:var(--space-3) var(--space-3) var(--space-1)}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:var(--space-2);height:var(--control-md);
+  padding:0 var(--space-4);border-radius:var(--radius-md);border:1px solid transparent;background:var(--primary);color:var(--primary-fg)}
+.btn:hover{background:var(--primary-hover)}
+.btn.secondary{background:var(--secondary);color:var(--fg);border-color:var(--surface-border)}
+.btn.outline{background:none;border-color:var(--surface-border);color:var(--fg)}
+.btn.ghost{background:none;color:var(--fg)}
+.btn.danger{background:var(--destructive);color:#fff}
+.btn.sm{height:var(--control-sm);padding:0 var(--space-3)}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:var(--control-sm);height:var(--control-sm);
+  border:0;border-radius:var(--radius-sm);background:none;color:var(--muted-fg)}
+.icon-btn:hover{background:var(--surface-hover);color:var(--fg)}
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 var(--space-2);
+  border-radius:var(--radius-full);font-size:var(--text-micro);line-height:var(--lh-micro);
+  background:var(--muted);color:var(--muted-fg)}
+.badge::before{content:"";width:6px;height:6px;border-radius:var(--radius-full);background:currentColor}
+.badge.success{background:color-mix(in oklab, var(--success) 12%, transparent);color:var(--success)}
+.badge.warning{background:color-mix(in oklab, var(--warning) 15%, transparent);color:var(--warning)}
+.badge.critical{background:var(--destructive-surface);color:var(--destructive)}
+.badge.info{background:color-mix(in oklab, var(--info) 12%, transparent);color:var(--info)}
+/* main + header */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.page-header{display:flex;align-items:center;gap:var(--space-3);height:var(--header-h);
+  padding:0 var(--space-4);background:var(--surface);border-bottom:1px solid var(--surface-border)}
+.page-header h1{font-size:var(--text-title);line-height:var(--lh-title);margin:0;font-weight:600}
+.page-header .spacer{flex:1}
+.workspace-btn{display:inline-flex;align-items:center;gap:var(--space-2);height:var(--control-md);
+  padding:0 var(--space-3);border:1px solid var(--surface-border);border-radius:var(--radius-md);background:var(--surface)}
+.search-box{position:relative;width:280px}
+.search-input{width:100%;height:var(--control-md);padding:0 var(--space-3);border:1px solid var(--input);
+  border-radius:var(--radius-md);background:var(--surface);color:var(--fg)}
+.search-pop{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--popover);color:var(--popover-fg);
+  border:1px solid var(--surface-border);border-radius:var(--radius-md);box-shadow:var(--shadow-menu);padding:var(--space-1);z-index:30}
+.search-pop[hidden]{display:none}
+.search-pop .opt{display:flex;align-items:center;gap:var(--space-2);padding:0 var(--space-3);height:var(--control-md);border-radius:var(--radius-sm)}
+.search-pop .opt:hover{background:var(--surface-hover)}
+.canvas{flex:1;padding:var(--space-4);overflow-y:auto}
+/* menus */
+.menu{position:absolute;background:var(--popover);color:var(--popover-fg);border:1px solid var(--surface-border);
+  border-radius:var(--radius-md);box-shadow:var(--shadow-menu);padding:var(--space-1);min-width:200px;z-index:40}
+.menu[hidden]{display:none}
+.menu .item{display:flex;align-items:center;gap:var(--space-2);width:100%;height:var(--control-md);
+  padding:0 var(--space-3);border:0;background:none;border-radius:var(--radius-sm);color:inherit;text-align:left}
+.menu .item:hover{background:var(--surface-hover)}
+.menu .item.danger{color:var(--destructive)}
+.menu-sep{height:1px;background:var(--surface-border);margin:var(--space-1) 0}
+/* cards */
+.panel{background:var(--card);border:1px solid var(--surface-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-surface)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-bottom:var(--space-4)}
+.stat-card{padding:var(--space-4)}
+.stat-card .label{font-size:var(--text-caption);line-height:var(--lh-caption);color:var(--muted-fg)}
+.stat-card .value{font-size:var(--text-title);line-height:var(--lh-title);font-weight:600;margin-top:var(--space-1)}
+.card-head{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--surface-border)}
+.card-body{padding:var(--space-4)}
+/* chart legend */
+.legend{display:flex;flex-wrap:wrap;gap:var(--space-3);padding:var(--space-3) var(--space-4)}
+.legend .key{display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-caption);line-height:var(--lh-caption)}
+.legend .swatch{width:10px;height:10px;border-radius:3px}
+/* table */
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:var(--text-body)}
+th{font-size:var(--text-caption);line-height:var(--lh-caption);color:var(--muted-fg);text-align:left;font-weight:600}
+th,td{padding:var(--space-2) var(--space-4);border-bottom:1px solid var(--surface-border);height:40px;white-space:nowrap}
+tbody tr:hover{background:var(--surface-hover)}
+/* toolbar + tabs + pagination */
+.toolbar{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);
+  border-bottom:1px solid var(--surface-border);flex-wrap:wrap}
+.tabs{display:flex;gap:var(--space-1)}
+.tab{height:var(--control-sm);padding:0 var(--space-3);border:0;background:none;border-radius:var(--radius-sm);color:var(--muted-fg)}
+.tab:hover{background:var(--surface-hover);color:var(--fg)}
+.tab[aria-selected="true"]{background:var(--brand-subtle);color:var(--fg);font-weight:600}
+.pagination{display:flex;align-items:center;gap:var(--space-1);padding:var(--space-3) var(--space-4)}
+.page-btn{min-width:var(--control-sm);height:var(--control-sm);border:1px solid var(--surface-border);
+  border-radius:var(--radius-sm);background:none;color:var(--fg)}
+.page-btn[aria-current="true"]{background:var(--primary);color:var(--primary-fg);border-color:transparent}
+/* board */
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4)}
+.board-col{background:var(--app-shell);border:1px solid var(--surface-border);border-radius:var(--radius-lg);
+  padding:var(--space-3);display:flex;flex-direction:column;gap:var(--space-3)}
+.board-col-head{display:flex;align-items:center;gap:var(--space-2)}
+.board-card{background:var(--card);border:1px solid var(--surface-border);border-radius:var(--radius-md);
+  box-shadow:var(--shadow-surface);padding:var(--space-3);display:flex;flex-direction:column;gap:var(--space-2)}
+.board-card.dragging{opacity:.5}
+.board-card .row{display:flex;align-items:center;gap:var(--space-2)}
+.board-card .drop-hint{font-size:var(--text-micro);color:var(--muted-fg)}
+/* service cards */
+.service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4)}
+.service-card{padding:var(--space-4);display:flex;flex-direction:column;gap:var(--space-3)}
+/* calendar */
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--space-3)}
+.cal-card{min-height:96px;padding:var(--space-2);display:flex;flex-direction:column;gap:var(--space-1)}
+.cal-card .day{font-size:var(--text-caption);color:var(--muted-fg)}
+.cal-card .event{font-size:var(--text-micro);line-height:var(--lh-micro);padding:2px var(--space-2);
+  border-radius:var(--radius-sm);background:var(--brand-subtle);color:var(--fg)}
+/* empty + skeleton */
+.empty{display:flex;flex-direction:column;align-items:center;gap:var(--space-3);padding:var(--space-6);text-align:center}
+.empty .title{font-size:var(--text-title-sm);line-height:var(--lh-title-sm);font-weight:600}
+.skeleton{border-radius:var(--radius-sm);background:var(--muted);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.5}}
+/* master-detail */
+.master-detail{display:grid;grid-template-columns:280px 1fr;gap:var(--space-4);align-items:start}
+.detail-doc{max-width:1440px}
+/* avatars */
+.avatar{display:inline-flex;align-items:center;justify-content:center;width:var(--control-sm);height:var(--control-sm);
+  border-radius:var(--radius-full);background:var(--muted);color:var(--muted-fg);
+  font-size:var(--text-micro);line-height:var(--lh-micro);font-weight:600;overflow:hidden}
+.avatar-group{display:flex}
+.avatar-group .avatar{border:2px solid var(--card);margin-left:-6px}
+/* overlay: dialog / confirm */
+.overlay{position:fixed;inset:0;background:rgb(0 0 0 / 0.4);display:flex;align-items:center;justify-content:center;z-index:50}
+.overlay[hidden]{display:none}
+.dialog{background:var(--popover);color:var(--popover-fg);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-floating);width:min(480px,92vw);padding:var(--space-5)}
+.dialog h2{margin:0 0 var(--space-2);font-size:var(--text-title-sm);line-height:var(--lh-title-sm)}
+.dialog .actions{display:flex;justify-content:flex-end;gap:var(--space-2);margin-top:var(--space-4)}
+.field{display:flex;flex-direction:column;gap:var(--space-1);margin-bottom:var(--space-3)}
+.field label{font-size:var(--text-label);line-height:var(--lh-label);font-weight:600}
+.text-input,.select,.textarea{border:1px solid var(--input);border-radius:var(--radius-md);background:var(--surface);
+  color:var(--fg);padding:0 var(--space-3);height:var(--control-md);width:100%}
+textarea.textarea{height:auto;min-height:72px;padding:var(--space-2) var(--space-3);resize:vertical}
+.select{appearance:none}
+/* switch + checkbox */
+.switch{position:relative;width:36px;height:20px;border-radius:var(--radius-full);border:1px solid var(--surface-border);
+  background:var(--muted);padding:0;transition:background .15s}
+.switch[aria-checked="true"]{background:var(--brand);border-color:transparent}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:var(--radius-full);
+  background:var(--surface);transition:left .15s}
+.switch[aria-checked="true"]::after{left:18px}
+.checkbox{width:16px;height:16px;border:1px solid var(--input);border-radius:var(--radius-sm);background:var(--surface);padding:0;
+  display:inline-flex;align-items:center;justify-content:center;color:var(--brand)}
+.checkbox[aria-checked="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+/* tooltip */
+.tooltip-wrap{position:relative;display:inline-flex}
+.tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--fg);color:var(--page-canvas);font-size:var(--text-micro);line-height:var(--lh-micro);
+  padding:2px var(--space-2);border-radius:var(--radius-sm);white-space:nowrap;visibility:hidden;opacity:0;transition:opacity .1s}
+.tooltip-wrap:hover .tooltip,.tooltip-wrap:focus-within .tooltip{visibility:visible;opacity:1}
+/* toast */
+.toasts{position:fixed;right:var(--space-4);bottom:var(--space-4);display:flex;flex-direction:column;gap:var(--space-2);z-index:60}
+.toast{display:flex;align-items:center;gap:var(--space-3);min-width:280px;background:var(--popover);color:var(--popover-fg);
+  border:1px solid var(--surface-border);border-left:3px solid var(--success);border-radius:var(--radius-md);
+  box-shadow:var(--shadow-floating);padding:var(--space-3)}
+.toast.warning{border-left-color:var(--warning)}
+.toast.info{border-left-color:var(--info)}
+.toast .msg{flex:1;font-size:var(--text-label);line-height:var(--lh-label)}
+/* responsive */
+@media (max-width:1024px){.stat-grid,.service-grid,.board{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:768px){
+  .sidebar{position:fixed;inset:0 auto 0 0;transform:translateX(-100%);transition:transform .2s;z-index:45}
+  .sidebar.open{transform:none}
+  .stat-grid,.service-grid,.board,.master-detail,.calendar-grid{grid-template-columns:1fr}
+  .search-box{width:160px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar" aria-label="侧栏导航">
+    <div class="sidebar-header">
+      <button class="btn secondary" id="workspace-btn" aria-haspopup="menu" aria-expanded="false">
+        <span class="avatar" aria-hidden="true">OP</span>
+        <span id="workspace-name">生产运维工作区</span> ▾
+      </button>
+      <div class="menu" id="workspace-menu" role="menu" hidden>
+        <button class="item" role="menuitem">生产运维工作区</button>
+        <button class="item" role="menuitem">交付管理工作区</button>
+        <button class="item" role="menuitem">SRE 值班工作区</button>
+      </div>
+    </div>
+    <div class="nav-group-label">协作</div>
+    <button class="nav-item" aria-current="page" data-page="dashboard">📋 收件箱</button>
+    <button class="nav-item" data-page="events">🧾 事件列表</button>
+    <button class="nav-item" data-page="board">🗂️ 事件看板</button>
+    <button class="nav-item" data-page="services">🧩 服务目录</button>
+    <button class="nav-item" data-page="calendar">📅 值班日历</button>
+    <button class="nav-item" data-page="metrics">📈 交付分析</button>
+    <div class="nav-group-label">管理</div>
+    <button class="nav-item" data-page="settings">⚙️ 工作区设置</button>
+    <div class="nav-group-label">入口</div>
+    <button class="btn primary" id="create-btn" aria-haspopup="menu" aria-expanded="false">＋ 创建</button>
+    <div class="menu" id="create-menu" role="menu" hidden>
+      <button class="item" role="menuitem" id="create-incident">创建事件</button>
+      <button class="item" role="menuitem" id="create-service">登记服务</button>
+      <div class="menu-sep"></div>
+      <button class="item danger" role="menuitem" id="create-archive">归档历史数据…</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="page-header">
+      <button class="icon-btn" id="nav-toggle" aria-label="打开导航" style="display:none">☰</button>
+      <h1 id="page-title">收件箱</h1>
+      <div class="spacer"></div>
+      <div class="search-box">
+        <input class="search-input" id="global-search" type="search" placeholder="搜索事件、服务、人员…"
+               role="combobox" aria-expanded="false" aria-controls="search-pop">
+        <div class="search-pop" id="search-pop" role="listbox" hidden>
+          <div class="opt">🔴 INC-2041 支付网关超时</div>
+          <div class="opt">🟡 INC-2038 缓存命中率下降</div>
+          <div class="opt">🟢 SVC payment-gateway</div>
+        </div>
+      </div>
+      <span class="tooltip-wrap">
+        <button class="icon-btn" id="theme-btn" aria-label="切换主题">🌓</button>
+        <span class="tooltip" role="tooltip">在浅色与深色主题之间切换</span>
+      </span>
+      <span class="avatar" aria-label="当前用户">张伟</span>
+    </header>
+
+    <main class="canvas" id="canvas">
+      <!-- dashboard -->
+      <section data-view="dashboard">
+        <div class="stat-grid">
+          <div class="panel stat-card">
+            <div class="label">进行中事件</div>
+            <div class="value">12</div>
+            <span class="badge critical">其中 2 个 P1</span>
+          </div>
+          <div class="panel stat-card">
+            <div class="label">近 7 日平均恢复时长</div>
+            <div class="value">38 分钟</div>
+            <span class="badge success">较上周 -9%</span>
+          </div>
+          <div class="panel stat-card">
+            <div class="label">待处理告警</div>
+            <div class="value">27</div>
+            <span class="badge warning">6 条待认领</span>
+          </div>
+        </div>
+        <div class="panel" style="margin-bottom:var(--space-4)">
+          <div class="card-head"><strong>交付趋势（近 6 周）</strong>
+            <div class="spacer" style="flex:1"></div>
+            <div class="legend" aria-label="趋势图例">
+              <span class="key"><span class="swatch" style="background:var(--chart-1)"></span>部署频次</span>
+              <span class="key"><span class="swatch" style="background:var(--chart-2)"></span>变更失败率</span>
+              <span class="key"><span class="swatch" style="background:var(--chart-3)"></span>恢复时长</span>
+            </div>
+          </div>
+          <div class="card-body" style="display:flex;gap:6px;align-items:flex-end;height:120px" aria-hidden="true">
+            <div style="width:14%;height:55%;background:var(--chart-1);border-radius:6px 6px 0 0"></div>
+            <div style="width:14%;height:70%;background:var(--chart-2);border-radius:6px 6px 0 0"></div>
+            <div style="width:14%;height:45%;background:var(--chart-3);border-radius:6px 6px 0 0"></div>
+            <div style="width:14%;height:85%;background:var(--chart-1);border-radius:6px 6px 0 0"></div>
+            <div style="width:14%;height:60%;background:var(--chart-2);border-radius:6px 6px 0 0"></div>
+            <div style="width:14%;height:92%;background:var(--chart-1);border-radius:6px 6px 0 0"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="card-head"><strong>今日值班</strong></div>
+          <div class="card-body" style="display:flex;gap:var(--space-3);align-items:center">
+            <span class="avatar-group"><span class="avatar">张伟</span><span class="avatar">李娜</span><span class="avatar">王强</span></span>
+            <span class="badge info">主班：张伟</span>
+            <span class="badge">副班：李娜</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- events table -->
+      <section data-view="events" hidden>
+        <div class="panel">
+          <div class="toolbar">
+            <div class="tabs" role="tablist" aria-label="事件筛选">
+              <button class="tab" role="tab" aria-selected="true">全部</button>
+              <button class="tab" role="tab" aria-selected="false">进行中</button>
+              <button class="tab" role="tab" aria-selected="false">已解决</button>
+            </div>
+            <div style="flex:1"></div>
+            <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-label)">
+              <button class="checkbox" role="checkbox" aria-checked="false" aria-label="只看 P1">✓</button> 只看 P1
+            </label>
+            <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-label)">
+              <button class="switch" role="switch" aria-checked="true" aria-label="自动刷新"></button> 自动刷新
+            </label>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>编号</th><th>标题</th><th>级别</th><th>状态</th><th>负责人</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr><td>INC-2041</td><td>支付网关超时</td><td><span class="badge critical">P1</span></td><td><span class="badge warning">处理中</span></td><td><span class="avatar" aria-label="张伟">张</span></td>
+                  <td><span class="tooltip-wrap"><button class="icon-btn" aria-label="查看详情">👁</button><span class="tooltip">查看事件详情</span></span></td></tr>
+                <tr><td>INC-2038</td><td>缓存命中率下降</td><td><span class="badge warning">P2</span></td><td><span class="badge info">已认领</span></td><td><span class="avatar" aria-label="李娜">李</span></td>
+                  <td><span class="tooltip-wrap"><button class="icon-btn" aria-label="查看详情">👁</button><span class="tooltip">查看事件详情</span></span></td></tr>
+                <tr><td>INC-2035</td><td>发布流水线阻塞</td><td><span class="badge warning">P2</span></td><td><span class="badge success">已解决</span></td><td><span class="avatar" aria-label="王强">王</span></td>
+                  <td><span class="tooltip-wrap"><button class="icon-btn" aria-label="查看详情">👁</button><span class="tooltip">查看事件详情</span></span></td></tr>
+                <tr><td>INC-2031</td><td>磁盘容量告警</td><td><span class="badge">P3</span></td><td><span class="badge">待认领</span></td><td><span class="avatar">—</span></td>
+                  <td><span class="tooltip-wrap"><button class="icon-btn" aria-label="查看详情">👁</button><span class="tooltip">查看事件详情</span></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination" aria-label="分页">
+            <button class="page-btn" aria-label="上一页">‹</button>
+            <button class="page-btn" aria-current="true">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn" aria-label="下一页">›</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- board -->
+      <section data-view="board" hidden>
+        <div class="board" id="board">
+          <div class="board-col" data-col="todo">
+            <div class="board-col-head"><strong>待处理</strong><span class="badge">2</span>
+              <div style="flex:1"></div>
+              <span class="tooltip-wrap"><button class="icon-btn" aria-label="列菜单">⋯</button><span class="tooltip">列操作</span></span>
+            </div>
+            <div class="board-card" draggable="true" tabindex="0" data-card>
+              <div class="row"><span class="badge critical">P1</span><span class="drop-hint">INC-2041</span></div>
+              <strong>支付网关超时</strong>
+              <div class="row"><span class="avatar">张</span><span class="badge warning">处理中</span></div>
+              <div class="drop-hint">拖拽移动，或打开卡片菜单使用「移动到」</div>
+            </div>
+            <div class="board-card" draggable="true" tabindex="0" data-card>
+              <div class="row"><span class="badge">P3</span><span class="drop-hint">INC-2031</span></div>
+              <strong>磁盘容量告警</strong>
+              <div class="row"><span class="avatar">—</span><span class="badge">待认领</span></div>
+            </div>
+          </div>
+          <div class="board-col" data-col="doing">
+            <div class="board-col-head"><strong>处理中</strong><span class="badge">1</span></div>
+            <div class="board-card" draggable="true" tabindex="0" data-card>
+              <div class="row"><span class="badge warning">P2</span><span class="drop-hint">INC-2038</span></div>
+              <strong>缓存命中率下降</strong>
+              <div class="row"><span class="avatar">李</span><span class="badge info">已认领</span></div>
+            </div>
+          </div>
+          <div class="board-col" data-col="done">
+            <div class="board-col-head"><strong>已解决</strong><span class="badge">1</span></div>
+            <div class="board-card" draggable="true" tabindex="0" data-card>
+              <div class="row"><span class="badge success">P2</span><span class="drop-hint">INC-2035</span></div>
+              <strong>发布流水线阻塞</strong>
+              <div class="row"><span class="avatar">王</span><span class="badge success">已解决</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- services -->
+      <section data-view="services" hidden>
+        <div class="toolbar" style="border:0;padding:0 0 var(--space-3)">
+          <input class="search-input" id="service-filter" type="search" placeholder="按服务名筛选…" style="max-width:280px">
+        </div>
+        <div class="panel empty" id="service-empty" hidden>
+          <span class="avatar" aria-hidden="true" style="width:40px;height:40px">∅</span>
+          <div class="title">没有匹配的服务</div>
+          <p style="margin:0;color:var(--muted-fg)">尝试更短的关键词，或清除筛选条件。</p>
+          <button class="btn outline sm" id="service-empty-reset">清除筛选</button>
+        </div>
+        <div class="service-grid" id="service-grid">
+          <div class="panel service-card">
+            <div class="row" style="display:flex;align-items:center;gap:var(--space-2)">
+              <strong>payment-gateway</strong><span class="badge success">健康</span>
+            </div>
+            <span class="badge">P99 延迟 220ms</span>
+            <div style="display:flex;gap:var(--space-2)">
+              <button class="btn outline sm">查看指标</button>
+              <button class="btn ghost sm">值班记录</button>
+            </div>
+          </div>
+          <div class="panel service-card">
+            <div class="row" style="display:flex;align-items:center;gap:var(--space-2)">
+              <strong>cache-cluster</strong><span class="badge warning">降级</span>
+            </div>
+            <span class="badge">命中率 71%</span>
+            <div style="display:flex;gap:var(--space-2)">
+              <button class="btn outline sm">查看指标</button>
+              <button class="btn ghost sm">值班记录</button>
+            </div>
+          </div>
+          <div class="panel service-card">
+            <div class="row" style="display:flex;align-items:center;gap:var(--space-2)">
+              <strong>search-api</strong><span class="badge info">维护中</span>
+            </div>
+            <span class="badge">计划维护 02:00–03:00</span>
+            <div style="display:flex;gap:var(--space-2)">
+              <button class="btn outline sm">查看指标</button>
+              <button class="btn ghost sm">值班记录</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- calendar -->
+      <section data-view="calendar" hidden>
+        <div class="panel">
+          <div class="card-head"><strong>9 月值班日历</strong>
+            <div style="flex:1"></div>
+            <button class="btn outline sm">上一周</button>
+            <button class="btn outline sm">下一周</button>
+          </div>
+          <div class="card-body">
+            <div class="calendar-grid">
+              <div class="panel cal-card"><span class="day">周一 8</span><span class="event">白班 张伟</span><span class="event">夜班 李娜</span></div>
+              <div class="panel cal-card"><span class="day">周二 9</span><span class="event">白班 王强</span></div>
+              <div class="panel cal-card"><span class="day">周三 10</span></div>
+              <div class="panel cal-card"><span class="day">周四 11</span><span class="event">白班 张伟</span></div>
+              <div class="panel cal-card"><span class="day">周五 12</span><span class="event">复盘会 14:00</span></div>
+              <div class="panel cal-card"><span class="day">周六 13</span></div>
+              <div class="panel cal-card"><span class="day">周日 14</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- detail master-detail -->
+      <section data-view="detail-demo" hidden>
+        <div class="master-detail">
+          <div class="panel">
+            <div class="card-head"><strong>相关事件</strong></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:var(--space-2)">
+              <button class="nav-item" aria-current="page">INC-2041 支付网关超时</button>
+              <button class="nav-item">INC-2038 缓存命中率下降</button>
+              <button class="nav-item">INC-2035 发布流水线阻塞</button>
+            </div>
+          </div>
+          <div class="panel detail-doc">
+            <div class="card-head"><strong>INC-2041 支付网关超时</strong><span class="badge critical">P1</span></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:var(--space-3)">
+              <p style="margin:0">支付网关 P99 延迟自 09:12 起超过 2s，影响结账链路。已定位到上游连接池耗尽，正在扩容并观察。</p>
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap">
+                <span class="badge critical">P1</span><span class="badge warning">处理中</span><span class="badge info">影响：结账</span>
+              </div>
+              <div><label class="field"><span>处理记录</span>
+                <textarea class="textarea" placeholder="记录处理进展…">09:30 确认连接池耗尽；09:41 开始扩容。</textarea></label>
+                <button class="btn primary sm" id="save-note">保存记录</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- settings: form controls -->
+      <section data-view="settings" hidden>
+        <div class="panel" style="max-width:560px">
+          <div class="card-head"><strong>工作区设置</strong></div>
+          <div class="card-body">
+            <label class="field"><span>工作区名称</span><input class="text-input" value="生产运维工作区"></label>
+            <label class="field"><span>默认值班策略</span>
+              <select class="select"><option>轮值（每周轮换）</option><option>主副班</option><option>按服务认领</option></select>
+            </label>
+            <label class="field"><span>告警升级阈值（分钟）</span><input class="text-input" value="15"></label>
+            <label style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-3)">
+              <button class="switch" role="switch" aria-checked="true" aria-label="夜间免打扰"></button>
+              <span>夜间免打扰（00:00–07:00 仅 P1 升级）</span>
+            </label>
+            <div style="display:flex;gap:var(--space-2)">
+              <button class="btn primary sm" id="save-settings">保存设置</button>
+              <button class="btn ghost sm">重置</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- create incident dialog -->
+<div class="overlay" id="incident-overlay" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="incident-title">
+    <h2 id="incident-title">创建事件</h2>
+    <label class="field"><span>标题</span><input class="text-input" id="incident-title-input" placeholder="简要描述问题"></label>
+    <label class="field"><span>级别</span>
+      <select class="select" id="incident-level"><option>P1</option><option>P2</option><option>P3</option></select>
+    </label>
+    <label class="field"><span>描述</span><textarea class="textarea" placeholder="发生了什么？影响范围？"></textarea></label>
+    <div class="actions">
+      <button class="btn ghost" data-close>取消</button>
+      <button class="btn primary" id="incident-submit">创建事件</button>
+    </div>
+  </div>
+</div>
+
+<!-- confirm dialog -->
+<div class="overlay" id="confirm-overlay" hidden>
+  <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+    <h2 id="confirm-title">归档历史数据？</h2>
+    <p style="margin:0">将归档 90 天前的已解决事件，此操作可在设置中撤销。</p>
+    <div class="actions">
+      <button class="btn ghost" data-close>取消</button>
+      <button class="btn danger" id="confirm-archive">确认归档</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(s, r){ return (r||document).querySelector(s); };
+  var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+
+  /* theme */
+  $("#theme-btn").addEventListener("click", function(){
+    var root = document.documentElement;
+    root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+  });
+
+  /* menus (workspace + create) with Escape + outside click + focus return */
+  function bindMenu(btnId, menuId){
+    var btn = $("#"+btnId), menu = $("#"+menuId);
+    btn.addEventListener("click", function(){
+      var open = !menu.hidden;
+      menu.hidden = open;
+      btn.setAttribute("aria-expanded", String(!open));
+      if(!open){ var f = menu.querySelector("button"); if(f) f.focus(); }
+    });
+    menu.addEventListener("keydown", function(e){
+      if(e.key === "Escape"){ menu.hidden = true; btn.setAttribute("aria-expanded","false"); btn.focus(); }
+    });
+    document.addEventListener("click", function(e){
+      if(!menu.hidden && !menu.contains(e.target) && !btn.contains(e.target)){
+        menu.hidden = true; btn.setAttribute("aria-expanded","false");
+      }
+    });
+    return {btn: btn, menu: menu};
+  }
+  var workspace = bindMenu("workspace-btn", "workspace-menu");
+  var createMenu = bindMenu("create-btn", "create-menu");
+  $$("#workspace-menu .item").forEach(function(item){
+    item.addEventListener("click", function(){
+      $("#workspace-name").textContent = item.textContent.trim();
+      workspace.menu.hidden = true; workspace.btn.setAttribute("aria-expanded","false"); workspace.btn.focus();
+      toast("已切换到「" + item.textContent.trim() + "」", "info");
+    });
+  });
+
+  /* navigation */
+  function show(view){
+    $$("[data-view]").forEach(function(s){ s.hidden = s.dataset.view !== view; });
+    var titles = {dashboard:"收件箱", events:"事件列表", board:"事件看板", services:"服务目录",
+      calendar:"值班日历", metrics:"交付分析", settings:"工作区设置", "detail-demo":"事件详情"};
+    $("#page-title").textContent = titles[view] || view;
+    $$(".sidebar .nav-item").forEach(function(n){
+      if(n.dataset.page === view){ n.setAttribute("aria-current","page"); }
+      else{ n.removeAttribute("aria-current"); }
+    });
+  }
+  $$(".sidebar .nav-item").forEach(function(n){
+    n.addEventListener("click", function(){
+      var page = n.dataset.page;
+      if(page === "events"){ show("events"); }
+      else if(page === "dashboard"){ show("dashboard"); }
+      else{ show(page); }
+    });
+  });
+  /* events row view-detail -> master-detail */
+  $$("[data-view='events'] .icon-btn").forEach(function(b){
+    b.addEventListener("click", function(){ show("detail-demo"); });
+  });
+  /* add a detail nav entry under 协作 */
+  var detailNav = document.createElement("button");
+  detailNav.className = "nav-item"; detailNav.dataset.page = "detail-demo";
+  detailNav.textContent = "🔍 事件详情";
+  detailNav.addEventListener("click", function(){ show("detail-demo"); });
+  $("#sidebar").insertBefore(detailNav, $(".nav-group-label"));
+
+  /* global search combobox */
+  var search = $("#global-search"), pop = $("#search-pop");
+  search.addEventListener("focus", function(){ pop.hidden = false; search.setAttribute("aria-expanded","true"); });
+  search.addEventListener("keydown", function(e){ if(e.key === "Escape"){ pop.hidden = true; search.setAttribute("aria-expanded","false"); } });
+  document.addEventListener("click", function(e){
+    if(!pop.hidden && !pop.contains(e.target) && e.target !== search){ pop.hidden = true; search.setAttribute("aria-expanded","false"); }
+  });
+  $$("#search-pop .opt").forEach(function(o){
+    o.addEventListener("click", function(){ show("detail-demo"); pop.hidden = true; });
+  });
+
+  /* create menu actions */
+  $("#create-incident").addEventListener("click", function(){
+    createMenu.menu.hidden = true;
+    $("#incident-overlay").hidden = false;
+    $("#incident-title-input").focus();
+  });
+  $("#create-archive").addEventListener("click", function(){
+    createMenu.menu.hidden = true;
+    $("#confirm-overlay").hidden = false;
+    $("#confirm-archive").focus();
+  });
+  $("#create-service").addEventListener("click", function(){
+    createMenu.menu.hidden = true;
+    toast("服务登记表单已打开（演示）", "info");
+  });
+
+  /* overlays: Escape + backdrop close + focus return */
+  function bindOverlay(id, opener){
+    var ov = $("#"+id);
+    ov.addEventListener("keydown", function(e){
+      if(e.key === "Escape"){ ov.hidden = true; if(opener) opener.focus(); }
+    });
+    ov.addEventListener("click", function(e){ if(e.target === ov){ ov.hidden = true; } });
+    $$("[data-close]", ov).forEach(function(b){ b.addEventListener("click", function(){ ov.hidden = true; }); });
+    return ov;
+  }
+  var incidentOv = bindOverlay("incident-overlay", $("#create-btn"));
+  var confirmOv = bindOverlay("confirm-overlay", $("#create-btn"));
+
+  $("#incident-submit").addEventListener("click", function(){
+    var title = $("#incident-title-input").value || "未命名事件";
+    incidentOv.hidden = true;
+    toast("事件已创建：" + title, "success");
+  });
+  $("#confirm-archive").addEventListener("click", function(){
+    confirmOv.hidden = true;
+    toast("归档任务已提交", "warning");
+  });
+  $("#save-note").addEventListener("click", function(){ toast("处理记录已保存", "success"); });
+  $("#save-settings").addEventListener("click", function(){ toast("设置已保存", "success"); });
+
+  /* toast */
+  function toast(msg, kind){
+    var box = document.createElement("div");
+    box.className = "toast " + (kind || "");
+    box.innerHTML = '<span class="msg">' + msg + '</span><button class="icon-btn" aria-label="关闭通知">✕</button>';
+    box.querySelector("button").addEventListener("click", function(){ box.remove(); });
+    $("#toasts").appendChild(box);
+    setTimeout(function(){ box.remove(); }, 6000);
+  }
+
+  /* board drag-and-drop with keyboard alternative */
+  var dragging = null;
+  $$("[data-card]").forEach(function(card){
+    card.addEventListener("dragstart", function(){ dragging = card; card.classList.add("dragging"); });
+    card.addEventListener("dragend", function(){ card.classList.remove("dragging"); dragging = null; });
+    card.addEventListener("keydown", function(e){
+      if(e.key === "m" || e.key === "M"){
+        var cols = $$(".board-col");
+        var current = card.closest(".board-col");
+        var next = cols[(cols.indexOf(current) + 1) % cols.length];
+        next.appendChild(card);
+        toast("卡片已移动到「" + next.querySelector("strong").textContent + "」（键盘操作）", "info");
+      }
+    });
+  });
+  $$(".board-col").forEach(function(col){
+    col.addEventListener("dragover", function(e){ e.preventDefault(); });
+    col.addEventListener("drop", function(e){
+      e.preventDefault();
+      if(dragging){ col.appendChild(dragging); toast("卡片已移动", "success"); }
+    });
+  });
+
+  /* checkbox toggle */
+  $$(".checkbox").forEach(function(cb){
+    cb.addEventListener("click", function(){
+      cb.setAttribute("aria-checked", cb.getAttribute("aria-checked") === "true" ? "false" : "true");
+    });
+  });
+  /* switch toggle */
+  $$(".switch").forEach(function(sw){
+    sw.addEventListener("click", function(){
+      sw.setAttribute("aria-checked", sw.getAttribute("aria-checked") === "true" ? "false" : "true");
+    });
+  });
+  /* tabs */
+  $$(".tab").forEach(function(t){
+    t.addEventListener("click", function(){
+      $$(".tab").forEach(function(o){ o.setAttribute("aria-selected","false"); });
+      t.setAttribute("aria-selected","true");
+    });
+  });
+  /* pagination */
+  $$(".page-btn").forEach(function(b){
+    b.addEventListener("click", function(){
+      $$(".page-btn").forEach(function(o){ o.removeAttribute("aria-current"); });
+      b.setAttribute("aria-current","true");
+    });
+  });
+
+  /* mobile nav */
+  var toggle = $("#nav-toggle");
+  function syncToggle(){ toggle.style.display = window.innerWidth <= 768 ? "inline-flex" : "none"; }
+  window.addEventListener("resize", syncToggle); syncToggle();
+  toggle.addEventListener("click", function(){ $("#sidebar").classList.toggle("open"); });
+
+  /* service filter + empty state */
+  $("#service-filter").addEventListener("input", function(){
+    var q = $("#service-filter").value.trim().toLowerCase();
+    var cards = $$("#service-grid .service-card");
+    var visible = 0;
+    cards.forEach(function(c){
+      var name = c.querySelector("strong").textContent.toLowerCase();
+      var show = !q || name.includes(q);
+      c.style.display = show ? "" : "none";
+      if(show) visible++;
+    });
+    $("#service-empty").hidden = visible > 0;
+    $("#service-grid").style.display = visible > 0 ? "" : "none";
+  });
+  $("#service-empty-reset").addEventListener("click", function(){
+    $("#service-filter").value = "";
+    $("#service-filter").dispatchEvent(new Event("input"));
+    $("#service-filter").focus();
+  });
+
+  /* skeleton → services loading demo on first open */
+  var servicesLoaded = false;
+  $$(".sidebar .nav-item").forEach(function(n){
+    n.addEventListener("click", function(){
+      if(n.dataset.page === "services" && !servicesLoaded){
+        servicesLoaded = true;
+        var grid = $("#service-grid");
+        var original = grid.innerHTML;
+        grid.innerHTML = "";
+        for(var i = 0; i < 3; i++){
+          var sk = document.createElement("div");
+          sk.className = "panel service-card";
+          sk.innerHTML = '<div class="skeleton" style="height:20px;width:60%"></div>' +
+                         '<div class="skeleton" style="height:14px;width:40%"></div>' +
+                         '<div class="skeleton" style="height:28px;width:100%"></div>';
+          grid.appendChild(sk);
+        }
+        setTimeout(function(){ grid.innerHTML = original; bindServiceButtons(); }, 900);
+      }
+    });
+  });
+  function bindServiceButtons(){
+    $$("#service-grid .btn").forEach(function(b){
+      b.addEventListener("click", function(){ toast(b.textContent + "（演示）", "info"); });
+    });
+  }
+  bindServiceButtons();
+})();
+</script>
+</body>
+</html>

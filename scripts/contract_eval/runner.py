@@ -63,6 +63,8 @@ PYTHON_OPERATIONS = frozenset({
     "catalog_seed_contracts",
     "apply_architecture_contracts",
     "apply_close_contracts",
+    "apply_source_blind_contracts",
+    "apply_pattern_bound_contracts",
     "design_standalone_contracts",
 })
 
@@ -698,6 +700,69 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "closed_hint": closed_hint in str(closed.get("hint", "")),
             "no_auto_delete": still_present,
             "templates_not_auto_deleted": closed.get("may_delete_templates") is False,
+        }
+    if operation == "apply_source_blind_contracts":
+        import tempfile
+
+        from template_apply_state.state import _source_blind_findings
+
+        with tempfile.TemporaryDirectory() as temp:
+            apply_root = Path(temp) / ".ui-template-apply"
+            apply_root.mkdir()
+            clean_findings = _source_blind_findings(
+                {"mode": "bootstrap", "phases": []}, apply_root,
+            )
+            oracle_findings = _source_blind_findings(
+                {"mode": "bootstrap", "oracle_revision": "deadbeef",
+                 "output_root": "example/workbench-shell/web"},
+                apply_root,
+            )
+            (apply_root / "source-compare.yaml").write_text("verdict: passed\n", encoding="utf-8")
+            stray_findings = _source_blind_findings({"mode": "bootstrap"}, apply_root)
+        codes = [finding.code for finding in oracle_findings + stray_findings]
+        return {
+            "clean_ok": not clean_findings,
+            "oracle_rejected": "SOURCE_BLIND_VIOLATION" in codes,
+            "historical_output_rejected": "SOURCE_BLIND_VIOLATION" in codes,
+            "stray_artifact_rejected": "SOURCE_BLIND_VIOLATION" in codes,
+        }
+    if operation == "apply_pattern_bound_contracts":
+        import tempfile
+
+        from template_apply_state.state import _route_composition_findings
+
+        layers = {
+            "page_types": {"page-type/dashboard"},
+            "patterns": {"pattern/dashboard-shell"},
+            "primitives": {"primitive/panel"},
+        }
+        with tempfile.TemporaryDirectory() as temp:
+            apply_root = Path(temp)
+            (apply_root / "02-routes.yaml").write_text(
+                "routes:\n- path: /\n  page_type: page-type/dashboard\n",
+                encoding="utf-8",
+            )
+            (apply_root / "04-components.yaml").write_text(
+                "routes:\n- id: dash\n  pattern: pattern/dashboard-shell\n"
+                "  primitives:\n  - primitive/panel\n",
+                encoding="utf-8",
+            )
+            clean = _route_composition_findings(apply_root, {2: {"id": 2, "status": "complete"}, 4: {"id": 4, "status": "complete"}}, layers)
+            (apply_root / "02-routes.yaml").write_text(
+                "routes:\n- path: /\n  page_type: page-type/ghost\n- path: /missing\n",
+                encoding="utf-8",
+            )
+            (apply_root / "04-components.yaml").write_text(
+                "routes:\n- id: dash\n  pattern: pattern/ghost\n",
+                encoding="utf-8",
+            )
+            broken = _route_composition_findings(apply_root, {2: {"id": 2, "status": "complete"}, 4: {"id": 4, "status": "complete"}}, layers)
+        codes = [finding.code for finding in clean + broken]
+        return {
+            "clean_ok": not clean,
+            "dangling_page_type": "ROUTE_PAGE_TYPE_DANGLING" in codes,
+            "missing_page_type": "ROUTE_PAGE_TYPE_MISSING" in codes,
+            "dangling_pattern": "COMPONENT_REF_DANGLING" in codes,
         }
     if operation == "design_standalone_contracts":
         import importlib.util

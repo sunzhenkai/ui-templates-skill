@@ -18,7 +18,7 @@ cases:
   apply-no-patch-generated-web:
     assertions:
       - type: path_exists
-        path: skills/ui-template-apply/references/fidelity-compare.md
+        path: skills/ui-template-apply/references/source-blind-boundary.md
   apply-retired-template-rejected:
     assertions:
       - type: python_call
@@ -30,10 +30,42 @@ cases:
             value: true
           - path: [retired_code]
             value: INDEX_NOT_PUBLISHED
-  apply-fidelity-compare-mode:
+  apply-original-alignment-handoff:
     assertions:
       - type: path_exists
-        path: skills/ui-template-apply/references/fidelity-compare.md
+        path: skills/ui-template-apply/references/source-blind-boundary.md
+      - type: path_exists
+        path: skills/ui-template-apply/SKILL.md
+  apply-source-blind-rejection:
+    assertions:
+      - type: python_call
+        operation: apply_source_blind_contracts
+        json_path_equals:
+          - path: [clean_ok]
+            value: true
+          - path: [oracle_rejected]
+            value: true
+          - path: [historical_output_rejected]
+            value: true
+          - path: [stray_artifact_rejected]
+            value: true
+  apply-pattern-bound-composition:
+    assertions:
+      - type: python_call
+        operation: apply_pattern_bound_contracts
+        json_path_equals:
+          - path: [clean_ok]
+            value: true
+          - path: [dangling_page_type]
+            value: true
+          - path: [missing_page_type]
+            value: true
+          - path: [dangling_pattern]
+            value: true
+  apply-missing-reusable-control-feedback:
+    assertions:
+      - type: path_exists
+        path: skills/ui-template-apply/references/apply-workflow.md
   apply-no-source-checkout:
     assertions:
       - type: path_exists
