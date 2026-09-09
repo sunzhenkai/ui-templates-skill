@@ -1,0 +1,6 @@
+schema: template-promotion-request/v1
+target: production-catalog
+oracle_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
+prompts_digest: d3e423f5b69a73b9acd812b658319ab248d6127dfc56f64242746586b8726e29
+requested_by: user
+requested_at: '2026-09-09'

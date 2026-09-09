@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from template_validation.validator import validate_paths
 
+CONFIDENCE_ORDER = ["low", "medium", "high"]
 
 class SkillContractTests(unittest.TestCase):
     def read(self, relative: str) -> str:
@@ -71,7 +72,14 @@ class SkillContractTests(unittest.TestCase):
         ids = [item["id"] for item in meta["sources"]]
         self.assertEqual(["source-001"], ids)
         self.assertTrue(all(item.get("ref") and item.get("revision") for item in meta["sources"]))
-        self.assertTrue((ROOT / "templates/workbench-shell/fidelity.yaml").is_file())
+        has_sidecar = (ROOT / "templates/workbench-shell/fidelity.yaml").is_file()
+        if not has_sidecar:
+            # OpenSpec workbench-shell-implementation: without a chrome-complete
+            # structural sidecar, layout confidence must stay honestly degraded.
+            self.assertLessEqual(
+                CONFIDENCE_ORDER.index(meta["confidence"]["layout"]),
+                CONFIDENCE_ORDER.index("medium"),
+            )
         repo = self.read("skills/ui-template-author/references/source-repo.md")
         self.assertIn("已发布模板没有 session source 时", repo)
         self.assertIn("不得停下来要求用户提供路径", repo)

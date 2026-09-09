@@ -1,6 +1,6 @@
 schema: design-system-meta/v1
 name: workbench-shell
-version: 1.1.0
+version: 1.2.0
 description: Neutral dual-theme workbench app shell with a quiet inset sidebar, dense
   14px interface, crisp 1px separation and restrained blue accents.
 sources:
@@ -21,9 +21,9 @@ tags:
 - dense-ui
 confidence:
   overall: high
-  layout: high
+  layout: medium
   visual: high
-  components: medium
+  components: high
 coverage:
   platforms:
     declared:
@@ -69,17 +69,54 @@ coverage:
     unsupported: []
   components:
     declared:
-    - nav-item
+    - avatar
+    - badge
+    - board-card
+    - board-column
     - button
+    - calendar-card
+    - chart-legend
+    - chat-fab
+    - checkbox
+    - confirm-dialog
+    - create-button
+    - dashboard-shell
+    - data-table
+    - empty-state
+    - global-search
+    - icon-button
     - input
-    - panel
-    - chat-fab
-    observed:
+    - master-detail
+    - menu
+    - modal
     - nav-item
-    - chat-fab
-    - page-header
+    - page-chrome
+    - pagination
     - panel
-    - link
+    - search-input
+    - select
+    - service-card
+    - skeleton
+    - stat-card
+    - switch
+    - tabs
+    - textarea
+    - toast
+    - tooltip
+    - workspace-switcher
+    observed:
+    - avatar
+    - badge
+    - board-card
+    - button
+    - chat-fab
+    - data-table
+    - empty-state
+    - input
+    - nav-item
+    - panel
+    - stat-card
+    - toast
     defaulted:
     - button
     - input

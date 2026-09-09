@@ -4,6 +4,9 @@ items:
   name: Workspace dashboard
   patterns:
   - pattern/dashboard-shell
+  - pattern/stat-card
+  - pattern/chart-legend
+  - pattern/toast
   data_states:
   - loading
   - ready
@@ -16,6 +19,13 @@ items:
   patterns:
   - pattern/page-chrome
   - pattern/dashboard-shell
+  - pattern/data-table
+  - pattern/board-column
+  - pattern/board-card
+  - pattern/service-card
+  - pattern/calendar-card
+  - pattern/empty-state
+  - pattern/toast
   data_states:
   - empty
   - loading
@@ -29,6 +39,7 @@ items:
   patterns:
   - pattern/master-detail
   - pattern/page-chrome
+  - pattern/empty-state
   data_states:
   - loading
   - ready
@@ -39,6 +50,8 @@ items:
   name: Modal task
   patterns:
   - pattern/modal
+  - pattern/confirm-dialog
+  - pattern/toast
   data_states:
   - open
   - closed
