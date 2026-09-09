@@ -67,7 +67,7 @@ digest 算法为 `sha256-canonical-json-v1`。
    - 兄弟应用、workspace 约定或功能规格里的技术提及只可作为候选，不得当作确认；`project-init` 仅在用户明确要脚手架且所选栈落在其 reference 时作为确认后执行器。
    - `existing`：仅在该输出根已有依赖清单或实质源码时成立，只记录观察到的栈。
 4. coverage 决定：对 defaulted/unsupported 项逐项作 accepted/deferred/excluded 决定。
-5. `fidelity.yaml` 检测：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。profile digest 纳入现有 template identity。
+5. `fidelity.yaml` 检测：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。checkpoint `template.digest` 必须绑定 `{template: meta, fidelity: profile}` 的 canonical digest；有 sidecar 但缺该绑定不得进入 Phase 5。
 6. Gate：schema/origin/checker 通过，范围与非目标经确认。不得把原版源码或已有生成物写入 intake 作为实现输入；生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。用户要求对齐原版时只记录 oracle 身份，对照手续见 [fidelity-compare.md](fidelity-compare.md)。
 
 `00-architecture.yaml` 使用 `architecture.schema.json`：必填 `output_root`（相对消费项目根，禁止 `..`）；`site` 为 `greenfield | existing` 且必须与对该输出根的探测一致；`layers` 固定为 language、UI framework、bundler、routing、styling、client/server state、data access、unit/browser verification、package manager、repo shape；greenfield 必须有 `confirmed_by_user: true` 与预声明 `build_identity`，可记录拟用 `init_command` 与 `observed_constraints`；existing 必须记录 `observed_stack`。greenfield 未确认前只允许写 `.ui-template-apply/`，不得写依赖清单、工程配置或应用源码；后续任何 phase 不得 complete。
@@ -105,7 +105,7 @@ Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可�
 
 记录必须符合 schema v2 `verification.schema.json`，`kind: phase-8-verification`，顶层绑定当前 template digest、source identity、build identity、browser identity。每条 UUID record 必含：rule ID、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。evidence 文件放 `evidence/`；截图、trace、AX、console、computed-style 或脚本输出必须可定位。
 
-按模板 coverage、included route 和 fidelity records 确定性生成 required scenario IDs，不使用固定“三视口/十项”等数量代替模板声明。chrome composition scenario 只从 structural sidecar 已声明的 variant/slot/anchor 派生；无 sidecar 时这些 scenario unavailable，且不得标 profile-verified。通用 skill 不要求 `chat-fab`、A–E 或 Board。每条 UUID record 必含：rule ID、profile record ID（若有）、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
+按模板 coverage、included route 和 fidelity records 确定性生成 required scenario IDs，不使用固定“三视口/十项”等数量代替模板声明。chrome composition scenario 只从 structural sidecar 已声明的 variant/slot/anchor 派生；无 sidecar 时这些 scenario unavailable，且不得标 profile-verified。通用 skill 不要求 `chat-fab`、A–E 或 Board。每条 UUID record 必含：rule ID、profile record ID（若有）、`scenario_ids[]`、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。所有派生 scenario IDs 的并集必须完整覆盖；校验器对 missing scenario fail closed。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
 
 ## Phase 9 — Review & feedback（`09-review.md`, `feedback/`）
 
@@ -135,6 +135,7 @@ python3 scripts/check_template_apply_state.py build-identity <build-artifact> --
 python3 scripts/check_template_apply_state.py checkpoint \
   --apply-root .ui-template-apply --template <template-meta-or-envelope> \
   --tokens <template/tokens.yaml> --scope <scope-yaml> \
+  --fidelity <template/fidelity.yaml> \
   --source-identity <revision> --build-identity <build-id> \
   --known-rule-id NN-001 --known-rule-id AX-001 \
   --known-rule-id LOCAL-STYLE-001 --known-rule-id LOCAL-INFORMATION-001 --known-rule-id LOCAL-PLACEMENT-001

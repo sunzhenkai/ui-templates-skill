@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## workbench-shell 1.1.0 — Unreleased
+
+保真补丁：把组件级几何/状态纳入 portable contract，并让 Apply 按 fidelity 派生场景 fail closed。
+
+- `workbench-shell` 更新到 1.1.0：补齐 sidecar 尺寸、chart palette、主题 shadow、成对 line-height 与按钮/输入/侧栏/面板几何状态。
+- Apply 领养时原样复制 `fidelity.yaml`；checkpoint `template.digest` 绑定 meta + fidelity canonical identity。
+- Phase 8 records 必须声明 `scenario_ids[]`，且并集覆盖 fidelity profile 派生全集；缺失场景 fail closed。
+- 旧 `workbench-shell` 1.0.0 checkpoint 与新模板 digest 不一致，必须从 Phase 0 干净重生。
+
 ## 3.0.1 — Unreleased
 
 兼容补丁：安装态自带统一 design-system validator，并切断 discovery wrapper 自 exec。

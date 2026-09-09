@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -12,6 +13,11 @@ import yaml
 
 def load(path: Path) -> Any:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def canonical_digest(value: Any) -> str:
+    payload = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 LAYER_PHASES = {
@@ -31,10 +37,20 @@ def plan(checkpoint_path: Path, design_root: Path) -> dict[str, Any]:
     contract = load(design_root / "design-system.yaml")
     binding = load(design_root / "binding.yaml")
     blockers: list[str] = []
+    template_path = design_root / "meta.yaml"
+    fidelity_path = design_root / "fidelity.yaml"
+    template = load(template_path) if template_path.is_file() else None
+    fidelity = load(fidelity_path) if fidelity_path.is_file() else None
+    template_identity = template if fidelity is None else {"template": template, "fidelity": fidelity}
+    template_digest = canonical_digest(template_identity) if template is not None else None
     if checkpoint.get("contract", {}).get("id") != contract.get("id") or checkpoint.get("contract", {}).get("version") != contract.get("version"):
         blockers.append("CONTRACT_IDENTITY_MISMATCH")
     if checkpoint.get("contract", {}).get("digest", {}).get("value") != contract.get("contract_digest", {}).get("value"):
         blockers.append("CONTRACT_DIGEST_MISMATCH")
+    if template is None:
+        blockers.append("TEMPLATE_IDENTITY_MISSING")
+    elif checkpoint.get("template", {}).get("digest") is not None and checkpoint["template"]["digest"].get("value") != template_digest:
+        blockers.append("TEMPLATE_IDENTITY_DIGEST_MISMATCH")
     if checkpoint.get("binding_digest", {}).get("value") != binding.get("binding_digest", {}).get("value"):
         blockers.append("BINDING_DIGEST_MISMATCH")
     recorded = {item["name"]: item["digest"]["value"] for item in checkpoint.get("projection_digests", [])}
@@ -49,6 +65,8 @@ def plan(checkpoint_path: Path, design_root: Path) -> dict[str, Any]:
     return {
         "schema_version": 1,
         "mode": checkpoint.get("mode"),
+        "template_digest": template_digest,
+        "fidelity_profile_digest": canonical_digest(fidelity) if fidelity is not None else None,
         "blocked": bool(blockers),
         "blockers": sorted(set(blockers)),
         "reopened_phases": phases,

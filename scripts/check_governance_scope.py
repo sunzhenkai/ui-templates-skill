@@ -96,9 +96,9 @@ def git_changed_path_names() -> list[str]:
 
 def guard_example_paths(paths: list[str] | None = None) -> list[str]:
     names = paths if paths is not None else git_changed_path_names()
-    # example/workbench-shell/web 是本任务的正常跟踪交付物（同 prompts/）；
+    # example/workbench-shell/web 与 prompts 是闭环交付/修复面；
     # 冻结排除样例（web-v2/web-v3/docs 等）仍然拒绝任何变更。
-    allowed_prefixes = ("example/workbench-shell/web/",)
+    allowed_prefixes = ("example/workbench-shell/web/", "example/workbench-shell/prompts/")
     hits = sorted(
         {
             name

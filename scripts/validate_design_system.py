@@ -309,7 +309,7 @@ def validate_binding(root: Path, manifest: dict[str, Any], layers: dict[str, Pat
         actual = canonical_digest(digest_input)
         if binding_digest.get("value") != actual:
             report.add("DIGEST_MISMATCH", "binding.binding_digest", f"expected {binding_digest.get('value')}, computed {actual}")
-    report.digests["binding"] = {"recorded": binding_digest, "computed": canonical_digest({**binding, "binding_digest": None})}
+    report.digests["binding"] = {"recorded": binding_digest, "computed": canonical_digest(dict(binding) | {"binding_digest": None}) if binding_digest is None else actual}
 
     tokens_doc = load_document(layers["tokens"]) if "tokens" in layers else {}
     token_paths = walk_tokens(tokens_doc.get("tokens", {}))

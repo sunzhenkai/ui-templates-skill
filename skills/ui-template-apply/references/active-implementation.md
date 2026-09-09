@@ -25,7 +25,7 @@ python3 skills/ui-template-apply/runtime/adopt_package.py \
   --component-system shadcn
 ```
 
-Adoption is copy-only: never rewrite package semantic identity, stable IDs, core values or gallery coverage. Project choices belong in `binding.yaml`.
+Adoption is copy-only: never rewrite package semantic identity, stable IDs, core values, fidelity observations or gallery coverage. Copy an existing package `fidelity.yaml` unchanged when present. Project choices belong in `binding.yaml`.
 
 ## Increment and recovery
 
@@ -35,7 +35,7 @@ Checkpoint uses Impact-based Resume. It records `design-system-apply-checkpoint/
 python3 skills/ui-template-apply/runtime/check_apply_resume.py .ui-template-apply/checkpoint.yaml --design-root .ui-template-design --json
 ```
 
-Any digest mismatch blocks selective continuation and reopens all phases. Otherwise only dependent phases reopen; undeclared paths remain original bytes.
+The checkpoint `template.digest` MUST bind canonical JSON of the package meta plus the unchanged fidelity profile when one exists. Any template, contract, binding, projection or fidelity digest mismatch blocks selective continuation and reopens all phases. Otherwise only dependent phases reopen; undeclared paths remain original bytes.
 
 ## Vendor loading
 

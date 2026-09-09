@@ -65,7 +65,7 @@ def main(argv: list[str] | None = None) -> int:
         if (root / forbidden).is_file():
             print(f"LEGACY_FREEZE_PRESENT: migrate or explicitly discard {forbidden}", file=sys.stderr)
             return 2
-    for relative in ("design-system.yaml", "meta.yaml"):
+    for relative in ("design-system.yaml", "meta.yaml", "fidelity.yaml"):
         source = package / relative
         if source.is_file():
             temporary = root / f".{relative}.adopting"

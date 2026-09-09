@@ -6,6 +6,7 @@ Active Instance 是消费项目内唯一可实施 Design System。目录固定�
 .ui-template-design/
 ├── design-system.yaml      # design-system/v1 manifest
 ├── core/                   # 七层 portable core
+├── fidelity.yaml           # package sidecar unchanged, when published with one
 ├── binding.yaml            # project binding + Token Projection
 ├── 00-intake.md ...        # Phase 状态与证据
 ├── 08-verification.json
@@ -28,7 +29,7 @@ source_origin:
       value: <package-contract-digest>
 ```
 
-`template-package` 只能领养 `published` 且 frozen 的 package。领养复制 `design-system.yaml`、`meta.yaml`、`core/`，不复制或伪造 `binding.yaml`。
+`template-package` 只能领养 `published` 且 frozen 的 package。领养复制 `design-system.yaml`、`meta.yaml`、`core/` 和已存在的 `fidelity.yaml`，不复制或伪造 `binding.yaml`。
 
 ## Binding 与 projection
 

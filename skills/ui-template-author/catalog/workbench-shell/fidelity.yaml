@@ -11,11 +11,15 @@ scope:
   - master-detail
   - shell
   components:
+  - button
+  - chart
   - chat-fab
+  - input
   - link
   - nav-item
   - page-header
   - panel
+  - sidebar
   contexts:
   - button-link
   - entity-row-link
@@ -492,6 +496,166 @@ component_geometry:
     source_span_sha256: sha256:adcb31c0fa1172967e5b561ec11d8105d2a7b19b3379329cc4b85f13269a1cc4
     captured_at: '2026-09-08T09:31:01+00:00'
     confidence: high
+- id: geometry.sidebar.root
+  component: sidebar
+  slot: root
+  rule_id: LAYOUT-101
+  status: defaulted
+  description: Desktop shell uses a resizable inset sidebar and a separated inset
+    canvas.
+  properties:
+    default_inline_size:
+      kind: token-ref
+      value: size.sidebar-default
+    min_inline_size:
+      kind: token-ref
+      value: size.sidebar-min
+    max_inline_size:
+      kind: token-ref
+      value: size.sidebar-max
+    variant:
+      kind: semantic
+      value: inset
+  negative_facts: []
+- id: geometry.sidebar.canvas
+  component: sidebar
+  slot: canvas
+  rule_id: LAYOUT-101
+  status: defaulted
+  description: The inset page canvas is a bounded rounded surface with hairline ring
+    and surface shadow.
+  properties:
+    margin_block:
+      kind: token-ref
+      value: space.2
+    margin_inline_end:
+      kind: token-ref
+      value: space.2
+    radius:
+      kind: token-ref
+      value: radius.xl
+    border:
+      kind: token-ref
+      value: color.light.surface-border
+    shadow:
+      kind: token-ref
+      value: shadow.surface
+  negative_facts: []
+- id: geometry.button.default
+  component: button
+  slot: default
+  rule_id: QUALITY-101
+  status: defaulted
+  description: Default control geometry and typography.
+  properties:
+    min_block_size:
+      kind: token-ref
+      value: size.control-md
+    gap:
+      kind: token-ref
+      value: space.1-5
+    padding_inline:
+      kind: token-ref
+      value: space.2-5
+    radius:
+      kind: token-ref
+      value: radius.lg
+    font_size:
+      kind: token-ref
+      value: typography.body
+    font_weight:
+      kind: semantic
+      value: '5'
+    icon_size:
+      kind: token-ref
+      value: size.icon-sm
+  negative_facts: []
+- id: geometry.button.sm
+  component: button
+  slot: sm
+  rule_id: QUALITY-101
+  status: defaulted
+  description: Small control geometry and typography.
+  properties:
+    min_block_size:
+      kind: token-ref
+      value: size.control-sm
+    gap:
+      kind: token-ref
+      value: space.1
+    padding_inline:
+      kind: token-ref
+      value: space.2-5
+    radius:
+      kind: token-ref
+      value: radius.lg
+    font_size:
+      kind: token-ref
+      value: typography.label
+    icon_size:
+      kind: token-ref
+      value: size.icon-sm
+  negative_facts: []
+- id: geometry.input.trigger
+  component: input
+  slot: trigger
+  rule_id: QUALITY-101
+  status: defaulted
+  description: Compact form trigger geometry.
+  properties:
+    min_block_size:
+      kind: token-ref
+      value: size.control-md
+    padding_block:
+      kind: token-ref
+      value: space.2
+    padding_inline_start:
+      kind: token-ref
+      value: space.2-5
+    padding_inline_end:
+      kind: token-ref
+      value: space.2
+    radius:
+      kind: token-ref
+      value: radius.lg
+    font_size:
+      kind: token-ref
+      value: typography.body
+  negative_facts: []
+- id: geometry.panel.radius
+  component: panel
+  slot: content
+  rule_id: QUALITY-102
+  status: defaulted
+  description: Bounded panels use the extra-large radius ramp.
+  properties:
+    radius:
+      kind: token-ref
+      value: radius.xl
+  negative_facts: []
+- id: geometry.chart.series
+  component: chart
+  slot: series
+  rule_id: QUALITY-101
+  status: defaulted
+  description: Delivery charts use the ordered five-color semantic ramp.
+  properties:
+    series_1_color:
+      kind: token-ref
+      value: color.light.chart.1
+    series_2_color:
+      kind: token-ref
+      value: color.light.chart.2
+    series_3_color:
+      kind: token-ref
+      value: color.light.chart.3
+    series_4_color:
+      kind: token-ref
+      value: color.light.chart.4
+    series_5_color:
+      kind: token-ref
+      value: color.light.chart.5
+  negative_facts: []
 state_presentations:
 - id: state.link.button-link.hover.button-link
   subject_role: link
@@ -586,4 +750,88 @@ state_presentations:
     source_span_sha256: sha256:4c77e1d612c99df972b8a598349eb51737eefbff6676df2eeda79b2f46ea2098
     captured_at: '2026-09-08T09:31:01+00:00'
     confidence: high
+- id: state.button.default.hover.button-link
+  subject_role: button
+  context: button-link
+  state: hover
+  surface: button
+  rule_id: QUALITY-103
+  status: defaulted
+  description: Default filled control keeps primary fill at 80% opacity.
+  text_decoration: none
+  visibility: visible
+  container_presentation: filled
+  negative_facts: []
+  background:
+    kind: token-ref
+    value: color.light.primary-hover
+  text:
+    kind: token-ref
+    value: color.light.primary-foreground
+- id: state.button.default.focus-visible.button-link
+  subject_role: button
+  context: button-link
+  state: focus-visible
+  surface: button
+  rule_id: AX-101
+  status: defaulted
+  description: Controls expose a visible two-pixel focus ring at 50% opacity.
+  text_decoration: none
+  visibility: visible
+  container_presentation: outline
+  negative_facts: []
+  border:
+    kind: token-ref
+    value: color.light.ring-focus
+- id: state.button.destructive.default.button-link
+  subject_role: button
+  context: button-link
+  state: default
+  surface: button
+  rule_id: QUALITY-103
+  status: defaulted
+  description: Destructive action uses tinted surface and destructive text.
+  text_decoration: none
+  visibility: visible
+  container_presentation: filled
+  negative_facts: []
+  background:
+    kind: token-ref
+    value: color.light.destructive-surface
+  text:
+    kind: token-ref
+    value: color.light.destructive
+- id: state.button.destructive.hover.button-link
+  subject_role: button
+  context: button-link
+  state: hover
+  surface: button
+  rule_id: QUALITY-103
+  status: defaulted
+  description: Destructive hover strengthens its tinted surface.
+  text_decoration: none
+  visibility: visible
+  container_presentation: filled
+  negative_facts: []
+  background:
+    kind: token-ref
+    value: color.light.destructive-surface-hover
+  text:
+    kind: token-ref
+    value: color.light.destructive
+- id: state.input.focus-visible.button-link
+  subject_role: input
+  context: button-link
+  state: focus-visible
+  surface: input
+  rule_id: AX-101
+  status: defaulted
+  description: Inputs expose a visible focus ring.
+  text_decoration: none
+  visibility: visible
+  container_presentation: outline
+  negative_facts: []
+  border:
+    kind: token-ref
+    value: color.light.ring-focus
 unresolved: []

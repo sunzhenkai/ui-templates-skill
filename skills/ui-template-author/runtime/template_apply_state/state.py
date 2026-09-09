@@ -229,6 +229,8 @@ def _schema_store(schema_dir: Path | None = None) -> SchemaStore:
 def _schema_findings(kind: str, data: Any, path: str, schema_dir: Path | None = None, phase: int | None = None) -> list[Finding]:
     if not isinstance(data, dict):
         return [Finding("APPLY_SCHEMA_INVALID", path, "记录根必须是 object", phase)]
+    if data.get("schema") == "design-system-apply-checkpoint/v1":
+        return []
     if data.get("schema_version") != 2:
         return [Finding("APPLY_SCHEMA_UNSUPPORTED", path, "仅支持 schema_version: 2", phase, {"declared": data.get("schema_version")})]
     return [
@@ -507,6 +509,22 @@ def validate_checkpoint(
         loaded = load_structured(verification_path)
         if isinstance(loaded, dict):
             phase8_data = loaded
+            if fidelity_value is not None:
+                from .fidelity import derive_scenario_ids
+                expected_scenarios = set(derive_scenario_ids(fidelity_value))
+                covered_scenarios: set[str] = set()
+                for record in phase8_data.get("records", []):
+                    if isinstance(record, dict) and isinstance(record.get("scenario_ids"), list):
+                        covered_scenarios.update(item for item in record["scenario_ids"] if isinstance(item, str))
+                missing_scenarios = sorted(expected_scenarios - covered_scenarios)
+                if missing_scenarios:
+                    findings.append(Finding(
+                        "FIDELITY_SCENARIO_COVERAGE_MISSING",
+                        "08-verification.json#records.scenario_ids",
+                        "Phase 8 必须覆盖 fidelity profile 派生的全部 scenario IDs",
+                        8,
+                        {"missing": missing_scenarios, "expected_count": len(expected_scenarios)},
+                    ))
 
     review_path = root / "09-review.md"
     review_data: dict[str, Any] | None = None

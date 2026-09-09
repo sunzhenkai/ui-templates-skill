@@ -1,12 +1,13 @@
 schema: design-system-meta/v1
 name: workbench-shell
-version: 1.0.0
-description: Neutral dual-theme workbench app shell with a quiet inset sidebar, dense 14px interface, crisp 1px separation
-  and restrained blue accents.
+version: 1.1.0
+description: Neutral dual-theme workbench app shell with a quiet inset sidebar, dense
+  14px interface, crisp 1px separation and restrained blue accents.
 sources:
 - id: source-001
   type: repo
-  ref: https://github.com/multica-ai/multica @ upstream 200dcb44cc1527ef24a1c892e9c3e5508377b386; capture-graph commit 3c2c295fe384f27ca0ada58c204df20618c95add
+  ref: https://github.com/multica-ai/multica @ upstream 200dcb44cc1527ef24a1c892e9c3e5508377b386;
+    capture-graph commit 3c2c295fe384f27ca0ada58c204df20618c95add
   revision: 3c2c295fe384f27ca0ada58c204df20618c95add
   captured_at: '2026-09-08T09:31:01+00:00'
 captured_at: '2026-09-08'
@@ -22,7 +23,7 @@ confidence:
   overall: high
   layout: high
   visual: high
-  components: high
+  components: medium
 coverage:
   platforms:
     declared:

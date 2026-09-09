@@ -53,6 +53,8 @@ def parser() -> argparse.ArgumentParser:
     checkpoint.add_argument("--template", type=Path, required=True)
     checkpoint.add_argument("--tokens", type=Path, required=True)
     checkpoint.add_argument("--scope", type=Path, required=True)
+    checkpoint.add_argument("--fidelity", type=Path)
+    checkpoint.add_argument("--previous-fidelity", type=Path)
     checkpoint.add_argument("--source-identity", required=True)
     checkpoint.add_argument("--build-identity", required=True)
     checkpoint.add_argument("--known-rule-id", action="append", default=None)
@@ -116,6 +118,8 @@ def main() -> int:
             source_identity=args.source_identity,
             build_identity=args.build_identity,
             known_rule_ids=known_rule_ids,
+            fidelity_value=load_structured(args.fidelity) if args.fidelity else None,
+            previous_fidelity=load_structured(args.previous_fidelity) if args.previous_fidelity else None,
         )
         payload = recovery_decision(findings, checkpoint)
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))

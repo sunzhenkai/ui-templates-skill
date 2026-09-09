@@ -13,6 +13,18 @@
       "type": "object", "additionalProperties": false, "required": ["id", "version", "digest"],
       "properties": {"id": {"$ref": "common.schema.json#/$defs/slug"}, "version": {"$ref": "common.schema.json#/$defs/semver"}, "digest": {"$ref": "common.schema.json#/$defs/digest"}}
     },
+    "template": {
+      "type": "object", "additionalProperties": false, "required": ["name", "version"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "version": {"$ref": "common.schema.json#/$defs/semver"},
+        "origin": {"enum": ["catalog", "project", "active"]},
+        "resolved_path": {"type": "string", "minLength": 1},
+        "fidelity": {"enum": ["repo-structural-v1", "legacy-baseline", "style-only", "unknown"]}
+      }
+    },
+    "template_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "source_identity": {"type": "string", "minLength": 1},
     "binding_digest": {"$ref": "common.schema.json#/$defs/digest"},
     "projection_digests": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["name", "digest"], "properties": {"name": {"type": "string"}, "digest": {"$ref": "common.schema.json#/$defs/digest"}}}},
     "stable_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "common.schema.json#/$defs/entityId"}},
