@@ -736,10 +736,29 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "patterns": {"pattern/dashboard-shell"},
             "primitives": {"primitive/panel"},
         }
+        context = {
+            "layouts": {
+                "route/dashboard": {
+                    "id": "route/dashboard",
+                    "page_type": "page-type/dashboard",
+                    "placement": {
+                        "id": "scene.dashboard",
+                        "regions": [{"id": "region.root", "role": "page"}],
+                        "relations": [{"type": "contains", "from": "region.root", "to": "region.root", "order": 0}],
+                        "pattern_refs": ["pattern/dashboard-shell"],
+                        "evidence_refs": ["evidence-placement"],
+                    },
+                }
+            },
+            "page_type_patterns": {"page-type/dashboard": ["pattern/dashboard-shell"]},
+        }
+        phases = {2: {"id": 2, "status": "complete"}, 4: {"id": 4, "status": "complete"}}
         with tempfile.TemporaryDirectory() as temp:
             apply_root = Path(temp)
             (apply_root / "02-routes.yaml").write_text(
-                "routes:\n- path: /\n  page_type: page-type/dashboard\n",
+                "routes:\n- id: route/dashboard\n  path: /\n  page_type: page-type/dashboard\n"
+                "  layout_ref: route/dashboard\n  pattern_refs:\n  - pattern/dashboard-shell\n"
+                "  structural_verification: unavailable\n",
                 encoding="utf-8",
             )
             (apply_root / "04-components.yaml").write_text(
@@ -747,22 +766,37 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                 "  primitives:\n  - primitive/panel\n",
                 encoding="utf-8",
             )
-            clean = _route_composition_findings(apply_root, {2: {"id": 2, "status": "complete"}, 4: {"id": 4, "status": "complete"}}, layers)
+            clean = _route_composition_findings(
+                apply_root, phases, layers, placement_context=context, structural_available=False,
+            )
             (apply_root / "02-routes.yaml").write_text(
-                "routes:\n- path: /\n  page_type: page-type/ghost\n- path: /missing\n",
+                "routes:\n- path: /\n  page_type: page-type/ghost\n"
+                "  pattern_refs:\n  - pattern/ghost\n  structural_verification: unavailable\n"
+                "- path: /missing\n  page_type: page-type/dashboard\n"
+                "  pattern_refs:\n  - pattern/dashboard-shell\n  structural_verification: unavailable\n"
+                "  placement:\n    shell_variant: inset\n"
+                "- path: /no-contract\n"
+                "  structural_verification: unavailable\n",
                 encoding="utf-8",
             )
             (apply_root / "04-components.yaml").write_text(
-                "routes:\n- id: dash\n  pattern: pattern/ghost\n",
+                "routes:\n- id: dash\n  pattern: pattern/ghost\n"
+                "- id: nav\n  pattern: pattern/dashboard-shell\n  placement_role: section-navigation\n"
+                "  route_refs:\n  - route/dashboard\n  placement_pattern: pattern/ghost\n",
                 encoding="utf-8",
             )
-            broken = _route_composition_findings(apply_root, {2: {"id": 2, "status": "complete"}, 4: {"id": 4, "status": "complete"}}, layers)
+            broken = _route_composition_findings(
+                apply_root, phases, layers, placement_context=context, structural_available=False,
+            )
         codes = [finding.code for finding in clean + broken]
         return {
             "clean_ok": not clean,
             "dangling_page_type": "ROUTE_PAGE_TYPE_DANGLING" in codes,
             "missing_page_type": "ROUTE_PAGE_TYPE_MISSING" in codes,
             "dangling_pattern": "COMPONENT_REF_DANGLING" in codes,
+            "missing_pattern_binding": "ROUTE_PATTERN_BINDING_MISSING" in codes,
+            "unauthorized_placement": "PLACEMENT_COMPONENT_UNAUTHORIZED" in codes,
+            "unavailable_assertion": "UNAVAILABLE_PLACEMENT_ASSERTION" in codes,
         }
     if operation == "design_standalone_contracts":
         import importlib.util

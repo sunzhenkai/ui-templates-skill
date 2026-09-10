@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from typing import Any
 
 from template_apply_state import (
     ApplyStateError,
@@ -26,6 +27,7 @@ def collect_active_layers(active_instance: Path) -> dict[str, set[str]] | None:
     core = active_instance / "core"
     layers: dict[str, set[str]] = {}
     for layer, filename in (
+        ("layouts", "layout.yaml"),
         ("page_types", "page-types.yaml"),
         ("patterns", "patterns.yaml"),
         ("primitives", "primitives.yaml"),
@@ -39,6 +41,28 @@ def collect_active_layers(active_instance: Path) -> dict[str, set[str]] | None:
             item.get("id") for item in items if isinstance(item, dict) and isinstance(item.get("id"), str)
         }
     return layers or None
+
+
+def collect_placement_context(active_instance: Path) -> dict[str, Any]:
+    """Load Active Instance placement identity maps for route closure validation."""
+    core = active_instance / "core"
+    layouts: dict[str, dict[str, Any]] = {}
+    layout_path = core / "layout.yaml"
+    if layout_path.is_file():
+        items = load_structured(layout_path).get("items", [])
+        for item in items:
+            if isinstance(item, dict) and isinstance(item.get("id"), str):
+                layouts[item["id"]] = item
+    page_type_patterns: dict[str, list[str]] = {}
+    page_types_path = core / "page-types.yaml"
+    if page_types_path.is_file():
+        items = load_structured(page_types_path).get("items", [])
+        for item in items:
+            if isinstance(item, dict) and isinstance(item.get("id"), str):
+                page_type_patterns[item["id"]] = [
+                    value for value in item.get("patterns", []) if isinstance(value, str)
+                ]
+    return {"layouts": layouts, "page_type_patterns": page_type_patterns}
 
 
 def parser() -> argparse.ArgumentParser:
@@ -146,6 +170,7 @@ def main() -> int:
             fidelity_value=load_structured(args.fidelity) if args.fidelity else None,
             previous_fidelity=load_structured(args.previous_fidelity) if args.previous_fidelity else None,
             active_layers=collect_active_layers(args.active_instance) if getattr(args, "active_instance", None) else None,
+            placement_context=collect_placement_context(args.active_instance) if getattr(args, "active_instance", None) else None,
         )
         payload = recovery_decision(findings, checkpoint)
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))

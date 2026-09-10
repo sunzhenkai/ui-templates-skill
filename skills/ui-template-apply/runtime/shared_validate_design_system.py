@@ -115,6 +115,7 @@ class Report:
         self.warnings: list[dict[str, str]] = []
         self.digests: dict[str, Any] = {}
         self.component_family: dict[str, Any] = {}
+        self.placement: dict[str, Any] | None = None
         self.inventory_patterns: list[str] | None = None
         self.inventory_expected_primitives: dict[str, int] = {}
 
@@ -136,6 +137,8 @@ class Report:
         }
         if self.component_family:
             payload["component_family"] = self.component_family
+        if self.placement is not None:
+            payload["placement"] = self.placement
         return payload
         if self.component_family:
             payload["component_family"] = self.component_family
@@ -412,6 +415,137 @@ def enforce_family_closure(component_family: dict[str, Any], report: Report) -> 
         )
 
 
+def validate_placement(
+    manifest: dict[str, Any],
+    layers: dict[str, Path],
+    ids: dict[str, str],
+    documents: dict[str, Any],
+    report: Report,
+) -> dict[str, Any]:
+    """Validate optional generic topology and its Page Type/evidence closure."""
+    result: dict[str, Any] = {"scenes": 0, "scenes_with_placement": 0, "errors": 0}
+    layouts = layers.get("layout")
+    if layouts is None or not layouts.is_file():
+        report.placement = result
+        return result
+    layout_document = documents.get("layout") or load_document(layouts)
+    evidence_layer = layers.get("evidence")
+    evidence_document = documents.get("evidence") or (
+        load_document(evidence_layer) if evidence_layer is not None and evidence_layer.is_file() else {}
+    )
+    evidence_ids = {
+        item.get("id")
+        for item in evidence_document.get("items", [])
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+    tokens_layer = layers.get("tokens")
+    tokens_document = documents.get("tokens") or (
+        load_document(tokens_layer) if tokens_layer is not None and tokens_layer.is_file() else {}
+    )
+    token_paths = walk_tokens(tokens_document.get("tokens", {}))
+    page_type_patterns = {
+        item.get("id"): [value for value in item.get("patterns", []) if isinstance(value, str)]
+        for item in documents.get("page-types", {}).get("items", [])
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+
+    def fail(path: str, message: str, **details: Any) -> None:
+        result["errors"] += 1
+        rendered = message if not details else f"{message}: {canonical_json(details)}"
+        report.add("PLACEMENT_CLOSURE_INVALID", path, rendered)
+
+    for item in layout_document.get("items", []):
+        if not isinstance(item, dict) or not isinstance(item.get("placement"), dict):
+            continue
+        result["scenes_with_placement"] += 1
+        scene = item["placement"]
+        route_id = item.get("id", "<route>")
+        page_type = item.get("page_type")
+        scene_id = scene.get("id", "<scene>")
+        result["scenes"] += 1
+        regions = scene.get("regions", [])
+        region_ids = {
+            region.get("id")
+            for region in regions
+            if isinstance(region, dict) and isinstance(region.get("id"), str)
+        }
+        if len(region_ids) != len(regions):
+            fail(f"layers.layout.{route_id}.placement.regions", "region IDs must be unique", scene=scene_id)
+        for region in regions:
+            if not isinstance(region, dict) or not isinstance(region.get("id"), str):
+                continue
+            parent = region.get("parent")
+            if parent is not None and parent not in region_ids:
+                fail(
+                    f"layers.layout.{route_id}.placement.regions.{region['id']}.parent",
+                    "placement region parent is dangling",
+                    parent=parent,
+                )
+        slot_ids: set[str] = set()
+        for slot in scene.get("slots", []):
+            if not isinstance(slot, dict) or not isinstance(slot.get("id"), str):
+                continue
+            if slot["id"] in slot_ids:
+                fail(f"layers.layout.{route_id}.placement.slots.{slot['id']}", "slot ID is duplicate")
+            slot_ids.add(slot["id"])
+            if slot.get("region") not in region_ids:
+                fail(
+                    f"layers.layout.{route_id}.placement.slots.{slot['id']}.region",
+                    "placement slot region is dangling",
+                    region=slot.get("region"),
+                )
+        for relation in scene.get("relations", []):
+            if not isinstance(relation, dict):
+                continue
+            missing = [endpoint for endpoint in (relation.get("from"), relation.get("to")) if endpoint not in region_ids]
+            if missing:
+                fail(
+                    f"layers.layout.{route_id}.placement.relations",
+                    "placement relation endpoint is dangling",
+                    missing=missing,
+                )
+        for domain in scene.get("scroll_domains", []):
+            if isinstance(domain, dict) and domain.get("owner") not in region_ids:
+                fail(
+                    f"layers.layout.{route_id}.placement.scroll_domains.{domain.get('id')}",
+                    "scroll owner is not a declared region",
+                    owner=domain.get("owner"),
+                )
+        for geometry in scene.get("geometry", []):
+            token = geometry.get("token") if isinstance(geometry, dict) else None
+            if token and token.removeprefix("token/") not in token_paths:
+                fail(
+                    f"layers.layout.{route_id}.placement.geometry.{geometry.get('id')}",
+                    "placement geometry token is dangling",
+                    token=token,
+                )
+        pattern_refs = scene.get("pattern_refs", [])
+        allowed_patterns = set(page_type_patterns.get(page_type, []))
+        for target in pattern_refs:
+            if target not in ids:
+                fail(
+                    f"layers.layout.{route_id}.placement.pattern_refs",
+                    "placement pattern reference is dangling",
+                    target=target,
+                )
+            elif target not in allowed_patterns:
+                fail(
+                    f"layers.layout.{route_id}.placement.pattern_refs",
+                    "placement pattern is outside the bound Page Type closure",
+                    target=target,
+                    page_type=page_type,
+                )
+        for target in scene.get("evidence_refs", []):
+            if target not in evidence_ids:
+                fail(
+                    f"layers.layout.{route_id}.placement.evidence_refs",
+                    "placement evidence reference is dangling",
+                    target=target,
+                )
+    report.placement = result
+    return result
+
+
 def validate_inventory(path: Path) -> Report:
     report = Report("certification-inventory", path)
     try:
@@ -633,8 +767,9 @@ def validate_target(target: Path, kind: str, *, require_component_family: bool =
     if kind == "active" and not has_binding:
         report.add("BINDING_MISSING", "binding.yaml", "active instance requires binding.yaml")
     validate_package_identity(target, manifest, report)
-    ids, refs, _ = collect_entities(layers, report)
+    ids, refs, documents = collect_entities(layers, report)
     validate_references(ids, refs, report)
+    validate_placement(manifest, layers, ids, documents, report)
     report.component_family = derive_component_family(manifest, layers, ids)
     if require_component_family:
         enforce_family_closure(report.component_family, report)

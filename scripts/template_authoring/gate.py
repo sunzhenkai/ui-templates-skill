@@ -109,63 +109,16 @@ def run_authoring_gate(
         }
     before = _file_digest(production_index)
     issues: list[dict[str, Any]] = []
-    if (candidate_template / "design-system.yaml").is_file():
-        validator_command = _command(
-            validator,
-            ["validate", str(candidate_template.resolve()), "--kind", "package", "--json"],
-        )
-        returncode, validator_payload, stderr = _run_json(validator_command, cwd)
-        if returncode != 0 or not isinstance(validator_payload, dict) or not validator_payload.get("valid"):
-            issues.append({"code": "DESIGN_SYSTEM_VALIDATOR_FAILED", "returncode": returncode, "stderr": stderr})
-        eval_command = _command(eval_runner, ["--skill", "ui-template-author"])
-        returncode, eval_payload, stderr = _run_json(eval_command, cwd)
-        if returncode != 0 or not _eval_passed(eval_payload):
-            issues.append({"code": "EVAL_FAILED", "returncode": returncode, "stderr": stderr})
-        unchanged_before_promotion = _file_digest(production_index) == before
-        if not unchanged_before_promotion:
-            issues.append({"code": "PRODUCTION_INDEX_CHANGED_DURING_GATE"})
-        promoted = False
-        if not issues and promote_index:
-            try:
-                _atomic_copy(candidate_index, production_index)
-                promoted = True
-            except OSError as exc:
-                issues.append({"code": "INDEX_PROMOTION_FAILED", "message": str(exc)})
-        after = _file_digest(production_index)
-        manifest = load_document(candidate_template / "design-system.yaml")
-        return {
-            "report_schema_version": REPORT_SCHEMA_VERSION,
-            "status": "passed" if not issues else "failed",
-            "gate": {
-                "capture": "not-run", "reproducibility": "not-run",
-                "validation": "passed" if not any(item["code"] == "DESIGN_SYSTEM_VALIDATOR_FAILED" for item in issues) else "failed",
-                "eval": "passed" if _eval_passed(eval_payload) else "failed",
-            },
-            "capture": None,
-            "profile": {
-                "schema_version": "design-system/v1", "profile": "design-system-package",
-                "conformance": manifest.get("capability"), "scope": manifest.get("capability"),
-                "canonical_digest": manifest.get("contract_digest"), "unresolved": [],
-            },
-            "replay": {"status": "not-run"},
-            "eval": None if eval_payload is None else {
-                "runner_version": eval_payload.get("runner_version"), "revision": eval_payload.get("revision"),
-                "runtime_fingerprint": eval_payload.get("runtime_fingerprint"), "counts": eval_payload.get("counts"),
-                "status": eval_payload.get("status"),
-            },
-            "production_index": {
-                "before_digest": before, "after_digest": after, "unchanged_during_gate": unchanged_before_promotion,
-                "promoted": promoted,
-            },
-            "degradation": None,
-            "issues": sorted(issues, key=canonical_json),
-        }
+    is_design_system = (candidate_template / "design-system.yaml").is_file()
     capture_receipt: dict[str, Any] | None = None
     validator_payload: dict[str, Any] | None = None
     eval_payload: dict[str, Any] | None = None
     profile: dict[str, Any] | None = None
     capture_status = "failed"
     reproducibility = "failed"
+    replay: dict[str, Any] = {"status": "not-run"}
+    degradation: str | None = None
+
     try:
         first = capture_from_files(request_path, source_root)
         second = capture_from_files(request_path, source_root)
@@ -176,23 +129,76 @@ def run_authoring_gate(
             issues.append({"code": "CAPTURE_UNRESOLVED", "details": first.get("unresolved", [])})
         if reproducibility != "passed":
             issues.append({"code": "CAPTURE_NOT_REPRODUCIBLE"})
+
+        generated: dict[str, Any] | None = None
         if capture_status == "captured":
             generated = facts_to_fidelity(first)
             if "shell" in (first.get("request") or {}).get("scope", {}).get("scenes", []) and not chrome_complete_sidecar(generated):
                 issues.append({"code": CHROME_INCOMPLETE})
             meta_path = candidate_template / "meta.yaml"
             if meta_path.is_file():
-                meta = load_document(meta_path)
-                declared = ((meta.get("coverage") or {}).get("page_modes") or {}).get("declared") if isinstance(meta, dict) else None
+                declared = load_document(meta_path).get("coverage", {}).get("platforms", {})
                 if page_modes_replace_shell(declared) and not (candidate_template / "fidelity.yaml").is_file():
                     issues.append({"code": COVERAGE_TAXONOMY_REPLACES_SHELL})
-        if capture_status == "style-only" and not (first.get("style_only_reason") or "").strip():
+        elif capture_status == "style-only" and not (first.get("style_only_reason") or "").strip():
             issues.append({"code": "STYLE_ONLY_REASON_REQUIRED"})
+            degradation = "style-only: structural layout/geometry/state fidelity is not provided; chrome composition is not provided"
     except CaptureError as exc:
         issues.append({"code": exc.code, "message": str(exc), "details": exc.details})
-    if not issues and capture_receipt is not None:
+
+    if capture_receipt is not None:
         receipt_out.parent.mkdir(parents=True, exist_ok=True)
         receipt_out.write_text(json.dumps(capture_receipt, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+
+    if is_design_system:
+        manifest = load_document(candidate_template / "design-system.yaml")
+        capability = manifest.get("capability")
+        if capability == "page-system" and capture_status != "captured":
+            issues.append({"code": "PAGE_SYSTEM_STRUCTURAL_DOWNGRADE_REQUIRED"})
+            degradation = "page-system requires structural placement closure; explicitly downgrade capability to continue"
+
+        if capture_status == "captured" and isinstance(generated, dict):
+            from template_validation.fidelity import replay_profile
+            sidecar_path = candidate_template / "fidelity.yaml"
+            if not sidecar_path.is_file():
+                issues.append({"code": "STRUCTURAL_FIDELITY_REQUIRED"})
+            else:
+                candidate_profile = load_document(sidecar_path)
+                if canonical_json(candidate_profile) != canonical_json(generated):
+                    issues.append({"code": "STRUCTURAL_FIDELITY_MISMATCH"})
+                request = capture_receipt["request"]
+                replay = replay_profile(
+                    candidate_profile,
+                    source_roots={request["source_id"]: source_root.resolve()},
+                    candidate_template=candidate_template,
+                    capture_receipt=capture_receipt,
+                )
+                if request["conformance"] == "structural" and not _replay_passed(replay):
+                    issues.append({"code": "STRUCTURAL_REPLAY_REQUIRED", "replay": replay})
+                profile = {
+                    "schema_version": "design-system/v1",
+                    "profile": candidate_profile.get("profile"),
+                    "conformance": candidate_profile.get("conformance"),
+                    "scope": candidate_profile.get("scope"),
+                    "canonical_digest": "sha256:" + hashlib.sha256(canonical_json(candidate_profile).encode("utf-8")).hexdigest(),
+                    "unresolved": candidate_profile.get("unresolved", []),
+                    "replay": replay,
+                }
+                if profile.get("conformance") != request["conformance"]:
+                    issues.append({"code": "CONFORMANCE_MISMATCH"})
+                elif profile.get("conformance") == "structural" and profile.get("unresolved"):
+                    issues.append({"code": "STRUCTURAL_UNRESOLVED"})
+
+        validator_command = _command(
+            validator,
+            ["validate", str(candidate_template.resolve()), "--kind", "package", "--json"],
+        )
+        returncode, validator_payload, stderr = _run_json(validator_command, cwd)
+        if returncode != 0 or not isinstance(validator_payload, dict) or not validator_payload.get("valid"):
+            issues.append({"code": "DESIGN_SYSTEM_VALIDATOR_FAILED", "returncode": returncode, "stderr": stderr})
+        elif capability == "page-system" and (validator_payload.get("placement") or {}).get("scenes", 0) == 0:
+            issues.append({"code": "PLACEMENT_CLOSURE_MISSING"})
+    elif capture_receipt is not None:
         source_id = capture_receipt["request"]["source_id"]
         validator_arguments = [
             str(candidate_template), "--index", str(candidate_index), "--json",
@@ -214,6 +220,7 @@ def run_authoring_gate(
                 issues.append({"code": "STRUCTURAL_REPLAY_REQUIRED"})
             elif profile.get("conformance") == "structural" and profile.get("unresolved"):
                 issues.append({"code": "STRUCTURAL_UNRESOLVED"})
+
     if not issues:
         eval_command = _command(eval_runner, ["--skill", "ui-template-author"])
         returncode, eval_payload, stderr = _run_json(eval_command, cwd)
@@ -231,13 +238,22 @@ def run_authoring_gate(
             issues.append({"code": "INDEX_PROMOTION_FAILED", "message": str(exc)})
     after = _file_digest(production_index)
     status = "passed" if not issues else "failed"
-    replay = profile.get("replay") if isinstance(profile, dict) else {"status": "not-run"}
+    validation_ok = not any(
+        item["code"] in {
+            "VALIDATOR_FAILED", "DESIGN_SYSTEM_VALIDATOR_FAILED", "STRUCTURAL_REPLAY_REQUIRED",
+            "STRUCTURAL_UNRESOLVED", "CONFORMANCE_MISMATCH", "STRUCTURAL_FIDELITY_REQUIRED",
+            "STRUCTURAL_FIDELITY_MISMATCH", "PLACEMENT_CLOSURE_MISSING",
+        }
+        for item in issues
+    )
+    replay = profile.get("replay") if isinstance(profile, dict) and isinstance(profile.get("replay"), dict) else replay
     report = {
         "report_schema_version": REPORT_SCHEMA_VERSION,
         "status": status,
         "gate": {
-            "capture": capture_status, "reproducibility": reproducibility,
-            "validation": "passed" if isinstance(validator_payload, dict) and validator_payload.get("exit_code") == 0 and not any(item["code"].startswith("VALIDATOR") or item["code"].startswith("STRUCTURAL") or item["code"] == "CONFORMANCE_MISMATCH" for item in issues) else "failed",
+            "capture": capture_status,
+            "reproducibility": reproducibility,
+            "validation": "passed" if validation_ok else "failed",
             "eval": "passed" if _eval_passed(eval_payload) else "failed",
         },
         "capture": None if capture_receipt is None else {
@@ -261,10 +277,7 @@ def run_authoring_gate(
             "before_digest": before, "after_digest": after, "unchanged_during_gate": unchanged_before_promotion,
             "promoted": promoted,
         },
-        "degradation": (
-            "style-only: structural layout/geometry/state fidelity is not provided; chrome composition is not provided"
-            if isinstance(profile, dict) and profile.get("conformance") == "style-only" else None
-        ),
+        "degradation": degradation,
         "issues": sorted(issues, key=canonical_json),
     }
     return report

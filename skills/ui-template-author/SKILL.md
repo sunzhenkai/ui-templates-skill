@@ -90,7 +90,7 @@ python3 scripts/validate_templates.py <candidate-template-or-templates-root> \
 
 ### 3. Eval
 
-本次从源导入时，先对相同 request/revision/scope/decisions 重复 capture；closure digest、record identities/status 与 unresolved 必须完全一致。已发布模板无 session source 时跳过 capture 重复，只跑 portable eval。再运行 Authoring/schema/反馈/repo-profile portable contract eval；要求 runner 报告 `declared = parsed = executed > 0` 且所有阻断 script judge 通过。LLM judge 仅在发布策略要求且已授权时运行。Eval 不存在、不可执行、输出不可解析、reproducibility 漂移或 case 数不一致都视为失败。
+本次从源导入时，无论候选是否已有 `design-system/v1` manifest，都先对相同 request/revision/scope/decisions 重复 capture；closure digest、record identities/status 与 unresolved 必须完全一致。package candidate 不得把 source gate 降级为 portable-only shortcut。已发布模板无 session source 时跳过 capture 重复，只跑 portable eval。page-system 的 Generate-from-source 必须具备结构化 placement closure、stable Pattern/Page Type identity、可解析 evidence 和通过的 source replay；无法闭合时只能显式降级 capability，不得继续发布为 page-system。再运行 Authoring/schema/反馈/repo-profile portable contract eval；要求 runner 报告 `declared = parsed = executed > 0` 且所有阻断 script judge 通过。LLM judge 仅在发布策略要求且已授权时运行。Eval 不存在、不可执行、输出不可解析、reproducibility 漂移或 case 数不一致都视为失败。
 
 bundle 在本 skill 根分发 `runtime/capture_repo_fidelity.py`、`runtime/run_authoring_gate.py` 和 `runtime/run_contract_evals.py`；普通离线执行确定性 judges，不调用模型或网络。runner 缺失、能力不足或输出不满足计数/身份契约时停在 Eval，保持 production INDEX 不变。
 

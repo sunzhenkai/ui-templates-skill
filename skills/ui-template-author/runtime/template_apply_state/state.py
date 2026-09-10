@@ -424,6 +424,7 @@ def validate_checkpoint(
     fidelity_value: Any | None = None,
     previous_fidelity: Any | None = None,
     active_layers: dict[str, set[str]] | None = None,
+    placement_context: dict[str, Any] | None = None,
 ) -> list[Finding]:
     root = apply_root.resolve()
     findings = _schema_findings("checkpoint", checkpoint, "checkpoint.yaml", schema_dir)
@@ -465,7 +466,17 @@ def validate_checkpoint(
     phases = checkpoint.get("phases", []) if isinstance(checkpoint.get("phases"), list) else []
     by_id = {phase.get("id"): phase for phase in phases if isinstance(phase, dict) and isinstance(phase.get("id"), int)}
     findings.extend(_architecture_findings(root, by_id, schema_dir))
-    findings.extend(_route_composition_findings(root, by_id, active_layers))
+    structural_available = (
+        checkpoint_template.get("fidelity") == "repo-structural-v1"
+        or (isinstance(fidelity_value, dict) and fidelity_value.get("profile") == "repo-structural-v1" and fidelity_value.get("conformance") == "structural")
+    )
+    findings.extend(_route_composition_findings(
+        root,
+        by_id,
+        active_layers,
+        placement_context=placement_context,
+        structural_available=structural_available,
+    ))
     if isinstance(checkpoint_template, dict):
         origin = checkpoint_template.get("origin")
         resolved_path = checkpoint_template.get("resolved_path")
@@ -625,6 +636,9 @@ def _route_composition_findings(
     apply_root: Path,
     by_id: dict[int, dict[str, Any]],
     active_layers: dict[str, set[str]] | None,
+    *,
+    placement_context: dict[str, Any] | None = None,
+    structural_available: bool = False,
 ) -> list[Finding]:
     """Pattern-bound composition: routes map to declared page types and resolvable refs."""
     findings: list[Finding] = []
@@ -644,7 +658,15 @@ def _route_composition_findings(
 
     for raw in entries(apply_root / "02-routes.yaml"):
         route_path = raw.get("path", "<route>")
+        route_id = raw.get("id")
         page_type = raw.get("page_type")
+        if not isinstance(route_id, str) or not route_id:
+            findings.append(Finding(
+                "ROUTE_ID_MISSING",
+                f"02-routes.yaml#{route_path}.id",
+                "included route 必须有稳定 route ID，供 placement-sensitive component 引用",
+                2,
+            ))
         if page_type is None:
             findings.append(Finding(
                 "ROUTE_PAGE_TYPE_MISSING",
@@ -659,6 +681,100 @@ def _route_composition_findings(
                 f"unknown page type: {page_type}",
                 2,
             ))
+
+        pattern_refs = raw.get("pattern_refs")
+        if not isinstance(pattern_refs, list) or not pattern_refs or not all(
+            isinstance(item, str) for item in pattern_refs
+        ):
+            findings.append(Finding(
+                "ROUTE_PATTERN_BINDING_MISSING",
+                f"02-routes.yaml#{route_path}",
+                "included route 必须绑定至少一个已声明 Pattern",
+                2,
+            ))
+            pattern_refs = []
+        else:
+            for target in pattern_refs:
+                if target not in active_layers.get("patterns", set()):
+                    findings.append(Finding(
+                        "ROUTE_PATTERN_REF_DANGLING",
+                        f"02-routes.yaml#{route_path}.pattern_refs",
+                        f"unknown pattern: {target}",
+                        2,
+                        {"target": target},
+                    ))
+            allowed_patterns = ((placement_context or {}).get("page_type_patterns") or {}).get(page_type)
+            if isinstance(allowed_patterns, list):
+                outside = sorted(set(pattern_refs) - set(allowed_patterns))
+                if outside:
+                    findings.append(Finding(
+                        "ROUTE_PATTERN_NOT_IN_PAGE_TYPE",
+                        f"02-routes.yaml#{route_path}.pattern_refs",
+                        "route Pattern 超出绑定 Page Type 的声明 closure",
+                        2,
+                        {"outside": outside, "page_type": page_type},
+                    ))
+
+        if raw.get("structural_verification") != ("available" if structural_available else "unavailable"):
+            findings.append(Finding(
+                "PLACEMENT_VERIFICATION_AVAILABILITY_INVALID",
+                f"02-routes.yaml#{route_path}.structural_verification",
+                "route 必须显式记录 structural verification 可用性",
+                2,
+                {"expected": "available" if structural_available else "unavailable"},
+            ))
+
+        layouts = (placement_context or {}).get("layouts", {})
+        if isinstance(layouts, dict):
+            candidates = {
+                layout_id: layout
+                for layout_id, layout in layouts.items()
+                if isinstance(layout, dict) and layout.get("page_type") == page_type and isinstance(layout.get("placement"), dict)
+            }
+            if candidates:
+                layout_ref = raw.get("layout_ref")
+                if layout_ref not in candidates:
+                    findings.append(Finding(
+                        "ROUTE_LAYOUT_BINDING_MISSING",
+                        f"02-routes.yaml#{route_path}.layout_ref",
+                        "route 必须绑定匹配 Page Type 的结构化 layout scene",
+                        2,
+                        {"allowed": sorted(candidates)},
+                    ))
+                else:
+                    scene_patterns = candidates[layout_ref].get("placement", {}).get("pattern_refs", [])
+                    missing = sorted(set(scene_patterns) - set(pattern_refs))
+                    if missing:
+                        findings.append(Finding(
+                            "ROUTE_PLACEMENT_CLOSURE_INCOMPLETE",
+                            f"02-routes.yaml#{route_path}.pattern_refs",
+                            "route Pattern closure 不包含结构化 layout 要求的 Pattern",
+                            2,
+                            {"missing": missing},
+                        ))
+            elif structural_available:
+                findings.append(Finding(
+                    "ROUTE_PLACEMENT_SCENE_MISSING",
+                    f"02-routes.yaml#{route_path}.layout_ref",
+                    "structural fidelity 可用时 route 必须有结构化 placement scene",
+                    2,
+                ))
+
+        if not structural_available:
+            forbidden = {"shell", "shell_variant", "slot_order", "scroll_owner", "topology", "placement"}
+            asserted = sorted(forbidden & set(raw))
+            if asserted:
+                findings.append(Finding(
+                    "UNAVAILABLE_PLACEMENT_ASSERTION",
+                    f"02-routes.yaml#{route_path}",
+                    "structural fidelity unavailable 时不得声明机器 placement 约束",
+                    2,
+                    {"fields": asserted},
+                ))
+
+        route_patterns_by_id: dict[str, list[str]] = {}
+        if isinstance(route_id, str) and pattern_refs:
+            route_patterns_by_id[route_id] = list(pattern_refs)
     for raw in entries(apply_root / "04-components.yaml"):
         name = raw.get("id") or raw.get("name") or "<component>"
         refs: list[str] = []
@@ -680,6 +796,45 @@ def _route_composition_findings(
                     "COMPONENT_REF_DANGLING",
                     f"04-components.yaml#{name}",
                     f"unknown stable ID: {ref}",
+                    4,
+                ))
+
+        placement_role = raw.get("placement_role") or raw.get("placement_group")
+        if isinstance(placement_role, str) and placement_role:
+            route_refs = raw.get("route_refs")
+            if not isinstance(route_refs, list) or not route_refs or not all(isinstance(item, str) for item in route_refs):
+                findings.append(Finding(
+                    "PLACEMENT_ROUTE_BINDING_MISSING",
+                    f"04-components.yaml#{name}.route_refs",
+                    "placement-sensitive component 必须绑定 route",
+                    4,
+                ))
+                continue
+            authorized: set[str] = set()
+            for route_ref in route_refs:
+                authorized.update(route_patterns_by_id.get(route_ref, set()))
+            placement_pattern = raw.get("placement_pattern")
+            if not isinstance(placement_pattern, str) or not placement_pattern:
+                findings.append(Finding(
+                    "PLACEMENT_COMPONENT_UNAUTHORIZED",
+                    f"04-components.yaml#{name}.placement_pattern",
+                    "placement-sensitive component 必须声明授权 Pattern",
+                    4,
+                    {"placement_role": placement_role, "routes": route_refs},
+                ))
+            elif placement_pattern not in authorized:
+                findings.append(Finding(
+                    "PLACEMENT_COMPONENT_UNAUTHORIZED",
+                    f"04-components.yaml#{name}.placement_pattern",
+                    "授权 Pattern 不在 route placement closure 中",
+                    4,
+                    {"placement_pattern": placement_pattern, "authorized": sorted(authorized)},
+                ))
+            elif placement_pattern not in active_layers.get("patterns", set()):
+                findings.append(Finding(
+                    "COMPONENT_REF_DANGLING",
+                    f"04-components.yaml#{name}.placement_pattern",
+                    f"unknown stable ID: {placement_pattern}",
                     4,
                 ))
     return findings

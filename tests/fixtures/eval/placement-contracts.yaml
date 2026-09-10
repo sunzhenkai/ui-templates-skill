@@ -1,0 +1,35 @@
+schema_version: 1
+cases:
+  author-placement-source-gate:
+    assertions:
+      - type: file_contains
+        path: skills/ui-template-author/SKILL.md
+        all:
+          - "无论候选是否已有 `design-system/v1` manifest"
+          - "portable-only shortcut"
+          - "结构化 placement closure"
+          - "source replay"
+          - "显式降级 capability"
+      - type: file_contains
+        path: skills/ui-template-author/references/source-repo.md
+        all:
+          - "仍必须走同一 staging capture gate"
+          - "候选格式本身不构成 portable-only 豁免"
+          - "stable topology"
+  apply-placement-closure:
+    assertions:
+      - type: file_contains
+        path: skills/ui-template-apply/references/apply-workflow.md
+        all:
+          - "`layout_ref`"
+          - "`pattern_refs`"
+          - "`structural_verification`"
+          - "`placement_pattern`"
+          - "unavailable"
+      - type: file_contains
+        path: skills/ui-template-apply/references/quality-gates.md
+        all:
+          - "relation/order"
+          - "scroll owner"
+          - "responsive mode"
+          - "profile-verified"

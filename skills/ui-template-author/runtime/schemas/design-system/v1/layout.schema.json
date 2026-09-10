@@ -50,7 +50,130 @@
             "items": {
               "$ref": "common.schema.json#/$defs/entityId"
             }
+          },
+          "placement": {
+            "$ref": "#/$defs/placementScene"
           }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]+(?:[-_.][a-z0-9]+)*$"
+    },
+    "semanticRole": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "placementRegion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "role": {"$ref": "#/$defs/semanticRole"},
+        "parent": {"$ref": "#/$defs/stableId"}
+      }
+    },
+    "placementSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "region", "order"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "role": {"$ref": "#/$defs/semanticRole"},
+        "region": {"$ref": "#/$defs/stableId"},
+        "order": {"type": "integer", "minimum": 0, "maximum": 32}
+      }
+    },
+    "placementRelation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "from", "to"],
+      "properties": {
+        "type": {"enum": ["contains", "owns", "horizontal", "vertical", "overlay"]},
+        "from": {"$ref": "#/$defs/stableId"},
+        "to": {"$ref": "#/$defs/stableId"},
+        "order": {"type": "integer", "minimum": 0, "maximum": 32}
+      }
+    },
+    "placementScrollDomain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "axis", "owner"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "axis": {"enum": ["inline", "block"]},
+        "owner": {"$ref": "#/$defs/stableId"},
+        "nested_in": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/stableId"}]}
+      }
+    },
+    "placementResponsiveMode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "viewport"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "viewport": {"$ref": "#/$defs/stableId"}
+      }
+    },
+    "placementGeometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "token"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "role": {"$ref": "#/$defs/semanticRole"},
+        "token": {
+          "type": "string",
+          "pattern": "^token/[A-Za-z0-9_.-]+$"
+        }
+      }
+    },
+    "placementScene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "regions", "relations", "pattern_refs", "evidence_refs"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "shell_variant": {"enum": ["inset", "flush"]},
+        "regions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/placementRegion"}
+        },
+        "slots": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/placementSlot"}
+        },
+        "relations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/placementRelation"}
+        },
+        "scroll_domains": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/placementScrollDomain"}
+        },
+        "responsive_modes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/placementResponsiveMode"}
+        },
+        "geometry": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/placementGeometry"}
+        },
+        "pattern_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "common.schema.json#/$defs/entityId"}
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/stableId"}
         }
       }
     }

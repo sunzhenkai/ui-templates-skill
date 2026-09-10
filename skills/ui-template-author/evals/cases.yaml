@@ -16,6 +16,21 @@ cases:
         - '汇报包含模板路径、关键 token 摘要、默认值（origin: default）、估算值与 coverage 说明'
       must_not: []
     revision: harden-template-lifecycle-eval-v1
+  - id: author-placement-source-gate
+    skill: ui-template-author
+    category: validation-gate
+    description: design-system package source import 不得绕过 capture，且 page-system 需要 placement closure。
+    given: 用户提交 design-system/v1 candidate、session source 和 structural capture request
+    fixture: tests/fixtures/eval/placement-contracts.yaml#author-placement-source-gate
+    fixture_sha256: f53448fd2e710376801e92a3cf2cc348ff8737302c44735a1ce9cc033cfe80f1
+    judge: script
+    expect:
+      must:
+        - 执行同一 capture/reproducibility/replay staging gate
+        - page-system 无法闭合时显式降级或停止
+      must_not:
+        - "因 portable package validator 通过就报告 capture: not-run 成功"
+    revision: harden-template-lifecycle-eval-v1
   - id: no-apply-handoff-after-authoring
     skill: ui-template-author
     category: routing
@@ -145,7 +160,7 @@ cases:
     description: Authoring 必须提供浏览、退役与删除手续，INDEX 带 published/retired。
     given: 用户要求退役或删除已发布模板
     fixture: tests/fixtures/eval/loop-contracts.yaml#authoring-template-lifecycle-verbs
-    fixture_sha256: 37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465
+    fixture_sha256: d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89
     judge: script
     expect:
       must:
@@ -160,7 +175,7 @@ cases:
     description: 从源更新必须冻结变更集合，未声明文件保持原字节。
     given: 用户要求从源更新模板的部分组件
     fixture: tests/fixtures/eval/loop-contracts.yaml#authoring-layered-extraction
-    fixture_sha256: 37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465
+    fixture_sha256: d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89
     judge: script
     expect:
       must:

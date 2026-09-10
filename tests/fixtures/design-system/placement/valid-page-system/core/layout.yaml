@@ -1,0 +1,75 @@
+schema: design-system-layout/v1
+items:
+- id: route/detail
+  name: Detail route
+  page_type: page-type/detail
+  slots:
+  - header
+  - body
+  breakpoints:
+  - narrow
+  - wide
+  rule_refs:
+  - rule/NN-001
+  placement:
+    id: scene.detail
+    shell_variant: inset
+    regions:
+    - id: region.root
+      role: page
+    - id: region.header
+      role: page-header
+      parent: region.root
+    - id: region.section-navigation
+      role: section-navigation
+      parent: region.root
+    - id: region.content
+      role: page-content
+      parent: region.root
+    slots:
+    - id: slot.header
+      role: page-header
+      region: region.header
+      order: 0
+    - id: slot.section-navigation
+      role: section-navigation
+      region: region.section-navigation
+      order: 1
+    - id: slot.content
+      role: page-content
+      region: region.content
+      order: 2
+    relations:
+    - type: contains
+      from: region.root
+      to: region.header
+      order: 0
+    - type: contains
+      from: region.root
+      to: region.section-navigation
+      order: 1
+    - type: contains
+      from: region.root
+      to: region.content
+      order: 2
+    - type: horizontal
+      from: region.section-navigation
+      to: region.content
+      order: 1
+    scroll_domains:
+    - id: scroll.content
+      axis: block
+      owner: region.content
+      nested_in: null
+    responsive_modes:
+    - id: mode.desktop
+      viewport: desktop
+    geometry:
+    - id: geometry.content-inset
+      role: content-inset
+      token: token/space.md
+    pattern_refs:
+    - pattern/list-page
+    evidence_refs:
+    - evidence-page-detail
+    - evidence-pattern-list-page

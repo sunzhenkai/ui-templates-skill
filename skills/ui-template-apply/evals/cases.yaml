@@ -20,6 +20,22 @@ cases:
       must_not:
         - 未读上述文件即开始实现页面
     revision: add-pattern-fidelity-certification-eval-v1
+  - id: apply-placement-closure
+    skill: ui-template-apply
+    category: checkpoint
+    description: route/component placement 必须绑定 stable closure，unavailable 时不得断言机器 topology。
+    given: Active Instance 提供 layout/Page Type/Pattern closure 或声明 structural fidelity unavailable
+    fixture: tests/fixtures/eval/placement-contracts.yaml#apply-placement-closure
+    fixture_sha256: f53448fd2e710376801e92a3cf2cc348ff8737302c44735a1ce9cc033cfe80f1
+    judge: script
+    expect:
+      must:
+        - Phase 2 记录 layout_ref、pattern_refs 和 structural_verification
+        - placement-sensitive component 引用授权 Pattern
+        - unavailable profile 不得输出 shell/topology 断言
+      must_not:
+        - 使用未声明 Pattern 或 prose slots 推导机器约束
+    revision: add-pattern-fidelity-certification-eval-v1
   - id: no-apply-without-template
     skill: ui-template-apply
     category: routing
@@ -185,7 +201,7 @@ cases:
     description: 保真差异不得通过修改生成 web 闭合。
     given: 对照原版发现视觉差异
     fixture: tests/fixtures/eval/loop-contracts.yaml#apply-no-patch-generated-web
-    fixture_sha256: 37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465
+    fixture_sha256: d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89
     judge: script
     expect:
       must:
@@ -200,7 +216,7 @@ cases:
     description: retired 模板不得进入新的 Apply Intake。
     given: 用户要求用 INDEX 状态为 retired 的模板实现页面
     fixture: tests/fixtures/eval/loop-contracts.yaml#apply-retired-template-rejected
-    fixture_sha256: 37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465
+    fixture_sha256: d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89
     judge: script
     expect:
       must:
@@ -215,7 +231,7 @@ cases:
     description: 用户要求对齐原版视觉时，Apply 仍只消费 Active Instance 并移交模板认证链路。
     given: 用户明确要求生成页面与可部署原版对齐
     fixture: tests/fixtures/eval/loop-contracts.yaml#apply-original-alignment-handoff
-    fixture_sha256: 37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465
+    fixture_sha256: d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89
     judge: script
     expect:
       must:
@@ -231,7 +247,7 @@ cases:
     description: source oracle、历史生成物或 source-compare artifact 进入 Apply checkpoint 时 fail closed。
     given: Apply checkpoint 试图引用 oracle revision 或保存 source-compare.yaml
     fixture: tests/fixtures/eval/loop-contracts.yaml#apply-source-blind-rejection
-    fixture_sha256: 37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465
+    fixture_sha256: d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89
     judge: script
     expect:
       must:
@@ -246,7 +262,7 @@ cases:
     description: included route 必须映射到已声明 Page Type 且引用的 Pattern/Primitive 可解析。
     given: Active Instance 声明了 page-type/dashboard、pattern/dashboard-shell 与 primitive/panel
     fixture: tests/fixtures/eval/loop-contracts.yaml#apply-pattern-bound-composition
-    fixture_sha256: 37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465
+    fixture_sha256: d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89
     judge: script
     expect:
       must:
@@ -261,7 +277,7 @@ cases:
     description: 页面缺少模板未声明的可复用交互控件时，停止复用层实现并生成 package feedback。
     given: 页面需要 Active Instance 未声明的可复用交互控件
     fixture: tests/fixtures/eval/loop-contracts.yaml#apply-missing-reusable-control-feedback
-    fixture_sha256: 37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465
+    fixture_sha256: d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89
     judge: script
     expect:
       must:
@@ -277,7 +293,7 @@ cases:
     description: Apply 实现时不得读取原版 checkout 或历史生成 web。
     given: 工作区同时存在模板 provenance 与 example web
     fixture: tests/fixtures/eval/loop-contracts.yaml#apply-no-source-checkout
-    fixture_sha256: 37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465
+    fixture_sha256: d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89
     judge: script
     expect:
       must:

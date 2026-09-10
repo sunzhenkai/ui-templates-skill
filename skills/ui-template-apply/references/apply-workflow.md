@@ -81,7 +81,7 @@ Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可�
 
 ## Phase 2 — IA/layout/routes（`02-routes.yaml`）
 
-记录 route、页面模式、入口/主要动作、URL params、shell/scroll owner、响应式矩阵及无效状态；跨页目的地为 link。每个 included route 必须有 `placement_plan`：页面单一职责、主要信息、主要动作、信息分组、阅读/焦点顺序、动作顺序和响应式降级位置，并引用相关 `LOCAL-PLACEMENT-###`。只把本次模板 `fidelity.yaml` 已声明的 layout/chrome record 投影为稳定 constraint IDs（region/arrangement/fill/shrink/wrap/scroll/overlay/responsive、以及已声明的 `shell_variant` / `slot:<role>:<order>` / `anchor:<role>→<region>`），不要求目标 DOM 或技术栈同构。无 sidecar 时这些几何 gate 为 unavailable，不得标 profile-verified，也不得用未声明的壳默认值去补。Gate：每个 included route 与该模板 `coverage.page_modes` 有确定映射；placement plan 的主要信息/动作和分组可追溯到页面职责；已声明的 wrap/scroll record 不得被根滚动或自动换行替代。
+记录 route、页面模式、入口/主要动作、URL params、`layout_ref`、`page_type`、`pattern_refs`、`scroll_owner`、`structural_verification`、响应式矩阵及无效状态；跨页目的地为 link。每个 included route 必须有 `placement_plan`：页面单一职责、主要信息、主要动作、信息分组、阅读/焦点顺序、动作顺序和响应式降级位置，并引用相关 `LOCAL-PLACEMENT-###`。结构化 placement 可用时，`layout_ref`、Pattern closure、relation/order、scroll owner 和 responsive mode 必须与 Active Instance topology 闭合；不要求目标 DOM 或技术栈同构。无结构化 fidelity/topology 时 `structural_verification` 必须写 `unavailable`，不得把 prose slots/breakpoints 升格为 shell variant、ordered chrome slots、scroll owner 或 topology 约束。Gate：每个 included route 与该模板 `coverage.page_modes` 有确定映射；`pattern_refs` 全部存在且属于绑定 Page Type；placement plan 的主要信息/动作和分组可追溯到页面职责；已声明的 wrap/scroll record 不得被根滚动或自动换行替代。
 
 ## Phase 3 — Project structure（`03-structure.md`）
 
@@ -89,7 +89,7 @@ Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可�
 
 ## Phase 4 — Component inventory（`04-components.yaml`）
 
-每项记录 semantic element、variants/sizes/states、keyboard/AT、source 与 template rule IDs，并增加 `semantic_decision`：用户任务、信息角色、候选语义元素、最终 primitive、选择理由、文案契约、风格角色、放置组、`LOCAL-*-###` 与 template rule IDs。状态、比较数据、元数据和操作入口按用户任务选择语义 primitive；不得因装饰便利、组件库默认值或视觉热点选错元素。将 included component/slot geometry 和 subject/context/state presentation 纳入 inventory/token map；保留 `none`、不对称 padding 等 negative facts，禁止组件库默认值覆盖 profile expected。Gate：included route 的交互全覆盖；semantic decision 无悬空 local rule；无嵌套交互；icon-only、浮层焦点和非颜色状态明确。
+每项记录 semantic element、variants/sizes/states、keyboard/AT、source 与 template rule IDs，并增加 `semantic_decision`：用户任务、信息角色、候选语义元素、最终 primitive、选择理由、文案契约、风格角色、放置组、`LOCAL-*-###` 与 template rule IDs。placement-sensitive 使用（例如 shell/content region、section navigation、toolbar、overlay、master/detail、floating surface）必须额外声明 `route_refs`、`placement_role` 和授权它的 `placement_pattern`；该 Pattern 必须在对应 route 的 `pattern_refs` closure 内。状态、比较数据、元数据和操作入口按用户任务选择语义 primitive；不得因装饰便利、组件库默认值或视觉热点选错元素。将 included component/slot geometry 和 subject/context/state presentation 纳入 inventory/token map；保留 `none`、不对称 padding 等 negative facts，禁止组件库默认值覆盖 profile expected。Gate：included route 的交互全覆盖；semantic decision 无悬空 local rule；无嵌套交互；icon-only、浮层焦点和非颜色状态明确。
 
 ## Phase 5–7 — 实现进度（`05-07-progress.yaml`）
 
@@ -124,7 +124,7 @@ python3 ui-template-author/runtime/manage_template_index.py apply-close --apply-
 
 恢复用 `check_apply_resume.py` 计算 Impact-based Resume：digest 失配全量重开；否则按 change set 依赖面重开最早 phase。source identity：有 Git 时记录 commit + dirty diff digest；无 Git 时记录目标源码快照 digest。build identity 来自目标项目声明的构建命令/产物，必须非空且可复现；不得写“latest”。
 
-仓库工具入口（存在时）：
+仓库工具入口（存在时；安装态使用 `skills/ui-template-apply/runtime/check_template_apply_state.py`）：
 
 ```bash
 python3 scripts/check_template_apply_state.py digest <yaml-or-json>

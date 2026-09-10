@@ -17,8 +17,9 @@
 1. `spec.md` 是设计规则入口，Non-negotiables 优先。
 2. `tokens.yaml` 是精确值唯一载体，expected 不从 prose 重算。
 3. `fidelity.yaml`（若存在）定义 scene/slot/context 的 token 用法、区域关系、chrome composition（`shell_variant` / 有序 slots / anchors）和 negative facts；不复制精确值。
-4. 拆分设计文档补充平台/页面模式/组件设计。
-5. `apply/` 只补阶段映射和取证方法，不能推翻设计规则或复制精确值。
+4. `design-system/v1` 的 `core/layout.yaml` 若声明 `placement`，它是机器 topology 与 route Pattern closure 的权威；relation/order、scroll owner、responsive mode 和 `pattern_refs` 必须在 Phase 2 闭合。
+5. 拆分设计文档补充平台/页面模式/组件设计。
+6. `apply/` 只补阶段映射和取证方法，不能推翻设计规则或复制精确值。
 
 发现冲突时，以较高层为准，在 Phase 9 记录 rule ID/裁决并创建 feedback；不得静默处理。
 

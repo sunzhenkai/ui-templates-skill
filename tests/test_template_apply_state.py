@@ -576,3 +576,116 @@ class ApplyStateTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PlacementClosureTests(unittest.TestCase):
+    def test_complete_route_and_component_closure_passes(self) -> None:
+        from scripts.template_apply_state.state import _route_composition_findings
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "02-routes.yaml").write_text(yaml.safe_dump({
+                "routes": [{
+                    "id": "route/detail",
+                    "path": "/detail",
+                    "page_type": "page-type/detail",
+                    "pattern_refs": ["pattern/list-page"],
+                    "structural_verification": "unavailable",
+                }],
+            }, sort_keys=False), encoding="utf-8")
+            (root / "04-components.yaml").write_text(yaml.safe_dump({
+                "routes": [{
+                    "id": "component/list",
+                    "pattern": "pattern/list-page",
+                    "primitives": ["primitive/button"],
+                    "placement_role": "section-navigation",
+                    "route_refs": ["route/detail"],
+                    "placement_pattern": "pattern/list-page",
+                }],
+            }, sort_keys=False), encoding="utf-8")
+            layers = {
+                "page_types": {"page-type/detail"},
+                "patterns": {"pattern/list-page"},
+                "primitives": {"primitive/button"},
+            }
+            context = {"page_type_patterns": {"page-type/detail": ["pattern/list-page"]}}
+            phases = {2: {"id": 2, "status": "complete"}, 4: {"id": 4, "status": "complete"}}
+            findings = _route_composition_findings(
+                root, phases, layers,
+                placement_context=context,
+                structural_available=False,
+            )
+            self.assertEqual([], [finding.code for finding in findings])
+
+    def test_unauthorized_placement_component_fails(self) -> None:
+        from scripts.template_apply_state.state import _route_composition_findings
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "02-routes.yaml").write_text(yaml.safe_dump({
+                "routes": [{
+                    "id": "route/detail",
+                    "path": "/detail",
+                    "page_type": "page-type/detail",
+                    "pattern_refs": ["pattern/list-page"],
+                    "structural_verification": "unavailable",
+                }],
+            }, sort_keys=False), encoding="utf-8")
+            (root / "04-components.yaml").write_text(yaml.safe_dump({
+                "routes": [{
+                    "id": "component/tabs",
+                    "pattern": "pattern/list-page",
+                    "placement_role": "section-navigation",
+                    "route_refs": ["route/detail"],
+                    "placement_pattern": "pattern/other",
+                }],
+            }, sort_keys=False), encoding="utf-8")
+            layers = {
+                "page_types": {"page-type/detail"},
+                "patterns": {"pattern/list-page"},
+                "primitives": {"primitive/button"},
+            }
+            context = {"page_type_patterns": {"page-type/detail": ["pattern/list-page"]}}
+            findings = _route_composition_findings(
+                root, {2: {"id": 2, "status": "complete"}, 4: {"id": 4, "status": "complete"}},
+                layers,
+                placement_context=context,
+                structural_available=False,
+            )
+            codes = [finding.code for finding in findings]
+            self.assertIn("PLACEMENT_COMPONENT_UNAUTHORIZED", codes)
+
+    def test_unavailable_machine_assertion_reopens_phase_two(self) -> None:
+        checkpoint = {
+            "schema": "design-system-apply-checkpoint/v1",
+            "mode": "bootstrap",
+            "phases": [
+                {"id": 2, "status": "complete"},
+                {"id": 4, "status": "complete"},
+                {"id": 8, "status": "complete"},
+            ],
+        }
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "02-routes.yaml").write_text(yaml.safe_dump({
+                "routes": [{
+                    "id": "route/detail",
+                    "path": "/detail",
+                    "page_type": "page-type/detail",
+                    "pattern_refs": ["pattern/list-page"],
+                    "structural_verification": "unavailable",
+                    "shell_variant": "inset",
+                }],
+            }, sort_keys=False), encoding="utf-8")
+            (root / "04-components.yaml").write_text("routes: []\n", encoding="utf-8")
+            from scripts.template_apply_state.state import _route_composition_findings
+
+            findings = _route_composition_findings(
+                root,
+                {phase["id"]: phase for phase in checkpoint["phases"]},
+                {"page_types": {"page-type/detail"}, "patterns": {"pattern/list-page"}},
+                placement_context={"page_type_patterns": {"page-type/detail": ["pattern/list-page"]}},
+                structural_available=False,
+            )
+            decision = recovery_decision(findings, checkpoint)
+            self.assertEqual(2, decision["earliest_phase"])

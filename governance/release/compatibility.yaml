@@ -33,6 +33,7 @@ breaking_boundaries:
 - schema-v2-migration-only
 - design-freeze-v1-migration-only
 - apply-source-blind-certification-gate
+- page-system-placement-closure
 notes:
 - Author+Apply remain paired; Design remains independently installable and upgradeable.
 - Published official workbench-shell must migrate only after separate user promotion
@@ -42,3 +43,6 @@ notes:
   Certification Gate (fixed oracle revision + candidate package + fixed prompts, clean
   regeneration and Pattern Equivalence Records). Existing checkpoints without oracle
   references stay valid.'
+- 'New page-system Generate-from-source requires closed structural placement
+  evidence or an explicit capability downgrade; existing legacy-baseline packages
+  remain consumable with structural verification unavailable.'

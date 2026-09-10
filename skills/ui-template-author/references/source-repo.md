@@ -31,6 +31,8 @@
 
 structural Intake 未固定上述字段或变更集合时不得开始 **Generate-from-source**。对已发布模板做校验、改文档、消费反馈、退役或删除等不含从源采集的操作，跳过本节，不索取 source root。
 
+Generate-from-source 使用 `design-system/v1` candidate 时仍必须走同一 staging capture gate；候选格式本身不构成 portable-only 豁免。`page-system` candidate 必须把 captured placement 事实映射为 stable topology、Page Type/Pattern identity 和 evidence；无法闭合时显式降级，不得用 prose 或实现默认补齐。
+
 多个 theme、entry 或 canonical definition 未能由既有规则/显式 decision 唯一裁决时保持 unresolved，不做多数表决或“常见默认”推断。
 
 ## 声明的安全采集子集

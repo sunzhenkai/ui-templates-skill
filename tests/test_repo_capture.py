@@ -304,6 +304,91 @@ class RepoCaptureTests(unittest.TestCase):
             self.assertEqual(report["production_index"]["before_digest"], report["production_index"]["after_digest"])
             self.assertEqual("production index\n", production_index.read_text(encoding="utf-8"))
 
+    def test_design_system_package_source_gate_does_not_bypass_capture(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            source, request_path, _ = self.materialize(temp)
+            validator = base / "validator.py"
+            validator.write_text(
+                "import json\nprint(json.dumps({'schema_version':1,'valid':True,'errors':[],"
+                "'warnings':[],'placement':{'scenes':1,'scenes_with_placement':1,'errors':0}}))\n",
+                encoding="utf-8",
+            )
+            eval_runner = base / "eval.py"
+            eval_runner.write_text(
+                "import json\nprint(json.dumps({'schema_version':1,'runner_version':'1','revision':'fixture',"
+                "'runtime_fingerprint':'sha256:runtime','status':'passed','counts':"
+                "{'declared':3,'parsed':3,'executed':3,'script':3,'llm':0}}))\n",
+                encoding="utf-8",
+            )
+            candidate_template = base / "staging/template"
+            candidate_template.mkdir(parents=True)
+            (candidate_template / "design-system.yaml").write_text(
+                "schema: design-system/v1\nid: candidate\nversion: 1.0.0\ncapability: page-system\n",
+                encoding="utf-8",
+            )
+            candidate_index = base / "staging/INDEX.md"
+            candidate_index.write_text("candidate index\n", encoding="utf-8")
+            production_index = base / "production/INDEX.md"
+            production_index.parent.mkdir()
+            production_index.write_text("production index\n", encoding="utf-8")
+            report = run_authoring_gate(
+                request_path=request_path, source_root=source, candidate_template=candidate_template,
+                candidate_index=candidate_index, production_index=production_index,
+                validator=validator, eval_runner=eval_runner, receipt_out=base / "staging/receipt.json",
+                promote_index=True, cwd=ROOT,
+            )
+            self.assertEqual("failed", report["status"])
+            self.assertNotEqual("not-run", report["gate"]["capture"])
+            self.assertIn("STRUCTURAL_FIDELITY_REQUIRED", {item["code"] for item in report["issues"]})
+            self.assertFalse(report["production_index"]["promoted"])
+
+    def test_design_system_package_complete_source_closure_can_promote(self) -> None:
+        from template_authoring.profile import facts_to_fidelity
+
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            source, request_path, _ = self.materialize(temp)
+            receipt = capture_from_files(request_path, source)
+            candidate_template = base / "staging/template"
+            candidate_template.mkdir(parents=True)
+            (candidate_template / "design-system.yaml").write_text(
+                "schema: design-system/v1\nid: candidate\nversion: 1.0.0\ncapability: page-system\n",
+                encoding="utf-8",
+            )
+            profile = facts_to_fidelity(receipt)
+            (candidate_template / "fidelity.yaml").write_text(
+                yaml.safe_dump(profile, sort_keys=False, allow_unicode=True), encoding="utf-8"
+            )
+            validator = base / "validator.py"
+            validator.write_text(
+                "import json\nprint(json.dumps({'schema_version':1,'valid':True,'errors':[],"
+                "'warnings':[],'placement':{'scenes':1,'scenes_with_placement':1,'errors':0}}))\n",
+                encoding="utf-8",
+            )
+            eval_runner = base / "eval.py"
+            eval_runner.write_text(
+                "import json\nprint(json.dumps({'schema_version':1,'runner_version':'1','revision':'fixture',"
+                "'runtime_fingerprint':'sha256:runtime','status':'passed','counts':"
+                "{'declared':3,'parsed':3,'executed':3,'script':3,'llm':0}}))\n",
+                encoding="utf-8",
+            )
+            candidate_index = base / "staging/INDEX.md"
+            candidate_index.write_text("candidate index\n", encoding="utf-8")
+            production_index = base / "production/INDEX.md"
+            production_index.parent.mkdir()
+            production_index.write_text("production index\n", encoding="utf-8")
+            report = run_authoring_gate(
+                request_path=request_path, source_root=source, candidate_template=candidate_template,
+                candidate_index=candidate_index, production_index=production_index,
+                validator=validator, eval_runner=eval_runner, receipt_out=base / "staging/receipt.json",
+                promote_index=True, cwd=ROOT,
+            )
+            self.assertEqual("passed", report["status"], report)
+            self.assertEqual("captured", report["gate"]["capture"])
+            self.assertEqual("passed", report["replay"]["status"])
+            self.assertTrue(report["production_index"]["promoted"])
+
     def test_capture_cli_is_deterministic_and_style_only_is_explicit(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             source, request_path, _ = self.materialize(temp)

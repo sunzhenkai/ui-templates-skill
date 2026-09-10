@@ -29,15 +29,15 @@
       "status": "passed"
     },
     "apply-missing-reusable-control-feedback": {
-      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "fixture_sha256": "d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89",
       "status": "passed"
     },
     "apply-no-patch-generated-web": {
-      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "fixture_sha256": "d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89",
       "status": "passed"
     },
     "apply-no-source-checkout": {
-      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "fixture_sha256": "d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89",
       "status": "passed"
     },
     "apply-no-template-only-when-absent-from-catalog": {
@@ -45,7 +45,7 @@
       "status": "passed"
     },
     "apply-original-alignment-handoff": {
-      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "fixture_sha256": "d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89",
       "status": "passed"
     },
     "apply-out-of-scope-rejected": {
@@ -53,7 +53,11 @@
       "status": "passed"
     },
     "apply-pattern-bound-composition": {
-      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "fixture_sha256": "d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89",
+      "status": "passed"
+    },
+    "apply-placement-closure": {
+      "fixture_sha256": "f53448fd2e710376801e92a3cf2cc348ff8737302c44735a1ce9cc033cfe80f1",
       "status": "passed"
     },
     "apply-placement-review-contract": {
@@ -65,7 +69,7 @@
       "status": "passed"
     },
     "apply-retired-template-rejected": {
-      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "fixture_sha256": "d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89",
       "status": "passed"
     },
     "apply-session-closed-delete-hint": {
@@ -73,7 +77,7 @@
       "status": "passed"
     },
     "apply-source-blind-rejection": {
-      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "fixture_sha256": "d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89",
       "status": "passed"
     },
     "apply-style-consistency-contract": {
@@ -84,12 +88,16 @@
       "fixture_sha256": "fb8289a210f8c8ed1dc84f3b4748a1a0a308b9fe8ad97387d404d6470e37090c",
       "status": "passed"
     },
+    "author-placement-source-gate": {
+      "fixture_sha256": "f53448fd2e710376801e92a3cf2cc348ff8737302c44735a1ce9cc033cfe80f1",
+      "status": "passed"
+    },
     "authoring-catalog-zero-drift": {
       "fixture_sha256": "1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c",
       "status": "passed"
     },
     "authoring-layered-extraction": {
-      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "fixture_sha256": "d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89",
       "status": "passed"
     },
     "authoring-normalizes-and-fills-defaults": {
@@ -101,7 +109,7 @@
       "status": "passed"
     },
     "authoring-template-lifecycle-verbs": {
-      "fixture_sha256": "37c18693553a41805718878fb7d745d9d22007cd93739cc99ce7bf24ed0ae465",
+      "fixture_sha256": "d28af647aaccb35ac1c1758ff5091a332ef535b687ce1e4efeabaca6827b2a89",
       "status": "passed"
     },
     "authoring-updates-index": {

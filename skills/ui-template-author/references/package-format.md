@@ -56,6 +56,12 @@ manifest 里的 `layers` 只能声明 capability 范围内文件。缺层是 cap
 
 变更集合仍按路径/组件冻结。未声明文件保持原字节。
 
+## Placement topology
+
+`core/layout.yaml` 的每个 route 可声明可选 `placement` scene。scene 使用 stable region/slot ID、semantic role、`contains | owns | horizontal | vertical | overlay` relation、sibling order、scroll domain 和 responsive mode 表达通用拓扑；`pattern_refs` 必须属于该 route 的 Page Type closure，`evidence_refs` 必须解析到 active evidence，quantitative geometry 只能引用 `token/` path。`slots`/`breakpoints` 散文可继续存在，但不是机器 placement constraint 的唯一权威。
+
+page-system Generate-from-source 必须能闭合 topology、Page Type/Pattern identity 和 evidence；无法闭合时显式降级 capability 或停止，不得用 prose 或实现默认补齐。
+
 ## Package feedback
 
 `design-system-feedback/v1` 的 `ownership` 固定为 `package`；`package` 记录 name/version/capability/contract digest；`targets` 只接受 Stable Entity ID；`evidence_refs` 必须能在授权 inbox 上下文内解析。项目 binding 缺口和 Apply skill 缺陷不得写入 package feedback。

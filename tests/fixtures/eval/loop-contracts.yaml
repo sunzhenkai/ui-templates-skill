@@ -62,6 +62,12 @@ cases:
             value: true
           - path: [dangling_pattern]
             value: true
+          - path: [missing_pattern_binding]
+            value: true
+          - path: [unauthorized_placement]
+            value: true
+          - path: [unavailable_assertion]
+            value: true
   apply-missing-reusable-control-feedback:
     assertions:
       - type: path_exists

@@ -49,6 +49,10 @@ public_skills:
       - runtime/shared_validate_design_system.py
       - runtime/validator_discovery.py
       - runtime/schemas/design-system/v1/*.json
+      - runtime/check_template_apply_state.py
+      - runtime/template_apply_state/*.py
+      - runtime/template_validation/*.py
+      - runtime/schemas/template/fidelity/v1/*.json
   ui-template-design:
     version: 3.0.1
     include:

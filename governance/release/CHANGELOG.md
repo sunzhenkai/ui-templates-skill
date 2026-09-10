@@ -55,6 +55,10 @@ Source-blind Apply 边界硬化与模板保真认证闭环。
 
 ## Unreleased
 
+- 新增通用 Design System placement closure：portable layout 可声明 region/slot topology、relation/order、scroll owner、responsive mode 与 Pattern/Page Type/evidence 闭包； quantitative geometry 仍以 token 为唯一权威。
+- Generate-from-source 对 `design-system/v1` candidate 不再走 portable-only 旁路；source capture、reproducibility、structural closure、replay、package validation 与 eval 全部通过才可 promotion。
+- `page-system` source import 必须有完整 placement closure，或显式降级 capability；Apply 的 route/component artifact 必须绑定 stable layout/Pattern closure，placement-sensitive component 不得凭全局存在自行放置。
+- 结构化 fidelity unavailable 时，Apply 不得把 prose slots/breakpoints 升格为 shell variant、ordered chrome slots、scroll owner 或 topology 约束。
 - 增加可单独安装的 public skill `ui-template-design`：消费项目 Design System freeze；bundle 含三个 skill，默认 `make install` 仍只装 Author/Apply 且不删除已有 Design。
 - Design skill 按可观察信号分流任务类 `bootstrap | refactor | iterate`：有匹配 freeze 走迭代更新，不重开完整阶段 0–9；digest 不匹配或范围未声明则停止，不得凭口吻猜测。
 - Phase 0 架构判定只看本次前端输出根：仓库已初始化但输出根仍是新应用时必须选型；`00-architecture.yaml` 必填 `output_root`，`site` 与探测不一致失败。兄弟应用或功能规格不得自动确认。

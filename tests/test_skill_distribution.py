@@ -391,9 +391,34 @@ class SkillDistributionTests(unittest.TestCase):
         )
         self.assertEqual(0, eval_proc.returncode, eval_proc.stderr + eval_proc.stdout)
         report = json.loads(eval_proc.stdout)
-        self.assertEqual({"declared": 50, "parsed": 50, "executed": 50, "script": 48, "llm": 2}, report["counts"])
+        self.assertEqual({"declared": 52, "parsed": 52, "executed": 52, "script": 50, "llm": 2}, report["counts"])
         self.assertTrue(report["discovery"]["example_excluded"])
         self.assertIn("example/**", report["discovery"]["exclusions"])
+        placement_root = self.base / "project/placement-package"
+        shutil.copytree(
+            ROOT / "tests/fixtures/design-system/placement/valid-page-system",
+            placement_root,
+        )
+        layout = placement_root / "core/layout.yaml"
+        layout.write_text(
+            layout.read_text(encoding="utf-8").replace(
+                "to: region.header", "to: region.missing", 1,
+            ),
+            encoding="utf-8",
+        )
+        installed_validator = target / "ui-template-author/runtime/shared_validate_design_system.py"
+        repository_validator = ROOT / "scripts/validate_design_system.py"
+        outputs = []
+        for validator in (installed_validator, repository_validator):
+            process = subprocess.run(
+                [sys.executable, str(validator), "validate", str(placement_root), "--kind", "package", "--json"],
+                text=True, capture_output=True, check=False,
+            )
+            self.assertNotEqual(0, process.returncode, process.stdout + process.stderr)
+            payload = json.loads(process.stdout)
+            self.assertIn("PLACEMENT_CLOSURE_INVALID", {finding["code"] for finding in payload["errors"]})
+            outputs.append(sorted(finding["code"] for finding in payload["errors"]))
+        self.assertEqual(outputs[0], outputs[1])
         portable_templates = self.base / "project/templates"
         shutil.copytree(
             ROOT / "tests/fixtures/validator/good/templates",
