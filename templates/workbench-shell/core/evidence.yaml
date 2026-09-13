@@ -5,154 +5,154 @@ items:
   target: color.light/color.dark
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: apps/web/app/globals.css, packages/ui/styles/tokens.css
   method: computed-style
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-token-typography
   kind: token
   target: typography
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/ui/styles/tokens.css#/definitions/theme.core
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-token-spacing
   kind: token
   target: space
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/ui/components/ui/sidebar.tsx#/definitions/component.nav-item
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-token-radius
   kind: token
   target: radius
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/ui/components/ui/sidebar.tsx#/definitions/component.nav-item
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-token-shadow
   kind: token
   target: shadow
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/ui/styles/tokens.css#/definitions/theme.core
   method: computed-style
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-layout-shell
   kind: layout
   target: page-type/dashboard
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/views/layout/dashboard-layout.tsx#/definitions/scene.shell
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-layout-page
   kind: layout
   target: page-type/collection
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/views/layout/page-header.tsx#/definitions/scene.board
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-layout-detail
   kind: layout
   target: page-type/detail
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/views/layout/collection-page.tsx#/definitions/scene.master-detail
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-layout-dialog
   kind: layout
   target: page-type/modal
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/ui/components/ui/dialog.tsx#/definitions/scene.dialog
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-component-nav
   kind: component
   target: primitive/nav-item
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/views/layout/app-sidebar.tsx#/definitions/component.nav-item
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-component-chat
   kind: component
   target: primitive/chat-fab
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/views/chat/components/chat-fab.tsx#/definitions/component.chat-fab
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-component-panel
   kind: component
   target: primitive/panel
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/ui/components/ui/card.tsx#/definitions/component.panel
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-rule-shell
   kind: rule
   target: rule/LAYOUT-103
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/views/layout/app-sidebar.tsx#/definitions/scene.shell
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-default-radius
   kind: default
   target: radius.sm
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/ui/styles/tokens.css#/definitions/theme.core
   method: source-graph
   confidence: medium
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
   basis: Derived as 60% of the observed 10px base radius from the source radius scale.
 - id: evidence-component-100
@@ -446,64 +446,119 @@ items:
   target: pattern/dashboard-shell
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/views/layout/dashboard-layout.tsx#/definitions/scene.shell
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-component-201
   kind: component
   target: pattern/page-chrome
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/views/layout/page-header.tsx#/definitions/scene.page-header
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-component-202
   kind: component
   target: pattern/master-detail
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/views/detail#/definitions/scene.master-detail
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-component-203
   kind: component
   target: pattern/modal
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/views/modal#/definitions/scene.modal
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-component-204
   kind: component
   target: primitive/button
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/ui/components/ui/button.tsx#/definitions/component.button
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active
 - id: evidence-component-205
   kind: component
   target: primitive/input
   origin: source
   source_id: source-001
-  source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   locator: packages/ui/components/ui/input.tsx#/definitions/component.input
   method: source-graph
   confidence: high
-  captured_at: '2026-09-13T00:00:00+00:00'
+  captured_at: '2026-09-13T16:00:00+00:00'
+  status: active
+- id: evidence-layout-content-card
+  kind: layout
+  target: route/dashboard-shell+route/collection-board+route/detail-document
+  origin: source
+  source_id: source-001
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  locator: packages/ui/components/ui/sidebar.tsx#/definitions/component.sidebar-inset, packages/views/layout/app-sidebar.tsx
+  method: source-graph
+  confidence: high
+  captured_at: '2026-09-13T16:00:00+00:00'
+  status: active
+- id: evidence-component-section-nav
+  kind: component
+  target: page-type/collection
+  origin: source
+  source_id: source-001
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  locator: packages/views/settings/components/settings-page.tsx#/definitions/component.settings-nav
+  method: source-graph
+  confidence: high
+  captured_at: '2026-09-13T16:00:00+00:00'
+  status: active
+- id: evidence-token-section-nav-width
+  kind: token
+  target: size.section-nav-default
+  origin: source
+  source_id: source-001
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  locator: packages/views/settings/components/settings-page.tsx#/definitions/component.settings-nav
+  method: computed-style
+  confidence: high
+  captured_at: '2026-09-13T16:00:00+00:00'
+  status: active
+- id: evidence-state-focus
+  kind: component
+  target: primitive/button+primitive/input+primitive/nav-item
+  origin: source
+  source_id: source-001
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  locator: packages/ui/components/ui/input.tsx#/definitions/component.input, packages/ui/components/ui/button.tsx#/definitions/component.button
+  method: source-graph
+  confidence: high
+  captured_at: '2026-09-13T16:00:00+00:00'
+  status: active
+- id: evidence-layout-settings-panes
+  kind: layout
+  target: route/settings-canvas
+  origin: source
+  source_id: source-001
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  locator: packages/views/settings/components/settings-page.tsx#/definitions/scene.settings
+  method: source-graph
+  confidence: high
+  captured_at: '2026-09-13T16:00:00+00:00'
   status: active

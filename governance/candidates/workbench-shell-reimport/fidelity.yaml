@@ -10,14 +10,18 @@ scope:
   - dashboard
   - dialog
   - master-detail
+  - settings
   - shell
   components:
   - app-sidebar
+  - button
   - chat-fab
   - command-palette
   - data-table
   - dialog
+  - input
   - page-header
+  - settings-nav
   contexts:
   - action-trigger
   - navigation-link
@@ -53,7 +57,7 @@ layout_scenes:
   negative_facts: []
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -97,7 +101,7 @@ layout_scenes:
   negative_facts: []
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -105,7 +109,7 @@ layout_scenes:
       pointer: '#/definitions/scene.shell'
       line: null
     method: source-graph
-    source_span_sha256: sha256:c4c51c42e574d97a14986fe698a425dcda777c86fa1b9da33170287ea6485011
+    source_span_sha256: sha256:e61869e18741b9f56ae0bb5168c24927574d047b3998b32b75d8554ba79a792c
     captured_at: '2026-01-01T00:00:00Z'
     confidence: high
 - id: scene.dashboard
@@ -138,7 +142,7 @@ layout_scenes:
   negative_facts: []
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -157,20 +161,20 @@ layout_scenes:
   regions:
   - id: region.detail-pane.root
     role: root
-  - id: region.detail-pane.page-canvas
-    role: page-canvas
+  - id: region.detail-pane.detail-pane
+    role: detail-pane
   relations:
   - type: contains
     from: region.detail-pane.root
-    to: region.detail-pane.page-canvas
+    to: region.detail-pane.detail-pane
   arrangement: vertical
   fill: intrinsic
   wrap: wrap
   shrink: shrink
   scroll_domains:
-  - id: scroll.detail-pane.page-canvas
+  - id: scroll.detail-pane.detail-pane
     axis: block
-    owner: region.detail-pane.page-canvas
+    owner: region.detail-pane.detail-pane
     nested_in: null
   overlays: []
   responsive_modes:
@@ -179,7 +183,7 @@ layout_scenes:
   negative_facts: []
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -187,7 +191,7 @@ layout_scenes:
       pointer: '#/definitions/scene.master-detail'
       line: null
     method: source-graph
-    source_span_sha256: sha256:62c76d9bc84e8e93994ddac40e1c2ced7c52a98f04a7bf55fad3cd4f3984f268
+    source_span_sha256: sha256:920bd6692604b769cc0a0a8cb35415858a438598e91e415f72fbeb4b8365f297
     captured_at: '2026-01-01T00:00:00Z'
     confidence: high
 - id: scene.dialog
@@ -223,7 +227,7 @@ layout_scenes:
   negative_facts: []
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -232,6 +236,111 @@ layout_scenes:
       line: null
     method: source-graph
     source_span_sha256: sha256:f008abb10ab75b31453aeb6c13a583f5065b0857f0812c8139ccd86c050d0a1f
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: scene.master-detail
+  scene: master-detail
+  scene_kind: master-detail
+  rule_id: rule.LAYOUT-105
+  status: observed
+  regions:
+  - id: region.master-detail.root
+    role: root
+  - id: region.master-detail.context-panel
+    role: context-panel
+  - id: region.master-detail.master-pane
+    role: master-pane
+  relations:
+  - type: contains
+    from: region.master-detail.root
+    to: region.master-detail.context-panel
+  - type: contains
+    from: region.master-detail.root
+    to: region.master-detail.master-pane
+  - type: overlay
+    from: region.master-detail.root
+    to: region.master-detail.context-panel
+  arrangement: horizontal
+  fill: intrinsic
+  wrap: wrap
+  shrink: shrink
+  scroll_domains:
+  - id: scroll.master-detail.master-pane
+    axis: block
+    owner: region.master-detail.master-pane
+    nested_in: null
+  overlays:
+  - id: overlay.master-detail
+    scope: region
+    anchor: region.master-detail.root
+    region: region.master-detail.context-panel
+  responsive_modes:
+  - id: mode.desktop
+    viewport: desktop
+  negative_facts: []
+  provenance:
+    source_id: source-001
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.detail-context-panel'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:2a79feba3dcbe5f7426d681585956202d94dfbcee94b6bea3679b934c6800e0a
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: scene.settings
+  scene: settings
+  scene_kind: other
+  rule_id: rule.LAYOUT-102
+  status: observed
+  regions:
+  - id: region.settings.page-canvas
+    role: page-canvas
+  - id: region.settings.section-nav
+    role: section-nav
+  - id: region.settings.root
+    role: root
+  relations:
+  - type: contains
+    from: region.settings.root
+    to: region.settings.page-canvas
+  - type: contains
+    from: region.settings.root
+    to: region.settings.section-nav
+  arrangement: vertical
+  fill: intrinsic
+  wrap: wrap
+  shrink: shrink
+  scroll_domains:
+  - id: scroll.settings.page-canvas
+    axis: block
+    owner: region.settings.page-canvas
+    nested_in: null
+  - id: scroll.settings.section-nav
+    axis: block
+    owner: region.settings.section-nav
+    nested_in: null
+  overlays: []
+  responsive_modes:
+  - id: mode.desktop
+    viewport: desktop
+  negative_facts:
+  - property: root_scroll
+    value: none
+  provenance:
+    source_id: source-001
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.settings-section-nav'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:b028ff2795f2023344f6972b85e84629ae472c98ebbf82be923720de9f3b9b22
     captured_at: '2026-01-01T00:00:00Z'
     confidence: high
 - id: scene.shell
@@ -333,7 +442,7 @@ layout_scenes:
     value: none
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -341,7 +450,7 @@ layout_scenes:
       pointer: '#/definitions/scene.shell'
       line: null
     method: source-graph
-    source_span_sha256: sha256:c4c51c42e574d97a14986fe698a425dcda777c86fa1b9da33170287ea6485011
+    source_span_sha256: sha256:e61869e18741b9f56ae0bb5168c24927574d047b3998b32b75d8554ba79a792c
     captured_at: '2026-01-01T00:00:00Z'
     confidence: high
   shell_variant: inset
@@ -402,6 +511,29 @@ layout_scenes:
     role: header-trigger
     region: region.shell.header-trigger
 component_geometry:
+- id: geometry.button.control
+  component: button
+  slot: control
+  rule_id: rule.QUALITY-101
+  status: observed
+  properties:
+    radius:
+      kind: token-ref
+      value: radius.lg
+  negative_facts: []
+  provenance:
+    source_id: source-001
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/definitions/component.button'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:96c7ab6d6bb056e8bf676f762c038301559502c3502c96d8cef4ee861128f451
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
 - id: geometry.chat-fab.chat-fab
   component: chat-fab
   slot: chat-fab
@@ -420,7 +552,7 @@ component_geometry:
   negative_facts: []
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -428,7 +560,30 @@ component_geometry:
       pointer: '#/definitions/scene.shell'
       line: null
     method: source-graph
-    source_span_sha256: sha256:c4c51c42e574d97a14986fe698a425dcda777c86fa1b9da33170287ea6485011
+    source_span_sha256: sha256:e61869e18741b9f56ae0bb5168c24927574d047b3998b32b75d8554ba79a792c
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.input.field
+  component: input
+  slot: field
+  rule_id: rule.QUALITY-101
+  status: observed
+  properties:
+    radius:
+      kind: token-ref
+      value: radius.lg
+  negative_facts: []
+  provenance:
+    source_id: source-001
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/definitions/component.input'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:23ee0519253000ea24da06574ac2a42c317ad09f1ff264225c8c4169dcdac740
     captured_at: '2026-01-01T00:00:00Z'
     confidence: high
 - id: geometry.page-header.page-header
@@ -443,7 +598,7 @@ component_geometry:
   negative_facts: []
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -466,7 +621,7 @@ component_geometry:
   negative_facts: []
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -489,7 +644,7 @@ component_geometry:
   negative_facts: []
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -497,7 +652,50 @@ component_geometry:
       pointer: '#/definitions/scene.shell'
       line: null
     method: source-graph
-    source_span_sha256: sha256:c4c51c42e574d97a14986fe698a425dcda777c86fa1b9da33170287ea6485011
+    source_span_sha256: sha256:e61869e18741b9f56ae0bb5168c24927574d047b3998b32b75d8554ba79a792c
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.shell.page-canvas
+  component: shell
+  slot: page-canvas
+  rule_id: rule.LAYOUT-107
+  status: observed
+  properties:
+    border:
+      kind: token-ref
+      value: color.surface-border
+    padding_block_end:
+      kind: token-ref
+      value: space.2
+    padding_block_start:
+      kind: token-ref
+      value: space.2
+    padding_inline_end:
+      kind: token-ref
+      value: space.2
+    padding_inline_start:
+      kind: semantic
+      value: zero
+    radius:
+      kind: token-ref
+      value: radius.xl
+    shadow:
+      kind: token-ref
+      value: shadow.surface
+  negative_facts:
+  - property: padding_inline_start
+    value: zero
+  provenance:
+    source_id: source-001
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/definitions/scene.shell'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:e61869e18741b9f56ae0bb5168c24927574d047b3998b32b75d8554ba79a792c
     captured_at: '2026-01-01T00:00:00Z'
     confidence: high
 state_presentations:
@@ -521,7 +719,7 @@ state_presentations:
     value: none
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -552,7 +750,7 @@ state_presentations:
     value: none
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -561,6 +759,37 @@ state_presentations:
       line: null
     method: source-graph
     source_span_sha256: sha256:224ce150443faba7fe957e4d987b07b8e6019da8b2b7518b26d43047bddf4574
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.button.action-trigger.focus-visible.control
+  subject_role: button
+  context: navigation-link
+  state: focus-visible
+  surface: control
+  rule_id: rule.QUALITY-104
+  status: observed
+  background: null
+  text: null
+  border:
+    kind: token-ref
+    value: color.ring
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-001
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/definitions/component.button'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:96c7ab6d6bb056e8bf676f762c038301559502c3502c96d8cef4ee861128f451
     captured_at: '2026-01-01T00:00:00Z'
     confidence: high
 - id: state.dialog.overlay-surface.open.item
@@ -581,7 +810,7 @@ state_presentations:
     value: none
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -590,6 +819,37 @@ state_presentations:
       line: null
     method: source-graph
     source_span_sha256: sha256:f008abb10ab75b31453aeb6c13a583f5065b0857f0812c8139ccd86c050d0a1f
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.input.action-trigger.focus-visible.field
+  subject_role: input
+  context: navigation-link
+  state: focus-visible
+  surface: field
+  rule_id: rule.QUALITY-104
+  status: observed
+  background: null
+  text: null
+  border:
+    kind: token-ref
+    value: color.ring
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-001
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/definitions/component.input'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:23ee0519253000ea24da06574ac2a42c317ad09f1ff264225c8c4169dcdac740
     captured_at: '2026-01-01T00:00:00Z'
     confidence: high
 - id: state.nav-link.navigation-link.active.item
@@ -612,7 +872,7 @@ state_presentations:
     value: none
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -641,7 +901,7 @@ state_presentations:
     value: underline
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -672,7 +932,7 @@ state_presentations:
     value: none
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -701,7 +961,7 @@ state_presentations:
     value: none
   provenance:
     source_id: source-001
-    source_revision: 7d51010639f3fea13f002945fc78f5f1f4438b40
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
     locator:
       path: ui-source-graph.yaml
       symbol: null
@@ -712,4 +972,114 @@ state_presentations:
     source_span_sha256: sha256:2e63acd3e4e50ed04625e6d732b9613bd24162e960ba2b044e8e40d9d0679635
     captured_at: '2026-01-01T00:00:00Z'
     confidence: high
+- id: state.settings.navigation-link.hover.section-nav
+  subject_role: settings
+  context: navigation-link
+  state: hover
+  surface: section-nav
+  rule_id: rule.QUALITY-103
+  status: observed
+  background:
+    kind: token-ref
+    value: color.surface-hover
+  text: null
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-001
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.settings-section-nav'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:b028ff2795f2023344f6972b85e84629ae472c98ebbf82be923720de9f3b9b22
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.settings.navigation-link.selected.section-nav
+  subject_role: settings
+  context: navigation-link
+  state: hover
+  surface: section-nav
+  rule_id: rule.QUALITY-103
+  status: observed
+  background:
+    kind: token-ref
+    value: color.surface-selected
+  text: null
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-001
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.settings-section-nav'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:b028ff2795f2023344f6972b85e84629ae472c98ebbf82be923720de9f3b9b22
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.settings-nav.navigation-link.focus-visible.item
+  subject_role: settings-nav
+  context: navigation-link
+  state: focus-visible
+  surface: item
+  rule_id: rule.QUALITY-104
+  status: observed
+  background: null
+  text: null
+  border:
+    kind: token-ref
+    value: color.ring
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-001
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/definitions/component.settings-nav'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:6c7d91868d60dd12894c9e0b30674f96605d15043edced6a7757d1618b848936
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
 unresolved: []
+mandatory_answers:
+  section-nav:board: excluded
+  section-nav:dashboard: excluded
+  detail-panes:master-detail: observed
+  context-panel:master-detail: observed
+  section-nav:settings: observed
+  pane-scroll:settings: observed
+  nav-anatomy:settings: observed
+  nav-state:settings: observed
+  inset-canvas:inset-or-gap:shell: observed
+  inset-canvas:radius:shell: observed
+  inset-canvas:border:shell: observed
+  inset-canvas:shadow:shell: observed
+  inset-canvas:background:shell: observed
+  focus:button: observed
+  focus:input: observed
+  focus:settings-nav: observed

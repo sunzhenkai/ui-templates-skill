@@ -591,6 +591,7 @@ class PlacementClosureTests(unittest.TestCase):
                     "page_type": "page-type/detail",
                     "pattern_refs": ["pattern/list-page"],
                     "structural_verification": "unavailable",
+                    "placement_plan": {"template_refs": ["pattern/list-page"]},
                 }],
             }, sort_keys=False), encoding="utf-8")
             (root / "04-components.yaml").write_text(yaml.safe_dump({

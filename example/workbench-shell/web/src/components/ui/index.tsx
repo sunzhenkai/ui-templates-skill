@@ -16,7 +16,7 @@ import { overlayFocus } from "../../stores";
 /* ---------------- Button / IconButton ---------------- */
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap text-body font-medium transition-colors disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg text-body font-medium transition-[color,background-color,border-color,box-shadow,transform] select-none outline-none disabled:pointer-events-none disabled:opacity-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 active:translate-y-px",
   {
     variants: {
       variant: {
@@ -61,7 +61,7 @@ export function IconButton({
 /* ---------------- Input / Textarea / Select ---------------- */
 
 const fieldClass =
-  "h-8 w-full rounded-md border border-input bg-surface px-2.5 text-body text-foreground placeholder:text-faint-foreground hover:border-ring disabled:opacity-50";
+  "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 text-body text-foreground transition-colors outline-none placeholder:text-muted-foreground hover:border-ring focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20";
 
 export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cn(fieldClass, "aria-invalid:border-destructive", className)} {...props} />;

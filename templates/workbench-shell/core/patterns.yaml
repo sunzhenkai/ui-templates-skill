@@ -15,6 +15,16 @@ items:
   forbidden:
   - global horizontal page scroll
   - content under the floating chat launcher corner
+- id: pattern/section-nav
+  name: In-card leading section navigation
+  primitives:
+  - primitive/nav-item
+  page_type: page-type/collection
+  rule_refs:
+  - rule/LAYOUT-107
+  - rule/AX-101
+  forbidden:
+  - section navigation rendered as top tabs while the source declares an in-card leading column
 - id: pattern/page-chrome
   name: Page header and toolbar
   primitives:

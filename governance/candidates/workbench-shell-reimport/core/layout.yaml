@@ -23,6 +23,7 @@ items:
   - rule/LAYOUT-101
   - rule/LAYOUT-103
   - rule/LAYOUT-104
+  - rule/LAYOUT-107
   placement:
     id: placement-shell-inset
     shell_variant: inset
@@ -54,6 +55,10 @@ items:
     - {id: geometry-shell-sidebar, role: sidebar-width, token: token/size.sidebar-default}
     - {id: geometry-shell-fab-size, role: chat-launcher-size, token: token/space.chat-launcher-size}
     - {id: geometry-shell-fab-inset, role: chat-launcher-inset, token: token/space.chat-launcher-inset}
+    - {id: geometry-shell-card-radius, role: content-card-radius, token: token/radius.xl}
+    - {id: geometry-shell-card-border, role: content-card-border, token: token/color.light.surface-border}
+    - {id: geometry-shell-card-shadow, role: content-card-shadow, token: token/shadow.surface}
+    - {id: geometry-shell-card-background, role: content-card-background, token: token/color.light.page-canvas}
     pattern_refs:
     - pattern/dashboard-shell
     evidence_refs:
@@ -72,6 +77,7 @@ items:
   rule_refs:
   - rule/LAYOUT-102
   - rule/LAYOUT-106
+  - rule/LAYOUT-107
   placement:
     id: placement-collection-canvas
     regions:
@@ -91,8 +97,14 @@ items:
     geometry:
     - {id: geometry-collection-header, role: page-header, token: token/space.header-height}
     - {id: geometry-collection-toolbar, role: page-toolbar, token: token/space.toolbar-height}
+    - {id: geometry-collection-card-inset, role: content-card-inset, token: token/space.2}
+    - {id: geometry-collection-card-radius, role: content-card-radius, token: token/radius.xl}
+    - {id: geometry-collection-card-border, role: content-card-border, token: token/color.light.surface-border}
+    - {id: geometry-collection-card-shadow, role: content-card-shadow, token: token/shadow.surface}
+    - {id: geometry-collection-card-background, role: content-card-background, token: token/color.light.page-canvas}
     pattern_refs:
     - pattern/page-chrome
+    - pattern/section-nav
     - pattern/data-table
     evidence_refs:
     - evidence-layout-page
@@ -109,6 +121,7 @@ items:
   - block scroll in detail
   rule_refs:
   - rule/LAYOUT-105
+  - rule/LAYOUT-107
   placement:
     id: placement-detail-rail
     regions:
@@ -131,10 +144,58 @@ items:
     geometry:
     - {id: geometry-detail-rail-width, role: detail-rail-width, token: token/size.detail-rail}
     - {id: geometry-detail-header, role: page-header, token: token/space.header-height}
+    - {id: geometry-detail-card-radius, role: content-card-radius, token: token/radius.xl}
+    - {id: geometry-detail-card-border, role: content-card-border, token: token/color.light.surface-border}
+    - {id: geometry-detail-card-shadow, role: content-card-shadow, token: token/shadow.surface}
+    - {id: geometry-detail-card-background, role: content-card-background, token: token/color.light.page-canvas}
     pattern_refs:
     - pattern/master-detail
     evidence_refs:
     - evidence-layout-detail
+- id: route/settings-canvas
+  name: Settings canvas
+  page_type: page-type/collection
+  slots:
+  - page-header
+  - section-nav
+  - page-canvas
+  breakpoints:
+  - nav collapses to horizontal strip below md
+  - two-pane in-card layout from md
+  rule_refs:
+  - rule/LAYOUT-102
+  - rule/LAYOUT-106
+  - rule/LAYOUT-107
+  placement:
+    id: placement-settings-panes
+    regions:
+    - {id: region-chrome, role: page-chrome}
+    - {id: region-nav, role: section-nav, parent: region-chrome}
+    - {id: region-content, role: canvas, parent: region-chrome}
+    slots:
+    - {id: slot-page-header, role: page-header, region: region-chrome, order: 1}
+    - {id: slot-section-nav, role: section-nav, region: region-nav, order: 2}
+    - {id: slot-page-canvas, role: page-canvas, region: region-content, order: 3}
+    relations:
+    - {type: vertical, from: region-chrome, to: region-nav, order: 1}
+    - {type: contains, from: region-chrome, to: region-nav, order: 1}
+    - {type: contains, from: region-chrome, to: region-content, order: 2}
+    scroll_domains:
+    - {id: scroll-settings-nav, axis: block, owner: region-nav}
+    - {id: scroll-settings-content, axis: block, owner: region-content}
+    geometry:
+    - {id: geometry-settings-header, role: page-header, token: token/space.header-height}
+    - {id: geometry-settings-nav-width, role: section-nav-width, token: token/size.section-nav-default}
+    - {id: geometry-settings-card-radius, role: content-card-radius, token: token/radius.lg}
+    - {id: geometry-settings-card-border, role: content-card-border, token: token/color.light.surface-border}
+    - {id: geometry-settings-card-shadow, role: content-card-shadow, token: token/shadow.surface}
+    - {id: geometry-settings-card-background, role: content-card-background, token: token/color.light.page-canvas}
+    pattern_refs:
+    - pattern/page-chrome
+    - pattern/section-nav
+    evidence_refs:
+    - evidence-layout-page
+    - evidence-component-section-nav
 - id: route/modal-task
   name: Modal task
   page_type: page-type/modal

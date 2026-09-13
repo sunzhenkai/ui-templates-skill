@@ -2,77 +2,139 @@ schema_version: 1
 cases:
   authoring-template-lifecycle-verbs:
     assertions:
-      - type: path_exists
-        path: scripts/manage_template_index.py
-      - type: path_exists
-        path: skills/ui-template-author/references/template-lifecycle.md
+    - type: path_exists
+      path: scripts/manage_template_index.py
+    - type: path_exists
+      path: skills/ui-template-author/references/template-lifecycle.md
   authoring-layered-extraction:
     assertions:
-      - type: python_call
-        operation: changeset_undeclared_stable
-        json_path_equals:
-          - path: [allowed_ok]
-            value: true
-          - path: [undeclared_blocked]
-            value: true
+    - type: python_call
+      operation: changeset_undeclared_stable
+      json_path_equals:
+      - path:
+        - allowed_ok
+        value: true
+      - path:
+        - undeclared_blocked
+        value: true
   apply-no-patch-generated-web:
     assertions:
-      - type: path_exists
-        path: skills/ui-template-apply/references/source-blind-boundary.md
+    - type: path_exists
+      path: skills/ui-template-apply/references/source-blind-boundary.md
   apply-retired-template-rejected:
     assertions:
-      - type: python_call
-        operation: index_require_published
-        json_path_equals:
-          - path: [published_ok]
-            value: true
-          - path: [retired_blocked]
-            value: true
-          - path: [retired_code]
-            value: INDEX_NOT_PUBLISHED
+    - type: python_call
+      operation: index_require_published
+      json_path_equals:
+      - path:
+        - published_ok
+        value: true
+      - path:
+        - retired_blocked
+        value: true
+      - path:
+        - retired_code
+        value: INDEX_NOT_PUBLISHED
   apply-original-alignment-handoff:
     assertions:
-      - type: path_exists
-        path: skills/ui-template-apply/references/source-blind-boundary.md
-      - type: path_exists
-        path: skills/ui-template-apply/SKILL.md
+    - type: path_exists
+      path: skills/ui-template-apply/references/source-blind-boundary.md
+    - type: path_exists
+      path: skills/ui-template-apply/SKILL.md
   apply-source-blind-rejection:
     assertions:
-      - type: python_call
-        operation: apply_source_blind_contracts
-        json_path_equals:
-          - path: [clean_ok]
-            value: true
-          - path: [oracle_rejected]
-            value: true
-          - path: [historical_output_rejected]
-            value: true
-          - path: [stray_artifact_rejected]
-            value: true
+    - type: python_call
+      operation: apply_source_blind_contracts
+      json_path_equals:
+      - path:
+        - clean_ok
+        value: true
+      - path:
+        - oracle_rejected
+        value: true
+      - path:
+        - historical_output_rejected
+        value: true
+      - path:
+        - stray_artifact_rejected
+        value: true
   apply-pattern-bound-composition:
     assertions:
-      - type: python_call
-        operation: apply_pattern_bound_contracts
-        json_path_equals:
-          - path: [clean_ok]
-            value: true
-          - path: [dangling_page_type]
-            value: true
-          - path: [missing_page_type]
-            value: true
-          - path: [dangling_pattern]
-            value: true
-          - path: [missing_pattern_binding]
-            value: true
-          - path: [unauthorized_placement]
-            value: true
-          - path: [unavailable_assertion]
-            value: true
+    - type: python_call
+      operation: apply_pattern_bound_contracts
+      json_path_equals:
+      - path:
+        - clean_ok
+        value: true
+      - path:
+        - dangling_page_type
+        value: true
+      - path:
+        - missing_page_type
+        value: true
+      - path:
+        - dangling_pattern
+        value: true
+      - path:
+        - missing_pattern_binding
+        value: true
+      - path:
+        - unauthorized_placement
+        value: true
+      - path:
+        - unavailable_assertion
+        value: true
+      - path:
+        - template_trace_missing
+        value: true
+      - path:
+        - template_ref_dangling
+        value: true
   apply-missing-reusable-control-feedback:
     assertions:
-      - type: path_exists
-        path: skills/ui-template-apply/references/apply-workflow.md
+    - type: path_exists
+      path: skills/ui-template-apply/references/apply-workflow.md
   apply-no-source-checkout:
     assertions:
-      - type: path_exists
-        path: skills/ui-template-apply/SKILL.md
+    - type: path_exists
+      path: skills/ui-template-apply/SKILL.md
+  apply-scenario-derivation:
+    assertions:
+    - type: python_call
+      operation: apply_scenario_derivation
+      json_path_equals:
+      - path:
+        - placement_geometry_scenario
+        value: true
+      - path:
+        - pattern_presence_scenario
+        value: true
+      - path:
+        - superset
+        value: true
+      - path:
+        - state_scenario
+        value: true
+      - path:
+        - scroll_domain_scenario
+        value: true
+  apply-control-styling-contracts:
+    assertions:
+    - type: python_call
+      operation: apply_control_styling_contracts
+      json_path_equals:
+      - path:
+        - multi_pane_required
+        value: true
+      - path:
+        - scroll_owner_untrace
+        value: true
+      - path:
+        - clean_route_ok
+        value: true
+      - path:
+        - global_css_invention_detected
+        value: true
+      - path:
+        - scoped_css_allowed
+        value: true

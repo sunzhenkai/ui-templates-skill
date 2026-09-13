@@ -2,6 +2,12 @@ schema: design-system-primitives/v1
 items:
 - id: primitive/nav-item
   name: Sidebar navigation item
+  anatomy:
+  - {slot: icon, order: 0}
+  - {slot: label, order: 1}
+  context_bindings:
+    sidebar: {selected: token/color.light.sidebar-accent, hover: token/color.light.sidebar-accent}
+    page-surface: {selected: token/color.light.surface-selected, hover: token/color.light.surface-hover}
   variants:
   - default
   - active
@@ -21,6 +27,14 @@ items:
   - rule/QUALITY-101
 - id: primitive/button
   name: Button
+  anatomy:
+  - {slot: label, order: 0}
+  variant_contracts:
+    default: {presentation: filled, radius: token/radius.lg, control_height: token/size.control-md, hover: token/color.light.primary-hover, focus_ref: rule/QUALITY-104}
+    outline: {presentation: outline, radius: token/radius.lg, control_height: token/size.control-md, hover: token/color.light.surface-hover, focus_ref: rule/QUALITY-104}
+    brand: {presentation: filled, radius: token/radius.lg, control_height: token/size.control-md, hover: token/color.light.brand-subtle-hover, focus_ref: rule/QUALITY-104}
+    ghost: {presentation: ghost, radius: token/radius.lg, control_height: token/size.control-md, hover: token/color.light.surface-hover, focus_ref: rule/QUALITY-104}
+    destructive: {presentation: filled, radius: token/radius.lg, control_height: token/size.control-md, hover: token/color.light.destructive-surface-hover, focus_ref: rule/QUALITY-104}
   variants:
   - default
   - primary
@@ -63,6 +77,8 @@ items:
   - rule/AX-101
 - id: primitive/input
   name: Text input
+  variant_contracts:
+    text: {presentation: plain, radius: token/radius.lg, control_height: token/size.control-md, focus_ref: rule/QUALITY-104}
   states:
   - default
   - hover

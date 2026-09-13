@@ -30,7 +30,7 @@ export function PageHeader({
   breadcrumb?: { label: string; to?: string }[];
 }) {
   return (
-    <header className="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-surface-border bg-surface px-4">
+    <header className="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-surface-border px-4">
       <div className="flex min-w-0 items-center gap-3">
         <h1 className="truncate text-title-sm font-semibold">
           {title}
@@ -45,14 +45,15 @@ export function PageHeader({
 
 export function PageToolbar({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-12 shrink-0 flex-wrap items-center gap-2 border-b border-surface-border bg-surface px-4 py-1.5">
+    <div className="flex min-h-12 shrink-0 flex-wrap items-center gap-2 border-b border-surface-border px-4 py-1.5">
       {children}
     </div>
   );
 }
 
 export function PageCanvas({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("p-4", className)}>{children}</div>;
+  // 单 scroll owner 页面在此滚动（scroll owner = region-content）
+  return <div className={cn("min-h-0 flex-1 overflow-y-auto p-4", className)}>{children}</div>;
 }
 
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {

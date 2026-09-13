@@ -311,6 +311,57 @@ def validate_references(ids: dict[str, str], refs: dict[str, list[str]], report:
                 report.add("REFERENCE_DANGLING", f"entities.{source_id}", f"unknown stable ID: {target}")
 
 
+def validate_primitive_contracts(
+    layers: dict[str, Path],
+    documents: dict[str, Any],
+    report: Report,
+) -> None:
+    """Variant styling contracts: resolve tokens/rules and bind contexts."""
+    primitives = documents.get("primitives")
+    if not isinstance(primitives, dict):
+        return
+    token_paths = walk_tokens((documents.get("tokens") or {}).get("tokens", {})) if "tokens" in documents else set()
+    if not token_paths and layers.get("tokens") and layers["tokens"].is_file():
+        token_paths = walk_tokens(load_document(layers["tokens"]).get("tokens", {}))
+    rule_ids = {
+        item.get("id")
+        for item in (documents.get("rules") or {}).get("items", [])
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+    for item in primitives.get("items", []):
+        if not isinstance(item, dict):
+            continue
+        pid = item.get("id", "<primitive>")
+        variants = [v for v in item.get("variants") or [] if isinstance(v, str)]
+        contracts = item.get("variant_contracts")
+        if not isinstance(contracts, dict):
+            continue
+        for variant, contract in sorted(contracts.items()):
+            where = f"layers.primitives.{pid}.variant_contracts.{variant}"
+            if variants and variant not in variants and variant != "default":
+                report.add("PRIMITIVE_CONTRACT_INVALID", where, "contract variant is not a declared variant", variant=variant)
+                continue
+            if not isinstance(contract, dict):
+                continue
+            for field in ("radius", "control_height", "hover", "active"):
+                ref = contract.get(field)
+                if isinstance(ref, str) and ref.removeprefix("token/") not in token_paths:
+                    report.add("PRIMITIVE_CONTRACT_INVALID", f"{where}.{field}", f"token path is dangling: {ref}")
+            focus = contract.get("focus_ref")
+            if isinstance(focus, str) and focus.startswith("rule/") and focus not in rule_ids:
+                report.add("PRIMITIVE_CONTRACT_INVALID", f"{where}.focus_ref", f"focus rule ref is dangling: {focus}")
+        bindings = item.get("context_bindings")
+        if isinstance(bindings, dict):
+            for context, binding in sorted(bindings.items()):
+                where = f"layers.primitives.{pid}.context_bindings.{context}"
+                if not isinstance(binding, dict):
+                    continue
+                for field in ("selected", "hover"):
+                    ref = binding.get(field)
+                    if isinstance(ref, str) and ref.removeprefix("token/") not in token_paths:
+                        report.add("PRIMITIVE_CONTRACT_INVALID", f"{where}.{field}", f"token path is dangling: {ref}")
+
+
 def derive_component_family(
     manifest: dict[str, Any],
     layers: dict[str, Path],
@@ -769,6 +820,7 @@ def validate_target(target: Path, kind: str, *, require_component_family: bool =
     validate_package_identity(target, manifest, report)
     ids, refs, documents = collect_entities(layers, report)
     validate_references(ids, refs, report)
+    validate_primitive_contracts(layers, documents, report)
     validate_placement(manifest, layers, ids, documents, report)
     report.component_family = derive_component_family(manifest, layers, ids)
     if require_component_family:

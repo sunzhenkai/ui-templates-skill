@@ -2,23 +2,41 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Pencil, Plus, Trash2, UserPlus } from "lucide-react";
+import { Bell, Pencil, Plus, Settings2, SlidersHorizontal, Trash2, UserPlus, Users, Webhook } from "lucide-react";
+import { cn } from "../../lib";
 import { api, type NotificationRule, type Severity } from "../../data/mock";
 import { useAppConfirm } from "../../stores";
 import {
   Badge, Button, Combobox, Dialog, Field, IconButton, Input, NativeSelect, Switch,
-  Tabs, Textarea,
+  Textarea,
 } from "../../components/ui";
 import { toastError, toastSuccess } from "../../components/ui/toast";
-import { PageCanvas, PageHeader, Panel } from "../../components/shell/page";
+import { PageHeader, Panel } from "../../components/shell/page";
 
-const TABS = [
-  { key: "general", label: "基本信息" },
-  { key: "members", label: "成员与权限" },
-  { key: "teams", label: "团队" },
-  { key: "rules", label: "通知规则" },
-  { key: "integrations", label: "集成" },
-  { key: "preferences", label: "个人偏好" },
+// pattern/section-nav（1.3.2）：icon + label 解剖 + 分组标签
+const NAV_GROUPS: { label: string; items: { key: string; label: string; icon: typeof Settings2 }[] }[] = [
+  {
+    label: "基础",
+    items: [{ key: "general", label: "基本信息", icon: Settings2 }],
+  },
+  {
+    label: "成员",
+    items: [
+      { key: "members", label: "成员与权限", icon: Users },
+      { key: "teams", label: "团队", icon: Users },
+    ],
+  },
+  {
+    label: "通知与集成",
+    items: [
+      { key: "rules", label: "通知规则", icon: Bell },
+      { key: "integrations", label: "集成", icon: Webhook },
+    ],
+  },
+  {
+    label: "偏好",
+    items: [{ key: "preferences", label: "个人偏好", icon: SlidersHorizontal }],
+  },
 ];
 
 export function SettingsPage() {
@@ -27,17 +45,61 @@ export function SettingsPage() {
   return (
     <>
       <PageHeader title="工作区设置" />
-      <PageCanvas className="min-h-0 flex-1 overflow-y-auto">
-        <Tabs tabs={TABS} value={tab} onChange={(k) => setParams({ tab: k }, { replace: true })} />
-        <div className="mt-4 max-w-3xl">
-          {tab === "general" && <GeneralTab />}
-          {tab === "members" && <MembersTab />}
-          {tab === "teams" && <TeamsTab />}
-          {tab === "rules" && <RulesTab />}
-          {tab === "integrations" && <IntegrationsTab />}
-          {tab === "preferences" && <PreferencesTab />}
+      {/* pattern/section-nav：二级导航位于内容卡片内部左列（rule/LAYOUT-107 卡片内） */}
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
+        <aside
+          aria-label="设置导航"
+          className="shrink-0 border-b border-surface-border md:flex md:w-60 md:flex-col md:border-b-0 md:border-r"
+        >
+          <nav
+            aria-label="设置分区"
+            className="flex gap-1 overflow-x-auto p-2 md:min-h-0 md:flex-col md:overflow-y-auto md:p-3 md:space-y-5"
+          >
+            {NAV_GROUPS.map((group) => (
+              <section key={group.label} aria-labelledby={`settings-group-${group.label}`}>
+                <h2
+                  id={`settings-group-${group.label}`}
+                  className="mb-1.5 hidden px-3 text-caption font-medium text-muted-foreground md:block"
+                >
+                  {group.label}
+                </h2>
+                <ul className="flex gap-1 md:flex-col md:gap-0.5">
+                  {group.items.map((item) => {
+                    const active = item.key === tab;
+                    return (
+                      <li key={item.key}>
+                        <button
+                          aria-current={active ? "page" : undefined}
+                          onClick={() => setParams({ tab: item.key }, { replace: true })}
+                          className={cn(
+                            "flex min-h-9 shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-body outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+                            active
+                              ? "bg-surface-selected font-medium text-surface-selected-foreground"
+                              : "text-muted-foreground hover:bg-surface-hover hover:text-foreground",
+                          )}
+                        >
+                          <item.icon className="size-4 shrink-0" aria-hidden />
+                          {item.label}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ))}
+          </nav>
+        </aside>
+        <div className="min-h-0 flex-1 overflow-y-auto p-4">
+          <div className="max-w-3xl">
+            {tab === "general" && <GeneralTab />}
+            {tab === "members" && <MembersTab />}
+            {tab === "teams" && <TeamsTab />}
+            {tab === "rules" && <RulesTab />}
+            {tab === "integrations" && <IntegrationsTab />}
+            {tab === "preferences" && <PreferencesTab />}
+          </div>
         </div>
-      </PageCanvas>
+      </div>
     </>
   );
 }

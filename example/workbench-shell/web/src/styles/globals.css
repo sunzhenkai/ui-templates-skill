@@ -245,12 +245,7 @@
       "Microsoft YaHei",
       sans-serif;
   }
-  /* AX-101: 可见 focus-visible，不依赖颜色（ring + offset） */
-  :focus-visible {
-    outline: 2px solid var(--color-ring);
-    outline-offset: 2px;
-    border-radius: var(--radius-sm);
-  }
+  /* rule/QUALITY-104：focus 处理逐控件 token 化（border-ring + ring），无全局 outline 机制 */
   /* NN-103: 骨架脉冲 */
   @keyframes skeleton-pulse {
     0%,

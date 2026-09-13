@@ -51,6 +51,14 @@ usages:
       - {id: fact.shell.order.compose, facet: layout_scenes, subject: shell, context: null, slot: compose, state: default, property: slot_order, value: {kind: semantic, value: "2"}, negative: false, rule_id: LAYOUT-001}
       - {id: fact.shell.anchor.trigger, facet: layout_scenes, subject: shell, context: null, slot: page-header, state: default, property: anchor_role, value: {kind: semantic, value: header-trigger}, negative: false, rule_id: LAYOUT-001}
       - {id: fact.shell.anchor.fab, facet: layout_scenes, subject: shell, context: null, slot: canvas, state: default, property: anchor_role, value: {kind: semantic, value: chat-fab}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.card-padding-block-start, facet: component_geometry, subject: shell, context: null, slot: canvas, state: default, property: padding_block_start, value: {kind: token-ref, value: spacing.content-card}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.card-padding-inline-end, facet: component_geometry, subject: shell, context: null, slot: canvas, state: default, property: padding_inline_end, value: {kind: token-ref, value: spacing.content-card}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.card-padding-block-end, facet: component_geometry, subject: shell, context: null, slot: canvas, state: default, property: padding_block_end, value: {kind: token-ref, value: spacing.content-card}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.card-padding-inline-start, facet: component_geometry, subject: shell, context: null, slot: canvas, state: default, property: padding_inline_start, value: {kind: semantic, value: zero}, negative: true, rule_id: LAYOUT-001}
+      - {id: fact.shell.card-radius, facet: component_geometry, subject: shell, context: null, slot: canvas, state: default, property: radius, value: {kind: token-ref, value: radius.content-card}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.card-border, facet: component_geometry, subject: shell, context: null, slot: canvas, state: default, property: border, value: {kind: token-ref, value: colors.content-card-border}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.card-shadow, facet: component_geometry, subject: shell, context: null, slot: canvas, state: default, property: shadow, value: {kind: token-ref, value: shadows.content-card}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.card-background, facet: component_geometry, subject: shell, context: null, slot: canvas, state: default, property: background, value: {kind: token-ref, value: themes.light.page-canvas}, negative: false, rule_id: LAYOUT-001}
   - id: usage.board
     definition_id: scene.board
     scene: board
@@ -63,6 +71,23 @@ usages:
       - {id: fact.board.non-wrap, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: wrap, value: {kind: semantic, value: non-wrap}, negative: true, rule_id: LAYOUT-002}
       - {id: fact.board.non-shrink, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: shrink, value: {kind: semantic, value: non-shrink}, negative: true, rule_id: LAYOUT-002}
       - {id: fact.board.inline-scroll, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: scroll_inline, value: {kind: semantic, value: inline}, negative: false, rule_id: LAYOUT-002}
+  - id: usage.board-nav
+    definition_id: scene.board
+    scene: board
+    component: null
+    context: null
+    slot: section-nav
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.board-nav"
+    facts:
+      - {id: fact.board.nav-placement, facet: layout_scenes, subject: board, context: null, slot: section-nav, state: default, property: arrangement, value: {kind: semantic, value: vertical}, negative: false, rule_id: LAYOUT-002}
+      - {id: fact.board.root-no-scroll, facet: layout_scenes, subject: board, context: null, slot: null, state: default, property: root_scroll, value: {kind: semantic, value: none}, negative: true, rule_id: LAYOUT-002}
+      - {id: fact.board.nav-scroll, facet: layout_scenes, subject: board, context: null, slot: section-nav, state: default, property: scroll_block, value: {kind: semantic, value: region}, negative: false, rule_id: LAYOUT-002}
+      - {id: fact.board.columns-scroll, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: scroll_block, value: {kind: semantic, value: region}, negative: false, rule_id: LAYOUT-002}
+      - {id: fact.board.nav-stretch, facet: layout_scenes, subject: board, context: null, slot: section-nav, state: default, property: container_presentation, value: {kind: semantic, value: fill}, negative: false, rule_id: LAYOUT-002}
+      - {id: fact.board.nav-anatomy, facet: layout_scenes, subject: board, context: null, slot: section-nav, state: default, property: anatomy, value: {kind: semantic, value: icon-label}, negative: false, rule_id: LAYOUT-002}
+      - {id: fact.board.nav-selected, facet: state_presentations, subject: board, context: navigation-link, slot: section-nav, state: selected, property: background, value: {kind: token-ref, value: themes.light.background}, negative: false, rule_id: QUALITY-002}
+      - {id: fact.board.nav-hover, facet: state_presentations, subject: board, context: navigation-link, slot: section-nav, state: hover, property: background, value: {kind: token-ref, value: themes.light.background}, negative: false, rule_id: QUALITY-002}
   - id: usage.master-scroll
     definition_id: scene.master-detail
     scene: master-detail
@@ -72,7 +97,7 @@ usages:
     state: default
     locator: "ui-source-graph.yaml#/usages/usage.master-scroll"
     facts:
-      - {id: fact.master.block-scroll, facet: layout_scenes, subject: master-detail, context: null, slot: master, state: default, property: scroll_block, value: {kind: semantic, value: block}, negative: false, rule_id: LAYOUT-003}
+      - {id: fact.master.block-scroll, facet: layout_scenes, subject: master-detail, context: null, slot: master-pane, state: default, property: scroll_block, value: {kind: semantic, value: block}, negative: false, rule_id: LAYOUT-003}
   - id: usage.detail-scroll
     definition_id: scene.master-detail
     scene: master-detail
@@ -82,7 +107,17 @@ usages:
     state: default
     locator: "ui-source-graph.yaml#/usages/usage.detail-scroll"
     facts:
-      - {id: fact.detail.block-scroll, facet: layout_scenes, subject: master-detail, context: null, slot: detail, state: default, property: scroll_block, value: {kind: semantic, value: block}, negative: false, rule_id: LAYOUT-003}
+      - {id: fact.detail.block-scroll, facet: layout_scenes, subject: master-detail, context: null, slot: detail-pane, state: default, property: scroll_block, value: {kind: semantic, value: block}, negative: false, rule_id: LAYOUT-003}
+  - id: usage.master-context
+    definition_id: scene.master-detail
+    scene: master-detail
+    component: null
+    context: null
+    slot: context-panel
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.master-context"
+    facts:
+      - {id: fact.master.context-panel, facet: layout_scenes, subject: master-detail, context: null, slot: context-panel, state: default, property: overlay_scope, value: {kind: semantic, value: region}, negative: false, rule_id: LAYOUT-003}
   - id: usage.overlay
     definition_id: scene.shell
     scene: shell

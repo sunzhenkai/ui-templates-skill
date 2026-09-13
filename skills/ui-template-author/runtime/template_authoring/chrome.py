@@ -191,3 +191,240 @@ def page_modes_replace_shell(declared: Any) -> bool:
     if not isinstance(declared, list):
         return False
     return {"A", "B", "C", "D", "E"}.issubset(set(declared))
+
+
+# ---------------------------------------------------------------------------
+# Mandatory question matrix (close-layout-fidelity-blind-spots)
+#
+# closure_complete attests the questions the authored scope chose to ask; these
+# constants make the questions themselves machine-forced. Silence fails closed
+# the same way an incomplete chrome composition does; an explicit exclusions
+# entry that targets the scene counts as an answer ("known unknown").
+# ---------------------------------------------------------------------------
+
+MANDATORY_FACT_MISSING = "MANDATORY_FACT_MISSING"
+
+# shell_variant: inset ⇒ the floating content card (page-canvas slot) must be
+# characterised: inset/margin, radius, border, shadow and background. Any fact
+# property in each group answers the question; exact values stay in tokens.yaml.
+INSET_CANVAS_GEOMETRY: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "inset-or-gap",
+        (
+            "gap",
+            "inset_block_start",
+            "inset_inline_end",
+            "inset_block_end",
+            "inset_inline_start",
+            "padding_block_start",
+            "padding_inline_end",
+            "padding_block_end",
+            "padding_inline_start",
+        ),
+    ),
+    ("radius", ("radius",)),
+    ("border", ("border",)),
+    ("shadow", ("shadow",)),
+    ("background", ("background",)),
+)
+
+# Multi-section content scenes (board/other) must state where their section
+# navigation lives (in-card leading column, top, or none via exclusion).
+CONTENT_SCENE_KINDS = ("board", "other")
+# Content-surface slot names accepted by the inset geometry question (the
+# chrome role stays "page-canvas"; graphs may use the shorter "canvas").
+CANVAS_SLOTS = (None, "canvas", "page-canvas")
+# Round 2: component names that trigger the focus-treatment question.
+INTERACTIVE_CONTROL_NAMES = frozenset({
+    "button", "icon-button", "input", "textarea", "select", "combobox",
+    "checkbox", "switch", "nav-item", "menu-item", "tabs", "pagination",
+})
+SECTION_NAV_SLOT = "section-nav"
+# Master-detail scenes must place both panes and state the context panel.
+DETAIL_PANE_SLOTS = ("master-pane", "detail-pane")
+CONTEXT_PANEL_SLOT = "context-panel"
+
+
+def _scene_definitions(graph: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    return {
+        item.get("name"): item
+        for item in graph.get("definitions") or []
+        if isinstance(item, dict) and item.get("kind") == "scene"
+    }
+
+
+def _scene_facts(graph: dict[str, Any], scene: dict[str, Any]) -> list[dict[str, Any]]:
+    facts = [item for item in scene.get("facts") or [] if isinstance(item, dict)]
+    for usage in graph.get("usages") or []:
+        if isinstance(usage, dict) and usage.get("scene") == scene.get("name"):
+            facts.extend(item for item in usage.get("facts") or [] if isinstance(item, dict))
+    return facts
+
+
+def _excluded_definition_ids(graph: dict[str, Any], graph_path: str) -> set[str]:
+    prefix = f"{graph_path}#/definitions/"
+    targets = set()
+    for item in graph.get("exclusions") or []:
+        if not isinstance(item, dict):
+            continue
+        locator = item.get("locator") or ""
+        if locator.startswith(prefix):
+            targets.add(locator[len(prefix):])
+    return targets
+
+
+def _matrix_questions(graph: dict[str, Any], graph_path: str, scene_names: list[str]) -> dict[str, tuple[str, str]]:
+    """Mandatory question matrix (rounds 1+2) -> label -> (state, owner_kind).
+
+    state: observed | excluded | unresolved. owner_kind: scene | component.
+    """
+    scenes = _scene_definitions(graph)
+    excluded_ids = _excluded_definition_ids(graph, graph_path)
+    usages = [item for item in graph.get("usages") or [] if isinstance(item, dict)]
+    definitions = [item for item in graph.get("definitions") or [] if isinstance(item, dict)]
+    components = {item.get("name"): item for item in definitions if item.get("kind") == "component"}
+    states: dict[str, tuple[str, str]] = {}
+
+    def scene_facts(name: str) -> list[dict[str, Any]]:
+        return _scene_facts(graph, scenes.get(name) or {})
+
+    # ---- round 1: layout placement questions ----
+    for name in scene_names:
+        scene = scenes.get(name)
+        if scene is None:
+            continue
+        scene_excluded = scene.get("id") in excluded_ids
+        facts = scene_facts(name)
+        kind = scene_kind_for(name)
+        if kind == "shell":
+            variants = {
+                item.get("value", {}).get("value")
+                for item in facts
+                if item.get("property") == "shell_variant" and isinstance(item.get("value"), dict)
+            }
+            if variants == {"inset"}:
+                canvas_properties = {
+                    item.get("property") for item in facts if item.get("slot") in CANVAS_SLOTS
+                }
+                for label, options in INSET_CANVAS_GEOMETRY:
+                    key = f"inset-canvas:{label}:{name}"
+                    answer = "observed" if canvas_properties & set(options) else "unresolved"
+                    states[key] = ("excluded" if scene_excluded else answer, "scene")
+        elif kind == "master-detail":
+            pane_slots = {item.get("slot") for item in facts}
+            states[f"detail-panes:{name}"] = (
+                ("excluded" if scene_excluded else "observed" if set(DETAIL_PANE_SLOTS) <= pane_slots else "unresolved"),
+                "scene",
+            )
+            has_context = any(
+                usage.get("scene") == name and usage.get("slot") == CONTEXT_PANEL_SLOT for usage in usages
+            )
+            states[f"context-panel:{name}"] = (
+                ("excluded" if scene_excluded else "observed" if has_context else "unresolved"),
+                "scene",
+            )
+        elif kind in CONTENT_SCENE_KINDS:
+            has_nav = any(
+                usage.get("scene") == name and usage.get("slot") == SECTION_NAV_SLOT for usage in usages
+            )
+            states[f"section-nav:{name}"] = (
+                ("excluded" if scene_excluded else "observed" if has_nav else "unresolved"),
+                "scene",
+            )
+
+        # ---- round 2: in-card section navigation scenes ----
+        nav_usage = any(usage.get("scene") == name and usage.get("slot") == SECTION_NAV_SLOT for usage in usages)
+        if nav_usage:
+            # 2a. multi-pane topology: root non-scroll + >=2 pane scroll domains + nav stretch
+            root_none = any(
+                item.get("property") == "root_scroll"
+                and isinstance(item.get("value"), dict)
+                and item.get("value", {}).get("value") == "none"
+                for item in facts
+            )
+            pane_slots = {
+                item.get("slot")
+                for item in facts
+                if item.get("property") == "scroll_block" and item.get("slot")
+            }
+            stretch = any(
+                item.get("property") in {"size", "container_presentation"}
+                and isinstance(item.get("value"), dict)
+                and item.get("value", {}).get("value") == "fill"
+                and item.get("slot") == SECTION_NAV_SLOT
+                for item in facts + [f for u in usages if u.get("scene") == name for f in u.get("facts") or []]
+            )
+            topology_ok = root_none and len(pane_slots) >= 2 and stretch
+            states[f"pane-scroll:{name}"] = (
+                ("excluded" if scene_excluded else "observed" if topology_ok else "unresolved"),
+                "scene",
+            )
+            # 2b. nav item anatomy (icon+label vs label-only)
+            anatomy = [
+                item for item in facts
+                if item.get("property") == "anatomy" and isinstance(item.get("value"), dict)
+            ]
+            states[f"nav-anatomy:{name}"] = (
+                ("excluded" if scene_excluded else "observed" if anatomy else "unresolved"),
+                "scene",
+            )
+            # 2c. page-surface selected/hover state (must not bind sidebar tokens)
+            nav_states = [
+                item for item in facts
+                if item.get("property") == "background"
+                and isinstance(item.get("value"), dict)
+                and item.get("value", {}).get("kind") == "token-ref"
+                and item.get("state") in {"selected", "active", "hover"}
+            ]
+            page_surface = [
+                item for item in nav_states
+                if "sidebar" not in str(item.get("value", {}).get("value", ""))
+            ]
+            states[f"nav-state:{name}"] = (
+                ("excluded" if scene_excluded else "observed" if page_surface else "unresolved"),
+                "scene",
+            )
+
+    # ---- round 2: interactive control focus treatment ----
+    for name in sorted(components):
+        if not _is_interactive_control(name):
+            continue
+        component = components[name]
+        component_excluded = component.get("id") in excluded_ids
+        focus_facts = [
+            item
+            for item in (component.get("facts") or []) + [
+                fact
+                for usage in usages
+                if usage.get("component") == name
+                for fact in (usage.get("facts") or [])
+            ]
+            if isinstance(item, dict)
+            and item.get("facet") == "state_presentations"
+            and item.get("state") == "focus-visible"
+            and item.get("property") in {"border", "shadow"}
+        ]
+        states[f"focus:{name}"] = (
+            ("excluded" if component_excluded else "observed" if focus_facts else "unresolved"),
+            "component",
+        )
+    return states
+
+
+def _is_interactive_control(name: str | None) -> bool:
+    if not isinstance(name, str) or not name:
+        return False
+    return name in INTERACTIVE_CONTROL_NAMES or name.endswith("-nav") or name.endswith("-nav-item")
+
+
+def mandatory_fact_gaps(graph: dict[str, Any], graph_path: str, scene_names: list[str]) -> list[str]:
+    """Answer-state check for the mandatory question matrix over included scenes/components."""
+    states = _matrix_questions(graph, graph_path, scene_names)
+    return sorted(key for key, (state, _kind) in states.items() if state == "unresolved")
+
+
+def mandatory_answer_states(
+    graph: dict[str, Any], graph_path: str, scene_names: list[str]
+) -> dict[str, str]:
+    """Per-item answer state for the mandatory question matrix."""
+    return {key: state for key, (state, _kind) in _matrix_questions(graph, graph_path, scene_names).items()}

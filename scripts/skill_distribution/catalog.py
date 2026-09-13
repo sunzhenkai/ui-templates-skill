@@ -83,8 +83,56 @@ def check_catalog(repo_root: Path) -> list[str]:
     return findings
 
 
+def _shell_bearing_templates(repo_root: Path) -> set[str]:
+    """Production templates whose layout declares shell chrome composition."""
+    import yaml as _yaml
+
+    bearing: set[str] = set()
+    templates_root = repo_root / "templates"
+    if not templates_root.is_dir():
+        return bearing
+    for meta in sorted(templates_root.glob("*/meta.yaml")):
+        name = meta.parent.name
+        layout = meta.parent / "core" / "layout.yaml"
+        if not layout.is_file():
+            continue
+        try:
+            document = _yaml.safe_load(layout.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        for item in document.get("items") or []:
+            placement = item.get("placement") if isinstance(item, dict) else None
+            if isinstance(placement, dict) and placement.get("shell_variant"):
+                bearing.add(name)
+                break
+    return bearing
+
+
+def _certification_accepted(repo_root: Path, name: str) -> bool:
+    report = repo_root / "governance" / "candidates" / name / "certification" / "report.yaml"
+    if not report.is_file():
+        return False
+    import yaml as _yaml
+
+    try:
+        document = _yaml.safe_load(report.read_text(encoding="utf-8"))
+    except Exception:
+        return False
+    return isinstance(document, dict) and document.get("status") == "accepted"
+
+
 def write_catalog(repo_root: Path) -> dict[str, object]:
     repo_root = repo_root.resolve()
+    # close-layout-fidelity-blind-spots: shell-bearing templates demand a current
+    # accepted certification report before the catalog switches; promotion itself
+    # stays a separate user decision.
+    for name in sorted(_shell_bearing_templates(repo_root)):
+        if not _certification_accepted(repo_root, name):
+            raise DistributionError(
+                f"CATALOG_PROMOTION_CERTIFICATION_REQUIRED: {name} declares shell chrome composition; "
+                "an accepted certification report under governance/candidates/"
+                f"{name}/certification/ is required before catalog promotion"
+            )
     payload = catalog_payload(repo_root)
     destination = repo_root / AUTHOR_CATALOG
     destination.parent.mkdir(parents=True, exist_ok=True)

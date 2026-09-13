@@ -12,7 +12,9 @@ from .chrome import (
     CHROME_FACT_PROPERTIES,
     CHROME_INCOMPLETE,
     CHROME_SEMANTIC_VALUES,
+    MANDATORY_FACT_MISSING,
     chrome_fact_gaps,
+    mandatory_fact_gaps,
 )
 
 CAPTURE_SCHEMA_VERSION = 1
@@ -27,12 +29,12 @@ FACT_PROPERTIES = {
     "padding_block_end", "padding_inline_start", "gap", "inset_block_start",
     "inset_inline_end", "inset_block_end", "inset_inline_start", "size", "radius",
     "surface", "border", "shadow", "background", "text", "text_decoration",
-    "visibility", "container_presentation", *CHROME_FACT_PROPERTIES,
+    "visibility", "container_presentation", "anatomy", *CHROME_FACT_PROPERTIES,
 }
 SEMANTIC_VALUES = {
     "none", "zero", "auto", "intrinsic", "fill", "non-wrap", "non-shrink",
     "underline", "visible", "hidden", "viewport", "region", "inline", "block",
-    "horizontal", "vertical", "overlay", *CHROME_SEMANTIC_VALUES,
+    "horizontal", "vertical", "overlay", "icon-label", "label-only", *CHROME_SEMANTIC_VALUES,
 }
 NEGATIVE_VALUES = {"none", "zero", "non-wrap", "non-shrink", "hidden"}
 HARD_LIMITS = {
@@ -222,11 +224,19 @@ def _validate_graph(raw: Any, graph_path: str) -> dict[str, Any]:
         usages.append(usage)
     graph["usages"] = usages
     exclusions: list[dict[str, Any]] = []
+    definition_ids = {item["id"] for item in definitions}
     for index, raw_exclusion in enumerate(graph["exclusions"] if isinstance(graph["exclusions"], list) else []):
         where = f"$.exclusions[{index}]"
         item = _closed(raw_exclusion, where, {"id", "locator", "reason"})
         _id(item["id"], f"{where}.id")
-        if item["locator"] != f"{graph_path}#/exclusions/{item['id']}":
+        # locator may self-identify or target the definition the exclusion answers for
+        target_prefix = f"{graph_path}#/definitions/"
+        allowed = {f"{graph_path}#/exclusions/{item['id']}"}
+        if item["locator"].startswith(target_prefix):
+            if item["locator"][len(target_prefix):] not in definition_ids:
+                raise CaptureError("SOURCE_LOCATOR_MISMATCH", f"{where}.locator targets unknown definition")
+            item["locator"] = item["locator"]
+        elif item["locator"] not in allowed:
             raise CaptureError("SOURCE_LOCATOR_MISMATCH", f"{where}.locator is not identity-based")
         if item["reason"] not in {"out-of-scope", "platform-mismatch", "non-ui"}:
             raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where}.reason is unsupported")
@@ -482,6 +492,13 @@ def capture(request_data: Any, source_root: Path) -> dict[str, Any]:
                 "shell usage is missing a complete chrome composition",
                 gaps=gaps,
             )
+        matrix_gaps = mandatory_fact_gaps(graph, request["graph_path"], request["scope"]["scenes"])
+        if matrix_gaps:
+            raise CaptureError(
+                MANDATORY_FACT_MISSING,
+                "included scenes leave mandatory questions unanswered (answer via facts or exclusions)",
+                gaps=matrix_gaps,
+            )
     exports = sorted(
         ({"definition_id": item["id"], "symbol": symbol} for item in definitions for symbol in item["exports"]),
         key=lambda item: (item["definition_id"], item["symbol"]),
@@ -586,8 +603,23 @@ usages:
     facts: []
 exclusions: []
 dynamic: []
-# Required shell chrome slots (empty facts remain incomplete; this file is not a TSX parser):
-# workspace-switcher, search, compose, header-trigger, chat-fab
+# Mandatory question matrix — answer every item via facts, or declare an
+# exclusions entry whose locator targets the scene (silence fails closed).
+# This skeleton is not a TSX parser; closure_complete stays false until answered.
+# 1. shell chrome slots: workspace-switcher, search, compose, nav-group,
+#    pin-list, rail, header-trigger, footer-utility, chat-fab, page-header,
+#    page-toolbar, page-canvas (slot_role + slot_order per slot)
+# 2. shell_variant inset ⇒ page-canvas card geometry: inset/margin (gap or
+#    inset_* / padding_*), radius, border, shadow, background (token-ref each)
+# 3. multi-section content scenes (board/other): a usage with slot section-nav
+#    stating where the section navigation lives, or an exclusions entry
+# 4. master-detail scenes: facts on master-pane and detail-pane slots (sides +
+#    order) and a context-panel usage or exclusions entry
+# 5. interactive controls in scope (input, button, nav-item, *-nav, select...):
+#    focus-visible state facts with border and/or ring(shadow) token refs
+# 6. in-card section-nav scenes: root_scroll none + scroll_block on >=2 pane
+#    slots + size fill on section-nav; anatomy fact (icon-label|label-only);
+#    selected/hover background token-refs bound to page-surface tokens
 """
 
 

@@ -5,8 +5,20 @@ items:
   severity: must
   status: active
 - id: rule/NN-102
-  statement: Every page band shares the 16px page gutter; full-width borders stay
-    on the outer band.
+  statement: Inside the inset content card every page band shares the 16px gutter;
+    hairline borders stay within the card and never span the bare shell.
+  severity: must
+  status: active
+- id: rule/QUALITY-104
+  statement: Interactive controls express focus-visible via a border switch to the
+    ring token plus a translucent ring built from the ring token; a global outline
+    mechanism is not the source treatment.
+  severity: must
+  status: active
+- id: rule/LAYOUT-107
+  statement: The shell renders content as a floating inset card (margin space.2 except
+    the leading edge, radius.xl, one surface-border hairline, surface shadow on
+    page-canvas); the app-shell ground shows through around it.
   severity: must
   status: active
 - id: rule/LAYOUT-101

@@ -4,7 +4,7 @@ from collections import defaultdict
 from typing import Any
 
 from .capture import digest
-from .chrome import ANCHOR_ROLES, CHROME_FACT_PROPERTIES, SHELL_VARIANTS, SLOT_ROLES, scene_kind_for
+from .chrome import ANCHOR_ROLES, CHROME_FACT_PROPERTIES, SHELL_VARIANTS, SLOT_ROLES, mandatory_answer_states, scene_kind_for
 
 PROFILE = "repo-structural-v1"
 REQUIRED_PADDING = (
@@ -80,6 +80,16 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
             "unresolved": list(receipt.get("unresolved") or []),
         }
     facts = [item for item in receipt.get("facts") or [] if isinstance(item, dict)]
+    closure = receipt.get("closure") or {}
+    mandatory_answers = mandatory_answer_states(
+        {
+            "definitions": closure.get("definitions") or [],
+            "usages": closure.get("usages") or [],
+            "exclusions": closure.get("exclusions") or [],
+        },
+        str(request.get("graph_path") or "ui-source-graph.yaml"),
+        [str(item) for item in (scope.get("scenes") or [])],
+    )
     layout_groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     geometry_groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     state_groups: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
@@ -286,4 +296,5 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
         "component_geometry": component_geometry,
         "state_presentations": state_presentations,
         "unresolved": unresolved,
+        "mandatory_answers": mandatory_answers,
     }

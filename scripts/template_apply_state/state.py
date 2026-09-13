@@ -715,6 +715,60 @@ def _route_composition_findings(
                         {"outside": outside, "page_type": page_type},
                     ))
 
+        placement_plan = raw.get("placement_plan")
+        template_refs = placement_plan.get("template_refs") if isinstance(placement_plan, dict) else None
+        if not isinstance(template_refs, list) or not template_refs or not all(
+            isinstance(item, str) for item in template_refs
+        ):
+            findings.append(Finding(
+                "PLACEMENT_TEMPLATE_TRACE_MISSING",
+                f"02-routes.yaml#{route_path}.placement_plan.template_refs",
+                "included route 的布局形态决策必须携带解析到模板 stable ID 的 template_refs",
+                2,
+            ))
+            template_refs = []
+        known_template_ids: set[str] = set()
+        for id_set in active_layers.values():
+            known_template_ids |= id_set
+        for ref in template_refs:
+            if isinstance(ref, str) and ref not in known_template_ids:
+                findings.append(Finding(
+                    "PLACEMENT_TEMPLATE_REF_DANGLING",
+                    f"02-routes.yaml#{route_path}.placement_plan.template_refs",
+                    f"unknown template id: {ref}",
+                    2,
+                    {"target": ref},
+                ))
+
+        layouts_map = (placement_context or {}).get("layouts", {})
+        if isinstance(layouts_map, dict) and isinstance(raw.get("layout_ref"), str):
+            bound = layouts_map.get(raw["layout_ref"])
+            if isinstance(bound, dict):
+                placement = bound.get("placement")
+                scroll_domains = placement.get("scroll_domains") if isinstance(placement, dict) else None
+                owners = {
+                    domain.get("owner")
+                    for domain in (scroll_domains or [])
+                    if isinstance(domain, dict)
+                } - {None}
+                scroll_owner = raw.get("scroll_owner")
+                if scroll_owner is not None and owners and scroll_owner not in owners:
+                    findings.append(Finding(
+                        "SCROLL_OWNER_UNTRACE",
+                        f"02-routes.yaml#{route_path}.scroll_owner",
+                        "route scroll_owner 不在绑定 layout 的 scroll domain owners 中",
+                        2,
+                        {"declared": scroll_owner, "owners": sorted(owners)},
+                    ))
+                if len(owners) >= 2 and raw.get("multi_pane") is not True:
+                    findings.append(Finding(
+                        "MULTI_PANE_ROOT_REQUIRED",
+                        f"02-routes.yaml#{route_path}.multi_pane",
+                        "多窗格 layout 要求 route 声明 multi_pane: true 且页面根 overflow-hidden 分窗格滚动",
+                        2,
+                        {"owners": sorted(owners)},
+                    ))
+
         if raw.get("structural_verification") != ("available" if structural_available else "unavailable"):
             findings.append(Finding(
                 "PLACEMENT_VERIFICATION_AVAILABILITY_INVALID",
@@ -1180,3 +1234,34 @@ def feedback_receipt(data: dict[str, Any]) -> dict[str, Any]:
         "updated_at": data.get("updated_at"),
         "evidence_count": len(data.get("evidence_refs", [])),
     }
+
+
+
+def scan_global_mechanism_css(files: dict[str, str]) -> list[dict[str, Any]]:
+    """Detect global mechanism CSS that bypasses template state facts.
+
+    Flags blocks whose selector is a bare element or bare pseudo-class (e.g.
+    ``:focus-visible``, ``input:hover`` — no class/id/attr scoping) and whose
+    body invents a mechanism (outline). Token projections, variable
+    definitions, at-rule prelude lines and reduced-motion guards are allowed.
+    """
+    import re
+
+    block_re = re.compile(r"(?m)^[ \t]*([^{}\n]+?)\{([^{}]*?)\}", re.S)
+    base_re = re.compile(r"^(?:[a-z][a-z0-9-]*)?$")
+    pseudo_re = re.compile(r":(?:focus-visible|focus|hover)\b")
+    findings: list[dict[str, Any]] = []
+    for name, text in sorted(files.items()):
+        if not isinstance(text, str) or not name.endswith((".css", ".scss")):
+            continue
+        for match in block_re.finditer(text):
+            selector, body = match.group(1).strip(), match.group(2)
+            if not pseudo_re.search(selector):
+                continue
+            base = selector.split(":")[0].strip()
+            if not base_re.match(base):
+                continue
+            if re.search(r"outline\s*:", body, re.I):
+                line = text.count("\n", 0, match.start()) + 1
+                findings.append({"file": name, "line": line, "selector": selector, "property": "outline"})
+    return findings

@@ -19,6 +19,7 @@ items:
   patterns:
   - pattern/page-chrome
   - pattern/dashboard-shell
+  - pattern/section-nav
   - pattern/data-table
   - pattern/board-column
   - pattern/board-card

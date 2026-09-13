@@ -552,3 +552,7 @@ tokens:
       value: 1440
       origin: source
       unit: px
+    section-nav-default:
+      value: 240
+      origin: source
+      unit: px

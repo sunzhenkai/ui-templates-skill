@@ -123,6 +123,10 @@ class ContractEvalTests(unittest.TestCase):
             "fidelity-canonical-stable", "fidelity-negative-mutations", "fidelity-capture-reproducibility",
             "fidelity-example-exclusion", "apply-fidelity-projections", "apply-fidelity-facet-recovery",
             "fidelity-chrome-incomplete", "fidelity-chrome-optional-anchors",
+            "fidelity-matrix-silence", "fidelity-matrix-exclusion",
+            "fidelity-matrix-focus-silence", "fidelity-matrix-pane-silence",
+            "primitive-variant-contracts", "apply-control-styling-contracts",
+            "apply-scenario-derivation",
             "fidelity-layout-high-without-chrome",
             "fidelity-capture-no-graph", "fidelity-capture-chrome-incomplete", "apply-chrome-unavailable",
             "authoring-catalog-zero-drift", "apply-catalog-pin-from-empty-project",
@@ -152,7 +156,7 @@ class ContractEvalTests(unittest.TestCase):
                 actual_ids.add(case["id"])
                 judges[case["judge"]] += 1
         self.assertEqual(expected_ids, actual_ids)
-        self.assertEqual({"script": 60, "llm": 2}, judges)
+        self.assertEqual({"script": 67, "llm": 2}, judges)
         self.assertEqual(
             {
                 "skills/ui-template-author/evals/cases.yaml",
@@ -167,7 +171,7 @@ class ContractEvalTests(unittest.TestCase):
         first = run(ROOT)
         second = run(ROOT)
         self.assertEqual("passed", first["status"])
-        self.assertEqual({"declared": 62, "parsed": 62, "executed": 62, "script": 60, "llm": 2}, first["counts"])
+        self.assertEqual({"declared": 69, "parsed": 69, "executed": 69, "script": 67, "llm": 2}, first["counts"])
         self.assertEqual("matched", first["baseline"]["status"])
         self.assertEqual({"added": [], "removed": [], "changed": []}, first["baseline"]["diff"])
         self.assertEqual(first, second)

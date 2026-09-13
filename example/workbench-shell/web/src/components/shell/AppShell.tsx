@@ -226,9 +226,14 @@ export function AppShell() {
   return (
     <div className="flex h-full overflow-hidden bg-app-shell" style={{ ["--sidebar-w" as string]: `${width}px` }}>
       {/* lg+ inset 侧栏 */}
+      {/* rule/LAYOUT-107：inset 分支——侧栏容器 p-2（pr-0），面板 rounded-xl 悬浮于 app-shell */}
+      <div
+        className="hidden shrink-0 p-2 pr-0 lg:flex"
+        style={{ width: "calc(var(--sidebar-w) + 8px)" }}
+      >
       <aside
         aria-label="侧栏"
-        className="relative hidden w-[var(--sidebar-w)] min-w-[200px] max-w-[360px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex"
+        className="relative flex w-[var(--sidebar-w)] min-w-[200px] max-w-[360px] shrink-0 flex-col overflow-hidden rounded-xl bg-sidebar text-sidebar-foreground"
       >
         {sidebarContent()}
         <div
@@ -254,6 +259,7 @@ export function AppShell() {
           className="absolute inset-y-0 right-0 w-1 cursor-col-resize hover:bg-sidebar-ring/40"
         />
       </aside>
+      </div>
 
       {/* <lg sheet 抽屉 */}
       {sheetOpen && (
@@ -268,15 +274,15 @@ export function AppShell() {
         </div>
       )}
 
-      {/* canvas 区 */}
-      <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
+      {/* canvas 区：内容悬浮卡片（SidebarInset 语义，rule/LAYOUT-107） */}
+      <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden max-lg:m-0 lg:m-2 lg:ml-0 lg:rounded-xl lg:bg-page-canvas lg:shadow-surface lg:ring-1 lg:ring-surface-border">
         {/* header-trigger 槽：<lg 打开抽屉 */}
-        <div className="flex h-12 shrink-0 items-center gap-2 border-b border-surface-border bg-surface px-3 lg:hidden">
+        <div className="flex h-12 shrink-0 items-center gap-2 border-b border-surface-border px-3 lg:hidden">
           <IconButton label="打开导航" onClick={() => setSheetOpen(true)}><MenuIcon className="size-4" /></IconButton>
           <span className="text-body font-medium">Workbench</span>
         </div>
         {/* page-canvas 槽位：页面路由填充（页面自带 page-header/toolbar） */}
-        <main id="main" data-canvas className="min-h-0 flex-1 overflow-y-auto bg-page-canvas">
+        <main id="main" data-canvas className="flex min-h-0 flex-1 flex-col overflow-hidden">
           <Outlet />
         </main>
         <span className="sr-only">内容区域结束</span>

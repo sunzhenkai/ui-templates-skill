@@ -53,10 +53,12 @@ async function main() {
     await shell.waitFor({ timeout: 5000 });
     const shellBg = await shell.evaluate((el) => getComputedStyle(el).backgroundColor);
     const canvas = page.locator("[data-canvas]");
-    const canvasScroll = await canvas.evaluate((el) => {
+    const scrollChild = canvas.locator("> div.overflow-y-auto").first();
+    const canvasScroll = await scrollChild.evaluate((el) => {
       const cs = getComputedStyle(el);
       return { overflowY: cs.overflowY, clientH: el.clientHeight, scrollH: el.scrollHeight };
     });
+    const mainOverflow = await canvas.evaluate((el) => getComputedStyle(el).overflowY);
     const rootScroll = await page.evaluate(() => {
       const el = document.querySelector("div.flex.h-full");
       return el ? getComputedStyle(el).overflow : "missing";
@@ -82,9 +84,9 @@ async function main() {
     );
     record(
       "scroll.owner.canvas",
-      rootScroll === "hidden" && canvasScroll.overflowY === "auto" ? "passed" : "failed",
-      "LAYOUT-102：壳根 overflow hidden，page-canvas 独占块滚动",
-      `shell root overflow=${rootScroll}；canvas overflowY=${canvasScroll.overflowY}`,
+      rootScroll === "hidden" && mainOverflow === "hidden" && canvasScroll.overflowY === "auto" ? "passed" : "failed",
+      "LAYOUT-102：壳根与 main 均 overflow hidden，页面级滚动容器（region-content）独占块滚动",
+      `shell root overflow=${rootScroll}；main overflowY=${mainOverflow}；scroll container overflowY=${canvasScroll.overflowY}`,
       ["s1-shell-sidebar.png"],
       { route: "/incidents", viewport: "1440x900", theme: "light" },
     );
@@ -272,6 +274,126 @@ async function main() {
       `dark body bg=${darkBg}`,
       ["s11-dark-theme.png"],
       { route: "/incidents", viewport: "1440x900", theme: "dark" },
+    );
+
+    /* ---------- S13 内容卡片几何（rule/LAYOUT-107 computed style） ---------- */
+    await page.goto(`${BASE}/incidents`);
+    await page.waitForSelector("table", { timeout: 10000 });
+    const card = page.locator("div.relative.flex.min-w-0.flex-1.flex-col.overflow-hidden");
+    const cardStyles = await card.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return {
+        borderRadius: cs.borderRadius,
+        marginTop: cs.marginTop,
+        marginRight: cs.marginRight,
+        marginBottom: cs.marginBottom,
+        marginLeft: cs.marginLeft,
+        boxShadow: cs.boxShadow,
+        backgroundColor: cs.backgroundColor,
+        borderColor: getComputedStyle(el).borderTopColor,
+      };
+    });
+    await page.screenshot({ path: `${OUT}s13-content-card.png` });
+    const radiusOk = cardStyles.borderRadius === "14px"; // radius.xl
+    const insetOk = [cardStyles.marginTop, cardStyles.marginRight, cardStyles.marginBottom].every((v) => v === "8px") && cardStyles.marginLeft === "0px";
+    const shadowOk = cardStyles.boxShadow !== "none" && cardStyles.boxShadow.includes("rgb");
+    const bgOk = cardStyles.backgroundColor.includes("0.988");
+    record(
+      "content-card.geometry",
+      radiusOk && insetOk && shadowOk && bgOk ? "passed" : "failed",
+      "rule/LAYOUT-107：内容卡片 lg 下 m-2 ml-0 + radius.xl + surface 阴影 + page-canvas 底",
+      JSON.stringify(cardStyles),
+      ["s13-content-card.png"],
+      { route: "/incidents", viewport: "1440x900", theme: "light" },
+    );
+
+    /* ---------- S14 二级导航位于卡片内部左列（pattern/section-nav） ---------- */
+    await page.goto(`${BASE}/settings`);
+    await page.waitForSelector("nav[aria-label='设置分区']", { timeout: 10000 });
+    const navBox = await page.locator("aside[aria-label='设置导航']").boundingBox();
+    const cardBox = await card.boundingBox();
+    const navItem = await page.getByRole("button", { name: "成员与权限" }).isVisible();
+    await navItem && (await page.getByRole("button", { name: "成员与权限" }).click());
+    await page.waitForTimeout(400);
+    const membersVisible = await page.getByText("成员与权限", { exact: true }).first().isVisible();
+    const inCardLeft = navBox && cardBox && navBox.x >= cardBox.x - 2 && navBox.x + navBox.width <= cardBox.x + cardBox.width && navBox.y >= cardBox.y - 2;
+    await page.screenshot({ path: `${OUT}s14-settings-section-nav.png` });
+    record(
+      "settings.section-nav.in-card-left",
+      inCardLeft && navItem && membersVisible ? "passed" : "failed",
+      "pattern/section-nav：二级导航位于内容卡片内部左列，点击切换分区内容",
+      `navBox=${JSON.stringify(navBox)}；cardBox.x=${cardBox?.x}, width=${cardBox?.width}`,
+      ["s14-settings-section-nav.png"],
+      { route: "/settings", viewport: "1440x900", theme: "light" },
+    );
+
+    /* ---------- S15 focus 处理（rule/QUALITY-104 computed style） ---------- */
+    await page.goto(`${BASE}/incidents`);
+    await page.waitForSelector("input[aria-label='搜索事件']", { timeout: 10000 });
+    const searchInput = page.getByLabel("搜索事件");
+    await searchInput.focus();
+    await page.waitForTimeout(300); // transition-colors 完成后再取 computed style
+    const focusStyles = await searchInput.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return {
+        outlineStyle: cs.outlineStyle,
+        borderColor: cs.borderColor,
+        boxShadow: cs.boxShadow,
+        borderRadius: cs.borderRadius,
+        backgroundColor: cs.backgroundColor,
+      };
+    });
+    await page.screenshot({ path: `${OUT}s15-focus-treatment.png` });
+    const focusOk =
+      focusStyles.outlineStyle === "none" &&
+      !focusStyles.borderColor.startsWith("oklab(0.92") &&
+      focusStyles.boxShadow.includes("3px") &&
+      focusStyles.boxShadow !== "none" &&
+      focusStyles.borderRadius === "10px" &&
+      focusStyles.backgroundColor === "rgba(0, 0, 0, 0)";
+    record(
+      "focus.treatment.contrast-104",
+      focusOk ? "passed" : "failed",
+      "rule/QUALITY-104：输入控件 focus = 无 outline + border-ring + ring/50 box-shadow + rounded-lg + 透明底",
+      JSON.stringify(focusStyles),
+      ["s15-focus-treatment.png"],
+      { route: "/incidents", viewport: "1440x900", theme: "light" },
+    );
+
+    /* ---------- S16 设置页双窗格滚动（scroll-domain 派生场景） ---------- */
+    await page.goto(`${BASE}/settings`);
+    await page.waitForSelector("nav[aria-label='设置分区']", { timeout: 10000 });
+    const paneStyles = await page.evaluate(() => {
+      const main = document.querySelector("main#main");
+      const nav = document.querySelector("aside[aria-label='设置导航'] nav");
+      const content = document.querySelector("aside[aria-label='设置导航'] + div");
+      const q = (el) => (el ? { overflowY: getComputedStyle(el).overflowY, height: el.getBoundingClientRect().height } : null);
+      return { main: q(main), nav: q(nav), content: q(content) };
+    });
+    const navAside = page.locator("aside[aria-label='设置导航']");
+    const navBox2 = await navAside.boundingBox();
+    const cardEl = page.locator("div.relative.flex.min-w-0.flex-1.flex-col.overflow-hidden");
+    const cardBox2 = await cardEl.boundingBox();
+    const iconCount = await navAside.locator("svg").count();
+    const selectedBg = await page.evaluate(() => {
+      const el = document.querySelector("button[aria-current='page']");
+      return el ? getComputedStyle(el).backgroundColor : null;
+    });
+    await page.screenshot({ path: `${OUT}s16-settings-panes.png` });
+    const panesOk =
+      paneStyles.main?.overflowY === "hidden" &&
+      paneStyles.nav?.overflowY === "auto" &&
+      paneStyles.content?.overflowY === "auto" &&
+      navBox2 && cardBox2 && Math.abs(navBox2.y + navBox2.height - (cardBox2.y + cardBox2.height)) < 2 &&
+      iconCount >= 6 &&
+      selectedBg && selectedBg.includes("oklch");
+    record(
+      "settings.scroll-domain.panes",
+      panesOk ? "passed" : "failed",
+      "placement-settings-panes：根 overflow-hidden，nav/内容各自滚动；nav 列撑满卡片高（分割线到底）；条目 icon+label；选中 surface-selected",
+      `main=${paneStyles.main?.overflowY} nav=${paneStyles.nav?.overflowY} content=${paneStyles.content?.overflowY}；navBottom-cardBottom=${navBox2 && cardBox2 ? (navBox2.y + navBox2.height - (cardBox2.y + cardBox2.height)).toFixed(1) : "n/a"}px；icons=${iconCount}；selected=${selectedBg}`,
+      ["s16-settings-panes.png"],
+      { route: "/settings", viewport: "1440x900", theme: "light" },
     );
 
     /* ---------- S12 移动端 sheet 抽屉 ---------- */

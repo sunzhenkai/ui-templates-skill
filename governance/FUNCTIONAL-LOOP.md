@@ -138,7 +138,7 @@ INDEX 表头固定为：名称、风格描述、来源类型、采集日期、�
 1. 冻结对照物：原版 revision、prompts、candidate package。
 2. 失败差异按 `package | apply-skill | certification-prompt` 归类，禁止先改生成物。
 3. 只改归属面：壳/token/组件/evidence → candidate package 或 Author skill；阶段/取证/source-blind 不稳 → Apply skill；固定 prompts 或 assertion 设计不足 → certification-prompt。
-4. 有 session source 才允许抬升 observed / 写 fidelity。
+4. 有 session source 才允许抬升 observed / 写 fidelity；capture 必答事实矩阵（inset 内容卡片几何、page_mode 必答问题）沉默即 fail closed，exclusions 是唯一合法的「显式不知道」。
 5. 干净 output root + fresh build identity 重新 source-blind Apply，重跑完整 gate；两次干净重生稳定才算闭环。
 
 `openspec/specs/workbench-shell-implementation/` 是**该模板实例附录**，不是产品级契约。第二个模板不得继承其 A–E / Shell 假设。
