@@ -1,0 +1,387 @@
+schema: design-system-primitives/v1
+items:
+- id: primitive/nav-item
+  name: Sidebar navigation item
+  variants:
+  - default
+  - active
+  states:
+  - default
+  - hover
+  - focus-visible
+  - active
+  - disabled
+  token_refs:
+  - token/color.light.sidebar-accent
+  - token/color.light.sidebar-accent-foreground
+  - token/space.2
+  - token/radius.md
+  rule_refs:
+  - rule/LAYOUT-101
+  - rule/QUALITY-101
+- id: primitive/button
+  name: Button
+  variants:
+  - default
+  - primary
+  - outline
+  - brand
+  - brand-subtle
+  - secondary
+  - ghost
+  - destructive
+  - link
+  sizes:
+  - xs
+  - sm
+  - md
+  - lg
+  - icon-xs
+  - icon-sm
+  - icon-lg
+  states:
+  - default
+  - hover
+  - focus-visible
+  - active
+  - disabled
+  token_refs:
+  - token/color.light.primary
+  - token/color.light.primary-foreground
+  - token/color.light.ring
+  - token/radius.md
+  - token/color.light.primary-hover
+  - token/color.light.brand
+  - token/color.light.brand-subtle
+  - token/color.light.destructive-surface
+  - token/color.light.ring-focus
+  - token/typography.body
+  - token/size.control-md
+  - token/size.control-sm
+  - token/size.icon-sm
+  rule_refs:
+  - rule/AX-101
+- id: primitive/input
+  name: Text input
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/color.light.input
+  - token/color.light.ring
+  - token/radius.md
+  - token/color.light.ring-focus
+  - token/typography.body
+  - token/size.control-md
+  rule_refs:
+  - rule/AX-101
+  variants:
+  - text
+  - select
+  - combobox
+  - checkbox
+  - radio
+  - switch
+- id: primitive/panel
+  name: Bounded surface panel
+  states:
+  - default
+  token_refs:
+  - token/color.light.surface
+  - token/color.light.surface-border
+  - token/shadow.surface
+  - token/space.4
+  rule_refs:
+  - rule/NN-101
+- id: primitive/chat-fab
+  name: Floating chat trigger
+  states:
+  - default
+  - hover
+  - focus-visible
+  - active
+  token_refs:
+  - token/color.light.surface-raised
+  - token/color.light.surface-hover
+  - token/shadow.floating
+  - token/space.chat-launcher-size
+  - token/space.chat-launcher-inset
+  rule_refs:
+  - rule/LAYOUT-104
+  - rule/RESP-101
+- id: primitive/workspace-switcher
+  name: Workspace switcher trigger
+  variants:
+  - default
+  - active
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/color.light.surface-raised
+  - token/color.light.surface-hover
+  - token/radius.md
+  - token/size.control-md
+  rule_refs:
+  - rule/LAYOUT-103
+  - rule/AX-101
+- id: primitive/search-input
+  name: Global search input
+  variants:
+  - default
+  - with-shortcut-hint
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/color.light.input
+  - token/color.light.ring
+  - token/color.light.ring-focus
+  - token/radius.md
+  - token/size.control-md
+  - token/typography.body
+  rule_refs:
+  - rule/AX-101
+  - rule/LAYOUT-103
+- id: primitive/create-button
+  name: Create entry button
+  variants:
+  - primary
+  - menu
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/color.light.primary
+  - token/color.light.primary-foreground
+  - token/radius.md
+  - token/size.control-sm
+  rule_refs:
+  - rule/AX-101
+  - rule/LAYOUT-103
+- id: primitive/textarea
+  name: Multiline text area
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  - error
+  token_refs:
+  - token/color.light.input
+  - token/color.light.ring
+  - token/color.light.ring-focus
+  - token/radius.md
+  - token/typography.body
+  rule_refs:
+  - rule/AX-101
+- id: primitive/select
+  name: Select trigger and listbox
+  variants:
+  - single
+  - with-checkmark
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  - open
+  token_refs:
+  - token/color.light.popover
+  - token/color.light.popover-foreground
+  - token/color.light.ring-focus
+  - token/radius.md
+  - token/size.control-md
+  rule_refs:
+  - rule/AX-101
+  - rule/AX-104
+- id: primitive/checkbox
+  name: Checkbox
+  variants:
+  - unchecked
+  - checked
+  - indeterminate
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/color.light.primary
+  - token/color.light.ring-focus
+  - token/radius.sm
+  - token/size.icon-sm
+  rule_refs:
+  - rule/AX-101
+  - rule/AX-102
+- id: primitive/switch
+  name: Boolean switch
+  variants:
+  - 'off'
+  - 'on'
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/color.light.primary
+  - token/color.light.surface-border
+  - token/radius.full
+  - token/size.icon-sm
+  rule_refs:
+  - rule/AX-101
+  - rule/AX-102
+- id: primitive/badge
+  name: Status badge
+  variants:
+  - neutral
+  - success
+  - warning
+  - critical
+  - info
+  states:
+  - default
+  token_refs:
+  - token/color.light.muted
+  - token/color.light.muted-foreground
+  - token/radius.full
+  - token/typography.micro
+  rule_refs:
+  - rule/AX-102
+- id: primitive/tabs
+  name: Tab list with tab panels
+  variants:
+  - underline
+  - boxed
+  states:
+  - default
+  - hover
+  - focus-visible
+  - active
+  - disabled
+  token_refs:
+  - token/color.light.foreground
+  - token/color.light.muted-foreground
+  - token/color.light.surface-border
+  - token/typography.label
+  - token/space.2
+  rule_refs:
+  - rule/AX-101
+  - rule/AX-104
+- id: primitive/pagination
+  name: Pagination control
+  variants:
+  - numbers
+  - compact
+  states:
+  - default
+  - hover
+  - focus-visible
+  - active
+  - disabled
+  token_refs:
+  - token/color.light.surface
+  - token/color.light.surface-hover
+  - token/color.light.ring-focus
+  - token/radius.sm
+  - token/size.control-sm
+  rule_refs:
+  - rule/AX-101
+- id: primitive/avatar
+  name: Avatar
+  variants:
+  - image
+  - initials
+  - group
+  sizes:
+  - xs
+  - sm
+  - md
+  - lg
+  states:
+  - default
+  token_refs:
+  - token/color.light.muted
+  - token/color.light.muted-foreground
+  - token/radius.full
+  - token/typography.caption
+  rule_refs:
+  - rule/AX-101
+- id: primitive/skeleton
+  name: Skeleton placeholder
+  variants:
+  - text
+  - block
+  - avatar
+  states:
+  - default
+  token_refs:
+  - token/color.light.muted
+  - token/radius.md
+  rule_refs:
+  - rule/NN-103
+- id: primitive/icon-button
+  name: Icon-only button
+  variants:
+  - ghost
+  - outline
+  sizes:
+  - icon-xs
+  - icon-sm
+  - icon-lg
+  states:
+  - default
+  - hover
+  - focus-visible
+  - active
+  - disabled
+  token_refs:
+  - token/color.light.surface-hover
+  - token/color.light.ring-focus
+  - token/radius.sm
+  - token/size.icon-sm
+  rule_refs:
+  - rule/AX-101
+- id: primitive/menu
+  name: Dropdown menu with items
+  variants:
+  - default
+  - with-destructive-item
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  - open
+  token_refs:
+  - token/color.light.popover
+  - token/color.light.popover-foreground
+  - token/color.light.surface-hover
+  - token/color.light.ring-focus
+  - token/radius.md
+  rule_refs:
+  - rule/AX-101
+  - rule/AX-104
+- id: primitive/tooltip
+  name: Tooltip
+  states:
+  - default
+  - hover
+  - focus-visible
+  token_refs:
+  - token/color.light.foreground
+  - token/color.light.app-shell
+  - token/radius.sm
+  - token/typography.micro
+  rule_refs:
+  - rule/AX-101
+  - rule/AX-104
