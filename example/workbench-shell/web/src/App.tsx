@@ -1,81 +1,36 @@
-import { Navigate, Route, Routes } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AppShell, ChatWindow } from "./components/shell/AppShell";
-import { OverlayHost } from "./components/shell/overlays";
-import { Toaster } from "./components/ui/toast";
-import { MemberContext } from "./components/ui";
-import { api } from "./data/mock";
-import { useQuery } from "@tanstack/react-query";
-import { IncidentListPage } from "./features/incidents/IncidentListPage";
-import { IncidentDetailPage } from "./features/incidents/IncidentDetailPage";
-import { InboxPage } from "./features/inbox/InboxPage";
-import { BoardPage } from "./features/board/BoardPage";
-import { ServiceCatalogPage, ServiceDetailPage } from "./features/services/ServicePages";
-import { OnCallPage } from "./features/oncall/OnCallPage";
-import { AnalyticsPage } from "./features/analytics/AnalyticsPage";
-import { SettingsPage } from "./features/settings/SettingsPage";
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { AppShell } from './components/shell'
+import { EmptyState, Button } from './components/ui'
+import { InboxPage } from './pages/InboxPage'
+import { IncidentsPage } from './pages/IncidentsPage'
+import { IncidentDetailPage } from './pages/IncidentDetailPage'
+import { BoardPage } from './pages/BoardPage'
+import { ServicesPage } from './pages/ServicesPage'
+import { OnCallPage } from './pages/OnCallPage'
+import { AnalyticsPage } from './pages/AnalyticsPage'
+import { SettingsPage } from './pages/SettingsPage'
+import { useNavigate } from 'react-router-dom'
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 0, staleTime: 30_000, refetchOnWindowFocus: false } },
-});
-
-function MemberProvider({ children }: { children: React.ReactNode }) {
-  const { data: members } = useQuery({ queryKey: ["members"], queryFn: api.listMembers });
-  return <MemberContext.Provider value={{ members: members ?? [] }}>{children}</MemberContext.Provider>;
-}
-
-/** 根布局：壳层 + 全局浮层（data router 的根路由元素） */
-export function RootLayout() {
+export default function App() {
   return (
-    <MemberProvider>
-      <AppShell />
-      <OverlayHost />
-      <ChatWindow />
-      <Toaster />
-    </MemberProvider>
-  );
+    <Routes>
+      <Route element={<AppShell />}>
+        <Route index element={<Navigate to="/incidents" replace />} />
+        <Route path="inbox" element={<InboxPage />} />
+        <Route path="incidents" element={<IncidentsPage />} />
+        <Route path="incidents/:id" element={<IncidentDetailPage />} />
+        <Route path="board" element={<BoardPage />} />
+        <Route path="services" element={<ServicesPage />} />
+        <Route path="oncall" element={<OnCallPage />} />
+        <Route path="analytics" element={<AnalyticsPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
+  )
 }
 
-/** data router 路由表（useBlocker 需要 data router 上下文） */
-export const routes = [
-  {
-    element: <RootLayout />,
-    children: [
-      { index: true, element: <Navigate to="/inbox" replace /> },
-      { path: "/inbox", element: <InboxPage /> },
-      { path: "/incidents", element: <IncidentListPage /> },
-      { path: "/incidents/board", element: <BoardPage /> },
-      { path: "/incidents/:id", element: <IncidentDetailPage /> },
-      { path: "/services", element: <ServiceCatalogPage /> },
-      { path: "/services/:id", element: <ServiceDetailPage /> },
-      { path: "/on-call", element: <OnCallPage /> },
-      { path: "/analytics", element: <AnalyticsPage /> },
-      { path: "/settings", element: <SettingsPage /> },
-      { path: "*", element: <Navigate to="/inbox" replace /> },
-    ],
-  },
-];
-
-export function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Routes>
-        <Route element={<RootLayout />}>
-          <Route index element={<Navigate to="/inbox" replace />} />
-          <Route path="/inbox" element={<InboxPage />} />
-          <Route path="/incidents" element={<IncidentListPage />} />
-          <Route path="/incidents/board" element={<BoardPage />} />
-          <Route path="/incidents/:id" element={<IncidentDetailPage />} />
-          <Route path="/services" element={<ServiceCatalogPage />} />
-          <Route path="/services/:id" element={<ServiceDetailPage />} />
-          <Route path="/on-call" element={<OnCallPage />} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="*" element={<Navigate to="/inbox" replace />} />
-        </Route>
-      </Routes>
-    </QueryClientProvider>
-  );
+function NotFound() {
+  const navigate = useNavigate()
+  return <div className="grid h-full place-items-center p-6"><EmptyState title="404 · 页面不存在" description="这个工作区页面不存在，或你没有访问权限。" action={<Button variant="primary" onClick={() => navigate('/incidents')}>返回事件列表</Button>} /></div>
 }
-
-export { queryClient };

@@ -1,0 +1,184 @@
+schema: design-system-primitives/v1
+items:
+- id: primitive/nav-item
+  name: Navigation item
+  states:
+  - default
+  - hover
+  - focus-visible
+  - active
+  - disabled
+  token_refs:
+  - token/color.sidebar-foreground
+  - token/color.sidebar-accent
+  - token/radius.control
+  - token/shadow.focus
+  rule_refs:
+  - rule/QUALITY-103
+  - rule/AX-101
+- id: primitive/button
+  name: Button
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  variants:
+  - primary
+  - secondary
+  - ghost
+  sizes:
+  - sm
+  - md
+  token_refs:
+  - token/color.brand
+  - token/color.surface
+  - token/radius.control
+  - token/shadow.focus
+  rule_refs:
+  - rule/QUALITY-101
+  - rule/AX-102
+- id: primitive/input
+  name: Input
+  states:
+  - default
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/color.surface
+  - token/color.surface-border
+  - token/radius.control
+  - token/shadow.focus
+  rule_refs:
+  - rule/AX-103
+- id: primitive/dialog
+  name: Dialog
+  states:
+  - default
+  - open
+  token_refs:
+  - token/color.surface-raised
+  - token/radius.dialog
+  - token/shadow.floating
+  - token/space.dialog-padding
+  rule_refs:
+  - rule/QUALITY-102
+- id: primitive/panel
+  name: Panel
+  states:
+  - default
+  token_refs:
+  - token/color.surface
+  - token/color.surface-border
+  - token/radius.surface
+  rule_refs:
+  - rule/LAYOUT-105
+- id: primitive/data-table
+  name: Data table
+  states:
+  - default
+  - hover
+  token_refs:
+  - token/color.surface
+  - token/color.surface-border
+  - token/text.label
+  rule_refs:
+  - rule/LAYOUT-103
+- id: primitive/board-column
+  name: Board column
+  states:
+  - default
+  token_refs:
+  - token/color.surface
+  - token/color.surface-border
+  - token/radius.surface
+  rule_refs:
+  - rule/LAYOUT-104
+- id: primitive/board-card
+  name: Board card
+  states:
+  - default
+  - hover
+  - focus-visible
+  token_refs:
+  - token/color.surface
+  - token/color.surface-hover
+  - token/color.surface-border
+  - token/radius.control
+  - token/shadow.surface
+  rule_refs:
+  - rule/QUALITY-101
+- id: primitive/badge
+  name: Badge
+  states:
+  - default
+  token_refs:
+  - token/color.surface-hover
+  - token/radius.control
+  - token/text.label
+  rule_refs:
+  - rule/QUALITY-101
+- id: primitive/avatar
+  name: Avatar
+  states:
+  - default
+  token_refs:
+  - token/color.surface-border
+  - token/radius.control
+  rule_refs:
+  - rule/QUALITY-101
+- id: primitive/tabs
+  name: Tabs
+  states:
+  - default
+  - active
+  - focus-visible
+  token_refs:
+  - token/color.surface-hover
+  - token/color.surface-selected
+  - token/radius.control
+  - token/shadow.focus
+  rule_refs:
+  - rule/AX-104
+- id: primitive/select
+  name: Select
+  states:
+  - default
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/color.surface
+  - token/color.surface-border
+  - token/radius.control
+  - token/shadow.focus
+  rule_refs:
+  - rule/AX-104
+- id: primitive/empty-state
+  name: Empty state
+  states:
+  - default
+  token_refs:
+  - token/color.muted-foreground
+  - token/color.surface
+  rule_refs:
+  - rule/QUALITY-103
+- id: primitive/skeleton
+  name: Skeleton
+  states:
+  - default
+  token_refs:
+  - token/color.surface-hover
+  - token/radius.control
+  rule_refs:
+  - rule/QUALITY-103
+- id: primitive/tooltip
+  name: Tooltip
+  states:
+  - default
+  - open
+  token_refs:
+  - token/color.surface-raised
+  - token/shadow.floating
+  - token/radius.control
+  rule_refs:
+  - rule/QUALITY-103
