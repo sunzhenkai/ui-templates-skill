@@ -29,6 +29,17 @@ SCHEMA_DIR = schema_dir()
 CANONICAL = "sha256-canonical-json-v1"
 RAW = "sha256-file-v1"
 INVENTORY_SCHEMA = "design-system-certification-inventory/v1"
+IMAGE_MAGIC_PREFIXES = (
+    b"\x89PNG\r\n\x1a\n",
+    b"\xff\xd8\xff",
+    b"GIF87a",
+    b"GIF89a",
+)
+ORACLE_EVIDENCE_CODES = frozenset({
+    "CERT_ORACLE_EVIDENCE_PLACEHOLDER",
+    "CERT_ORACLE_MEASUREMENT_INVALID",
+    "CERT_ASSERTION_UNANCHORED",
+})
 MEASURABLE_ASSERTION_METHODS = frozenset({
     "dom-geometry",
     "computed-style",
@@ -252,14 +263,105 @@ def validate_package_identity(root: Path, manifest: dict[str, Any], report: Repo
     if meta.get("name") != manifest.get("id") or meta.get("version") != manifest.get("version"):
         report.add("IDENTITY_MISMATCH", "meta", "meta name/version must match manifest id/version")
     sources = {item.get("id") for item in meta.get("sources", [])}
+    declared_revisions: dict[str, set[str]] = {}
+    for item in meta.get("sources", []):
+        source_id = item.get("id")
+        if isinstance(source_id, str):
+            declared_revisions.setdefault(source_id, set()).add(str(item.get("revision", "")))
     evidence_path = manifest.get("layers", {}).get("evidence")
     if evidence_path:
         evidence_file = safe_relative(root, evidence_path, report, "manifest.layers.evidence")
         if evidence_file and evidence_file.is_file():
             evidence = load_document(evidence_file)
             for item in evidence.get("items", []):
-                if item.get("source_id") and item["source_id"] not in sources:
-                    report.add("EVIDENCE_SOURCE_DANGLING", f"evidence.{item.get('id')}", f"unknown source {item.get('source_id')}")
+                where = f"evidence.{item.get('id')}"
+                source_id = item.get("source_id")
+                revision = item.get("source_revision")
+                if source_id and source_id not in sources:
+                    report.add("EVIDENCE_SOURCE_DANGLING", where, f"unknown source {source_id}")
+                    continue
+                if revision and not source_id:
+                    report.add(
+                        "EVIDENCE_REVISION_UNDECLARED",
+                        where,
+                        "source_revision present without source_id; cannot resolve against meta.sources",
+                    )
+                    continue
+                if source_id and revision and str(revision) not in declared_revisions.get(str(source_id), set()):
+                    report.add(
+                        "EVIDENCE_REVISION_UNDECLARED",
+                        where,
+                        f"source_revision {revision} is not declared by meta.sources[{source_id}]",
+                    )
+
+
+CONFIDENCE_ORDER = {"high": 3, "medium": 2, "low": 1}
+
+
+def validate_coverage_and_confidence(root: Path, report: Report) -> None:
+    """Coverage must be a complete, mutually exclusive partition; confidence must match it."""
+    meta_path = root / "meta.yaml"
+    if not meta_path.is_file():
+        return
+    try:
+        meta = load_document(meta_path)
+    except Exception:
+        return
+    if not isinstance(meta, dict):
+        return
+    coverage = meta.get("coverage")
+    if isinstance(coverage, dict):
+        for dimension, entry in sorted(coverage.items()):
+            if not isinstance(entry, dict):
+                continue
+            declared = {item for item in entry.get("declared", []) if isinstance(item, str)}
+            buckets = {
+                name: {item for item in entry.get(name, []) if isinstance(item, str)}
+                for name in ("observed", "defaulted", "unsupported")
+            }
+            for item in sorted(declared | set().union(*buckets.values())):
+                memberships = sorted(name for name, values in buckets.items() if item in values)
+                where = f"meta.coverage.{dimension}.{item}"
+                if len(memberships) > 1:
+                    report.add(
+                        "COVERAGE_PARTITION_INVALID",
+                        where,
+                        f"item appears in multiple classification buckets: {memberships}",
+                    )
+                elif item in declared and not memberships:
+                    report.add(
+                        "COVERAGE_PARTITION_INVALID",
+                        where,
+                        "declared item is not classified as observed/defaulted/unsupported",
+                    )
+                elif item in buckets["observed"] and item not in declared:
+                    report.add("COVERAGE_PARTITION_INVALID", where, "observed item is not declared")
+    confidence = meta.get("confidence")
+    if not isinstance(confidence, dict):
+        return
+    overall = confidence.get("overall")
+    required = {
+        name: confidence[name]
+        for name in ("layout", "visual", "components")
+        if isinstance(confidence.get(name), str)
+    }
+    if isinstance(overall, str) and overall in CONFIDENCE_ORDER and required:
+        weakest_name, weakest_value = min(required.items(), key=lambda pair: CONFIDENCE_ORDER.get(pair[1], 99))
+        if CONFIDENCE_ORDER.get(overall, 0) > CONFIDENCE_ORDER.get(weakest_value, 99):
+            report.add(
+                "CONFIDENCE_INCONSISTENT",
+                "meta.confidence.overall",
+                f"overall {overall} exceeds weakest required dimension {weakest_name}={weakest_value}",
+            )
+    components_confidence = confidence.get("components")
+    if components_confidence == "high" and isinstance(coverage, dict):
+        components_coverage = coverage.get("components")
+        if isinstance(components_coverage, dict) and components_coverage.get("defaulted"):
+            report.add(
+                "CONFIDENCE_INCONSISTENT",
+                "meta.confidence.components",
+                "components confidence cannot be high while coverage.components lists defaulted items",
+            )
 
 
 def walk_tokens(node: Any, prefix: str = "") -> set[str]:
@@ -309,6 +411,57 @@ def validate_references(ids: dict[str, str], refs: dict[str, list[str]], report:
                 continue
             if target not in ids:
                 report.add("REFERENCE_DANGLING", f"entities.{source_id}", f"unknown stable ID: {target}")
+
+
+def validate_primitive_contracts(
+    layers: dict[str, Path],
+    documents: dict[str, Any],
+    report: Report,
+) -> None:
+    """Variant styling contracts: resolve tokens/rules and bind contexts."""
+    primitives = documents.get("primitives")
+    if not isinstance(primitives, dict):
+        return
+    token_paths = walk_tokens((documents.get("tokens") or {}).get("tokens", {})) if "tokens" in documents else set()
+    if not token_paths and layers.get("tokens") and layers["tokens"].is_file():
+        token_paths = walk_tokens(load_document(layers["tokens"]).get("tokens", {}))
+    rule_ids = {
+        item.get("id")
+        for item in (documents.get("rules") or {}).get("items", [])
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+    for item in primitives.get("items", []):
+        if not isinstance(item, dict):
+            continue
+        pid = item.get("id", "<primitive>")
+        variants = [v for v in item.get("variants") or [] if isinstance(v, str)]
+        contracts = item.get("variant_contracts")
+        if not isinstance(contracts, dict):
+            continue
+        for variant, contract in sorted(contracts.items()):
+            where = f"layers.primitives.{pid}.variant_contracts.{variant}"
+            if variants and variant not in variants and variant != "default":
+                report.add("PRIMITIVE_CONTRACT_INVALID", where, "contract variant is not a declared variant", variant=variant)
+                continue
+            if not isinstance(contract, dict):
+                continue
+            for field in ("radius", "control_height", "hover", "active"):
+                ref = contract.get(field)
+                if isinstance(ref, str) and ref.removeprefix("token/") not in token_paths:
+                    report.add("PRIMITIVE_CONTRACT_INVALID", f"{where}.{field}", f"token path is dangling: {ref}")
+            focus = contract.get("focus_ref")
+            if isinstance(focus, str) and focus.startswith("rule/") and focus not in rule_ids:
+                report.add("PRIMITIVE_CONTRACT_INVALID", f"{where}.focus_ref", f"focus rule ref is dangling: {focus}")
+        bindings = item.get("context_bindings")
+        if isinstance(bindings, dict):
+            for context, binding in sorted(bindings.items()):
+                where = f"layers.primitives.{pid}.context_bindings.{context}"
+                if not isinstance(binding, dict):
+                    continue
+                for field in ("selected", "hover"):
+                    ref = binding.get(field)
+                    if isinstance(ref, str) and ref.removeprefix("token/") not in token_paths:
+                        report.add("PRIMITIVE_CONTRACT_INVALID", f"{where}.{field}", f"token path is dangling: {ref}")
 
 
 def derive_component_family(
@@ -598,6 +751,72 @@ def validate_inventory(path: Path) -> Report:
     return report
 
 
+def _is_image_file(path: Path) -> bool:
+    try:
+        head = path.read_bytes()[:16]
+    except OSError:
+        return False
+    if any(head.startswith(prefix) for prefix in IMAGE_MAGIC_PREFIXES):
+        return True
+    return len(head) >= 12 and head[:4] == b"RIFF" and head[8:12] == b"WEBP"
+
+
+def _validate_oracle_measurements(measurements: Any, where: str, report: Report) -> int:
+    """Return the number of structurally valid inline oracle measurements."""
+    valid = 0
+    if not isinstance(measurements, list):
+        return 0
+    for index, measurement in enumerate(measurements):
+        entry = f"{where}.{index}"
+        if not isinstance(measurement, dict):
+            report.add("CERT_ORACLE_MEASUREMENT_INVALID", entry, "measurement entry must be a mapping")
+            continue
+        missing = [
+            field
+            for field in ("id", "method", "dimension", "unit", "oracle_revision")
+            if not isinstance(measurement.get(field), str) or not measurement.get(field)
+        ]
+        if "value" not in measurement:
+            missing.append("value")
+        if missing:
+            report.add("CERT_ORACLE_MEASUREMENT_INVALID", entry, f"measurement is missing required fields: {missing}")
+            continue
+        valid += 1
+    return valid
+
+
+def validate_expectations(path: Path, package_root: Path | None = None) -> dict[str, Any]:
+    """Validate an oracle-anchored measured expectation set and its package binding."""
+    report = Report("expectations", path)
+    document = validate_schema_document(path, "measured-expectations.schema.json", report, "expectations")
+    if document is None:
+        return report.to_dict()
+    if package_root is not None:
+        manifest_path = package_root / "design-system.yaml"
+        if not manifest_path.is_file():
+            report.add("MANIFEST_MISSING", "design-system.yaml", "package root for expectation binding is missing")
+            return report.to_dict()
+        manifest = load_document(manifest_path)
+        digest_input = dict(manifest)
+        digest_input.pop("contract_digest", None)
+        digest = canonical_digest(digest_input)
+        package = document.get("package") or {}
+        if package.get("id") != manifest.get("id") or package.get("version") != manifest.get("version"):
+            report.add(
+                "EXPECTATION_DIGEST_MISMATCH",
+                "package",
+                f"expectation set binds {package.get('id')}@{package.get('version')} "
+                f"but the package is {manifest.get('id')}@{manifest.get('version')}",
+            )
+        elif (package.get("digest") or {}).get("value") != digest:
+            report.add(
+                "EXPECTATION_DIGEST_MISMATCH",
+                "package.digest",
+                "expectation set does not bind the current package contract digest",
+            )
+    return report.to_dict()
+
+
 def validate_certification(
     path: Path,
     *,
@@ -672,14 +891,62 @@ def validate_certification(
             if any(isinstance(a, dict) and a.get("result") == "failed" for a in assertions):
                 report.add("CERT_VERDICT_CONTRADICTED", f"{where}.verdict", "passed record contains failed assertions")
         evidence = record.get("evidence", {})
-        for key in ("current_screenshot", "oracle_screenshot"):
-            ref = evidence.get(key)
-            if not ref:
-                report.add("CERT_EVIDENCE_MISSING", f"{where}.evidence.{key}", "screenshot evidence ref is required")
-                continue
-            candidate = safe_relative(root, ref, report, f"{where}.evidence.{key}")
-            if candidate is not None and not candidate.is_file():
-                report.add("CERT_EVIDENCE_MISSING", f"{where}.evidence.{key}", f"evidence file does not exist: {ref}")
+        oracle_anchored = False
+        current_ref = evidence.get("current_screenshot")
+        if not current_ref:
+            report.add(
+                "CERT_EVIDENCE_MISSING",
+                f"{where}.evidence.current_screenshot",
+                "current-build screenshot evidence ref is required",
+            )
+        else:
+            current_file = safe_relative(root, current_ref, report, f"{where}.evidence.current_screenshot")
+            if current_file is not None:
+                if not current_file.is_file():
+                    report.add(
+                        "CERT_EVIDENCE_MISSING",
+                        f"{where}.evidence.current_screenshot",
+                        f"evidence file does not exist: {current_ref}",
+                    )
+                elif not _is_image_file(current_file):
+                    report.add(
+                        "CERT_ORACLE_EVIDENCE_PLACEHOLDER",
+                        f"{where}.evidence.current_screenshot",
+                        "current-build evidence is not an image artifact",
+                    )
+        oracle_ref = evidence.get("oracle_screenshot")
+        measurements = evidence.get("oracle_measurements")
+        if oracle_ref:
+            oracle_file = safe_relative(root, oracle_ref, report, f"{where}.evidence.oracle_screenshot")
+            if oracle_file is not None:
+                if not oracle_file.is_file():
+                    report.add(
+                        "CERT_EVIDENCE_MISSING",
+                        f"{where}.evidence.oracle_screenshot",
+                        f"evidence file does not exist: {oracle_ref}",
+                    )
+                elif not _is_image_file(oracle_file):
+                    report.add(
+                        "CERT_ORACLE_EVIDENCE_PLACEHOLDER",
+                        f"{where}.evidence.oracle_screenshot",
+                        "oracle evidence is not a real screenshot; supply oracle_measurements when no screenshot exists",
+                    )
+                else:
+                    oracle_anchored = True
+        if _validate_oracle_measurements(measurements, f"{where}.evidence.oracle_measurements", report):
+            oracle_anchored = True
+        if not oracle_ref and not measurements:
+            report.add(
+                "CERT_EVIDENCE_MISSING",
+                f"{where}.evidence.oracle_screenshot",
+                "oracle_screenshot or oracle_measurements is required",
+            )
+        if record.get("verdict") == "passed" and not oracle_anchored:
+            report.add(
+                "CERT_ASSERTION_UNANCHORED",
+                f"{where}.assertions",
+                "passed record carries no oracle-anchored evidence: a real oracle screenshot or a structural oracle measurement is required",
+            )
         if inventory_patterns is not None and record.get("pattern") not in inventory_patterns:
             report.add("CERT_RECORD_NOT_IN_INVENTORY", f"{where}.pattern", "record pattern is not part of the certification inventory")
         pattern_id = record.get("pattern")
@@ -767,8 +1034,10 @@ def validate_target(target: Path, kind: str, *, require_component_family: bool =
     if kind == "active" and not has_binding:
         report.add("BINDING_MISSING", "binding.yaml", "active instance requires binding.yaml")
     validate_package_identity(target, manifest, report)
+    validate_coverage_and_confidence(target, report)
     ids, refs, documents = collect_entities(layers, report)
     validate_references(ids, refs, report)
+    validate_primitive_contracts(layers, documents, report)
     validate_placement(manifest, layers, ids, documents, report)
     report.component_family = derive_component_family(manifest, layers, ids)
     if require_component_family:
@@ -891,6 +1160,9 @@ def main(argv: list[str] | None = None) -> int:
     certification.add_argument("--evidence-root", type=Path)
     inventory = sub.add_parser("validate-inventory")
     inventory.add_argument("document", type=Path)
+    expectations = sub.add_parser("validate-expectations")
+    expectations.add_argument("document", type=Path)
+    expectations.add_argument("--package-root", type=Path)
     args = parser.parse_args(argv)
     if args.command == "compute-digest":
         print(json.dumps(compute_manifest_digest(args.manifest), ensure_ascii=False, sort_keys=True, indent=2))
@@ -909,6 +1181,13 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if payload["valid"] else 1
     if args.command == "validate-inventory":
         payload = validate_inventory(args.document.resolve()).to_dict()
+        print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
+        return 0 if payload["valid"] else 1
+    if args.command == "validate-expectations":
+        payload = validate_expectations(
+            args.document.resolve(),
+            args.package_root.resolve() if args.package_root else None,
+        )
         print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
         return 0 if payload["valid"] else 1
 

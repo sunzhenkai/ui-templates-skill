@@ -242,9 +242,9 @@
           "evidence": {
             "type": "object",
             "additionalProperties": false,
+            "description": "Oracle anchoring is satisfied by a real oracle screenshot or by inline oracle measurements; a record with neither fails closed.",
             "required": [
-              "current_screenshot",
-              "oracle_screenshot"
+              "current_screenshot"
             ],
             "properties": {
               "current_screenshot": {
@@ -257,6 +257,57 @@
                 "type": "array",
                 "items": {
                   "$ref": "common.schema.json#/$defs/path"
+                }
+              },
+              "oracle_measurements": {
+                "description": "Oracle-side measurements. Structurally validated by the unified validator (CERT_ORACLE_MEASUREMENT_INVALID); an inline measurement anchors a pattern record without a deployable oracle screenshot.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "method",
+                    "dimension",
+                    "value",
+                    "unit",
+                    "oracle_revision"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "method": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "dimension": {
+                      "enum": [
+                        "structure",
+                        "hierarchy",
+                        "spacing",
+                        "density",
+                        "typography",
+                        "color",
+                        "surface",
+                        "border",
+                        "divider"
+                      ]
+                    },
+                    "value": {},
+                    "unit": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "tolerance": {
+                      "type": "string"
+                    },
+                    "oracle_revision": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8,64}$"
+                    }
+                  }
                 }
               }
             }

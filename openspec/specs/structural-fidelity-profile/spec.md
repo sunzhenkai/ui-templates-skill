@@ -68,8 +68,38 @@
 - **WHEN** structural component geometry 未指定某个必需属性对应的 token path或闭集语义值
 - **THEN** validation 报告不完整映射，不允许以自由 prose 代替
 
+### Requirement: Capture mandatory question matrix
+repo structural capture 的 literal graph SHALL 满足机器强制的必答事实矩阵，闭合范围不得只由作者起草的 scope 决定。当 shell scene 声明 `shell_variant: inset` 时，该 scene SHALL 同时携带内容承载面（page-canvas 槽位）的 inset/gap、radius、border、shadow、background 五项事实，每项以 token-ref、闭集语义或显式 negative 表达；缺任一项 SHALL 以 chrome composition 不完整的同级错误 fail closed。每个声明的 page_mode SHALL 回答其必答问题：多分区页（含设置类）必须声明 section navigation 的放置事实（内容区内部左列、顶部或无）；detail 页必须声明 master/detail 分侧与上下文面板位置。来源无法作答的项 SHALL 以带理由的显式 exclusions 呈现；沉默 SHALL 等价于闭合失败。骨架初始化输出 SHALL 附带按本矩阵生成的必答清单。
+
+#### Scenario: inset 壳缺内容卡片几何
+- **WHEN** capture graph 声明 `shell_variant: inset` 但 page-canvas 槽位缺少 radius 或 shadow 等必答事实且无对应 exclusions
+- **THEN** capture 以闭合不完整失败，不得产出 `captured` receipt，模板不得进入 Generate
+
+#### Scenario: 多分区页未声明二级导航
+- **WHEN** included page_mode 为多分区页而 graph 未声明 section navigation 放置事实，也没有带理由的 exclusions
+- **THEN** capture 失败并指出缺失的必答项，不得以「scope 未包含」为由放行
+
+#### Scenario: 显式不知道
+- **WHEN** 来源确实无法唯一裁决某必答项
+- **THEN** graph 以带理由的 exclusions 记录该项，capture 可继续，fidelity 将该项呈现为非 observed 而非省略
+
+#### Scenario: 骨架生成必答清单
+- **WHEN** 作者以骨架初始化起草 capture graph
+- **THEN** 骨架输出包含按矩阵推导的必答清单注释，作者逐项作答或显式排除
+
+### Requirement: Fidelity projection completeness
+fidelity profile SHALL 是 capture facts 的确定性投影，且 SHALL 暴露必答矩阵的应答状态：每项必答事实在 profile 中要么有对应记录，要么有显式 unresolved/exclusion 条目。profile SHALL NOT 把未作答的必答项呈现为已观察结构事实，也不得在投影时静默丢弃。
+
+#### Scenario: 投影保留应答状态
+- **WHEN** capture facts 包含内容卡片五项几何
+- **THEN** fidelity 的 component geometry 记录逐项携带对应 token-ref，placement 引用可解析
+
+#### Scenario: 投影不得吞噬 exclusions
+- **WHEN** capture graph 对某必答项声明了 exclusions
+- **THEN** fidelity 保留该 exclusion 的可见痕迹，validator 与下游 Apply 可区分「已观察为无」与「未作答」
+
 ### Requirement: Contextual state presentation records
-交互呈现 SHALL 按 subject role、context、state 和适用 surface 记录，而不是按通用“link/component”全局推广。记录 SHALL 支持背景/文字/边框角色、text decoration、visibility 与 container-state 等闭集结果，并 SHALL 将 `none` 等 negative facts 作为 expected 值。
+交互呈现 SHALL 按 subject role、context、state 和适用 surface 记录，而不是按通用“link/component”全局推广。记录 SHALL 支持背景/文字/边框角色、text decoration、visibility 与 container-state 等闭集结果，并 SHALL 将 `none` 等 negative facts 作为 expected 值。`focus-visible` SHALL 是一等 state：交互控件的 focus 记录 SHALL 同时表达机制（border 切换、ring/box-shadow 或等价闭集语义）与 token 绑定，机制缺失的 focus 记录 SHALL 视为未作答。
 
 #### Scenario: Navigation link hover
 - **WHEN** 来源 navigation link 通过 sidebar background 表达 hover 且没有 text underline
@@ -82,6 +112,33 @@
 #### Scenario: 单一 usage 被推广为全局规则
 - **WHEN** Authoring 只有一个 context 的来源证据却生成跨 context 状态规则
 - **THEN** source replay 或 semantic validation 失败，并要求拆分 context 或记录 unresolved
+
+#### Scenario: focus 记录缺机制
+- **WHEN** 某交互控件 state presentation 声明 focus-visible 但只有颜色没有机制语义
+- **THEN** 该记录判为不完整，等价未作答并回到必答矩阵失败路径
+
+### Requirement: 必答矩阵第二轮（交互状态与解剖）
+repo structural capture 的必答事实矩阵 SHALL 覆盖交互控件状态呈现与组件解剖。对 included scope 内每个交互控件类（文本输入、按钮、导航条目、下拉类），graph SHALL 记录 `focus-visible` 状态事实：边框 token 与 ring/shadow 机制及对应 token（三者至少边框与机制二者），无法作答必须显式 exclusions。对声明 in-card section navigation 的 scene，graph SHALL 记录多窗格拓扑事实：根滚动语义（root_scroll none / overflow-hidden 等价闭集值）、每个可滚动窗格的 scroll domain、导航列 stretch/fill；并对 section navigation 条目记录解剖事实（icon 槽存在性、分组标签存在性）与页面上下文状态事实（selected/hover 绑定的 page-surface token）。沉默 SHALL 以 `MANDATORY_FACT_MISSING` fail closed；`mandatory_answers` 投影 SHALL 覆盖本轮全部条目。
+
+#### Scenario: 输入框 focus 处理沉默
+- **WHEN** included scope 含文本输入控件而 graph 无其 focus-visible 状态事实且无 exclusions
+- **THEN** capture 以 `MANDATORY_FACT_MISSING` 失败，gaps 指明缺失的 focus 条目
+
+#### Scenario: focus 机制与 token 被记录
+- **WHEN** 来源输入控件 focus 时边框切 ring token 并绘制 3px 半透明 ring
+- **THEN** graph 记录 focus-visible 状态的 border token-ref 与 shadow/ring 机制 token-ref，fidelity 投影为对应 state presentation 记录
+
+#### Scenario: 多窗格场景缺滚动拓扑
+- **WHEN** scene 声明 in-card section-nav 但未记录根滚动语义与各窗格 scroll domain
+- **THEN** capture 失败并指明缺失条目；不得让导航列高度语义留空给 Apply 猜测
+
+#### Scenario: 导航条目解剖沉默
+- **WHEN** section navigation 条目在源中为 icon+label 而图未记录 icon 槽事实
+- **THEN** capture 失败或经显式 exclusions 降级；Apply 不得默认渲染纯文字条目
+
+#### Scenario: 页面上下文状态绑定
+- **WHEN** section navigation 选中态在源中绑定 page-surface token（如 surface-selected）
+- **THEN** 状态事实记录该 token；sidebar 系 token 不得被静默复用到页面上下文
 
 ### Requirement: Structural provenance 与 source replay
 每条 **本会话 Generate-from-source 新写入的** structural observed record SHALL 记录 source ID、与 meta 一致的 revision、可重放 locator、method、source-span digest、captured_at 和 confidence。Authoring 仅在本会话提供 session source 时 SHALL 重放这些 record。已发布模板上 `method: v1-source-token-migration` 等 snapshot locator 是合法 legacy provenance，SHALL NOT 触发「请提供上游本地路径」。多个 usage 冲突时 SHALL 保留冲突集合并要求显式裁决，不得静默多数表决。

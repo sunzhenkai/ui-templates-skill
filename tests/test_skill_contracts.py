@@ -69,9 +69,17 @@ class SkillContractTests(unittest.TestCase):
 
     def test_workbench_meta_sources_are_identity_not_live_checkouts(self) -> None:
         meta = yaml.safe_load((ROOT / "templates/workbench-shell/meta.yaml").read_text(encoding="utf-8"))
-        ids = [item["id"] for item in meta["sources"]]
-        self.assertEqual(["source-001"], ids)
-        self.assertTrue(all(item.get("ref") and item.get("revision") for item in meta["sources"]))
+        sources = meta["sources"]
+        self.assertTrue(sources)
+        self.assertTrue(all(item.get("ref") and item.get("revision") for item in sources))
+        # Source entries are identity, never a local checkout binding.
+        self.assertTrue(all(not item["ref"].startswith("/") and "file://" not in item["ref"] for item in sources))
+        # Every evidence revision must resolve to a declared source (close-fidelity-truth-gaps).
+        declared = {(item["id"], item["revision"]) for item in sources}
+        evidence = yaml.safe_load((ROOT / "templates/workbench-shell/core/evidence.yaml").read_text(encoding="utf-8"))
+        for entry in evidence["items"]:
+            if entry.get("source_id") and entry.get("source_revision"):
+                self.assertIn((entry["source_id"], entry["source_revision"]), declared, entry["id"])
         has_sidecar = (ROOT / "templates/workbench-shell/fidelity.yaml").is_file()
         if not has_sidecar:
             # OpenSpec workbench-shell-implementation: without a chrome-complete

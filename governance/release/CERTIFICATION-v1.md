@@ -50,3 +50,30 @@ python3 scripts/run_template_certification.py verify \
 ## Promotion request（release check）
 
 `governance/candidates/<name>/promotion-request.yaml` 声明 `target: production-catalog`、`oracle_revision` 与 `prompts_digest` 后，`check_active_release.py` 会要求同目录 `certification/report.yaml` 为 accepted 且绑定当前 candidate digest、同一 oracle revision 与 prompts digest；candidate、prompts 或 oracle 任一变化都会使报告过期并阻止 promotion。生产 catalog 切换本身仍需用户单独确认，不随 gate 自动执行。
+
+## Oracle 采集（oracle capture harness）
+
+oracle 侧证据 SHALL 由 `scripts/oracle_capture.py` 从固定部署声明采集，不得手工写入或粘贴占位内容。采集前置检查：
+
+```bash
+python3 scripts/oracle_capture.py capture \
+  --descriptor <oracle-deployment.yaml> \
+  --output-root <output-root> \
+  --build-identity <fresh-build-id> \
+  --checkout <pinned-checkout>
+```
+
+`oracle-deployment.yaml`（`schema: oracle-deployment/v1`）声明：
+
+- `oracle.kind: git-revision` 与完整 40 位 `oracle.revision`；
+- `deployment.serve`、`deployment.ready_url`，可选 `deployment.install`、`deployment.cwd`、`deployment.env`、`ready_timeout_seconds`；
+- `capture.routes[]`、`capture.viewports[]`、`capture.themes[]`，可选 `capture.measurements[]`（`id`、`route`、`viewport`、`theme`、`selector`、`property`、`dimension`、`unit`、`tolerance`）。
+
+前置检查与产出约束：
+
+- checkout 的 `git rev-parse HEAD` MUST 等于声明的 revision，否则 `ORACLE_REVISION_MISMATCH`；
+- 采集 MUST 产出真实 PNG（校验 magic bytes）与结构化测量；写入 `<output-root>/evidence/oracle-*.png` 和 `<output-root>/oracle-evidence.json`；
+- 声明了 `capture.measurements[]` 时，任一 selector 未命中即 `ORACLE_MEASUREMENT_MISSING`，不得静默跳过；
+- oracle 不可部署或采集失败时 gate MUST 输出 `self-consistency` 并阻断 promotion（`CERT_SELF_CONSISTENCY_ONLY`），SHALL NOT 以占位文本替代。
+
+浏览器依赖：治理环境需 `python -m playwright install chromium`；缺少浏览器时 `tests/test_oracle_capture.py` 显式 skip，oracle 采集本身不可执行。

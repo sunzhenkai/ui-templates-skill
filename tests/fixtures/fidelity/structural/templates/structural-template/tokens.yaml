@@ -6,22 +6,30 @@ themes:
     muted-foreground: {value: "oklch(0.30 0 0)", origin: source}
     ring: {value: "#000000", origin: source}
     sidebar-hover: {value: "#f3f4f6", origin: source}
+    page-canvas: {value: "oklch(0.988087 0 0)", origin: source}
   dark:
     background: {value: "#000000", origin: source}
     foreground: {value: "#ffffff", origin: source}
     muted-foreground: {value: "oklch(0.80 0 0)", origin: source}
     ring: {value: "#ffffff", origin: source}
     sidebar-hover: {value: "#111827", origin: source}
+    page-canvas: {value: "oklch(0.18 0.005 285.823)", origin: source}
 spacing:
   base: {value: 4, unit: px, origin: source}
   allowed: {value: [4, 8, 16], unit: px, origin: source}
+  content-card: {value: 8, unit: px, origin: source}
   dialog:
     block-start: {value: 24, unit: px, origin: source}
     inline-end: {value: 24, unit: px, origin: source}
     block-end: {value: 16, unit: px, origin: source}
     inline-start: {value: 24, unit: px, origin: source}
+radius:
+  content-card: {value: 12, unit: px, origin: source}
+colors:
+  content-card-border: {value: "oklch(0.92 0.004 286.32)", origin: source}
 shadows:
   dialog: {value: "none", origin: source}
+  content-card: {value: "0 1px 2px rgb(15 23 42 / 0.04)", origin: source}
 precision:
   percent: {value: 50, unit: "%", origin: source}
   angle: {value: 45, unit: deg, origin: source}

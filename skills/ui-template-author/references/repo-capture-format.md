@@ -29,3 +29,23 @@ Locator 固定为 `<graph_path>#/<collection>/<stable-id>`；capture digest 针�
 ## 安全与确定性
 
 Runtime 只对**本会话 session source root** 执行 `git rev-parse HEAD`，随后读取 graph 数据；拒绝 absolute/traversal、symlink、`example/`、revision mismatch。禁止从已发布 `meta.sources[]`、sibling 或 `/tmp` 猜测该 root。它不导入来源模块，不执行 shell/package/编译器，不访问网络，也不把完整 AST/call graph/source snapshot 发布进模板。该有限子集无法表达的 repo 必须 fail unsupported/unresolved 或请求用户提供可信 literal graph，不能猜测。
+
+## Mandatory question matrix（close-layout-fidelity-blind-spots）
+
+closure 只证明 scope 内问题已闭合；本节问题由机器强制，沉默与未作答等价。`capture` 对 included scenes 逐项检查，缺失即抛 `MANDATORY_FACT_MISSING`（与 chrome composition 不完整同级 fail closed），不产出 `captured` receipt：
+
+1. **inset 内容卡片**：shell scene 声明 `shell_variant: inset` 时，内容面（slot `page-canvas` 或 `canvas`）必须携带五项几何事实，每项为 token-ref、闭集语义或显式 negative——inset/margin（`gap`、`inset_*`、`padding_*` 任一）、`radius`、`border`、`shadow`、`background`。精确值仍由 `tokens.yaml` 唯一携带。高保真 geometry 记录仍须满足四向 padding 完整性（含显式 zero）。
+2. **多分区页二级导航**：kind 为 `board | other` 的 included scene 必须有一个 `slot: section-nav` 的 usage 声明二级导航放置（卡内左列/顶部/无），或以 exclusions 条目显式回答。
+3. **master-detail 分侧与上下文**：kind 为 `master-detail` 的 scene 必须在 `master-pane` 与 `detail-pane` 两个 slot 上各携带事实（分侧与次序），并声明 `context-panel` usage 或 exclusions。
+
+**显式不知道的作答方式**：exclusions 条目的 locator 指向目标 scene definition（`<graph_path>#/definitions/<id>`，或保持自指 `<graph_path>#/exclusions/<id>`），reason 仍取闭集。指向不存在 definition 的 exclusions 一律拒绝。`fidelity.yaml` 投影按 `mandatory_answers` 暴露每项应答状态（`observed | excluded | unresolved`）；未作答项不得呈现为 observed。骨架 `--init-source-graph` 输出附必答清单注释，起草时逐项作答。
+
+## Mandatory question matrix — round 2（close-state-presentation-blind-spots）
+
+在第一轮基础上追加（同一 fail-closed 语义，gaps 标签 `focus:` / `pane-scroll:` / `nav-anatomy:` / `nav-state:`）：
+
+1. **交互控件 focus 处理**：scope.components 中命中交互控件名闭集（`button`、`icon-button`、`input`、`textarea`、`select`、`combobox`、`checkbox`、`switch`、`nav-item`、`menu-item`、`tabs`、`pagination`，或名称以 `-nav` / `-nav-item` 结尾）的组件，必须携带 `state_presentations`、`state: focus-visible` 的事实，property 至少覆盖 `border` 与 `shadow`（ring 机制）之一，值为 token-ref。机制缺失（只有颜色没有机制语义）视为未作答。
+2. **in-card section-nav 多窗格拓扑**：声明 section-nav usage 的 scene 必须记录——根滚动语义（`root_scroll: none`，negative）、≥2 个不同 slot 上的 `scroll_block`（导航列 + 内容区各自滚动域）、导航列 `size: fill`（stretch）。
+3. **section-nav 解剖与页面上下文状态**：必须记录 `anatomy` 事实（闭集语义 `icon-label | label-only`），以及 selected/hover 的 `background` token-ref 且绑定 page-surface token（含 `sidebar` 的 token 路径不算作答）。
+
+作答方式与第一轮一致：facts 或指向目标 definition 的显式 exclusions。`fidelity.yaml` 的 `mandatory_answers` 覆盖以上全部条目。

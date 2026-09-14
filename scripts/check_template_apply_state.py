@@ -31,6 +31,7 @@ def collect_active_layers(active_instance: Path) -> dict[str, set[str]] | None:
         ("page_types", "page-types.yaml"),
         ("patterns", "patterns.yaml"),
         ("primitives", "primitives.yaml"),
+        ("rules", "rules.yaml"),
     ):
         path = core / filename
         if not path.is_file():
@@ -75,6 +76,8 @@ def parser() -> argparse.ArgumentParser:
     site = sub.add_parser("architecture-site", help="判定本次前端输出根，不是仓库根")
     site.add_argument("root", type=Path, help="将写入应用源码的输出根")
     site.add_argument("--explicit-greenfield", action="store_true")
+    css = sub.add_parser("css-mechanism-scan", help="扫描输出根全局机制 CSS（未 trace 模板状态事实的发明）")
+    css.add_argument("root", type=Path)
     build = sub.add_parser("build-identity")
     build.add_argument("artifact", type=Path)
     build.add_argument("--command", dest="build_command", required=True)
@@ -118,6 +121,17 @@ def main() -> int:
     if args.command == "source-identity":
         print(source_identity(args.root))
         return 0
+    if args.command == "css-mechanism-scan":
+        from template_apply_state.state import scan_global_mechanism_css
+
+        files = {
+            str(path.relative_to(args.root)): path.read_text(encoding="utf-8")
+            for path in sorted(args.root.rglob("*.css"))
+            if ".ui-template" not in path.parts and "node_modules" not in path.parts
+        }
+        payload = {"findings": scan_global_mechanism_css(files), "scanned": sorted(files)}
+        print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
+        return 1 if payload["findings"] else 0
     if args.command == "architecture-site":
         print(detect_architecture_site(args.root, explicit_greenfield=args.explicit_greenfield))
         return 0

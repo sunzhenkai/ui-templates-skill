@@ -65,6 +65,9 @@ PYTHON_OPERATIONS = frozenset({
     "apply_close_contracts",
     "apply_source_blind_contracts",
     "apply_pattern_bound_contracts",
+    "apply_scenario_derivation",
+    "primitive_variant_contracts",
+    "apply_control_styling_contracts",
     "design_standalone_contracts",
 })
 
@@ -356,6 +359,9 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                 "profile_repeatable": canonical_digest(profile) == canonical_digest(again),
                 "unresolved": bool(profile.get("unresolved")),
                 "conformance": profile.get("conformance"),
+                "mandatory_answers_unresolved": any(
+                    value == "unresolved" for value in profile.get("mandatory_answers", {}).values()
+                ),
                 "revision": revision,
             }
     if operation == "capture_error":
@@ -383,6 +389,48 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                             if item.get("property") in {"root_scroll", "arrangement"}
                         ]
                 graph.write_text(yaml.safe_dump(document, sort_keys=False, allow_unicode=True), encoding="utf-8")
+            if assertion.get("add_focusless_button") and graph is not None:
+                document = load_yaml(graph)
+                document.setdefault("definitions", []).append({
+                    "id": "component.button", "kind": "component", "name": "button",
+                    "locator": f"{assertion.get('graph_path') or 'ui-source-graph.yaml'}#/definitions/component.button",
+                    "exports": ["button"], "facts": [],
+                })
+                if "button" not in (document.get("scope") or {}).get("components", []):
+                    pass
+                request_scope_note = True
+                graph.write_text(yaml.safe_dump(document, sort_keys=False, allow_unicode=True), encoding="utf-8")
+            if assertion.get("add_nav_scene") and graph is not None:
+                document = load_yaml(graph)
+                document.setdefault("definitions", []).append({
+                    "id": "scene.navonly", "kind": "scene", "name": "navonly",
+                    "locator": f"{assertion.get('graph_path') or 'ui-source-graph.yaml'}#/definitions/scene.navonly",
+                    "exports": ["navonly-scene"], "facts": [],
+                })
+                document.setdefault("imports", []).append({
+                    "id": "import.navonly", "from_definition": "entry.shell", "to_definition": "scene.navonly",
+                    "locator": f"{assertion.get('graph_path') or 'ui-source-graph.yaml'}#/imports/import.navonly",
+                })
+                document.setdefault("usages", []).append({
+                    "id": "usage.navonly-nav", "definition_id": "scene.navonly", "scene": "navonly",
+                    "component": None, "context": None, "slot": "section-nav", "state": "default",
+                    "locator": f"{assertion.get('graph_path') or 'ui-source-graph.yaml'}#/usages/usage.navonly-nav",
+                    "facts": [],
+                })
+                graph.write_text(yaml.safe_dump(document, sort_keys=False, allow_unicode=True), encoding="utf-8")
+            if assertion.get("drop_section_nav") and graph is not None:
+                document = load_yaml(graph)
+                document["usages"] = [
+                    item for item in document.get("usages") or []
+                    if item.get("slot") != "section-nav"
+                ]
+                if assertion.get("exclude_scene"):
+                    document.setdefault("exclusions", []).append({
+                        "id": "exclusion.matrix-answer",
+                        "locator": f"{assertion.get('graph_path') or 'ui-source-graph.yaml'}#/definitions/scene.{assertion['exclude_scene']}",
+                        "reason": "out-of-scope",
+                    })
+                graph.write_text(yaml.safe_dump(document, sort_keys=False, allow_unicode=True), encoding="utf-8")
             if graph is not None:
                 subprocess.run(["git", "init", "-q"], cwd=source, check=True)
                 subprocess.run(["git", "config", "user.name", "UI Fixture"], cwd=source, check=True)
@@ -407,6 +455,10 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                     ["git", "rev-parse", "HEAD"], cwd=source, check=True, text=True, capture_output=True,
                 ).stdout.strip()
             request = load_yaml(request_fixture)
+            if assertion.get("add_focusless_button"):
+                request.setdefault("scope", {}).setdefault("components", []).append("button")
+            if assertion.get("add_nav_scene"):
+                request.setdefault("scope", {}).setdefault("scenes", []).append("navonly")
             request["source_revision"] = revision
             request["graph_path"] = assertion.get("graph_path") or (graph.name if graph is not None else "ui-source-graph.yaml")
             request_path = Path(temp) / "capture-request.yaml"
@@ -735,6 +787,7 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "page_types": {"page-type/dashboard"},
             "patterns": {"pattern/dashboard-shell"},
             "primitives": {"primitive/panel"},
+            "rules": {"rule/LAYOUT-101"},
         }
         context = {
             "layouts": {
@@ -758,7 +811,8 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             (apply_root / "02-routes.yaml").write_text(
                 "routes:\n- id: route/dashboard\n  path: /\n  page_type: page-type/dashboard\n"
                 "  layout_ref: route/dashboard\n  pattern_refs:\n  - pattern/dashboard-shell\n"
-                "  structural_verification: unavailable\n",
+                "  structural_verification: unavailable\n"
+                "  placement_plan:\n    template_refs:\n    - pattern/dashboard-shell\n    - rule/LAYOUT-101\n",
                 encoding="utf-8",
             )
             (apply_root / "04-components.yaml").write_text(
@@ -772,9 +826,11 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             (apply_root / "02-routes.yaml").write_text(
                 "routes:\n- path: /\n  page_type: page-type/ghost\n"
                 "  pattern_refs:\n  - pattern/ghost\n  structural_verification: unavailable\n"
+                "  placement_plan:\n    template_refs:\n    - pattern/ghost\n"
                 "- path: /missing\n  page_type: page-type/dashboard\n"
                 "  pattern_refs:\n  - pattern/dashboard-shell\n  structural_verification: unavailable\n"
                 "  placement:\n    shell_variant: inset\n"
+                "  placement_plan:\n    template_refs:\n    - pattern/not-declared\n"
                 "- path: /no-contract\n"
                 "  structural_verification: unavailable\n",
                 encoding="utf-8",
@@ -797,6 +853,272 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "missing_pattern_binding": "ROUTE_PATTERN_BINDING_MISSING" in codes,
             "unauthorized_placement": "PLACEMENT_COMPONENT_UNAUTHORIZED" in codes,
             "unavailable_assertion": "UNAVAILABLE_PLACEMENT_ASSERTION" in codes,
+            "template_trace_missing": "PLACEMENT_TEMPLATE_TRACE_MISSING" in codes,
+            "template_ref_dangling": "PLACEMENT_TEMPLATE_REF_DANGLING" in codes,
+        }
+    if operation == "apply_scenario_derivation":
+        from template_apply_state.fidelity import derive_scenario_ids
+
+        profile = {
+            "conformance": "structural",
+            "layout_scenes": [{
+                "id": "scene.shell", "scene": "shell", "scene_kind": "shell",
+                "rule_id": "rule/LAYOUT-101", "status": "observed",
+                "shell_variant": "inset",
+                "regions": [{"id": "region.shell.root", "role": "root"}],
+                "relations": [], "arrangement": "horizontal", "fill": "intrinsic",
+                "wrap": "wrap", "shrink": "shrink", "scroll_domains": [],
+                "overlays": [], "responsive_modes": [], "negative_facts": [],
+                "slots": [{"id": "slot.shell.page-canvas", "role": "page-canvas", "region": "region.shell.root", "order": 10}],
+                "chrome_anchors": [],
+                "provenance": {"source_id": "source-001", "source_revision": "0" * 40, "locator": {"path": "g", "symbol": None, "selector": None, "pointer": None, "line": None}, "method": "source-graph", "source_span_sha256": "sha256:x", "captured_at": "2026-01-01T00:00:00Z", "confidence": "high"},
+            }],
+            "component_geometry": [],
+            "state_presentations": [],
+        }
+        layout = {"items": [{
+            "id": "route/dashboard-shell", "page_type": "page-type/dashboard",
+            "placement": {
+                "id": "placement-shell-inset", "shell_variant": "inset",
+                "regions": [{"id": "region-sidebar", "role": "sidebar"}],
+                "relations": [{"type": "contains", "from": "region-sidebar", "to": "region-canvas", "order": 1}],
+                "geometry": [{"id": "geometry-card-radius", "role": "content-card-radius", "token": "token/radius.xl"}],
+                "pattern_refs": ["pattern/dashboard-shell"],
+                "evidence_refs": ["evidence-layout-shell"],
+            },
+        }]}
+        profile["state_presentations"] = [{
+            "id": "state.input.default.focus-visible.field",
+            "subject_role": "input", "context": "action-trigger", "state": "focus-visible", "surface": "field",
+            "text_decoration": None, "visibility": None,
+            "background": None, "text": None,
+            "border": {"kind": "token-ref", "value": "color.ring"},
+            "negative_facts": [],
+            "rule_id": "rule/QUALITY-104", "status": "observed",
+            "provenance": {"source_id": "source-001", "source_revision": "0" * 40, "locator": {"path": "g", "symbol": None, "selector": None, "pointer": None, "line": None}, "method": "source-graph", "source_span_sha256": "sha256:x", "captured_at": "2026-01-01T00:00:00Z", "confidence": "high"},
+        }]
+        layout["items"][0]["placement"]["scroll_domains"] = [
+            {"id": "scroll-nav", "axis": "block", "owner": "region-nav", "nested_in": None},
+            {"id": "scroll-content", "axis": "block", "owner": "region-canvas", "nested_in": None},
+        ]
+        without_layout = derive_scenario_ids(profile)
+        with_layout = derive_scenario_ids(profile, layout)
+        placement_geometry_scenario = any(item.startswith("phase8:placement-geometry:route/dashboard-shell:geometry-card-radius:token/radius.xl") for item in with_layout)
+        pattern_presence_scenario = any(item.startswith("phase8:pattern-presence:route/dashboard-shell:pattern/dashboard-shell") for item in with_layout)
+        state_scenario = any(item.startswith("phase8:state:input:action-trigger:focus-visible:field") for item in with_layout)
+        scroll_domain_scenario = any(item.startswith("phase8:scroll-domain:route/dashboard-shell:block:region-nav") for item in with_layout)
+        superset = set(without_layout) <= set(with_layout) and len(with_layout) > len(without_layout)
+        return {
+            "placement_geometry_scenario": placement_geometry_scenario,
+            "pattern_presence_scenario": pattern_presence_scenario,
+            "state_scenario": state_scenario,
+            "scroll_domain_scenario": scroll_domain_scenario,
+            "superset": superset,
+        }
+    if operation == "primitive_variant_contracts":
+        import hashlib
+        import shutil
+        import tempfile
+
+        import subprocess as _sp
+        import sys as _sys
+        import yaml as _yaml
+
+        validator = root / "scripts" / "validate_design_system.py"
+        if not validator.is_file():
+            # 安装态 root 即 author skill 目录：bundle 的 discovery wrapper（同目录 shared 实现由 bundle 携带）
+            validator = root / "runtime" / "validate_design_system.py"
+        if not validator.is_file():
+            validator = resource_path(root, "skills/ui-template-author/runtime/validate_design_system.py")
+
+        def _validate(package: Path) -> dict:
+            proc = _sp.run(
+                [_sys.executable, str(validator), "validate", str(package), "--kind", "package", "--json"],
+                capture_output=True, text=True, timeout=120,
+            )
+            return json.loads(proc.stdout)
+
+        def _cdig(value: dict) -> dict:
+            return {
+                "algorithm": "sha256-canonical-json-v1",
+                "value": hashlib.sha256(
+                    json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+                ).hexdigest(),
+            }
+
+        primitives = {
+            "schema": "design-system-primitives/v1",
+            "items": [
+                {
+                    "id": "primitive/button", "name": "Button", "variants": ["default"], "states": ["focus-visible"],
+                    "variant_contracts": {
+                        "default": {
+                            "presentation": "filled", "radius": "token/radius.control",
+                            "control_height": "token/size.control-md", "focus_ref": "rule/QUALITY-104",
+                        }
+                    },
+                },
+            ],
+        }
+        tokens = {
+            "schema": "design-system-tokens/v1",
+            "tokens": {
+                "color": {
+                    "light": {
+                        "background": {"value": "#ffffff", "origin": "source"},
+                        "foreground": {"value": "#000000", "origin": "source"},
+                    },
+                    "dark": {
+                        "background": {"value": "#000000", "origin": "source"},
+                        "foreground": {"value": "#ffffff", "origin": "source"},
+                    },
+                },
+                "radius": {"control": {"value": 10, "unit": "px", "origin": "source"}},
+                "size": {"control-md": {"value": 32, "unit": "px", "origin": "source"}},
+            },
+        }
+        rules = {
+            "schema": "design-system-rules/v1",
+            "items": [{
+                "id": "rule/QUALITY-104", "statement": "focus via border-ring plus translucent ring",
+                "severity": "must", "status": "active",
+            }],
+        }
+        token_paths = ["color.light.background", "color.light.foreground", "color.dark.background", "color.dark.foreground", "radius.control", "size.control-md"]
+        evidence = {
+            "schema": "design-system-evidence/v1",
+            "items": [
+                {"id": f"evidence-token-{path.replace('.', '-')}", "kind": "token", "target": path,
+                 "origin": "source", "source_id": "source-001", "source_revision": "0" * 40,
+                 "locator": "fixture", "method": "document", "confidence": "medium",
+                 "captured_at": "2026-01-01", "status": "active"}
+                for path in token_paths
+            ],
+        }
+        layers = {"tokens": tokens, "primitives": primitives, "rules": rules, "evidence": evidence}
+
+        def _build(package: Path, radius: str) -> None:
+            core = package / "core"
+            core.mkdir(parents=True)
+            digests = {}
+            for name, document in layers.items():
+                document = json.loads(json.dumps(document))
+                if name == "primitives":
+                    for item in document["items"]:
+                        if item["id"] == "primitive/button":
+                            item["variant_contracts"]["default"]["radius"] = radius
+                (core / f"{name}.yaml").write_text(_yaml.safe_dump(document, sort_keys=False, allow_unicode=True), encoding="utf-8")
+                digests[name] = _cdig(document)
+            manifest = {
+                "schema": "design-system/v1", "id": "primitive-contract-fixture", "version": "0.1.0",
+                "status": "frozen", "capability": "ui-kit", "created_at": "2026-01-01",
+                "updated_at": "2026-01-01T00:00:00Z",
+                "layers": {n: f"core/{n}.yaml" for n in layers},
+                "layer_digests": digests,
+            }
+            manifest["contract_digest"] = _cdig(manifest)
+            (package / "design-system.yaml").write_text(_yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True), encoding="utf-8")
+            (package / "meta.yaml").write_text(_yaml.safe_dump({
+                "schema": "design-system-meta/v1", "name": "primitive-contract-fixture", "version": "0.1.0",
+                "description": "minimal ui-kit fixture", "captured_at": "2026-01-01",
+                "platforms": ["web"],
+                "confidence": {"overall": "high"},
+                "coverage": {
+                    "platforms": {"declared": ["web"], "observed": ["web"], "defaulted": [], "unsupported": []},
+                    "viewports": {"declared": ["desktop"], "observed": ["desktop"], "defaulted": [], "unsupported": []},
+                    "themes": {"declared": ["light", "dark"], "observed": ["light", "dark"], "defaulted": [], "unsupported": []},
+                    "page_modes": {"declared": ["collection"], "observed": ["collection"], "defaulted": [], "unsupported": []},
+                    "components": {"declared": ["button"], "observed": ["button"], "defaulted": [], "unsupported": []},
+                    "states": {"declared": ["focus-visible"], "observed": ["focus-visible"], "defaulted": [], "unsupported": []},
+                },
+                "sources": [{"id": "source-001", "type": "doc", "ref": "fixture://primitive-contracts",
+                              "revision": "0" * 40, "captured_at": "2026-01-01"}],
+                "tags": [],
+            }, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+        with tempfile.TemporaryDirectory() as temp:
+            clean = Path(temp) / "clean"
+            _build(clean, "token/radius.control")
+            clean_payload = _validate(clean)
+            broken = Path(temp) / "broken"
+            _build(broken, "token/radius.missing")
+            broken_payload = _validate(broken)
+            clean_errors = {finding.get("code") for finding in clean_payload.get("errors", [])}
+            broken_errors = {finding.get("code") for finding in broken_payload.get("errors", [])}
+            return {
+                "clean_valid": clean_payload.get("valid") is True,
+                "broken_rejected": "PRIMITIVE_CONTRACT_INVALID" in broken_errors,
+                "clean_has_no_contract_error": "PRIMITIVE_CONTRACT_INVALID" not in clean_errors,
+            }
+    if operation == "apply_control_styling_contracts":
+        import tempfile
+
+        from template_apply_state.state import _route_composition_findings, scan_global_mechanism_css
+
+        layouts = {
+            "route/settings-canvas": {
+                "id": "route/settings-canvas", "page_type": "page-type/collection",
+                "placement": {
+                    "id": "placement-settings",
+                    "regions": [{"id": "region-nav", "role": "section-nav"}, {"id": "region-content", "role": "canvas"}],
+                    "relations": [{"type": "contains", "from": "region-content", "to": "region-nav", "order": 1}],
+                    "scroll_domains": [
+                        {"id": "scroll-nav", "axis": "block", "owner": "region-nav"},
+                        {"id": "scroll-content", "axis": "block", "owner": "region-content"},
+                    ],
+                    "pattern_refs": ["pattern/section-nav"],
+                    "evidence_refs": ["evidence-placement"],
+                },
+            },
+            "route/list": {
+                "id": "route/list", "page_type": "page-type/collection",
+                "placement": {
+                    "id": "placement-list",
+                    "regions": [{"id": "region-content", "role": "canvas"}],
+                    "relations": [{"type": "contains", "from": "region-content", "to": "region-content", "order": 0}],
+                    "scroll_domains": [{"id": "scroll-list", "axis": "block", "owner": "region-content"}],
+                    "pattern_refs": ["pattern/data-table"],
+                    "evidence_refs": ["evidence-placement"],
+                },
+            },
+        }
+        layers = {"page_types": {"page-type/collection"}, "patterns": {"pattern/section-nav", "pattern/data-table"}}
+        context = {
+            "layouts": layouts,
+            "page_type_patterns": {"page-type/collection": ["pattern/section-nav", "pattern/data-table"]},
+        }
+        phases = {2: {"id": 2, "status": "complete"}}
+        with tempfile.TemporaryDirectory() as temp:
+            apply_root = Path(temp)
+            (apply_root / "02-routes.yaml").write_text(
+                "routes:\n"
+                "- id: route/settings\n  path: /settings\n  page_type: page-type/collection\n"
+                "  layout_ref: route/settings-canvas\n  pattern_refs:\n  - pattern/section-nav\n"
+                "  structural_verification: available\n  scroll_owner: region-content\n"
+                "  placement_plan:\n    template_refs: [pattern/section-nav]\n"
+                "- id: route/list\n  path: /list\n  page_type: page-type/collection\n"
+                "  layout_ref: route/list\n  pattern_refs:\n  - pattern/data-table\n"
+                "  structural_verification: available\n  scroll_owner: page-canvas\n"
+                "  multi_pane: true\n"
+                "  placement_plan:\n    template_refs: [pattern/data-table]\n"
+                "- id: route/clean\n  path: /clean\n  page_type: page-type/collection\n"
+                "  layout_ref: route/list\n  pattern_refs:\n  - pattern/data-table\n"
+                "  structural_verification: available\n  scroll_owner: region-content\n"
+                "  placement_plan:\n    template_refs: [pattern/data-table]\n",
+                encoding="utf-8",
+            )
+            findings = _route_composition_findings(apply_root, phases, layers, placement_context=context, structural_available=True)
+            codes = [finding.code for finding in findings]
+        css_findings = scan_global_mechanism_css({
+            "invented.css": "button {}\n:focus-visible {\n  outline: 2px solid red;\n}\n",
+            "scoped.css": ".btn:focus-visible { outline: none; }\n",
+        })
+        return {
+            "multi_pane_required": "MULTI_PANE_ROOT_REQUIRED" in codes,
+            "scroll_owner_untrace": "SCROLL_OWNER_UNTRACE" in codes,
+            "clean_route_ok": codes.count("MULTI_PANE_ROOT_REQUIRED") == 1 and codes.count("SCROLL_OWNER_UNTRACE") == 1,
+            "global_css_invention_detected": bool(css_findings),
+            "scoped_css_allowed": not scan_global_mechanism_css({"scoped.css": ".btn:focus-visible { outline: none; }\n"}),
         }
     if operation == "design_standalone_contracts":
         import importlib.util

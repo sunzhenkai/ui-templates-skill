@@ -10,6 +10,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests/fixtures/design-system"
 VALIDATOR = ROOT / "scripts/validate_design_system.py"
@@ -97,6 +99,179 @@ def certification_cases(root_tmp: Path) -> list[dict[str, object]]:
         fixtures / "invalid/over-fragmented/candidate-package",
     )
     cases.append(result("certification-over-fragmented-rejected", False, report, ["CERT_OVER_FRAGMENTED"]))
+
+    # A placeholder file can never stand in for oracle evidence.
+    placeholder_root = root_tmp / "cert-placeholder"
+    shutil.copytree(fixtures / "valid", placeholder_root)
+    for name in ("oracle-dashboard.png", "oracle-list.png"):
+        (placeholder_root / "evidence" / name).write_text(
+            "replace this provenance file when the oracle deployment is available\n", encoding="utf-8",
+        )
+    report = run_cert(VALIDATOR, placeholder_root / "report.yaml", candidate)
+    cases.append(result(
+        "certification-oracle-placeholder-rejected", False, report,
+        ["CERT_ORACLE_EVIDENCE_PLACEHOLDER", "CERT_ASSERTION_UNANCHORED"],
+    ))
+
+    # Inline oracle measurements anchor a record when no oracle screenshot exists.
+    measurement_root = root_tmp / "cert-measurement"
+    shutil.copytree(fixtures / "valid", measurement_root)
+    report_path = measurement_root / "report.yaml"
+    text = report_path.read_text(encoding="utf-8")
+    measurement = (
+        "    oracle_measurements:\n"
+        "    - id: measurement-dashboard-sidebar\n"
+        "      method: computed-style\n"
+        "      dimension: spacing\n"
+        "      value: 256px\n"
+        "      unit: px\n"
+        "      tolerance: <=2px\n"
+        f"      oracle_revision: {'a' * 40}\n"
+    )
+    text = text.replace("    oracle_screenshot: evidence/oracle-dashboard.png\n", measurement, 1)
+    text = text.replace("    oracle_screenshot: evidence/oracle-list.png\n", measurement, 1)
+    report_path.write_text(text, encoding="utf-8")
+    report = run_cert(VALIDATOR, report_path, candidate)
+    cases.append(result("certification-oracle-measurement-anchors-record", True, report, []))
+
+    # Measured expectation sets must bind the promoted package contract.
+    digest = json.loads(subprocess.run(
+        [sys.executable, str(VALIDATOR), "compute-digest", str(candidate / "design-system.yaml")],
+        cwd=ROOT, text=True, capture_output=True, check=True,
+    ).stdout)["contract_digest"]
+    expectations = root_tmp / "measured-expectations.yaml"
+
+    def expectations_document(package_digest: str) -> str:
+        return (
+            "schema: design-system-measured-expectations/v1\n"
+            "package:\n"
+            "  id: page-system-fixture\n"
+            "  version: 1.0.0\n"
+            "  digest:\n"
+            "    algorithm: sha256-canonical-json-v1\n"
+            f"    value: {package_digest}\n"
+            "oracle:\n"
+            "  kind: git-revision\n"
+            f"  revision: {'a' * 40}\n"
+            "prompts_digest:\n"
+            "  algorithm: sha256-file-v1\n"
+            f"  value: {'b' * 64}\n"
+            "entries:\n"
+            "- id: expectation-toolbar-gap\n"
+            "  pattern: pattern/toolbar\n"
+            "  dimension: spacing\n"
+            "  method: computed-style\n"
+            "  expected: 8px\n"
+            "  unit: px\n"
+            "  tolerance: <=2px\n"
+            f"  oracle_revision: {'a' * 40}\n"
+        )
+
+    def run_expectations(document: Path) -> dict:
+        process = subprocess.run(
+            [sys.executable, str(VALIDATOR), "validate-expectations", str(document),
+             "--package-root", str(candidate)],
+            cwd=ROOT, text=True, capture_output=True, check=False,
+        )
+        return json.loads(process.stdout)
+
+    expectations.write_text(expectations_document(digest), encoding="utf-8")
+    payload = run_expectations(expectations)
+    cases.append(result("expectations-bound-to-package-accepted", True, payload, []))
+
+    expectations.write_text(expectations_document("c" * 64), encoding="utf-8")
+    payload = run_expectations(expectations)
+    cases.append(result(
+        "expectations-package-digest-mismatch-rejected", False, payload, ["EXPECTATION_DIGEST_MISMATCH"],
+    ))
+    return cases
+
+
+def consistency_cases(root_tmp: Path) -> list[dict[str, object]]:
+    """Provenance, coverage and confidence cross-checks fail closed."""
+    cases: list[dict[str, object]] = []
+
+    def refresh_digests(target: Path) -> None:
+        manifest_path = target / "design-system.yaml"
+        process = subprocess.run(
+            [sys.executable, str(VALIDATOR), "compute-digest", str(manifest_path)],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        digests = json.loads(process.stdout)
+        manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+        for name, value in digests["layer_digests"].items():
+            manifest["layer_digests"][name]["value"] = value
+        manifest["contract_digest"]["value"] = digests["contract_digest"]
+        manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+    def write_meta(target: Path, **changes: object) -> None:
+        meta_path = target / "meta.yaml"
+        meta = yaml.safe_load(meta_path.read_text(encoding="utf-8"))
+        meta.update(changes)
+        meta_path.write_text(yaml.safe_dump(meta, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+    # Evidence must resolve its source revision against meta.sources[].
+    target = root_tmp / "consistency-evidence-revision"
+    shutil.copytree(FIXTURES / "packages/tokens-only-fixture", target)
+    evidence_path = target / "core/evidence.yaml"
+    evidence_path.write_text(
+        evidence_path.read_text(encoding="utf-8").replace("fixture-v1", "fixture-v2", 1),
+        encoding="utf-8",
+    )
+    refresh_digests(target)
+    _, report = run_validator(target, "package")
+    cases.append(result("consistency-evidence-revision-undeclared-rejected", False, report, ["EVIDENCE_REVISION_UNDECLARED"]))
+
+    # Every declared coverage item must be classified in exactly one bucket.
+    target = root_tmp / "consistency-coverage-unclassified"
+    shutil.copytree(FIXTURES / "packages/tokens-only-fixture", target)
+    write_meta(
+        target,
+        coverage={
+            "components": {"declared": ["alpha", "beta"], "observed": ["alpha"], "defaulted": [], "unsupported": []},
+            "states": {"declared": [], "observed": [], "defaulted": [], "unsupported": []},
+        },
+    )
+    _, report = run_validator(target, "package")
+    cases.append(result("consistency-coverage-unclassified-rejected", False, report, ["COVERAGE_PARTITION_INVALID"]))
+
+    # Classification buckets must be mutually exclusive.
+    target = root_tmp / "consistency-coverage-overlap"
+    shutil.copytree(FIXTURES / "packages/tokens-only-fixture", target)
+    write_meta(
+        target,
+        coverage={
+            "components": {"declared": ["alpha"], "observed": ["alpha"], "defaulted": ["alpha"], "unsupported": []},
+            "states": {"declared": [], "observed": [], "defaulted": [], "unsupported": []},
+        },
+    )
+    _, report = run_validator(target, "package")
+    cases.append(result("consistency-coverage-overlap-rejected", False, report, ["COVERAGE_PARTITION_INVALID"]))
+
+    # overall confidence may not exceed the weakest required dimension.
+    target = root_tmp / "consistency-confidence-overall"
+    shutil.copytree(FIXTURES / "packages/tokens-only-fixture", target)
+    write_meta(target, confidence={"overall": "high", "layout": "medium", "visual": "high", "components": "high"})
+    _, report = run_validator(target, "package")
+    cases.append(result("consistency-confidence-overall-rejected", False, report, ["CONFIDENCE_INCONSISTENT"]))
+
+    # A dimension with defaulted items may not claim high confidence.
+    target = root_tmp / "consistency-confidence-defaulted"
+    shutil.copytree(FIXTURES / "packages/tokens-only-fixture", target)
+    write_meta(
+        target,
+        confidence={"overall": "medium", "components": "high"},
+        coverage={
+            "components": {"declared": ["alpha"], "observed": [], "defaulted": ["alpha"], "unsupported": []},
+            "states": {"declared": [], "observed": [], "defaulted": [], "unsupported": []},
+        },
+    )
+    _, report = run_validator(target, "package")
+    cases.append(result("consistency-confidence-defaulted-high-rejected", False, report, ["CONFIDENCE_INCONSISTENT"]))
+
     return cases
 
 
@@ -183,6 +358,7 @@ def evaluate(root_tmp: Path) -> dict[str, object]:
     cases: list[dict[str, object]] = authoring_cases(root_tmp)
     cases.extend(certification_cases(root_tmp))
     cases.extend(closure_cases(root_tmp))
+    cases.extend(consistency_cases(root_tmp))
 
     positive_fixtures = (
         ("tokens-only-valid", FIXTURES / "packages/tokens-only-fixture", "package"),

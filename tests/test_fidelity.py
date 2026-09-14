@@ -241,6 +241,23 @@ class FidelityContractTests(unittest.TestCase):
         self.assertFalse(any(item.startswith("shell_variant:") for item in project_layout(style_only)))
         self.assertEqual([], derive_scenario_ids(style_only))
 
+    def test_oracle_expectations_produce_phase8_scenarios(self) -> None:
+        data = load_fidelity(STRUCTURAL / "templates/structural-template/fidelity.yaml")
+        expectations = {
+            "schema": "design-system-measured-expectations/v1",
+            "entries": [
+                {"id": "expectation-sidebar-width"},
+                {"id": "expectation-focus-ring"},
+            ],
+        }
+        scenarios = derive_scenario_ids(data, None, expectations)
+        self.assertIn("phase8:expectation:expectation-sidebar-width", scenarios)
+        self.assertIn("phase8:expectation:expectation-focus-ring", scenarios)
+        # Without a measured expectation set the derived scenario set is unchanged.
+        self.assertNotIn(
+            "phase8:expectation:expectation-sidebar-width", derive_scenario_ids(data),
+        )
+
     def test_chrome_mutations_and_layout_high_without_sidecar(self) -> None:
         data = yaml.safe_load((STRUCTURAL / "templates/structural-template/fidelity.yaml").read_text(encoding="utf-8"))
         cases = [

@@ -410,7 +410,13 @@ def check_mirror_state(root: Path, target: str) -> list[Finding]:
 
 
 def check_local_skill_boundary(root: Path, target: str = ".agents/skills") -> list[Finding]:
-    allowed = {"ui-template-manager"}
+    """`.agents/skills` may hold repository-only skills, but never public product mirrors.
+
+    A repository-only skill is a real directory carrying `SKILL.md` and not named after a
+    public skill. Public skill names and the public manifest stay rejected so this directory
+    can never become a shadow copy of the distributed bundle.
+    """
+    always_allowed = {"ui-template-manager"}
     public = {"ui-template-author", "ui-template-apply", "ui-template-design"}
     findings: list[Finding] = []
     skills = root / target
@@ -420,12 +426,18 @@ def check_local_skill_boundary(root: Path, target: str = ".agents/skills") -> li
         return [Finding("LOCAL_SKILL_TARGET_UNSAFE", target, "expected a real directory")]
     for path in skills.iterdir():
         name = path.name
-        if name in allowed and path.is_dir() and not path.is_symlink():
+        if name in always_allowed and path.is_dir() and not path.is_symlink():
             continue
         if name in public or name == ".ui-template-public-manifest.yaml":
             findings.append(Finding("LOCAL_PUBLIC_SKILL_FORBIDDEN", f"{target}/{name}", "public skills are not mirrored in this repository"))
-        else:
-            findings.append(Finding("LOCAL_SKILL_ENTRY_INVALID", f"{target}/{name}", "only ui-template-manager is allowed"))
+            continue
+        if path.is_dir() and not path.is_symlink() and (path / "SKILL.md").is_file():
+            continue
+        findings.append(Finding(
+            "LOCAL_SKILL_ENTRY_INVALID",
+            f"{target}/{name}",
+            "repository-only skills must be real directories containing SKILL.md and must not mirror a public skill",
+        ))
     return findings
 
 

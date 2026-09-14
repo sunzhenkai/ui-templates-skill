@@ -1,0 +1,23 @@
+{
+  "skill_name": "ui-template-test",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "workbench-shell 的 example web 已经改得面目全非了，帮我把 template 和 example web 都删掉，用仓库最新的 skill 从头重建一遍，别参考以前的文件",
+      "expected_output": "判定为干净模式：Step 0 只读收集事实（git 状态、INDEX 行、checkpoint 状态、模板身份）；Step 1 信息完整性校验后输出固定格式执行计划（删除清单逐条路径、template 来源作为待确认项列出候选来源及其实际身份 [catalog 副本 version/digest/meta.sources 或 session source] 由用户显式选定、栈选择来源、需求源与范围、回滚方式）并等待用户显式确认，来源不得按可用性默认代选，确认前不执行任何删除或写入；确认后经 retire+delete 删除模板、rm -rf -- 删除 example web，经 manage_template_index.py adopt 从已确认来源重建 template（先核对 catalog 副本身份与确认一致）并过 package validator，再经 adopt_package.py bootstrap + Apply Phase 0–9 重建 example web（需求源 example/workbench-shell/prompts/README.md），全程不读取旧 web 内容，最后输出含「计划确认」行的固定测试报告。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "workbench-shell 模板我刚升级到 1.3.0（patterns 和 tokens 有变化），把 example/workbench-shell/web 同步一下，别的东西别动",
+      "expected_output": "判定为增量模式：Step 0 只读建立身份基线；Step 1 校验发现声称版本 1.3.0 与 meta 实际版本不符（或 checkpoint 缺失）时触发停止项——停止并报告差异，不做任何修改、不自动转干净模式、不替用户推断更新来源；若身份基线一致则输出无删除清单的执行计划（更新类型与来源、变更集合均为待确认项，须用户显式确认），确认后用相同栈参数重跑 adopt_package.py 重同步 .ui-template-design，check_apply_resume.py 计算 reopen 范围，只重做受影响 phase 与页面，未声明路径保持原字节，Phase 8 重新取证。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "新项目要搭一个运维后台，直接用 workbench-shell 模板给我实现页面",
+      "expected_output": "不进入本 skill（单端诉求，不涉及模板生命周期与 example web 两端）：移交/执行 skills/ui-template-apply 的 Phase 0–9，不触发信息完整性校验、计划确认、删除与模板重建流程。",
+      "files": []
+    }
+  ]
+}

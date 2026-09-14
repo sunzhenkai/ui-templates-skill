@@ -1,0 +1,225 @@
+schema: design-system-layout/v1
+items:
+- id: route/dashboard-shell
+  name: Dashboard shell
+  page_type: page-type/dashboard
+  slots:
+  - workspace-switcher
+  - search
+  - compose
+  - nav-group
+  - pin-list
+  - rail
+  - page-header
+  - page-toolbar
+  - page-canvas
+  - footer-utility
+  - chat-fab
+  breakpoints:
+  - compact sheet below lg
+  - inset shell from lg
+  - rail trigger hidden from xl
+  rule_refs:
+  - rule/LAYOUT-101
+  - rule/LAYOUT-103
+  - rule/LAYOUT-104
+  - rule/LAYOUT-107
+  placement:
+    id: placement-shell-inset
+    shell_variant: inset
+    regions:
+    - {id: region-sidebar, role: sidebar}
+    - {id: region-canvas, role: canvas}
+    - {id: region-overlay, role: overlay}
+    slots:
+    - {id: slot-workspace-switcher, role: workspace-switcher, region: region-sidebar, order: 1}
+    - {id: slot-search, role: search, region: region-sidebar, order: 2}
+    - {id: slot-compose, role: compose, region: region-sidebar, order: 3}
+    - {id: slot-nav-group, role: nav-group, region: region-sidebar, order: 4}
+    - {id: slot-pin-list, role: pin-list, region: region-sidebar, order: 5}
+    - {id: slot-rail, role: rail, region: region-sidebar, order: 6}
+    - {id: slot-header-trigger, role: header-trigger, region: region-canvas, order: 7}
+    - {id: slot-page-header, role: page-header, region: region-canvas, order: 8}
+    - {id: slot-page-toolbar, role: page-toolbar, region: region-canvas, order: 9}
+    - {id: slot-page-canvas, role: page-canvas, region: region-canvas, order: 10}
+    - {id: slot-footer-utility, role: footer-utility, region: region-sidebar, order: 11}
+    - {id: slot-chat-fab, role: chat-fab, region: region-overlay, order: 12}
+    relations:
+    - {type: horizontal, from: region-sidebar, to: region-canvas, order: 1}
+    - {type: overlay, from: region-overlay, to: region-canvas, order: 1}
+    scroll_domains:
+    - {id: scroll-shell-block, axis: block, owner: region-canvas}
+    geometry:
+    - {id: geometry-shell-header, role: page-header, token: token/space.header-height}
+    - {id: geometry-shell-toolbar, role: page-toolbar, token: token/space.toolbar-height}
+    - {id: geometry-shell-sidebar, role: sidebar-width, token: token/size.sidebar-default}
+    - {id: geometry-shell-fab-size, role: chat-launcher-size, token: token/space.chat-launcher-size}
+    - {id: geometry-shell-fab-inset, role: chat-launcher-inset, token: token/space.chat-launcher-inset}
+    - {id: geometry-shell-card-radius, role: content-card-radius, token: token/radius.xl}
+    - {id: geometry-shell-card-border, role: content-card-border, token: token/color.light.surface-border}
+    - {id: geometry-shell-card-shadow, role: content-card-shadow, token: token/shadow.surface}
+    - {id: geometry-shell-card-background, role: content-card-background, token: token/color.light.page-canvas}
+    pattern_refs:
+    - pattern/dashboard-shell
+    evidence_refs:
+    - evidence-layout-shell
+    - evidence-component-chat
+- id: route/collection-board
+  name: Collection board
+  page_type: page-type/collection
+  slots:
+  - page-header
+  - page-toolbar
+  - page-canvas
+  breakpoints:
+  - full bleed with 16px page gutter
+  - 1440px detail rail
+  rule_refs:
+  - rule/LAYOUT-102
+  - rule/LAYOUT-106
+  - rule/LAYOUT-107
+  placement:
+    id: placement-collection-canvas
+    regions:
+    - {id: region-chrome, role: page-chrome}
+    - {id: region-content, role: canvas}
+    - {id: region-overlay, role: overlay}
+    slots:
+    - {id: slot-page-header, role: page-header, region: region-chrome, order: 1}
+    - {id: slot-page-toolbar, role: page-toolbar, region: region-chrome, order: 2}
+    - {id: slot-page-canvas, role: page-canvas, region: region-content, order: 3}
+    - {id: slot-toast, role: toast, region: region-overlay, order: 4}
+    relations:
+    - {type: vertical, from: region-chrome, to: region-content, order: 1}
+    - {type: overlay, from: region-overlay, to: region-content, order: 1}
+    scroll_domains:
+    - {id: scroll-collection-block, axis: block, owner: region-content}
+    geometry:
+    - {id: geometry-collection-header, role: page-header, token: token/space.header-height}
+    - {id: geometry-collection-toolbar, role: page-toolbar, token: token/space.toolbar-height}
+    - {id: geometry-collection-card-inset, role: content-card-inset, token: token/space.2}
+    - {id: geometry-collection-card-radius, role: content-card-radius, token: token/radius.xl}
+    - {id: geometry-collection-card-border, role: content-card-border, token: token/color.light.surface-border}
+    - {id: geometry-collection-card-shadow, role: content-card-shadow, token: token/shadow.surface}
+    - {id: geometry-collection-card-background, role: content-card-background, token: token/color.light.page-canvas}
+    pattern_refs:
+    - pattern/page-chrome
+    - pattern/section-nav
+    - pattern/data-table
+    evidence_refs:
+    - evidence-layout-page
+- id: route/detail-document
+  name: Detail document
+  page_type: page-type/detail
+  slots:
+  - page-header
+  - page-toolbar
+  - master-pane
+  - detail-pane
+  breakpoints:
+  - 1440px centered rail
+  - block scroll in detail
+  rule_refs:
+  - rule/LAYOUT-105
+  - rule/LAYOUT-107
+  placement:
+    id: placement-detail-rail
+    regions:
+    - {id: region-rail, role: detail-rail}
+    - {id: region-master, role: master, parent: region-rail}
+    - {id: region-detail, role: detail, parent: region-rail}
+    - {id: region-overlay, role: overlay}
+    slots:
+    - {id: slot-page-header, role: page-header, region: region-rail, order: 1}
+    - {id: slot-page-toolbar, role: page-toolbar, region: region-rail, order: 2}
+    - {id: slot-master-pane, role: master-pane, region: region-master, order: 3}
+    - {id: slot-detail-pane, role: detail-pane, region: region-detail, order: 4}
+    relations:
+    - {type: contains, from: region-rail, to: region-master, order: 1}
+    - {type: contains, from: region-rail, to: region-detail, order: 2}
+    - {type: horizontal, from: region-master, to: region-detail, order: 1}
+    - {type: overlay, from: region-overlay, to: region-rail, order: 1}
+    scroll_domains:
+    - {id: scroll-detail-block, axis: block, owner: region-detail}
+    geometry:
+    - {id: geometry-detail-rail-width, role: detail-rail-width, token: token/size.detail-rail}
+    - {id: geometry-detail-header, role: page-header, token: token/space.header-height}
+    - {id: geometry-detail-card-radius, role: content-card-radius, token: token/radius.xl}
+    - {id: geometry-detail-card-border, role: content-card-border, token: token/color.light.surface-border}
+    - {id: geometry-detail-card-shadow, role: content-card-shadow, token: token/shadow.surface}
+    - {id: geometry-detail-card-background, role: content-card-background, token: token/color.light.page-canvas}
+    pattern_refs:
+    - pattern/master-detail
+    evidence_refs:
+    - evidence-layout-detail
+- id: route/settings-canvas
+  name: Settings canvas
+  page_type: page-type/collection
+  slots:
+  - page-header
+  - section-nav
+  - page-canvas
+  breakpoints:
+  - nav collapses to horizontal strip below md
+  - two-pane in-card layout from md
+  rule_refs:
+  - rule/LAYOUT-102
+  - rule/LAYOUT-106
+  - rule/LAYOUT-107
+  placement:
+    id: placement-settings-panes
+    regions:
+    - {id: region-chrome, role: page-chrome}
+    - {id: region-nav, role: section-nav, parent: region-chrome}
+    - {id: region-content, role: canvas, parent: region-chrome}
+    slots:
+    - {id: slot-page-header, role: page-header, region: region-chrome, order: 1}
+    - {id: slot-section-nav, role: section-nav, region: region-nav, order: 2}
+    - {id: slot-page-canvas, role: page-canvas, region: region-content, order: 3}
+    relations:
+    - {type: vertical, from: region-chrome, to: region-nav, order: 1}
+    - {type: contains, from: region-chrome, to: region-nav, order: 1}
+    - {type: contains, from: region-chrome, to: region-content, order: 2}
+    scroll_domains:
+    - {id: scroll-settings-nav, axis: block, owner: region-nav}
+    - {id: scroll-settings-content, axis: block, owner: region-content}
+    geometry:
+    - {id: geometry-settings-header, role: page-header, token: token/space.header-height}
+    - {id: geometry-settings-nav-width, role: section-nav-width, token: token/size.section-nav-default}
+    - {id: geometry-settings-card-radius, role: content-card-radius, token: token/radius.lg}
+    - {id: geometry-settings-card-border, role: content-card-border, token: token/color.light.surface-border}
+    - {id: geometry-settings-card-shadow, role: content-card-shadow, token: token/shadow.surface}
+    - {id: geometry-settings-card-background, role: content-card-background, token: token/color.light.page-canvas}
+    pattern_refs:
+    - pattern/page-chrome
+    - pattern/section-nav
+    evidence_refs:
+    - evidence-layout-page
+    - evidence-component-section-nav
+- id: route/modal-task
+  name: Modal task
+  page_type: page-type/modal
+  slots:
+  - overlay
+  - dialog-content
+  breakpoints:
+  - viewport overlay
+  rule_refs:
+  - rule/LAYOUT-105
+  - rule/AX-101
+  placement:
+    id: placement-modal-overlay
+    regions:
+    - {id: region-viewport, role: viewport}
+    - {id: region-dialog, role: dialog, parent: region-viewport}
+    slots:
+    - {id: slot-overlay, role: overlay, region: region-viewport, order: 1}
+    - {id: slot-dialog-content, role: dialog-content, region: region-dialog, order: 2}
+    relations:
+    - {type: contains, from: region-viewport, to: region-dialog, order: 1}
+    geometry:
+    - {id: geometry-modal-shadow, role: overlay-shadow, token: token/shadow.floating}
+    pattern_refs:
+    - pattern/modal
+    evidence_refs:
+    - evidence-layout-dialog

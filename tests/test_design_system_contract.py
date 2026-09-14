@@ -8,6 +8,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR = ROOT / "scripts/validate_design_system.py"
 EVAL = ROOT / "scripts/run_design_system_evals.py"
@@ -29,7 +31,7 @@ class DesignSystemContractTests(unittest.TestCase):
 
     def test_schema_family_is_parseable(self) -> None:
         documents = [json.loads(path.read_text(encoding="utf-8")) for path in sorted(SCHEMAS.glob("*.json"))]
-        self.assertEqual(16, len(documents))
+        self.assertEqual(17, len(documents))
         self.assertTrue(all(item["$id"].startswith("https://ui-templates-skill.local/schemas/design-system/v1/") for item in documents))
 
     def test_capability_fixtures_are_valid(self) -> None:
@@ -73,6 +75,44 @@ class DesignSystemContractTests(unittest.TestCase):
             codes = {item["code"] for item in report["errors"]}
             self.assertNotEqual(0, code)
             self.assertIn("BINDING_MISSING", codes)
+
+    def test_provenance_coverage_confidence_cross_checks(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+
+            target = root / "revision"
+            shutil.copytree(FIXTURES / "packages/tokens-only-fixture", target)
+            evidence = target / "core/evidence.yaml"
+            evidence.write_text(
+                evidence.read_text(encoding="utf-8").replace("fixture-v1", "fixture-v2", 1),
+                encoding="utf-8",
+            )
+            code, report = self.run_validator(target, "package")
+            codes = {item["code"] for item in report["errors"]}
+            self.assertNotEqual(0, code)
+            self.assertIn("EVIDENCE_REVISION_UNDECLARED", codes)
+
+            target = root / "coverage"
+            shutil.copytree(FIXTURES / "packages/tokens-only-fixture", target)
+            meta_path = target / "meta.yaml"
+            meta = yaml.safe_load(meta_path.read_text(encoding="utf-8"))
+            meta["coverage"]["components"] = {"declared": ["alpha"], "observed": [], "defaulted": [], "unsupported": []}
+            meta_path.write_text(yaml.safe_dump(meta, sort_keys=False, allow_unicode=True), encoding="utf-8")
+            code, report = self.run_validator(target, "package")
+            codes = {item["code"] for item in report["errors"]}
+            self.assertNotEqual(0, code)
+            self.assertIn("COVERAGE_PARTITION_INVALID", codes)
+
+            target = root / "confidence"
+            shutil.copytree(FIXTURES / "packages/tokens-only-fixture", target)
+            meta_path = target / "meta.yaml"
+            meta = yaml.safe_load(meta_path.read_text(encoding="utf-8"))
+            meta["confidence"] = {"overall": "high", "layout": "medium"}
+            meta_path.write_text(yaml.safe_dump(meta, sort_keys=False, allow_unicode=True), encoding="utf-8")
+            code, report = self.run_validator(target, "package")
+            codes = {item["code"] for item in report["errors"]}
+            self.assertNotEqual(0, code)
+            self.assertIn("CONFIDENCE_INCONSISTENT", codes)
 
     def test_deterministic_evals_cover_required_failures(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -18,8 +18,8 @@ from template_authoring.capture import CaptureError, capture_from_files, load_do
 from template_authoring.gate import run_authoring_gate
 
 FIXTURE = ROOT / "tests/fixtures/repo-capture"
-FIXED_REVISION = "58397b5ae6c0fb56d75c21d790a0643595c743ac"
-FIXED_CLOSURE_DIGEST = "sha256:84b6ea77c0ad95eb3fac81c8e57c7d5bff28c394283bb1b631c58c2918b7a879"
+FIXED_REVISION = "1805654239c3192972c34d8fcb70b9ebe304a096"
+FIXED_CLOSURE_DIGEST = "sha256:50616383b3fc991ed582652656b66e3f0ddb97d27b53501884281997fab7ea9e"
 
 
 class RepoCaptureTests(unittest.TestCase):
@@ -65,8 +65,8 @@ class RepoCaptureTests(unittest.TestCase):
             self.assertEqual(first["closure_digest"], second["closure_digest"])
             self.assertFalse(first["unresolved"])
             self.assertGreaterEqual(first["summary"]["definitions"], 12)
-            self.assertEqual(10, first["summary"]["usages"])
-            self.assertEqual(5, first["summary"]["negative_facts"])
+            self.assertEqual(12, first["summary"]["usages"])
+            self.assertEqual(7, first["summary"]["negative_facts"])
             identities = [(item["id"], item["status"]) for item in first["facts"]]
             self.assertEqual(identities, [(item["id"], item["status"]) for item in second["facts"]])
             replayed = replay(load_document(request_path), source, first)
@@ -148,6 +148,32 @@ class RepoCaptureTests(unittest.TestCase):
             with self.assertRaises(CaptureError) as raised:
                 capture_from_files(request_path, source)
             self.assertEqual("UNSUPPORTED_SOURCE_FORMAT", raised.exception.code)
+
+    def test_mandatory_matrix_silence_fails_closed(self) -> None:
+        def drop_section_nav(graph):
+            graph["usages"] = [item for item in graph["usages"] if item.get("slot") != "section-nav"]
+
+        with tempfile.TemporaryDirectory() as temp:
+            source, request_path, _ = self.materialize(temp, drop_section_nav)
+            with self.assertRaises(CaptureError) as raised:
+                capture_from_files(request_path, source)
+            self.assertEqual("MANDATORY_FACT_MISSING", raised.exception.code)
+            self.assertIn("section-nav:board", raised.exception.details["gaps"])
+
+    def test_mandatory_matrix_exclusion_answers_the_question(self) -> None:
+        def drop_section_nav_and_exclude(graph):
+            graph["usages"] = [item for item in graph["usages"] if item.get("slot") != "section-nav"]
+            graph["exclusions"].append({
+                "id": "exclusion.board-nav",
+                "locator": "ui-source-graph.yaml#/definitions/scene.board",
+                "reason": "out-of-scope",
+            })
+
+        with tempfile.TemporaryDirectory() as temp:
+            source, request_path, _ = self.materialize(temp, drop_section_nav_and_exclude)
+            receipt = capture_from_files(request_path, source)
+            self.assertEqual("captured", receipt["status"])
+            self.assertEqual([], receipt["unresolved"])
 
     def test_shell_usage_without_chrome_facts_does_not_complete(self) -> None:
         def drop_chrome(graph):

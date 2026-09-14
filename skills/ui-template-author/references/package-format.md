@@ -16,6 +16,7 @@ templates/<name>/
 │   ├── layout.yaml         # design-system-layout/v1
 │   ├── rules.yaml          # design-system-rules/v1
 │   └── evidence.yaml       # design-system-evidence/v1
+├── measured-expectations.yaml  # optional；certification 产出的 oracle 锚定期望值集合
 └── apply/                  # optional；仍技术栈无关
 ```
 

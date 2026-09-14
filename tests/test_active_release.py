@@ -93,19 +93,26 @@ class ActiveReleaseTests(unittest.TestCase):
             findings = active.check_shared_validator_copies(root)
         self.assertIn(self.expected["shared-validator-drift"], {item.code for item in findings})
 
-    def test_local_skills_allow_only_manager(self) -> None:
+    def test_local_skills_allow_repo_local_but_forbid_public_mirrors(self) -> None:
         self.assertEqual([], active.check_local_skill_boundary(ROOT))
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             skills = root / ".agents/skills"
             (skills / "ui-template-manager").mkdir(parents=True)
+            (skills / "ui-template-test").mkdir(parents=True)
+            (skills / "ui-template-test/SKILL.md").write_text("# repo-local\n", encoding="utf-8")
+            (skills / "not-a-skill").mkdir(parents=True)
             (skills / "ui-template-author").mkdir()
             (skills / ".ui-template-public-manifest.yaml").write_text("schema_version: 1\n", encoding="utf-8")
             findings = active.check_local_skill_boundary(root)
+        by_code: dict[str, set[str]] = {}
+        for item in findings:
+            by_code.setdefault(item.code, set()).add(item.path)
         self.assertEqual(
-            {"LOCAL_PUBLIC_SKILL_FORBIDDEN"},
-            {item.code for item in findings},
+            {".agents/skills/ui-template-author", ".agents/skills/.ui-template-public-manifest.yaml"},
+            by_code.get("LOCAL_PUBLIC_SKILL_FORBIDDEN"),
         )
+        self.assertEqual({".agents/skills/not-a-skill"}, by_code.get("LOCAL_SKILL_ENTRY_INVALID"))
 
     def test_source_product_name_outside_provenance_is_rejected(self) -> None:
         terms = active.source_product_terms_from_ref("https://github.com/acme-labs/acme @ abc")
