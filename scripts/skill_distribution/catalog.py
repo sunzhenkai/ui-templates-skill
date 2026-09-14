@@ -1,6 +1,8 @@
 """把仓库根 published 模板同步为 Author skill 内只读 catalog。"""
 from __future__ import annotations
 
+import hashlib
+import json
 import shutil
 import tempfile
 from pathlib import Path
@@ -108,17 +110,124 @@ def _shell_bearing_templates(repo_root: Path) -> set[str]:
     return bearing
 
 
-def _certification_accepted(repo_root: Path, name: str) -> bool:
-    report = repo_root / "governance" / "candidates" / name / "certification" / "report.yaml"
-    if not report.is_file():
-        return False
+CERTIFICATION_STATUS_VALUES = ("passed", "failed")
+
+
+def _canonical_manifest_digest(template_root: Path) -> str | None:
     import yaml as _yaml
 
+    manifest_path = template_root / "design-system.yaml"
+    if not manifest_path.is_file():
+        return None
     try:
-        document = _yaml.safe_load(report.read_text(encoding="utf-8"))
+        manifest = _yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     except Exception:
-        return False
-    return isinstance(document, dict) and document.get("status") == "accepted"
+        return None
+    if not isinstance(manifest, dict):
+        return None
+    manifest = dict(manifest)
+    manifest.pop("contract_digest", None)
+    payload = json.dumps(manifest, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _certification_blocker(repo_root: Path, name: str) -> str | None:
+    """Return a blocking reason when a shell-bearing template lacks a current certification.
+
+    The accepted verdict comes from the certification schema plus its verify result, and the
+    report must bind the package identity actually being promoted. Returning `None` means the
+    promotion may proceed.
+    """
+    import yaml as _yaml
+
+    candidate = repo_root / "governance" / "candidates" / name
+    report_path = candidate / "certification" / "report.yaml"
+    if not report_path.is_file():
+        return f"CATALOG_PROMOTION_CERTIFICATION_REQUIRED: no certification report for {name}"
+    try:
+        report = _yaml.safe_load(report_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return f"CATALOG_PROMOTION_CERTIFICATION_REQUIRED: unreadable certification report for {name}: {exc}"
+    if not isinstance(report, dict):
+        return f"CATALOG_PROMOTION_CERTIFICATION_REQUIRED: invalid certification report for {name}"
+    status = report.get("status")
+    if status not in CERTIFICATION_STATUS_VALUES:
+        return (
+            f"CERTIFICATION_STATUS_INVALID: report status {status!r} is outside {list(CERTIFICATION_STATUS_VALUES)}; "
+            "the accepted verdict is a separate verify-result flag, not a report status value"
+        )
+    if status != "passed":
+        return f"CATALOG_PROMOTION_CERTIFICATION_REQUIRED: certification report status is {status!r} for {name}"
+    verify_path = candidate / "certification" / "verify-result.json"
+    accepted = False
+    outcome = None
+    if verify_path.is_file():
+        try:
+            verify = json.loads(verify_path.read_text(encoding="utf-8"))
+            accepted = verify.get("accepted") is True
+            outcome = verify.get("outcome")
+        except Exception:
+            accepted = False
+    if not accepted:
+        if outcome == "self-consistency":
+            return (
+                f"CERT_SELF_CONSISTENCY_ONLY: {name} carries a self-consistency verdict only; "
+                "oracle-anchored certification is required before catalog promotion"
+            )
+        return f"CATALOG_PROMOTION_CERTIFICATION_REQUIRED: certification result is not accepted for {name}"
+
+    template_root = repo_root / "templates" / name
+    manifest_path = template_root / "design-system.yaml"
+    if not manifest_path.is_file():
+        return f"CERTIFICATION_PACKAGE_MISMATCH: promoted template manifest is missing for {name}"
+    try:
+        manifest = _yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return f"CERTIFICATION_PACKAGE_MISMATCH: unreadable promoted template manifest for {name}: {exc}"
+    gate_package = (report.get("gate") or {}).get("package") if isinstance(report.get("gate"), dict) else None
+    gate_package = gate_package if isinstance(gate_package, dict) else {}
+    if gate_package.get("id") != manifest.get("id") or gate_package.get("version") != manifest.get("version"):
+        return (
+            f"CERTIFICATION_PACKAGE_MISMATCH: report binds {gate_package.get('id')}@{gate_package.get('version')} "
+            f"but catalog promotion targets {manifest.get('id')}@{manifest.get('version')}"
+        )
+    digest = _canonical_manifest_digest(template_root)
+    if (gate_package.get("digest") or {}).get("value") != digest:
+        return (
+            f"CERTIFICATION_PACKAGE_MISMATCH: report package digest does not match the promoted "
+            f"{manifest.get('id')}@{manifest.get('version')} contract"
+        )
+
+    expectations_path = template_root / "measured-expectations.yaml"
+    if not expectations_path.is_file():
+        return (
+            f"EXPECTATION_SET_MISSING: {name} ships no measured expectation set; "
+            "oracle-anchored expectations must accompany the promoted package"
+        )
+    try:
+        expectations = _yaml.safe_load(expectations_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return f"EXPECTATION_SET_MISSING: unreadable measured expectation set for {name}: {exc}"
+    if not isinstance(expectations, dict):
+        return f"EXPECTATION_SET_MISSING: invalid measured expectation set for {name}"
+    binding = expectations.get("package") if isinstance(expectations.get("package"), dict) else {}
+    if (
+        binding.get("id") != manifest.get("id")
+        or binding.get("version") != manifest.get("version")
+        or (binding.get("digest") or {}).get("value") != digest
+    ):
+        return (
+            f"EXPECTATION_DIGEST_MISMATCH: measured expectation set for {name} does not bind the "
+            "promoted package contract"
+        )
+    return None
+
+
+def check_catalog_freshness(repo_root: Path) -> list[str]:
+    """Catalog copies must match the published production library when that library exists."""
+    if not (repo_root / "templates/INDEX.md").is_file():
+        return []
+    return check_catalog(repo_root)
 
 
 def write_catalog(repo_root: Path) -> dict[str, object]:
@@ -127,12 +236,9 @@ def write_catalog(repo_root: Path) -> dict[str, object]:
     # accepted certification report before the catalog switches; promotion itself
     # stays a separate user decision.
     for name in sorted(_shell_bearing_templates(repo_root)):
-        if not _certification_accepted(repo_root, name):
-            raise DistributionError(
-                f"CATALOG_PROMOTION_CERTIFICATION_REQUIRED: {name} declares shell chrome composition; "
-                "an accepted certification report under governance/candidates/"
-                f"{name}/certification/ is required before catalog promotion"
-            )
+        blocker = _certification_blocker(repo_root, name)
+        if blocker:
+            raise DistributionError(blocker)
     payload = catalog_payload(repo_root)
     destination = repo_root / AUTHOR_CATALOG
     destination.parent.mkdir(parents=True, exist_ok=True)

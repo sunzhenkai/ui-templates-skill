@@ -8,6 +8,7 @@ Apply 只有一种实现心智：消费 digest 一致 Active Instance，按 Phas
 
 - 原版 checkout、原版源码路径或 `meta.sources[]` 中的实现路径；
 - source oracle 身份（oracle revision/locator）、source-compare 记录或对照结论；
+- measured expectation set 是唯一允许携带 oracle 侧测量的输入：Apply MAY 读取它并记录其 digest、expectation id 与比对结论，但 SHALL NOT 把 oracle revision、locator 或原始 oracle 证据复制进 checkpoint、verification 或任何 project artifact。
 - 历史生成物：任何 `web/`、`web-v*` 或上一轮输出目录中的实现文件。
 
 runtime 校验发现上述任一输入时 fail closed 并报告 `SOURCE_BLIND_VIOLATION`；不得继续实现或声称完成。

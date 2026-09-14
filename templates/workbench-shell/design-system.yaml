@@ -34,7 +34,7 @@ layer_digests:
     value: f7ee61d459b707b902c00e0342c8e4344129d1dd2cc6e6560f0bbf87a63e82e1
   evidence:
     algorithm: sha256-canonical-json-v1
-    value: 87d32c19e24f69619c92eda4c57c98f0c5f7eab9b5aba689f66c7af8fc63056c
+    value: 72561c57102bb08791358b6a2ff900e39c93613a5a422ed4fb04334181e1e796
 contract_digest:
   algorithm: sha256-canonical-json-v1
-  value: 4bc38556031c0d37e4a79c306eebb30a1745734406ea7fb7779575615e882ab6
+  value: 78a6995bccf584f4e9bda6a6e58df4faa57599921743a48ef321fca43b1dc2b9

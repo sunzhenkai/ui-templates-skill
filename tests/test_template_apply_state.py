@@ -157,6 +157,43 @@ class ApplyStateTests(unittest.TestCase):
                 self.assertEqual(1, len(identity_findings))
                 self.assertEqual(0, identity_findings[0].phase)
 
+    def test_checkpoint_rejects_oracle_identity_but_accepts_expectation_digest(self) -> None:
+        def run(checkpoint: dict) -> set[str]:
+            return {
+                finding.code
+                for finding in validate_checkpoint(
+                    checkpoint,
+                    apply_root=self.root,
+                    template_value=self.template,
+                    tokens_value=self.tokens,
+                    scope=self.scope,
+                    source_identity=self.source,
+                    build_identity=self.build,
+                    known_rule_ids={"NN-001"},
+                )
+            }
+
+        leaked = copy.deepcopy(self.checkpoint)
+        leaked["fidelity"] = {"status": "fidelity-unverified", "oracle_revision": "a" * 40}
+        self.assertIn("SOURCE_BLIND_VIOLATION", run(leaked))
+
+        allowed = copy.deepcopy(self.checkpoint)
+        allowed["fidelity"] = {
+            "status": "verified",
+            "expectation_digest": {"algorithm": "sha256-canonical-json-v1", "value": "d" * 64},
+            "expectation_ids": ["expectation-sidebar-width"],
+            "comparisons": [
+                {
+                    "expectation_id": "expectation-sidebar-width",
+                    "result": "passed",
+                    "expected": "256px",
+                    "actual": "256px",
+                    "tolerance": "<=2px",
+                }
+            ],
+        }
+        self.assertNotIn("SOURCE_BLIND_VIOLATION", run(allowed))
+
     def test_recovery_reopens_earliest_scope_token_artifact_and_stale_evidence_phase(self) -> None:
         cases = [
             (dict(scope={"included": ["/new"], "deferred": [], "excluded": []}), 0),

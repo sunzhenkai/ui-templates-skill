@@ -600,6 +600,14 @@ def _source_blind_findings(checkpoint: dict[str, Any], apply_root: Path) -> list
     def walk(node: Any, path: str) -> None:
         if isinstance(node, dict):
             for key, value in node.items():
+                if isinstance(key, str) and SOURCE_BLIND_TOKEN.search(key):
+                    findings.append(Finding(
+                        "SOURCE_BLIND_VIOLATION",
+                        f"checkpoint.yaml#{path}.{key}",
+                        "checkpoint 字段名不得携带 oracle/source-compare/meta.sources 身份；"
+                        "measured expectation set 只以 digest 与 expectation id 引用",
+                        0,
+                    ))
                 walk(value, f"{path}.{key}")
         elif isinstance(node, list):
             for index, value in enumerate(node):

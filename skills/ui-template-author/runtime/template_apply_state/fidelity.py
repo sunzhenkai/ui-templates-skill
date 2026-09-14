@@ -82,7 +82,9 @@ def project_geometry_state(profile: dict[str, Any] | None) -> list[str]:
 
 
 def derive_scenario_ids(
-    profile: dict[str, Any] | None, layout: dict[str, Any] | None = None
+    profile: dict[str, Any] | None,
+    layout: dict[str, Any] | None = None,
+    expectations: dict[str, Any] | None = None,
 ) -> list[str]:
     if not isinstance(profile, dict) or profile.get("conformance") != "structural":
         return []
@@ -120,6 +122,12 @@ def derive_scenario_ids(
                     identities.append(
                         f"phase8:scroll-domain:{layout_id}:{domain.get('axis')}:{domain.get('owner')}"
                     )
+    if isinstance(expectations, dict):
+        # close-fidelity-truth-gaps: every oracle-anchored expectation demands a Phase 8
+        # comparison scenario, so package blind spots no longer define the evidence set.
+        for entry in expectations.get("entries") or []:
+            if isinstance(entry, dict) and entry.get("id"):
+                identities.append(f"phase8:expectation:{entry['id']}")
     return _sorted_ids(identities)
 
 

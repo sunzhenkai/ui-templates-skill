@@ -107,7 +107,8 @@
         "components": {
           "$ref": "common.schema.json#/$defs/confidence"
         }
-      }
+      },
+      "description": "Dimension confidence. Cross-field constraint enforced by the unified validator: overall MUST NOT exceed the weakest present required dimension (layout/visual/components), and a dimension whose coverage lists defaulted items MUST NOT be high."
     },
     "coverage": {
       "type": "object",
@@ -135,7 +136,8 @@
         "states": {
           "$ref": "common.schema.json#/$defs/coverageDimension"
         }
-      }
+      },
+      "description": "Coverage per dimension. Cross-field constraint enforced by the unified validator: every declared item MUST appear in exactly one of observed/defaulted/unsupported, the three buckets MUST be mutually exclusive, and observed items MUST be declared."
     }
   }
 }

@@ -46,10 +46,12 @@
             "$ref": "common.schema.json#/$defs/origin"
           },
           "source_id": {
-            "type": "string"
+            "type": "string",
+            "description": "Source identity that MUST resolve to an entry in meta.sources[]; enforced by the unified validator."
           },
           "source_revision": {
-            "type": "string"
+            "type": "string",
+            "description": "Captured revision that MUST equal the revision declared by the referenced meta.sources[] entry; enforced by the unified validator (EVIDENCE_REVISION_UNDECLARED)."
           },
           "locator": {
             "type": "string"

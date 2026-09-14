@@ -24,6 +24,36 @@
       }
     },
     "template_digest": {"$ref": "common.schema.json#/$defs/digest"},
+    "fidelity": {
+      "description": "Oracle-anchored expectation comparison state. Apply consumes the measured expectation set source-blind and records only its digest, expectation ids and comparison outcomes; oracle revision or locator must never appear here.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["verified", "fidelity-unverified", "not-applicable"]},
+        "expectation_digest": {"$ref": "common.schema.json#/$defs/digest"},
+        "expectation_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^expectation-[0-9a-zA-Z-]{3,80}$"}
+        },
+        "comparisons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["expectation_id", "result"],
+            "properties": {
+              "expectation_id": {"type": "string", "pattern": "^expectation-[0-9a-zA-Z-]{3,80}$"},
+              "result": {"enum": ["passed", "failed"]},
+              "expected": {},
+              "actual": {},
+              "tolerance": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
     "source_identity": {"type": "string", "minLength": 1},
     "binding_digest": {"$ref": "common.schema.json#/$defs/digest"},
     "projection_digests": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["name", "digest"], "properties": {"name": {"type": "string"}, "digest": {"$ref": "common.schema.json#/$defs/digest"}}}},

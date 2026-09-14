@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from validate_design_system import (  # noqa: E402
+    ORACLE_EVIDENCE_CODES,
     validate_certification,
     validate_inventory,
 )
@@ -32,6 +33,9 @@ SOURCE_BLIND_INPUT_TOKEN = re.compile(
     r"meta\.sources|source[-_]compare|visual[- ]oracle", re.I,
 )
 OWNERSHIP_BY_CODE = {
+    "CERT_ORACLE_EVIDENCE_PLACEHOLDER": "certification-prompt",
+    "CERT_ORACLE_MEASUREMENT_INVALID": "certification-prompt",
+    "CERT_ASSERTION_UNANCHORED": "certification-prompt",
     "CERT_RECORD_MISSING": "package",
     "CERT_RECORD_NOT_IN_INVENTORY": "package",
     "CERT_OVER_FRAGMENTED": "package",
@@ -234,12 +238,23 @@ def cmd_verify(args: argparse.Namespace) -> int:
             payload["valid"] = False
     ownership = classify(payload)
     accepted = payload["valid"]
+    error_codes = {error.get("code") for error in payload.get("errors", [])}
+    if accepted:
+        outcome = "certification-accepted"
+    elif error_codes and error_codes <= set(ORACLE_EVIDENCE_CODES):
+        # Every blocking finding is about absent or placeholder oracle evidence: the gate can
+        # only speak to self-consistency, never to Visual Equivalence.
+        outcome = "self-consistency"
+    else:
+        outcome = "failed"
     print(json.dumps({
         "accepted": accepted,
+        "outcome": outcome,
         "result": payload,
         "failures": ownership,
         "note": (
             "accepted candidates still await explicit user promotion; "
+            "a self-consistency outcome proves internal agreement only and must not be promoted; "
             "failed ownership must be written back to package, apply-skill or certification-prompt, "
             "followed by clean regeneration."
         ),

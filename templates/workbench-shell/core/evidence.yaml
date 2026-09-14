@@ -159,7 +159,7 @@ items:
   kind: component
   target: primitive/workspace-switcher
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.workspace-switcher
   method: source-graph
@@ -170,7 +170,7 @@ items:
   kind: component
   target: primitive/search-input
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.search-input
   method: source-graph
@@ -181,7 +181,7 @@ items:
   kind: component
   target: primitive/create-button
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.create-button
   method: source-graph
@@ -192,7 +192,7 @@ items:
   kind: component
   target: primitive/textarea
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.textarea
   method: source-graph
@@ -203,7 +203,7 @@ items:
   kind: component
   target: primitive/select
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.select
   method: source-graph
@@ -214,7 +214,7 @@ items:
   kind: component
   target: primitive/checkbox
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.checkbox
   method: source-graph
@@ -225,7 +225,7 @@ items:
   kind: component
   target: primitive/switch
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.switch
   method: source-graph
@@ -236,7 +236,7 @@ items:
   kind: component
   target: primitive/badge
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.badge
   method: source-graph
@@ -247,7 +247,7 @@ items:
   kind: component
   target: primitive/tabs
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.tabs
   method: source-graph
@@ -258,7 +258,7 @@ items:
   kind: component
   target: primitive/pagination
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.pagination
   method: source-graph
@@ -269,7 +269,7 @@ items:
   kind: component
   target: primitive/avatar
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.avatar
   method: source-graph
@@ -280,7 +280,7 @@ items:
   kind: component
   target: primitive/skeleton
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.skeleton
   method: source-graph
@@ -291,7 +291,7 @@ items:
   kind: component
   target: primitive/icon-button
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.icon-button
   method: source-graph
@@ -302,7 +302,7 @@ items:
   kind: component
   target: primitive/menu
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.menu
   method: source-graph
@@ -313,7 +313,7 @@ items:
   kind: component
   target: primitive/tooltip
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.tooltip
   method: source-graph
@@ -324,7 +324,7 @@ items:
   kind: component
   target: pattern/global-search
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.global-search
   method: source-graph
@@ -335,7 +335,7 @@ items:
   kind: component
   target: pattern/data-table
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.data-table
   method: source-graph
@@ -346,7 +346,7 @@ items:
   kind: component
   target: pattern/board-column
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.board-column
   method: source-graph
@@ -357,7 +357,7 @@ items:
   kind: component
   target: pattern/board-card
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.board-card
   method: source-graph
@@ -368,7 +368,7 @@ items:
   kind: component
   target: pattern/service-card
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.service-card
   method: source-graph
@@ -379,7 +379,7 @@ items:
   kind: component
   target: pattern/calendar-card
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.calendar-card
   method: source-graph
@@ -390,7 +390,7 @@ items:
   kind: component
   target: pattern/stat-card
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.stat-card
   method: source-graph
@@ -401,7 +401,7 @@ items:
   kind: component
   target: pattern/chart-legend
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.chart-legend
   method: source-graph
@@ -412,7 +412,7 @@ items:
   kind: component
   target: pattern/empty-state
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.empty-state
   method: source-graph
@@ -423,7 +423,7 @@ items:
   kind: component
   target: pattern/toast
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.toast
   method: source-graph
@@ -434,7 +434,7 @@ items:
   kind: component
   target: pattern/confirm-dialog
   origin: source
-  source_id: source-001
+  source_id: source-002
   source_revision: 879d0de9166261c26ec35b69f5cec9382191eda1
   locator: packages/ui#/definitions/component.confirm-dialog
   method: source-graph
@@ -520,7 +520,7 @@ items:
   status: active
 - id: evidence-component-section-nav
   kind: component
-  target: page-type/collection
+  target: pattern/section-nav
   origin: source
   source_id: source-001
   source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca

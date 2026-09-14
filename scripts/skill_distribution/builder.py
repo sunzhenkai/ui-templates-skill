@@ -82,6 +82,11 @@ def build_bundle(
     repo_root: Path, output_dir: Path | None = None, *, config_path: Path | None = None,
 ) -> BuildResult:
     repo_root = repo_root.resolve()
+    from .catalog import check_catalog_freshness
+
+    stale = check_catalog_freshness(repo_root)
+    if stale:
+        raise DistributionError(f"CATALOG_STALE: {'; '.join(stale)}")
     config = load_config(repo_root, config_path)
     scan_forbidden_public_data(repo_root, config)
     mappings = expand_files(repo_root, config)
