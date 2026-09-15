@@ -1,80 +1,52 @@
 schema: design-system-patterns/v1
 items:
 - id: pattern/app-shell
-  name: App shell
+  name: Inset workbench shell
   primitives:
-  - primitive/nav-item
-  - primitive/button
-  - primitive/badge
-  - primitive/avatar
-  - primitive/tooltip
-  page_type: page-type/dashboard
+  - primitive/app-sidebar
+  - primitive/command-palette
+  - primitive/chat-fab
+  - primitive/page-header
+  - primitive/page-toolbar
   rule_refs:
   - rule/LAYOUT-101
-  - rule/AX-101
-- id: pattern/collection-table
-  name: Collection table
-  primitives:
-  - primitive/data-table
-  - primitive/badge
-  - primitive/button
-  - primitive/empty-state
-  - primitive/skeleton
-  page_type: page-type/collection
-  rule_refs:
+  - rule/LAYOUT-102
   - rule/LAYOUT-103
-- id: pattern/board-view
-  name: Board view
-  primitives:
-  - primitive/board-column
-  - primitive/board-card
-  - primitive/badge
-  - primitive/button
-  - primitive/empty-state
-  page_type: page-type/collection
-  rule_refs:
   - rule/LAYOUT-104
+- id: pattern/settings-section-nav
+  name: Settings section navigation
+  primitives:
+  - primitive/settings-nav
+  - primitive/nav-item
+  rule_refs:
+  - rule/LAYOUT-107
+  - rule/QUALITY-103
+- id: pattern/workspace-board
+  name: Workspace board
+  primitives:
+  - primitive/page-header
+  - primitive/page-toolbar
+  - primitive/data-table
+  - primitive/button
+  rule_refs:
+  - rule/LAYOUT-106
+  - rule/QUALITY-103
+  - rule/AX-101
 - id: pattern/master-detail
   name: Master detail
   primitives:
-  - primitive/panel
-  - primitive/data-table
-  - primitive/badge
-  - primitive/button
-  - primitive/tooltip
-  page_type: page-type/detail
+  - primitive/page-header
+  - primitive/detail-pane
   rule_refs:
   - rule/LAYOUT-105
-- id: pattern/settings-form
-  name: Settings form
-  primitives:
-  - primitive/panel
-  - primitive/input
-  - primitive/select
-  - primitive/tabs
-  - primitive/button
-  page_type: page-type/detail
-  rule_refs:
-  - rule/QUALITY-102
-  - rule/AX-103
-- id: pattern/create-dialog
-  name: Create dialog
+  - rule/LAYOUT-106
+- id: pattern/overlay-dialog
+  name: Overlay dialog
   primitives:
   - primitive/dialog
-  - primitive/input
-  - primitive/select
   - primitive/button
-  - primitive/tooltip
-  page_type: page-type/modal
+  - primitive/input
   rule_refs:
+  - rule/LAYOUT-105
   - rule/QUALITY-102
-- id: pattern/search-command
-  name: Search command
-  primitives:
-  - primitive/dialog
-  - primitive/input
-  - primitive/badge
-  - primitive/button
-  page_type: page-type/modal
-  rule_refs:
-  - rule/QUALITY-103
+  - rule/AX-104

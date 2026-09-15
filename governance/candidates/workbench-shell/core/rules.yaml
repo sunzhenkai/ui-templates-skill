@@ -1,88 +1,110 @@
 schema: design-system-rules/v1
 items:
-- id: rule/NN-101
-  statement: Reserve filled surfaces for bounded content; keep shell and canvas quiet.
-  severity: must
-  status: active
-- id: rule/NN-102
-  statement: Every page band shares the 16px page gutter; full-width borders stay
-    on the outer band.
-  severity: must
-  status: active
 - id: rule/LAYOUT-101
-  statement: The dashboard is a non-wrapping horizontal inset shell with a vertical
-    sidebar and fill-sized canvas.
+  statement: 'The shell uses an inset canvas: the sidebar remains in the shell frame
+    and the page canvas is a bounded surface.'
   severity: must
+  token_refs:
+  - token/color.page-canvas
+  - token/radius.xl
   status: active
 - id: rule/LAYOUT-102
-  statement: Page canvas or detail region owns block scrolling; the shell root does
-    not scroll.
+  statement: The shell root does not scroll; the page canvas owns block scrolling,
+    and settings owns independent navigation and content scroll regions.
   severity: must
+  token_refs:
+  - token/space.2
   status: active
 - id: rule/LAYOUT-103
-  statement: 'Shell chrome follows the fixed slot order: workspace switcher, search,
-    compose, navigation, pins, rail, page header, toolbar, canvas, footer utility.'
+  statement: 'Chrome slots render in the declared order: workspace switcher, search,
+    compose, nav group, pin list, rail, header trigger, page header, page toolbar,
+    page canvas, footer utility, then chat launcher.'
   severity: must
+  token_refs:
+  - token/size.sidebar-default
   status: active
 - id: rule/LAYOUT-104
-  statement: The floating chat launcher overlays the viewport from the bottom right
-    and content preserves its clearance.
+  statement: The chat launcher is a viewport overlay anchored to the bottom-right
+    inset and uses the declared launcher geometry.
   severity: must
+  token_refs:
+  - token/space.chat-launcher-size
+  - token/space.chat-launcher-inset
   status: active
 - id: rule/LAYOUT-105
-  statement: Dialogs overlay the viewport; detail documents use a centered 1440px
-    rail with block scrolling in the detail region.
+  statement: Master-detail keeps master and detail panes side by side with independent
+    block scroll domains; dialogs overlay the viewport and expose an open surface.
   severity: must
+  token_refs: []
   status: active
 - id: rule/LAYOUT-106
-  statement: Page headers and toolbars are 48 pixels tall and share the same leading
-    edge.
+  statement: Page headers and page toolbars use the shared header height so chrome
+    bands align across routes.
   severity: must
+  token_refs:
+  - token/space.header-height
   status: active
-- id: rule/AX-101
-  statement: Interactive controls expose visible hover and focus-visible treatment
-    without relying on color alone.
+- id: rule/LAYOUT-107
+  statement: The inset page canvas carries padding, radius, border, shadow, and page-canvas
+    background; settings section navigation is a vertical icon-label rail with its
+    own width and border.
   severity: must
+  token_refs:
+  - token/space.2
+  - token/radius.xl
+  - token/color.surface-border
+  - token/shadow.surface
+  - token/color.page-canvas
+  - token/size.section-nav-default
   status: active
 - id: rule/RESP-101
-  statement: Below the compact breakpoint navigation becomes a sheet and floating
-    overlays remain within viewport insets.
+  statement: At the compact viewport the navigation group becomes an overlay sheet
+    rather than a permanent in-flow column.
   severity: must
+  token_refs: []
   status: active
 - id: rule/QUALITY-101
-  statement: Use the declared spacing, size and radius scale for controls and chrome
-    geometry.
+  statement: Control and navigation geometry follows the declared token values; do
+    not substitute ad-hoc dimensions.
   severity: must
+  token_refs:
+  - token/radius.lg
+  - token/size.sidebar-default
   status: active
 - id: rule/QUALITY-102
-  statement: Bounded panels use one hairline border and the surface shadow; overlays
-    use the floating shadow.
+  statement: Overlay surfaces use the floating shadow token, while bounded page surfaces
+    use the surface shadow token.
   severity: must
+  token_refs:
+  - token/shadow.floating
+  - token/shadow.surface
   status: active
 - id: rule/QUALITY-103
-  statement: Navigation links use filled hover and active states with no text underline.
+  statement: Navigation links use sidebar accent for hover and active states; settings
+    links use surface hover and surface selected states, and links do not underline.
   severity: must
+  token_refs:
+  - token/color.sidebar-accent
+  - token/color.surface-hover
+  - token/color.surface-selected
   status: active
-- id: rule/AX-102
-  statement: Status conveyed by color must also carry a text label or icon signal.
+- id: rule/QUALITY-104
+  statement: Interactive controls use the ring token for focus border and a 50 percent
+    ring-alpha shadow for focus-visible treatment.
   severity: must
+  token_refs:
+  - token/color.ring
+  - token/color.ring-focus
   status: active
-- id: rule/AX-103
-  statement: Drag-and-drop surfaces must provide a keyboard-reachable alternative
-    move action.
+- id: rule/AX-101
+  statement: Table actions use primary-hover on hover and the focus ring on focus-visible.
   severity: must
+  token_refs:
+  - token/color.primary-hover
+  - token/color.ring-focus
   status: active
 - id: rule/AX-104
-  statement: Overlay surfaces (dialog, confirm, menu, tooltip, toast) manage focus,
-    close on Escape and return focus to the trigger.
+  statement: An open dialog is visible and overlays the viewport.
   severity: must
-  status: active
-- id: rule/RESP-102
-  statement: Composite cards collapse to a single-column stack below the compact breakpoint.
-  severity: must
-  status: active
-- id: rule/NN-103
-  statement: Skeleton placeholders must preserve final layout metrics to avoid layout
-    shift on load.
-  severity: must
+  token_refs: []
   status: active

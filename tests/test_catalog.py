@@ -72,12 +72,12 @@ class CatalogAndDiscoveryTests(unittest.TestCase):
             encoding="utf-8",
         )
 
-    def _write_expectations(self, root: Path, package_digest: str) -> None:
+    def _write_expectations(self, root: Path, package_digest: str, version: str) -> None:
         template_root = root / "templates/workbench-shell"
         template_root.mkdir(parents=True, exist_ok=True)
         (template_root / "measured-expectations.yaml").write_text(
             "schema: design-system-measured-expectations/v1\n"
-            "package:\n  id: workbench-shell\n  version: 1.3.2\n"
+            "package:\n  id: workbench-shell\n  version: " + version + "\n"
             "  digest:\n    algorithm: sha256-canonical-json-v1\n"
             f"    value: {package_digest}\n"
             "oracle:\n  kind: git-revision\n  revision: " + "a" * 40 + "\n"
@@ -97,6 +97,10 @@ class CatalogAndDiscoveryTests(unittest.TestCase):
         from skill_distribution.catalog import _canonical_manifest_digest
 
         return _canonical_manifest_digest(ROOT / "templates/workbench-shell")
+
+    def _real_version(self) -> str:
+        manifest = yaml.safe_load((ROOT / "templates/workbench-shell/design-system.yaml").read_text(encoding="utf-8"))
+        return manifest["version"]
 
     def test_promotion_requires_schema_status_and_acceptance(self) -> None:
         root = self._promotion_repo()
@@ -126,11 +130,12 @@ class CatalogAndDiscoveryTests(unittest.TestCase):
 
     def test_promotion_requires_measured_expectations(self) -> None:
         root = self._promotion_repo()
-        self._write_certification(root, "passed", True, "1.3.2", self._real_digest())
+        self._write_certification(root, "passed", True, self._real_version(), self._real_digest())
+        (root / "templates/workbench-shell/measured-expectations.yaml").unlink()
         with self.assertRaisesRegex(DistributionError, "EXPECTATION_SET_MISSING"):
             write_catalog(root)
 
-        self._write_expectations(root, "c" * 64)
+        self._write_expectations(root, "c" * 64, self._real_version())
         with self.assertRaisesRegex(DistributionError, "EXPECTATION_DIGEST_MISMATCH"):
             write_catalog(root)
 
@@ -142,8 +147,8 @@ class CatalogAndDiscoveryTests(unittest.TestCase):
 
     def test_current_certification_allows_catalog_promotion(self) -> None:
         root = self._promotion_repo()
-        self._write_certification(root, "passed", True, "1.3.2", self._real_digest())
-        self._write_expectations(root, self._real_digest())
+        self._write_certification(root, "passed", True, self._real_version(), self._real_digest())
+        self._write_expectations(root, self._real_digest(), self._real_version())
         payload = write_catalog(root)
         self.assertEqual(sorted(["workbench-shell"]), payload["templates"])
         self.assertEqual([], check_catalog(root))

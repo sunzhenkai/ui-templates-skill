@@ -1,52 +1,39 @@
 schema: design-system-page-types/v1
 items:
-- id: page-type/dashboard
-  name: Dashboard
+- id: page-type/app-shell
+  name: App shell
   patterns:
   - pattern/app-shell
-  data_states:
-  - loading
-  - success
-  - empty
-  - error
   rule_refs:
   - rule/LAYOUT-101
-- id: page-type/collection
-  name: Collection
-  patterns:
-  - pattern/app-shell
-  - pattern/collection-table
-  - pattern/board-view
-  data_states:
-  - loading
-  - success
-  - empty
-  - error
-  rule_refs:
+  - rule/LAYOUT-102
   - rule/LAYOUT-103
   - rule/LAYOUT-104
-- id: page-type/detail
-  name: Detail
+  - rule/RESP-101
+- id: page-type/settings
+  name: Settings page
   patterns:
-  - pattern/app-shell
+  - pattern/settings-section-nav
+  rule_refs:
+  - rule/LAYOUT-107
+  - rule/QUALITY-103
+- id: page-type/board
+  name: Board page
+  patterns:
+  - pattern/workspace-board
+  rule_refs:
+  - rule/LAYOUT-106
+  - rule/AX-101
+- id: page-type/master-detail
+  name: Master detail page
+  patterns:
   - pattern/master-detail
-  - pattern/settings-form
-  data_states:
-  - loading
-  - success
-  - empty
-  - error
   rule_refs:
   - rule/LAYOUT-105
-- id: page-type/modal
-  name: Modal
+- id: page-type/dialog
+  name: Dialog page
   patterns:
-  - pattern/create-dialog
-  - pattern/search-command
-  data_states:
-  - default
-  - submitting
-  - success
-  - error
+  - pattern/overlay-dialog
   rule_refs:
-  - rule/QUALITY-102
+  - rule/LAYOUT-105
+  - rule/AX-104

@@ -1,0 +1,80 @@
+schema: oracle-deployment/v1
+oracle:
+  kind: git-revision
+  revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+deployment:
+  cwd: .
+  serve: python3 .oracle-harness/serve_oracle.py
+  ready_url: http://127.0.0.1:3100
+  ready_timeout_seconds: 600
+capture:
+  settle_ms: 6000
+  full_page: true
+  routes:
+    - id: app-shell
+      path: /seed/app-shell
+    - id: workspace-board
+      path: /seed/workspace-board
+    - id: settings-section-nav
+      path: /seed/settings-section-nav
+    - id: master-detail
+      path: /seed/master-detail
+    - id: overlay-dialog
+      path: /seed/overlay-dialog
+  viewports:
+    - id: desktop
+      width: 1440
+      height: 900
+  themes:
+    - light
+  measurements:
+    - id: oracle-app-shell-surface
+      route: app-shell
+      viewport: desktop
+      theme: light
+      selector: '[data-slot="sidebar-wrapper"]'
+      property: backgroundColor
+      dimension: surface
+      unit: css-color
+      tolerance: exact
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - id: oracle-workspace-board-header-height
+      route: workspace-board
+      viewport: desktop
+      theme: light
+      selector: 'header'
+      property: height
+      dimension: spacing
+      unit: px
+      tolerance: '<=2px'
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - id: oracle-settings-nav-width
+      route: settings-section-nav
+      viewport: desktop
+      theme: light
+      selector: 'aside'
+      property: width
+      dimension: spacing
+      unit: px
+      tolerance: '<=2px'
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - id: oracle-master-detail-pane-split
+      route: master-detail
+      viewport: desktop
+      theme: light
+      selector: 'main'
+      property: width
+      dimension: structure
+      unit: px
+      tolerance: '<=2px'
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - id: oracle-overlay-dialog-shape
+      route: overlay-dialog
+      viewport: desktop
+      theme: light
+      selector: '[role="dialog"]'
+      property: borderRadius
+      dimension: surface
+      unit: css-length
+      tolerance: exact
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386

@@ -73,3 +73,9 @@ lerna-debug.log*
 
 # ui-template-design skill local state (freeze/checkpoint, consumer-side)
 .ui-template-design/
+
+# Transient candidate workspaces. Keep only governance/candidates/<template-name>/ for promotion.
+governance/candidates/.work/
+governance/candidates/*-clean/
+governance/candidates/*-reimport/
+governance/candidates/*-reimport-*/

@@ -1,60 +1,39 @@
 schema: design-system-page-types/v1
 items:
-- id: page-type/dashboard
-  name: Workspace dashboard
+- id: page-type/app-shell
+  name: App shell
   patterns:
-  - pattern/dashboard-shell
-  - pattern/stat-card
-  - pattern/chart-legend
-  - pattern/toast
-  data_states:
-  - loading
-  - ready
-  - error
-  rule_refs:
-  - rule/LAYOUT-101
-  - rule/LAYOUT-103
-- id: page-type/collection
-  name: Collection or board
-  patterns:
-  - pattern/page-chrome
-  - pattern/dashboard-shell
-  - pattern/data-table
-  - pattern/board-column
-  - pattern/board-card
-  - pattern/service-card
-  - pattern/calendar-card
-  - pattern/empty-state
-  - pattern/toast
-  data_states:
-  - empty
-  - loading
-  - ready
-  - error
+  - pattern/app-shell
   rule_refs:
   - rule/LAYOUT-101
   - rule/LAYOUT-102
-- id: page-type/detail
-  name: Detail document
+  - rule/LAYOUT-103
+  - rule/LAYOUT-104
+  - rule/RESP-101
+- id: page-type/settings
+  name: Settings page
+  patterns:
+  - pattern/settings-section-nav
+  rule_refs:
+  - rule/LAYOUT-107
+  - rule/QUALITY-103
+- id: page-type/board
+  name: Board page
+  patterns:
+  - pattern/workspace-board
+  rule_refs:
+  - rule/LAYOUT-106
+  - rule/AX-101
+- id: page-type/master-detail
+  name: Master detail page
   patterns:
   - pattern/master-detail
-  - pattern/page-chrome
-  - pattern/empty-state
-  data_states:
-  - loading
-  - ready
-  - error
   rule_refs:
   - rule/LAYOUT-105
-- id: page-type/modal
-  name: Modal task
+- id: page-type/dialog
+  name: Dialog page
   patterns:
-  - pattern/modal
-  - pattern/confirm-dialog
-  - pattern/toast
-  data_states:
-  - open
-  - closed
+  - pattern/overlay-dialog
   rule_refs:
   - rule/LAYOUT-105
-  - rule/AX-101
+  - rule/AX-104

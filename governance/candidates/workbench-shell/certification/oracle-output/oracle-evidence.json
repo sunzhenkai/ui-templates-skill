@@ -1,0 +1,144 @@
+{
+  "base_url": "http://127.0.0.1:3100",
+  "build_identity": "workbench-shell-oracle-20260915-04",
+  "captured_at": "2026-09-15T14:39:13Z",
+  "measurements": [
+    {
+      "box": {
+        "height": 900,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      },
+      "dimension": "surface",
+      "id": "oracle-app-shell-surface",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "backgroundColor",
+      "route": "app-shell",
+      "selector": "[data-slot=\"sidebar-wrapper\"]",
+      "theme": "light",
+      "tolerance": "exact",
+      "unit": "css-color",
+      "value": "oklch(0.964435 0.001327 286.375)",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 48,
+        "width": 1176,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "spacing",
+      "id": "oracle-workspace-board-header-height",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "height",
+      "route": "workspace-board",
+      "selector": "header",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "48px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 884,
+        "width": 240,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "spacing",
+      "id": "oracle-settings-nav-width",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "width",
+      "route": "settings-section-nav",
+      "selector": "aside",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "240px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 884,
+        "width": 1176,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "structure",
+      "id": "oracle-master-detail-pane-split",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "width",
+      "route": "master-detail",
+      "selector": "main",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "1176px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 303,
+        "width": 576,
+        "x": 432,
+        "y": 298.5
+      },
+      "dimension": "surface",
+      "id": "oracle-overlay-dialog-shape",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "borderRadius",
+      "route": "overlay-dialog",
+      "selector": "[role=\"dialog\"]",
+      "theme": "light",
+      "tolerance": "exact",
+      "unit": "css-length",
+      "value": "14px",
+      "viewport": "desktop"
+    }
+  ],
+  "oracle": {
+    "kind": "git-revision",
+    "revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+  },
+  "schema": "oracle-evidence/v1",
+  "screenshots": [
+    {
+      "path": "evidence/oracle-app-shell-desktop-light.png",
+      "route": "app-shell",
+      "sha256": "c480977fef8e8a83730936f98ec70556ee132caffdf9ae1d1cb737031d389b78",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/oracle-workspace-board-desktop-light.png",
+      "route": "workspace-board",
+      "sha256": "90d1d3d58efa011c5b8bbb8ebfe2460be59385a8840a210fb07aae9498a13b30",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/oracle-settings-section-nav-desktop-light.png",
+      "route": "settings-section-nav",
+      "sha256": "3c6a971ad75abac0991176d56edf8a079ffc0a782ea3168a1b41d570ee42c771",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/oracle-master-detail-desktop-light.png",
+      "route": "master-detail",
+      "sha256": "00474a6ca5679730fe23b45d975644674ecb63949a354d35c2ad64724c861f06",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/oracle-overlay-dialog-desktop-light.png",
+      "route": "overlay-dialog",
+      "sha256": "4eb10598fd9e0c2e1c44f2e52fd7c70e6ec71e2bf5086f02ba667f657763cfde",
+      "theme": "light",
+      "viewport": "desktop"
+    }
+  ]
+}

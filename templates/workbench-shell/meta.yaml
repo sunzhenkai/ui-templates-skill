@@ -1,32 +1,33 @@
 schema: design-system-meta/v1
 name: workbench-shell
-version: 2.0.0
-description: Neutral dual-theme workbench app shell with an inset canvas, dense 14px interface, crisp separation and restrained blue accents.
+version: 3.0.0
+description: Neutral dual-theme workbench app shell with an inset canvas, dense 14px
+  interface, crisp separation and restrained blue accents.
 sources:
 - id: source-001
   type: repo
-  ref: https://github.com/multica-ai/multica @ upstream 9d18186e6e8cfa168d6053d33d652e86fadfc12b; capture-graph commit 368e25475f984de2514274451f20ec40ffe244c3 (session-local capture graph; not published upstream)
-  revision: 368e25475f984de2514274451f20ec40ffe244c3
+  ref: https://github.com/multica-ai/multica
+  revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   captured_at: '2026-09-15T00:00:00Z'
 - id: source-002
   type: repo
-  ref: https://github.com/multica-ai/multica @ 9d18186e6e8cfa168d6053d33d652e86fadfc12b
-  revision: 9d18186e6e8cfa168d6053d33d652e86fadfc12b
+  ref: session-local capture graph commit in a multica worktree based on 200dcb44
+    (not published upstream)
+  revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   captured_at: '2026-09-15T00:00:00Z'
 captured_at: '2026-09-15'
 platforms:
 - web
 tags:
 - workbench
-- app-shell
-- dual-theme
-- sidebar
-- inset-canvas
+- shell
+- dashboard
+- admin
 confidence:
   overall: medium
-  layout: medium
+  layout: high
   visual: medium
-  components: high
+  components: medium
 coverage:
   platforms:
     declared:
@@ -37,14 +38,12 @@ coverage:
     unsupported: []
   viewports:
     declared:
-    - compact
     - desktop
-    - wide
-    observed: []
-    defaulted:
     - compact
+    observed:
     - desktop
-    - wide
+    - compact
+    defaulted: []
     unsupported: []
   themes:
     declared:
@@ -52,71 +51,73 @@ coverage:
     - dark
     observed:
     - light
-    defaulted:
+    defaulted: []
+    unsupported:
     - dark
-    unsupported: []
   page_modes:
     declared:
-    - dashboard
-    - collection
-    - detail
-    - modal
+    - shell
+    - board
+    - master-detail
+    - settings
+    - dialog
     observed:
-    - dashboard
-    - collection
-    - detail
-    - modal
+    - shell
+    - board
+    - master-detail
+    - settings
+    - dialog
     defaulted: []
     unsupported: []
   components:
     declared:
-    - nav-item
-    - button
-    - input
-    - dialog
-    - panel
+    - app-sidebar
+    - page-header
+    - chat-fab
     - data-table
-    - board-column
-    - board-card
-    - badge
-    - avatar
-    - tabs
-    - select
-    - empty-state
-    - skeleton
-    - tooltip
+    - dialog
+    - command-palette
+    - settings-nav
+    - input
+    - button
+    - page-toolbar
+    - nav-item
+    - detail-pane
     observed:
-    - nav-item
-    - button
-    - input
-    - dialog
-    - panel
+    - app-sidebar
+    - page-header
+    - chat-fab
     - data-table
-    - board-column
-    - board-card
-    - badge
-    - avatar
-    - tabs
-    - select
-    - empty-state
-    - skeleton
-    - tooltip
+    - dialog
+    - command-palette
+    - settings-nav
+    - input
+    - button
+    - page-toolbar
+    - nav-item
+    - detail-pane
     defaulted: []
     unsupported: []
   states:
     declared:
     - default
     - hover
-    - focus-visible
     - active
-    - disabled
+    - selected
+    - focus-visible
     - open
+    - closed
+    - disabled
+    - invalid
     observed:
-    - default
     - hover
-    - focus-visible
     - active
+    - selected
+    - focus-visible
     - open
     defaulted:
+    - default
+    - closed
     - disabled
-    unsupported: []
+    unsupported:
+    - invalid

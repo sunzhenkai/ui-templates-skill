@@ -1,43 +1,93 @@
 schema: design-system-primitives/v1
 items:
-- id: primitive/nav-item
-  name: Navigation item
+- id: primitive/app-sidebar
+  name: App sidebar
+  states:
+  - default
+  - hover
+  - active
+  - selected
+  - focus-visible
+  token_refs:
+  - token/color.sidebar-accent
+  - token/size.sidebar-default
+  rule_refs:
+  - rule/LAYOUT-103
+  - rule/QUALITY-101
+  - rule/QUALITY-103
+- id: primitive/page-header
+  name: Page header
+  states:
+  - default
+  token_refs:
+  - token/space.header-height
+  rule_refs:
+  - rule/LAYOUT-106
+- id: primitive/page-toolbar
+  name: Page toolbar
   states:
   - default
   - hover
   - focus-visible
-  - active
-  - disabled
   token_refs:
-  - token/color.sidebar-foreground
-  - token/color.sidebar-accent
-  - token/radius.control
-  - token/shadow.focus
+  - token/space.header-height
+  - token/color.primary-hover
+  - token/color.ring-focus
+  rule_refs:
+  - rule/LAYOUT-106
+  - rule/AX-101
+- id: primitive/chat-fab
+  name: Chat launcher
+  states:
+  - default
+  - hover
+  - active
+  - focus-visible
+  token_refs:
+  - token/space.chat-launcher-size
+  - token/space.chat-launcher-inset
+  - token/shadow.floating
+  - token/color.surface-border
+  - token/color.ring-focus
+  rule_refs:
+  - rule/LAYOUT-104
+  - rule/QUALITY-102
+  - rule/QUALITY-104
+- id: primitive/data-table
+  name: Data table
+  states:
+  - default
+  - hover
+  - selected
+  token_refs:
+  - token/color.surface-hover
+  - token/color.surface-selected
   rule_refs:
   - rule/QUALITY-103
-  - rule/AX-101
-- id: primitive/button
-  name: Button
+- id: primitive/dialog
+  name: Dialog
   states:
-  - default
+  - open
+  - closed
+  token_refs:
+  - token/shadow.floating
+  rule_refs:
+  - rule/LAYOUT-105
+  - rule/QUALITY-102
+  - rule/AX-104
+- id: primitive/command-palette
+  name: Command palette
+  states:
+  - closed
+  - open
   - hover
   - focus-visible
-  - disabled
-  variants:
-  - primary
-  - secondary
-  - ghost
-  sizes:
-  - sm
-  - md
   token_refs:
-  - token/color.brand
-  - token/color.surface
-  - token/radius.control
-  - token/shadow.focus
+  - token/shadow.floating
+  - token/color.ring-focus
   rule_refs:
-  - rule/QUALITY-101
-  - rule/AX-102
+  - rule/QUALITY-102
+  - rule/QUALITY-104
 - id: primitive/input
   name: Input
   states:
@@ -45,140 +95,72 @@ items:
   - focus-visible
   - disabled
   token_refs:
-  - token/color.surface
-  - token/color.surface-border
-  - token/radius.control
-  - token/shadow.focus
+  - token/radius.lg
+  - token/color.ring
+  - token/color.ring-focus
   rule_refs:
-  - rule/AX-103
-- id: primitive/dialog
-  name: Dialog
-  states:
-  - default
-  - open
-  token_refs:
-  - token/color.surface-raised
-  - token/radius.dialog
-  - token/shadow.floating
-  - token/space.dialog-padding
-  rule_refs:
-  - rule/QUALITY-102
-- id: primitive/panel
-  name: Panel
-  states:
-  - default
-  token_refs:
-  - token/color.surface
-  - token/color.surface-border
-  - token/radius.surface
-  rule_refs:
-  - rule/LAYOUT-105
-- id: primitive/data-table
-  name: Data table
+  - rule/QUALITY-101
+  - rule/QUALITY-104
+- id: primitive/button
+  name: Button
   states:
   - default
   - hover
-  token_refs:
-  - token/color.surface
-  - token/color.surface-border
-  - token/text.label
-  rule_refs:
-  - rule/LAYOUT-103
-- id: primitive/board-column
-  name: Board column
-  states:
-  - default
-  token_refs:
-  - token/color.surface
-  - token/color.surface-border
-  - token/radius.surface
-  rule_refs:
-  - rule/LAYOUT-104
-- id: primitive/board-card
-  name: Board card
-  states:
-  - default
-  - hover
-  - focus-visible
-  token_refs:
-  - token/color.surface
-  - token/color.surface-hover
-  - token/color.surface-border
-  - token/radius.control
-  - token/shadow.surface
-  rule_refs:
-  - rule/QUALITY-101
-- id: primitive/badge
-  name: Badge
-  states:
-  - default
-  token_refs:
-  - token/color.surface-hover
-  - token/radius.control
-  - token/text.label
-  rule_refs:
-  - rule/QUALITY-101
-- id: primitive/avatar
-  name: Avatar
-  states:
-  - default
-  token_refs:
-  - token/color.surface-border
-  - token/radius.control
-  rule_refs:
-  - rule/QUALITY-101
-- id: primitive/tabs
-  name: Tabs
-  states:
-  - default
   - active
-  - focus-visible
-  token_refs:
-  - token/color.surface-hover
-  - token/color.surface-selected
-  - token/radius.control
-  - token/shadow.focus
-  rule_refs:
-  - rule/AX-104
-- id: primitive/select
-  name: Select
-  states:
-  - default
   - focus-visible
   - disabled
   token_refs:
-  - token/color.surface
+  - token/radius.lg
+  - token/color.primary-hover
+  - token/color.ring
+  - token/color.ring-focus
+  rule_refs:
+  - rule/QUALITY-101
+  - rule/QUALITY-104
+  - rule/AX-101
+- id: primitive/settings-nav
+  name: Settings navigation
+  states:
+  - default
+  - hover
+  - selected
+  - focus-visible
+  token_refs:
+  - token/size.section-nav-default
   - token/color.surface-border
-  - token/radius.control
-  - token/shadow.focus
-  rule_refs:
-  - rule/AX-104
-- id: primitive/empty-state
-  name: Empty state
-  states:
-  - default
-  token_refs:
-  - token/color.muted-foreground
-  - token/color.surface
-  rule_refs:
-  - rule/QUALITY-103
-- id: primitive/skeleton
-  name: Skeleton
-  states:
-  - default
-  token_refs:
   - token/color.surface-hover
-  - token/radius.control
+  - token/color.surface-selected
+  - token/color.ring-focus
   rule_refs:
+  - rule/LAYOUT-107
   - rule/QUALITY-103
-- id: primitive/tooltip
-  name: Tooltip
+  - rule/QUALITY-104
+- id: primitive/nav-item
+  name: Navigation item
   states:
   - default
-  - open
+  - hover
+  - active
+  - selected
+  - focus-visible
   token_refs:
-  - token/color.surface-raised
-  - token/shadow.floating
-  - token/radius.control
+  - token/color.sidebar-accent
+  - token/color.surface-hover
+  - token/color.surface-selected
+  - token/color.ring-focus
   rule_refs:
   - rule/QUALITY-103
+  - rule/QUALITY-104
+  context_bindings:
+    navigation-link:
+      selected: token/color.sidebar-accent
+      hover: token/color.sidebar-accent
+- id: primitive/detail-pane
+  name: Detail pane
+  states:
+  - default
+  - scroll
+  token_refs:
+  - token/color.surface-border
+  rule_refs:
+  - rule/LAYOUT-105

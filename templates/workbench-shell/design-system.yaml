@@ -1,6 +1,6 @@
 schema: design-system/v1
 id: workbench-shell
-version: 2.0.0
+version: 3.0.0
 status: frozen
 capability: page-system
 layers:
@@ -11,30 +11,30 @@ layers:
   layout: core/layout.yaml
   rules: core/rules.yaml
   evidence: core/evidence.yaml
+created_at: '2026-09-15'
+updated_at: '2026-09-15T00:00:00Z'
 layer_digests:
   tokens:
     algorithm: sha256-canonical-json-v1
-    value: 23d2efd83717156f99803a11b69200cc10a67739d96eb6c01dcae53a397691e9
+    value: 93e57f8ef230fce8dc2cedfa17d227230b4cf7516a2e83149456e4332633fc1d
   primitives:
     algorithm: sha256-canonical-json-v1
-    value: 60b52d7c9f035deaf89f449b3aadd3643f118efce4c5671d187a6d06e540b987
+    value: f5fb5ef65f54ab09e231b43e5fbf861585a8adf70ec6ee5598bc6374ba658eb2
   patterns:
     algorithm: sha256-canonical-json-v1
-    value: ce18afed919df198529b43870584d252e1fc12e87abdcd94948335b3e4e84f2c
+    value: 964274515bb1cf821384d945c8f06e0d64ec169283bb3cfaa5ff051a6243bc1c
   page-types:
     algorithm: sha256-canonical-json-v1
-    value: 83cf1ccca4a676b24ee8208c368b8b7e5d4a7f6e696adf7e67332b280f3cc667
+    value: 8630d1643a2ce069509892ca8d0919825da0ecafdfa33437bf80432d9098c61b
   layout:
     algorithm: sha256-canonical-json-v1
-    value: d8ef4d7b294adc9890d7cce637703f893d12c1f2813be9c4bf5aab2337f0e11c
+    value: b18427559a3979aa611d4f625b846550d865c7e10371918123f9bf714ddbadde
   rules:
     algorithm: sha256-canonical-json-v1
-    value: 8cf6177968f531da6c225054912927b5fdb3e169c9e108fbec89f8255f817400
+    value: 9be0afd0f8ed42fe8782c4b65d706e21395dbe5a6a04d8146cfadbd964a1e4aa
   evidence:
     algorithm: sha256-canonical-json-v1
-    value: be4f3becf0e54d4112b6a0a321a10841a33cb4ed662fe7004eec6526cbe1eb14
-created_at: '2026-09-15'
-updated_at: '2026-09-15T00:00:00Z'
+    value: f5b6c10df8e68a7e201228939308b8b2b3591265e736e62642977a9418a04329
 contract_digest:
   algorithm: sha256-canonical-json-v1
-  value: 5fb764de52e8209dc425749a1a48d40c0bfd301d716e2155315de565839d8cba
+  value: 20be2559f7a5074879da0d2eb6f611dc62a52b5d6ddb595b9eb9d34f8dde1a6c

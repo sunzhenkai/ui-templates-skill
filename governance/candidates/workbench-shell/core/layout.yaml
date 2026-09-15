@@ -1,8 +1,8 @@
 schema: design-system-layout/v1
 items:
-- id: route/dashboard-shell
-  name: Dashboard shell
-  page_type: page-type/dashboard
+- id: route/shell
+  name: Workbench shell
+  page_type: page-type/app-shell
   slots:
   - workspace-switcher
   - search
@@ -10,53 +10,428 @@ items:
   - nav-group
   - pin-list
   - rail
+  - header-trigger
   - page-header
   - page-toolbar
   - page-canvas
   - footer-utility
   - chat-fab
   breakpoints:
-  - compact sheet below lg
-  - inset shell from lg
-  - rail trigger hidden from xl
+  - desktop
+  - compact
   rule_refs:
   - rule/LAYOUT-101
+  - rule/LAYOUT-102
   - rule/LAYOUT-103
   - rule/LAYOUT-104
-- id: route/collection-board
-  name: Collection board
-  page_type: page-type/collection
+  - rule/RESP-101
+  placement:
+    id: shell
+    shell_variant: inset
+    regions:
+    - id: region.shell.root
+      role: root
+    - id: region.shell.workspace-switcher
+      role: workspace-switcher
+      parent: region.shell.root
+    - id: region.shell.search
+      role: search
+      parent: region.shell.root
+    - id: region.shell.compose
+      role: compose
+      parent: region.shell.root
+    - id: region.shell.nav-group
+      role: nav-group
+      parent: region.shell.root
+    - id: region.shell.pin-list
+      role: pin-list
+      parent: region.shell.root
+    - id: region.shell.rail
+      role: rail
+      parent: region.shell.root
+    - id: region.shell.header-trigger
+      role: header-trigger
+      parent: region.shell.root
+    - id: region.shell.page-header
+      role: page-header
+      parent: region.shell.root
+    - id: region.shell.page-toolbar
+      role: page-toolbar
+      parent: region.shell.root
+    - id: region.shell.page-canvas
+      role: page-canvas
+      parent: region.shell.root
+    - id: region.shell.footer-utility
+      role: footer-utility
+      parent: region.shell.root
+    - id: region.shell.chat-fab
+      role: chat-fab
+      parent: region.shell.root
+    slots:
+    - id: slot.shell.workspace-switcher
+      role: workspace-switcher
+      region: region.shell.workspace-switcher
+      order: 1
+    - id: slot.shell.search
+      role: search
+      region: region.shell.search
+      order: 2
+    - id: slot.shell.compose
+      role: compose
+      region: region.shell.compose
+      order: 3
+    - id: slot.shell.nav-group
+      role: nav-group
+      region: region.shell.nav-group
+      order: 4
+    - id: slot.shell.pin-list
+      role: pin-list
+      region: region.shell.pin-list
+      order: 5
+    - id: slot.shell.rail
+      role: rail
+      region: region.shell.rail
+      order: 6
+    - id: slot.shell.header-trigger
+      role: header-trigger
+      region: region.shell.header-trigger
+      order: 7
+    - id: slot.shell.page-header
+      role: page-header
+      region: region.shell.page-header
+      order: 8
+    - id: slot.shell.page-toolbar
+      role: page-toolbar
+      region: region.shell.page-toolbar
+      order: 9
+    - id: slot.shell.page-canvas
+      role: page-canvas
+      region: region.shell.page-canvas
+      order: 10
+    - id: slot.shell.footer-utility
+      role: footer-utility
+      region: region.shell.footer-utility
+      order: 11
+    - id: slot.shell.chat-fab
+      role: chat-fab
+      region: region.shell.chat-fab
+      order: 12
+    relations:
+    - type: contains
+      from: region.shell.root
+      to: region.shell.workspace-switcher
+      order: 1
+    - type: contains
+      from: region.shell.root
+      to: region.shell.search
+      order: 2
+    - type: contains
+      from: region.shell.root
+      to: region.shell.compose
+      order: 3
+    - type: contains
+      from: region.shell.root
+      to: region.shell.nav-group
+      order: 4
+    - type: contains
+      from: region.shell.root
+      to: region.shell.pin-list
+      order: 5
+    - type: contains
+      from: region.shell.root
+      to: region.shell.rail
+      order: 6
+    - type: contains
+      from: region.shell.root
+      to: region.shell.header-trigger
+      order: 7
+    - type: contains
+      from: region.shell.root
+      to: region.shell.page-header
+      order: 8
+    - type: contains
+      from: region.shell.root
+      to: region.shell.page-toolbar
+      order: 9
+    - type: contains
+      from: region.shell.root
+      to: region.shell.page-canvas
+      order: 10
+    - type: contains
+      from: region.shell.root
+      to: region.shell.footer-utility
+      order: 11
+    - type: overlay
+      from: region.shell.root
+      to: region.shell.chat-fab
+      order: 12
+    scroll_domains:
+    - id: scroll.shell.canvas
+      axis: block
+      owner: region.shell.page-canvas
+    responsive_modes:
+    - id: mode.desktop
+      viewport: desktop
+    - id: mode.compact
+      viewport: compact
+    geometry:
+    - id: geometry.shell.canvas.padding-start
+      role: padding-block-start
+      token: token/space.2
+    - id: geometry.shell.canvas.padding-end
+      role: padding-inline-end
+      token: token/space.2
+    - id: geometry.shell.canvas.padding-bottom
+      role: padding-block-end
+      token: token/space.2
+    - id: geometry.shell.canvas.radius
+      role: radius
+      token: token/radius.xl
+    - id: geometry.shell.nav-group.width
+      role: size
+      token: token/size.sidebar-default
+    - id: geometry.shell.chat-fab.size
+      role: size
+      token: token/space.chat-launcher-size
+    pattern_refs:
+    - pattern/app-shell
+    evidence_refs:
+    - evidence-layout-shell
+- id: route/board
+  name: Board page
+  page_type: page-type/board
   slots:
   - page-header
   - page-toolbar
   - page-canvas
   breakpoints:
-  - full bleed with 16px page gutter
-  - 1440px detail rail
+  - desktop
   rule_refs:
   - rule/LAYOUT-102
   - rule/LAYOUT-106
-- id: route/detail-document
-  name: Detail document
-  page_type: page-type/detail
+  placement:
+    id: board
+    regions:
+    - id: region.board.root
+      role: root
+    - id: region.board.page-header
+      role: page-header
+      parent: region.board.root
+    - id: region.board.page-toolbar
+      role: page-toolbar
+      parent: region.board.root
+    - id: region.board.page-canvas
+      role: page-canvas
+      parent: region.board.root
+    slots:
+    - id: slot.board.page-header
+      role: page-header
+      region: region.board.page-header
+      order: 1
+    - id: slot.board.page-toolbar
+      role: page-toolbar
+      region: region.board.page-toolbar
+      order: 2
+    - id: slot.board.page-canvas
+      role: page-canvas
+      region: region.board.page-canvas
+      order: 3
+    relations:
+    - type: contains
+      from: region.board.root
+      to: region.board.page-header
+      order: 1
+    - type: contains
+      from: region.board.root
+      to: region.board.page-toolbar
+      order: 2
+    - type: contains
+      from: region.board.root
+      to: region.board.page-canvas
+      order: 3
+    scroll_domains:
+    - id: scroll.board.canvas
+      axis: block
+      owner: region.board.page-canvas
+    responsive_modes:
+    - id: mode.desktop
+      viewport: desktop
+    geometry:
+    - id: geometry.board.page-header.size
+      role: size
+      token: token/space.header-height
+    - id: geometry.board.page-toolbar.size
+      role: size
+      token: token/space.header-height
+    pattern_refs:
+    - pattern/workspace-board
+    evidence_refs:
+    - evidence-layout-board
+- id: route/master-detail
+  name: Master detail page
+  page_type: page-type/master-detail
   slots:
-  - page-header
-  - page-toolbar
   - master-pane
   - detail-pane
+  - context-panel
   breakpoints:
-  - 1440px centered rail
-  - block scroll in detail
+  - desktop
   rule_refs:
   - rule/LAYOUT-105
-- id: route/modal-task
-  name: Modal task
-  page_type: page-type/modal
+  placement:
+    id: master-detail
+    regions:
+    - id: region.detail.root
+      role: root
+    - id: region.detail.master-pane
+      role: master-pane
+      parent: region.detail.root
+    - id: region.detail.detail-pane
+      role: detail-pane
+      parent: region.detail.root
+    - id: region.detail.context-panel
+      role: context-panel
+      parent: region.detail.root
+    slots:
+    - id: slot.detail.master-pane
+      role: master-pane
+      region: region.detail.master-pane
+      order: 1
+    - id: slot.detail.detail-pane
+      role: detail-pane
+      region: region.detail.detail-pane
+      order: 2
+    - id: slot.detail.context-panel
+      role: context-panel
+      region: region.detail.context-panel
+      order: 3
+    relations:
+    - type: horizontal
+      from: region.detail.master-pane
+      to: region.detail.detail-pane
+      order: 1
+    - type: overlay
+      from: region.detail.root
+      to: region.detail.context-panel
+      order: 3
+    scroll_domains:
+    - id: scroll.detail.master
+      axis: block
+      owner: region.detail.master-pane
+    - id: scroll.detail.detail
+      axis: block
+      owner: region.detail.detail-pane
+    responsive_modes:
+    - id: mode.desktop
+      viewport: desktop
+    geometry:
+    - id: geometry.detail.page-header.size
+      role: size
+      token: token/space.header-height
+    pattern_refs:
+    - pattern/master-detail
+    evidence_refs:
+    - evidence-layout-master-detail
+- id: route/settings
+  name: Settings page
+  page_type: page-type/settings
+  slots:
+  - section-nav
+  - page-canvas
+  breakpoints:
+  - desktop
+  - compact
+  rule_refs:
+  - rule/LAYOUT-102
+  - rule/LAYOUT-107
+  placement:
+    id: settings
+    regions:
+    - id: region.settings.root
+      role: root
+    - id: region.settings.section-nav
+      role: section-nav
+      parent: region.settings.root
+    - id: region.settings.page-canvas
+      role: page-canvas
+      parent: region.settings.root
+    slots:
+    - id: slot.settings.section-nav
+      role: section-nav
+      region: region.settings.section-nav
+      order: 1
+    - id: slot.settings.page-canvas
+      role: page-canvas
+      region: region.settings.page-canvas
+      order: 2
+    relations:
+    - type: vertical
+      from: region.settings.root
+      to: region.settings.section-nav
+      order: 1
+    - type: contains
+      from: region.settings.root
+      to: region.settings.page-canvas
+      order: 2
+    scroll_domains:
+    - id: scroll.settings.nav
+      axis: block
+      owner: region.settings.section-nav
+    - id: scroll.settings.canvas
+      axis: block
+      owner: region.settings.page-canvas
+    responsive_modes:
+    - id: mode.desktop
+      viewport: desktop
+    - id: mode.compact
+      viewport: compact
+    geometry:
+    - id: geometry.settings.section-nav.width
+      role: size
+      token: token/size.section-nav-default
+    - id: geometry.settings.section-nav.border
+      role: border
+      token: token/color.surface-border
+    pattern_refs:
+    - pattern/settings-section-nav
+    evidence_refs:
+    - evidence-layout-settings
+- id: route/dialog
+  name: Dialog surface
+  page_type: page-type/dialog
   slots:
   - overlay
-  - dialog-content
   breakpoints:
-  - viewport overlay
+  - desktop
   rule_refs:
   - rule/LAYOUT-105
-  - rule/AX-101
+  - rule/AX-104
+  placement:
+    id: dialog
+    regions:
+    - id: region.dialog.root
+      role: root
+    - id: region.dialog.overlay
+      role: overlay
+      parent: region.dialog.root
+    slots:
+    - id: slot.dialog.overlay
+      role: overlay
+      region: region.dialog.overlay
+      order: 1
+    relations:
+    - type: overlay
+      from: region.dialog.root
+      to: region.dialog.overlay
+      order: 1
+    responsive_modes:
+    - id: mode.desktop
+      viewport: desktop
+    geometry:
+    - id: geometry.dialog.overlay.shadow
+      role: shadow
+      token: token/shadow.floating
+    pattern_refs:
+    - pattern/overlay-dialog
+    evidence_refs:
+    - evidence-layout-dialog

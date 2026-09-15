@@ -61,3 +61,10 @@ checker 的路径域来自 `governance/scope.yaml`：active/release 检查本地
 ```
 
 该命令只验证声明并生成符合 `schemas/governance/sample-promotion-report.schema.json` 的 evidence-only report，`commands_executed` 固定为 false；它不编辑样例、README 或发布元数据。scope exclusions（包括 web-v2/web-v3）会在任何样例 Git lookup 前被拒绝。
+
+## Candidate workspace convention
+
+- Canonical promotion candidate: `governance/candidates/<template-name>/`. This directory is tracked and is the only location read by certification and catalog promotion checks.
+- Transient authoring/certification work: `governance/candidates/.work/<template-name>-<timestamp>/`. It is ignored by Git and must not be used as the promotion source.
+- If a candidate is intentionally outside the repository, pass explicit absolute paths to the Authoring/certification commands; copy only the accepted canonical report, inventory and verification result into `governance/candidates/<template-name>/` before promotion.
+- Do not run `git add -A` or `git add .` from the repository root after creating temporary candidates. Add retained paths explicitly, or use the ignored `.work/` location above.
