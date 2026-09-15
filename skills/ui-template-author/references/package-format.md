@@ -43,6 +43,16 @@ manifest 里的 `layers` 只能声明 capability 范围内文件。缺层是 cap
 
 跨文件身份固定为 `primitive/<slug>`、`pattern/<slug>`、`page-type/<slug>`、`token/<dotted-path>` 和 `rule/<NAMESPACE>-###`。展示名、YAML key、页面标题不是身份。published ID 不复用；替代时旧记录写 `retired`/`superseded` 并指向新 ID。
 
+## Evidence admission
+
+`core/evidence.yaml` 的每条 item 是声明准入的记录：
+
+- `scope`（`surface | product`，缺省 `surface`）：声明适用范围。`product` 表示产品/站点级规则，必须由 `recurrence_refs` 支撑。
+- `surface`（可选）：该证据所属的已采样 surface 标识（页面/scene/视口）。缺省时 validator 从 `locator` 推导 distinct surface。
+- `recurrence_refs`（可选）：同 role 复现本声明的其他 evidence id。`scope: product` 时必须解析到 active evidence，且覆盖 ≥2 个 distinct surface，否则 `RECURRENCE_UNSUPPORTED`。
+
+对 `origin: source | computed` 且 `kind` 不属于 `basis`/`default` 的 item，validator 要求 `locator`（Observation）与非空 `method`/`basis`（Basis）齐备，且 `target` 解析到已声明的 token 路径或 stable entity（Consequence）；缺失报 `CLAIM_ADMISSION_INCOMPLETE`。`origin: default` 的 item 需带 `basis` 或 `decision_id`，但豁免 Consequence。
+
 ## L0–L6 映射
 
 | Authoring 变更标签 | package 目标 |

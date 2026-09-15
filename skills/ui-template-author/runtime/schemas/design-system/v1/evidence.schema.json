@@ -42,6 +42,25 @@
           "target": {
             "type": "string"
           },
+          "scope": {
+            "enum": [
+              "surface",
+              "product"
+            ],
+            "description": "Claim scope. Defaults to `surface` when omitted; `product` requires recurrence_refs covering >=2 distinct sampled surfaces (enforced by the unified validator: RECURRENCE_UNSUPPORTED)."
+          },
+          "recurrence_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Evidence ids that independently reproduce this claim on distinct sampled surfaces; required for scope: product (enforced by the unified validator)."
+          },
+          "surface": {
+            "type": "string",
+            "description": "Optional sampled surface identity (page/scene/viewport). When omitted the validator derives it from locator."
+          },
           "origin": {
             "$ref": "common.schema.json#/$defs/origin"
           },

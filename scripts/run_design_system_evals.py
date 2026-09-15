@@ -354,11 +354,86 @@ def authoring_cases(root_tmp: Path) -> list[dict[str, object]]:
     cases.append({"id": "author-feedback-fingerprint-dedup-contract", "passed": "active fingerprint" in text and "合并去重" in text})
     return cases
 
+def evidence_admission_cases(root_tmp: Path) -> list[dict[str, object]]:
+    """Claim admission (Observation/Basis/Consequence) and recurrence-gated scope."""
+    cases: list[dict[str, object]] = []
+
+    def refresh_digests(target: Path) -> None:
+        manifest_path = target / "design-system.yaml"
+
+        def compute() -> dict:
+            process = subprocess.run(
+                [sys.executable, str(VALIDATOR), "compute-digest", str(manifest_path)],
+                cwd=ROOT, text=True, capture_output=True, check=False,
+            )
+            return json.loads(process.stdout)
+
+        # Layer digests first, then the contract digest over the refreshed manifest.
+        digests = compute()
+        manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+        for name, value in digests["layer_digests"].items():
+            manifest["layer_digests"][name]["value"] = value
+        manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True), encoding="utf-8")
+        manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+        manifest["contract_digest"]["value"] = compute()["contract_digest"]
+        manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+    def build(name: str, extra_items: list[dict[str, object]]) -> dict:
+        target = root_tmp / name
+        shutil.copytree(FIXTURES / "packages/ui-kit-fixture", target)
+        evidence_path = target / "core/evidence.yaml"
+        evidence = yaml.safe_load(evidence_path.read_text(encoding="utf-8"))
+        evidence["items"] = list(evidence.get("items", [])) + extra_items
+        evidence_path.write_text(yaml.safe_dump(evidence, sort_keys=False, allow_unicode=True), encoding="utf-8")
+        refresh_digests(target)
+        _, report = run_validator(target, "package")
+        return report
+
+    product = {
+        "id": "evidence-product", "kind": "rule", "target": "rule/NN-001", "origin": "computed",
+        "source_id": "source-001", "source_revision": "fixture-v1", "locator": "page-a",
+        "method": "computed-style", "confidence": "high", "status": "active",
+        "scope": "product", "surface": "page-a",
+        "recurrence_refs": ["evidence-001", "evidence-002"],
+    }
+    report = build("admission-product-recurrence", [dict(product)])
+    cases.append(result("admission-product-recurrence-accepted", True, report, []))
+
+    dangling = {
+        "id": "evidence-dangling", "kind": "token", "target": "token/nope.missing", "origin": "source",
+        "source_id": "source-001", "source_revision": "fixture-v1", "locator": "nope.css",
+        "method": "computed-style", "confidence": "high", "status": "active",
+    }
+    report = build("admission-dangling", [dangling])
+    cases.append(result("admission-dangling-target-rejected", False, report, ["CLAIM_ADMISSION_INCOMPLETE"]))
+
+    default_no_basis = {
+        "id": "evidence-default-nobasis", "kind": "default", "target": "token/space.md",
+        "origin": "default", "confidence": "medium", "status": "active",
+    }
+    report = build("admission-default-nobasis", [default_no_basis])
+    cases.append(result("admission-default-without-basis-rejected", False, report, ["CLAIM_ADMISSION_INCOMPLETE"]))
+
+    single = dict(product)
+    single["id"] = "evidence-product-single"
+    single["recurrence_refs"] = ["evidence-001"]
+    report = build("admission-single-surface", [single])
+    cases.append(result("admission-single-surface-product-rejected", False, report, ["RECURRENCE_UNSUPPORTED"]))
+
+    target = root_tmp / "admission-legacy-no-scope"
+    shutil.copytree(FIXTURES / "packages/ui-kit-fixture", target)
+    _, report = run_validator(target, "package")
+    cases.append(result("admission-legacy-no-scope-accepted", True, report, []))
+
+    return cases
+
+
 def evaluate(root_tmp: Path) -> dict[str, object]:
     cases: list[dict[str, object]] = authoring_cases(root_tmp)
     cases.extend(certification_cases(root_tmp))
     cases.extend(closure_cases(root_tmp))
     cases.extend(consistency_cases(root_tmp))
+    cases.extend(evidence_admission_cases(root_tmp))
 
     positive_fixtures = (
         ("tokens-only-valid", FIXTURES / "packages/tokens-only-fixture", "package"),

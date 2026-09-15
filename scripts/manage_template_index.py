@@ -8,6 +8,8 @@ import json
 import re
 import shutil
 import sys
+
+import yaml
 from pathlib import Path
 
 HEADER = ["名称", "风格描述", "来源类型", "采集日期", "状态"]
@@ -241,19 +243,86 @@ def _tree_bytes(root: Path) -> dict[str, bytes]:
     return files
 
 
-def check_changeset(before: Path, after: Path, allowed: list[str]) -> dict[str, object]:
+ENTITY_FILES = ("primitives.yaml", "patterns.yaml", "page-types.yaml", "layout.yaml", "rules.yaml")
+
+
+def _stable_id_status(root: Path) -> dict[str, str]:
+    """Map stable entity/rule id -> declared status (missing status means active)."""
+    found: dict[str, str] = {}
+    if not root.is_dir():
+        return found
+    for base in (root / "core", root):
+        if not base.is_dir():
+            continue
+        for name in ENTITY_FILES:
+            path = base / name
+            if not path.is_file():
+                continue
+            try:
+                document = yaml.safe_load(path.read_text(encoding="utf-8"))
+            except yaml.YAMLError:
+                continue
+            if not isinstance(document, dict):
+                continue
+            for item in document.get("items", []):
+                if not isinstance(item, dict):
+                    continue
+                entity_id = item.get("id")
+                if not isinstance(entity_id, str) or not entity_id:
+                    continue
+                status = item.get("status")
+                found[entity_id] = status if isinstance(status, str) else "active"
+    return found
+
+
+def detect_silent_removal(before: Path, after: Path, declared: list[str] | None = None) -> dict[str, object]:
+    """An active id that vanishes without being retired/superseded or declared is a silent removal."""
+    before_status = _stable_id_status(before)
+    after_status = _stable_id_status(after)
+    declared_set = set(declared or [])
+    removed: list[str] = []
+    silent: list[str] = []
+    for entity_id in sorted(before_status):
+        if before_status[entity_id] != "active":
+            continue
+        status_after = after_status.get(entity_id)
+        if status_after == "active":
+            continue
+        removed.append(entity_id)
+        declared_now = status_after in ("retired", "superseded") or entity_id in declared_set
+        if not declared_now:
+            silent.append(entity_id)
+    return {"removed": removed, "silent_removals": silent}
+
+
+def check_changeset(
+    before: Path, after: Path, allowed: list[str], removed: list[str] | None = None,
+) -> dict[str, object]:
     if not before.is_dir() or not after.is_dir():
-        return {"ok": False, "code": "CHANGESET_ROOT_MISSING", "changed": [], "undeclared": [], "allowed": list(allowed)}
+        return {
+            "ok": False, "code": "CHANGESET_ROOT_MISSING", "changed": [], "undeclared": [],
+            "allowed": list(allowed), "removed": [], "silent_removals": [],
+        }
     left, right = _tree_bytes(before), _tree_bytes(after)
     allowed_set = set(allowed)
     changed = sorted(path for path in set(left) | set(right) if left.get(path) != right.get(path))
     undeclared = [path for path in changed if path not in allowed_set]
+    removal = detect_silent_removal(before, after, removed)
+    silent = removal["silent_removals"]
+    if undeclared:
+        code = "CHANGESET_UNDECLARED"
+    elif silent:
+        code = "SILENT_DECISION_REMOVAL"
+    else:
+        code = "CHANGESET_OK"
     return {
-        "ok": not undeclared,
-        "code": "CHANGESET_OK" if not undeclared else "CHANGESET_UNDECLARED",
+        "ok": not undeclared and not silent,
+        "code": code,
         "changed": changed,
         "undeclared": undeclared,
         "allowed": sorted(allowed_set),
+        "removed": removal["removed"],
+        "silent_removals": silent,
     }
 
 
@@ -444,12 +513,17 @@ def cmd_apply_close(apply_root: Path, as_json: bool) -> int:
     return 0 if payload["ok"] else 1
 
 
-def cmd_check_changeset(before: Path, after: Path, allowed: list[str], as_json: bool) -> int:
-    payload = check_changeset(before, after, allowed)
+def cmd_check_changeset(
+    before: Path, after: Path, allowed: list[str], as_json: bool, removed: list[str] | None = None,
+) -> int:
+    payload = check_changeset(before, after, allowed, removed)
     if as_json:
         _print_json(payload)
     else:
-        print(f"{payload['code']}\tchanged={payload['changed']}\tundeclared={payload['undeclared']}")
+        print(
+            f"{payload['code']}\tchanged={payload['changed']}\tundeclared={payload['undeclared']}"
+            f"\tsilent_removals={payload['silent_removals']}"
+        )
     return 0 if payload["ok"] else 1
 
 
@@ -510,10 +584,11 @@ def main() -> int:
     changeset.add_argument("--before", type=Path, required=True)
     changeset.add_argument("--after", type=Path, required=True)
     changeset.add_argument("--allow", action="append", default=[], dest="allowed")
+    changeset.add_argument("--removed", action="append", default=[], dest="removed")
     changeset.add_argument("--json", action="store_true")
     args = parser.parse_args()
     if args.command == "check-changeset":
-        return cmd_check_changeset(args.before, args.after, args.allowed, args.json)
+        return cmd_check_changeset(args.before, args.after, args.allowed, args.json, args.removed)
     if args.command == "apply-close":
         return cmd_apply_close(args.apply_root, args.json)
     index, templates = _resolve_library(args)

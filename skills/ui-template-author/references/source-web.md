@@ -19,3 +19,7 @@
 ## 置信度
 
 不要笼统写 high：layout/visual/components 分维度评估；computed style 定位稳定通常 high，动态/跨域样式或状态注入通常 medium。overall 不高于最弱必需维度。需要登录但无授权、关键页面不可达或响应式只采一档时，明确降低 coverage/confidence。
+
+## 声明准入
+
+写入前每条候选声明都要过 [extraction-layers.md](extraction-layers.md) 的三证（Observation/Basis/Consequence）与 scope 门槛：来源只能支撑单 surface 时声明 `surface` scope，不得冒充 `product`；证据不足以凑齐三证或 recurrence 时 omit 或收窄 scope，不得以 default、低 confidence 或改 `origin` 绕过（validator 报 `CLAIM_ADMISSION_INCOMPLETE` / `RECURRENCE_UNSUPPORTED`）。

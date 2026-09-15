@@ -104,8 +104,16 @@
       "fixture_sha256": "1caa4cd8dd8e6872fec049d11a9a8d0ab76571e683a6193799fb9bd334cff36c",
       "status": "passed"
     },
+    "authoring-claim-admission": {
+      "fixture_sha256": "1c7b2073e72ee9f993a7ed7d4635ea4041211461defb6d9b33ef61a542d4d9fd",
+      "status": "passed"
+    },
     "authoring-layered-extraction": {
       "fixture_sha256": "b696ad5df8669a59a4d8aea13a4c4f0ac380c94c104b1162ee312b609bfd0afb",
+      "status": "passed"
+    },
+    "authoring-no-silent-removal": {
+      "fixture_sha256": "1c7b2073e72ee9f993a7ed7d4635ea4041211461defb6d9b33ef61a542d4d9fd",
       "status": "passed"
     },
     "authoring-normalizes-and-fills-defaults": {

@@ -19,3 +19,7 @@
 ## 置信度与 coverage
 
 风格清晰、画布尺寸已知且多图一致时可 medium；模糊、单图、未知缩放通常 low。不得仅因颜色取样成功就把 layout/components 标 high。未出现的页面、平台、主题、组件和状态分别标 defaulted 或 unsupported。
+
+## 声明准入
+
+写入前每条候选声明都要过 [extraction-layers.md](extraction-layers.md) 的三证（Observation/Basis/Consequence）与 scope 门槛：来源只能支撑单 surface 时声明 `surface` scope，不得冒充 `product`；证据不足以凑齐三证或 recurrence 时 omit 或收窄 scope，不得以 default、低 confidence 或改 `origin` 绕过（validator 报 `CLAIM_ADMISSION_INCOMPLETE` / `RECURRENCE_UNSUPPORTED`）。

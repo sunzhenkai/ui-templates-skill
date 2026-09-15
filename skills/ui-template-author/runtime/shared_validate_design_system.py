@@ -376,6 +376,115 @@ def walk_tokens(node: Any, prefix: str = "") -> set[str]:
     return found
 
 
+def _declared_token_paths(node: Any, prefix: str = "") -> set[str]:
+    """All dotted token paths, including group paths, not just leaves."""
+    paths: set[str] = set()
+    if isinstance(node, dict):
+        for key, value in node.items():
+            path = f"{prefix}.{key}" if prefix else str(key)
+            paths.add(path)
+            if isinstance(value, dict) and "value" not in value:
+                paths |= _declared_token_paths(value, path)
+    return paths
+
+
+def _evidence_target_resolves(target: Any, surfaces: set[str]) -> bool:
+    if not isinstance(target, str) or not target.strip():
+        return False
+    if target in surfaces:
+        return True
+    parts = [part for part in target.split("/") if part]
+    return bool(parts) and all(part in surfaces for part in parts)
+
+
+def _declared_surfaces(layers: dict[str, Path], ids: dict[str, str]) -> set[str]:
+    surfaces: set[str] = set(ids)
+    tokens_path = layers.get("tokens")
+    if tokens_path and tokens_path.is_file():
+        for path in _declared_token_paths(load_document(tokens_path).get("tokens", {})):
+            surfaces.add(path)
+            surfaces.add(f"token/{path}")
+    return surfaces
+
+
+def _evidence_items(layers: dict[str, Path]) -> list[dict[str, Any]]:
+    path = layers.get("evidence")
+    if not path or not path.is_file():
+        return []
+    document = load_document(path)
+    if not isinstance(document, dict):
+        return []
+    return [item for item in document.get("items", []) if isinstance(item, dict)]
+
+
+def _evidence_surface(item: dict[str, Any]) -> str | None:
+    for key in ("surface", "locator", "target"):
+        value = item.get(key)
+        if isinstance(value, str) and value.strip():
+            return value
+    return None
+
+
+def validate_claim_admission(
+    layers: dict[str, Path],
+    ids: dict[str, str],
+    report: Report,
+) -> None:
+    """Three-proof admission: Observation, Basis and Consequence per evidence item."""
+    items = _evidence_items(layers)
+    if not items:
+        return
+    by_id = {item.get("id"): item for item in items if isinstance(item.get("id"), str)}
+    surfaces = _declared_surfaces(layers, ids)
+    for evidence_id in sorted(by_id):
+        item = by_id[evidence_id]
+        where = f"evidence.{evidence_id}"
+        origin = item.get("origin")
+        kind = item.get("kind")
+        if origin == "default":
+            if not (item.get("basis") or item.get("decision_id")):
+                report.add(
+                    "CLAIM_ADMISSION_INCOMPLETE",
+                    where,
+                    "default evidence requires basis or decision_id",
+                )
+            continue
+        if kind in ("basis", "default"):
+            continue
+        if origin not in ("source", "computed"):
+            continue
+        if not item.get("locator"):
+            report.add("CLAIM_ADMISSION_INCOMPLETE", where, "observed evidence requires a locator (Observation)")
+        if not (item.get("method") or item.get("basis")):
+            report.add("CLAIM_ADMISSION_INCOMPLETE", where, "observed evidence requires method or basis (Basis)")
+        if not _evidence_target_resolves(item.get("target"), surfaces):
+            report.add(
+                "CLAIM_ADMISSION_INCOMPLETE",
+                where,
+                "evidence target does not resolve to a declared token path or stable entity (Consequence)",
+            )
+    for evidence_id in sorted(by_id):
+        item = by_id[evidence_id]
+        if item.get("scope") != "product":
+            continue
+        where = f"evidence.{evidence_id}"
+        references = [ref for ref in item.get("recurrence_refs", []) if isinstance(ref, str)]
+        problems: list[str] = []
+        recurrence_surfaces: set[str] = set()
+        for reference in references:
+            target_item = by_id.get(reference)
+            if target_item is None or target_item.get("status") == "superseded":
+                problems.append(f"recurrence_ref {reference} does not resolve to active evidence")
+                continue
+            surface = _evidence_surface(target_item)
+            if surface:
+                recurrence_surfaces.add(surface)
+        if len(recurrence_surfaces) < 2:
+            problems.append("product scope requires at least two distinct sampled surfaces")
+        if problems:
+            report.add("RECURRENCE_UNSUPPORTED", where, "; ".join(problems))
+
+
 def collect_entities(layers: dict[str, Path], report: Report) -> tuple[dict[str, str], dict[str, list[str]], dict[str, Any]]:
     ids: dict[str, str] = {}
     refs: dict[str, list[str]] = {}
@@ -1037,6 +1146,7 @@ def validate_target(target: Path, kind: str, *, require_component_family: bool =
     validate_coverage_and_confidence(target, report)
     ids, refs, documents = collect_entities(layers, report)
     validate_references(ids, refs, report)
+    validate_claim_admission(layers, ids, report)
     validate_primitive_contracts(layers, documents, report)
     validate_placement(manifest, layers, ids, documents, report)
     report.component_family = derive_component_family(manifest, layers, ids)

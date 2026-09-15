@@ -19,3 +19,7 @@ source locator 使用标题层级 + 段落/页码/表格单元格（例如 `§Re
 ## 置信度与 coverage
 
 layout、visual、components 分维度记录：明确布局规则可 high，缺视觉参考时 visual 不高于 medium；overall 不高于最弱必需维度。文档未定义的主题、平台、页面模式、组件和状态归入 defaulted/unsupported，不能因已补默认值而标 observed。
+
+## 声明准入
+
+写入前每条候选声明都要过 [extraction-layers.md](extraction-layers.md) 的三证（Observation/Basis/Consequence）与 scope 门槛：来源只能支撑单 surface 时声明 `surface` scope，不得冒充 `product`；证据不足以凑齐三证或 recurrence 时 omit 或收窄 scope，不得以 default、低 confidence 或改 `origin` 绕过（validator 报 `CLAIM_ADMISSION_INCOMPLETE` / `RECURRENCE_UNSUPPORTED`）。

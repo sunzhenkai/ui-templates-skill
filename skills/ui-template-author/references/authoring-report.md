@@ -6,8 +6,10 @@ Report 是稳定 JSON envelope `report_schema_version: 1`。成功 structural �
 - fidelity `schema_version/profile/conformance/scope/canonical_digest`；
 - replay identity 与 `declared = resolved = executed = passed > 0`；
 - eval runner identity/fingerprint 与 `declared = parsed = executed > 0`；
+- 声明准入摘要：本次提升的声明数、因未过三证被 omit 的候选数、`product` scope 声明数与其 recurrence surface 数。
 - production INDEX before/after digest、`unchanged_during_gate: true`，以及是否显式 promoted。
 - catalog 领养决定：未领养为 `catalog_adopted: false`；领养则记录模板 name/version/digest、catalog 来源 locator 与项目 `templates/<name>/` 结果。
+- `removal_set`：本次 update 相对上一 published 版本移除的 active stable entity/rule ID 列表（可为空）。静默移除（既不在 `removal_set`，也未在 candidate 标 `retired`/`superseded`）SHALL 以 `SILENT_DECISION_REMOVAL` 阻断，且不 promotion。
 
 示例（省略非关键计数）：
 
@@ -31,7 +33,8 @@ Report 是稳定 JSON envelope `report_schema_version: 1`。成功 structural �
     "executed": 12,
     "passed": 12
   },
-  "production_index": {"unchanged_during_gate": true, "promoted": true}
+  "production_index": {"unchanged_during_gate": true, "promoted": true},
+  "removal_set": []
 }
 ```
 

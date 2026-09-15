@@ -38,6 +38,7 @@ class ContractEvalTests(unittest.TestCase):
             "scripts/contract_eval/runner.py",
             "scripts/manage_template_index.py",
             "tests/fixtures/eval/script-contracts.yaml",
+            "tests/fixtures/eval/admission-contracts.yaml",
             "tests/fixtures/eval/llm-contracts.yaml",
             "tests/fixtures/eval/loop-contracts.yaml",
             "tests/fixtures/eval/catalog-contracts.yaml",
@@ -136,6 +137,7 @@ class ContractEvalTests(unittest.TestCase):
             "apply-style-consistency-contract", "apply-information-semantics-contract",
             "apply-placement-review-contract",
             "author-placement-source-gate", "apply-placement-closure",
+            "authoring-claim-admission", "authoring-no-silent-removal",
             "design-standalone-complete", "design-primitives-not-complete", "design-raw-token-fail",
             "design-no-freeze-apply-optional", "design-handoff-author", "design-handoff-apply",
             "design-task-classes", "design-scanner-gate-extended",
@@ -156,7 +158,7 @@ class ContractEvalTests(unittest.TestCase):
                 actual_ids.add(case["id"])
                 judges[case["judge"]] += 1
         self.assertEqual(expected_ids, actual_ids)
-        self.assertEqual({"script": 67, "llm": 2}, judges)
+        self.assertEqual({"script": 69, "llm": 2}, judges)
         self.assertEqual(
             {
                 "skills/ui-template-author/evals/cases.yaml",
@@ -171,7 +173,7 @@ class ContractEvalTests(unittest.TestCase):
         first = run(ROOT)
         second = run(ROOT)
         self.assertEqual("passed", first["status"])
-        self.assertEqual({"declared": 69, "parsed": 69, "executed": 69, "script": 67, "llm": 2}, first["counts"])
+        self.assertEqual({"declared": 71, "parsed": 71, "executed": 71, "script": 69, "llm": 2}, first["counts"])
         self.assertEqual("matched", first["baseline"]["status"])
         self.assertEqual({"added": [], "removed": [], "changed": []}, first["baseline"]["diff"])
         self.assertEqual(first, second)

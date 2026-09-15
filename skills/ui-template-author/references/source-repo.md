@@ -80,3 +80,7 @@ Capture 从声明 scope 的 canonical theme/entry/definitions 出发，沿显式
 仅 Generate-from-source 使用 `runtime/run_authoring_gate.py`（它要求 `--source-root`，因为这次本来就有 session source）。候选 `fidelity.yaml`、capture receipt、candidate INDEX 都先写 staging。gate 重复 capture 并比较完整 receipt，随后要求 validator portable checks + 对该 session source 的 structural replay、Authoring eval 的 `declared = parsed = executed` 全通过，才允许显式 promotion。
 
 对已发布模板做 portable 校验时不要调用该 gate，也不要为了满足它的 `--source-root` 去找历史仓库。任何失败均保持 production `templates/INDEX.md` digest 不变。报告字段与降级措辞见 [authoring-report.md](authoring-report.md)。
+
+## 声明准入
+
+写入前每条候选声明都要过 [extraction-layers.md](extraction-layers.md) 的三证（Observation/Basis/Consequence）与 scope 门槛：来源只能支撑单 surface 时声明 `surface` scope，不得冒充 `product`；证据不足以凑齐三证或 recurrence 时 omit 或收窄 scope，不得以 default、低 confidence 或改 `origin` 绕过（validator 报 `CLAIM_ADMISSION_INCOMPLETE` / `RECURRENCE_UNSUPPORTED`）。

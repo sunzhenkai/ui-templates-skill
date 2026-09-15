@@ -214,3 +214,33 @@ cases:
       must_not:
         - 变体只有名字无样式契约
     revision: close-state-presentation-blind-spots
+  - id: authoring-claim-admission
+    skill: ui-template-author
+    category: validation-gate
+    description: 提升进 package 的声明必须过三证准入（Observation/Basis/Consequence），scope 门槛与 no-op pass 写入 skill。
+    given: 候选声明缺 locator、basis 或 target 不解析到已声明 token/entity
+    fixture: tests/fixtures/eval/admission-contracts.yaml#authoring-claim-admission
+    fixture_sha256: 1c7b2073e72ee9f993a7ed7d4635ea4041211461defb6d9b33ef61a542d4d9fd
+    judge: script
+    expect:
+      must:
+        - skill 与 reference 写明三证准入与 recurrence scope 门槛
+        - validator 报 CLAIM_ADMISSION_INCOMPLETE / RECURRENCE_UNSUPPORTED
+      must_not:
+        - 以 default、低 confidence 或改 origin 绕过准入写入
+    revision: close-state-presentation-blind-spots
+  - id: authoring-no-silent-removal
+    skill: ui-template-author
+    category: validation-gate
+    description: update 不得静默移除既有 active stable entity/rule ID。
+    given: candidate 相对上一 published 版本丢弃 active rule/primitive/pattern ID
+    fixture: tests/fixtures/eval/admission-contracts.yaml#authoring-no-silent-removal
+    fixture_sha256: 1c7b2073e72ee9f993a7ed7d4635ea4041211461defb6d9b33ef61a542d4d9fd
+    judge: script
+    expect:
+      must:
+        - 未声明丢失报 SILENT_DECISION_REMOVAL 并保持 production INDEX 原字节
+        - 报告 removal_set
+      must_not:
+        - rewrite 时顺手删 ID 而不记录 retired/superseded
+    revision: close-state-presentation-blind-spots

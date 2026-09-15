@@ -1,0 +1,40 @@
+schema_version: 1
+cases:
+  authoring-claim-admission:
+    assertions:
+    - type: file_contains
+      path: skills/ui-template-author/SKILL.md
+      all:
+      - 三证准入
+      - Observation
+      - Basis
+      - Consequence
+      - no-op pass
+      - SILENT_DECISION_REMOVAL
+    - type: file_contains
+      path: skills/ui-template-author/references/extraction-layers.md
+      all:
+      - 声明准入
+      - Observation
+      - Basis
+      - Consequence
+      - recurrence
+    - type: file_contains
+      path: skills/ui-template-author/references/source-web.md
+      all:
+      - 声明准入
+      - CLAIM_ADMISSION_INCOMPLETE
+      - RECURRENCE_UNSUPPORTED
+  authoring-no-silent-removal:
+    assertions:
+    - type: file_contains
+      path: skills/ui-template-author/SKILL.md
+      all:
+      - 静默移除
+      - SILENT_DECISION_REMOVAL
+      - removal_set
+    - type: file_contains
+      path: skills/ui-template-author/references/authoring-report.md
+      all:
+      - removal_set
+      - SILENT_DECISION_REMOVAL

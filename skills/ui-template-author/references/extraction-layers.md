@@ -2,6 +2,18 @@
 
 L0–L6 只是变更集合的标签，不是七层完成仪式。从源创建或更新必须声明**本次改哪些路径或组件**；未纳入的文件保持原字节。禁止用“3–5 个代表组件”冒充完整 coverage。
 
+## 声明准入（写入前的统一前置）
+
+四种来源（web/repo/image/doc）只决定**如何采集**；写入 package 前的准入判据一致。每条候选声明必须过三证，缺一即 omit，不得降级写入：
+
+1. **Observation**：来自 `meta.sources[]` 已声明来源的可观测证据（evidence `locator`）。
+2. **Basis**：可复核依据（`method`、可解析 revision，或带 `basis`/`decision_id` 的 default）。
+3. **Consequence**：evidence `target` 解析到已声明的 token 路径或 stable entity/rule id，且该声明会改变 Apply 的实现选择。
+
+scope 分 `surface` 与 `product`：`product` 声明要求同一 role 上 ≥2 distinct sampled surface 的 recurrence 证据；不足时收窄为 `surface`，不得用单 surface 证据冒充产品级规则。
+
+Index 前执行 no-op pass：删除组件清单式罗列、对 YAML 具名值的重复散文、以及「保持精致」「注意一致性」一类不改变产物的句子。保留的每条 statement 必须指向具体 token/pattern/state/choice。
+
 ## 标签（可选，用于命名变更集合）
 
 | 标签 | 典型路径 |

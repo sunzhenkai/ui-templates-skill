@@ -39,6 +39,10 @@ npx skills add sunzhenkai/ui-templates-skill -s ui-template-author -s ui-templat
 - Primitive、Pattern、Page Type、Token 和 Rule 使用 Stable Entity ID；展示名不是身份。published ID 不复用，替代时保留 retired/superseded 说明。
 - `fidelity.yaml` profile v1 只表达 `layout_scenes`、`component_geometry`、`state_presentations` 三类技术栈无关 observable；不发布 AST/call graph/source snapshot，不规定框架、DOM、CSS class 或 stack adapter。
 - token leaf 统一含 `value`、适用 `unit`、`origin: source | computed | estimated | default`。缺口用有 basis 的 default，不留给 Apply 猜测。
+- 每条提升进 package 的声明必须过三证准入：Observation（可观测证据 locator）、Basis（可复核 method/revision 或带 basis 的 default）、Consequence（`target` 解析到已声明 token/entity，且会改变实现选择）。缺一即 omit，禁止降级写入。
+- 声明为 `product` scope 的规则必须由同一 role 上 ≥2 distinct sampled surface 的 recurrence 证据支撑；不足时收窄为 `surface` scope，不得用单 surface 证据冒充产品级规则。
+- prose/rules 只保留会改变实现选择的陈述；Index 前执行 no-op pass，删除组件清单式罗列、重复 YAML 与泛泛建议。
+- update 不得静默移除既有 active stable entity/rule ID：移除必须显式记为 `retired`/`superseded` 或在 change-set 声明，报告 `removal_set`；未声明丢失报 `SILENT_DECISION_REMOVAL`。
 - Non-negotiables 与跨文档规则使用稳定 rule ID；coverage 对声明项作 observed/defaulted/unsupported 完整互斥分类。
 - 来源、locator、revision、confidence、asset license/redistribution/privacy 与 default basis 都进入 evidence。
 - `meta.sources[]` 是出处身份，不是文件系统绑定。Session source 只存在于本次用户明确给出的导入/从源更新；已发布模板缺 checkout 时走 portable 校验，禁止向用户索要历史本地路径、扫描 sibling/`/tmp`/`example/**` 或按 ref clone。

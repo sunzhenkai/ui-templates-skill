@@ -70,6 +70,26 @@ def _eval_passed(payload: Any) -> bool:
     return all(isinstance(value, int) and not isinstance(value, bool) for value in values) and values[0] > 0 and len(set(values)) == 1
 
 
+def _index_tool():
+    """Load the sibling manage_template_index.py (same tree in repo and installed runtime)."""
+    import importlib.util
+
+    module_path = Path(__file__).resolve().parents[1] / "manage_template_index.py"
+    spec = importlib.util.spec_from_file_location("manage_template_index", module_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("MANAGE_TEMPLATE_INDEX_UNIMPORTABLE")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _prior_template_dir(production_index: Path, name: str | None) -> Path | None:
+    if not name:
+        return None
+    candidate = production_index.parent / name
+    return candidate if candidate.is_dir() else None
+
+
 def _atomic_copy(source: Path, destination: Path) -> None:
     data = source.read_bytes()
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -88,7 +108,7 @@ def _atomic_copy(source: Path, destination: Path) -> None:
 def run_authoring_gate(
     *, request_path: Path, source_root: Path, candidate_template: Path, candidate_index: Path,
     production_index: Path, validator: Path, eval_runner: Path, receipt_out: Path,
-    promote_index: bool = False, cwd: Path | None = None,
+    promote_index: bool = False, removed: list[str] | None = None, cwd: Path | None = None,
 ) -> dict[str, Any]:
     """Session-source staging gate only.
 
@@ -105,7 +125,7 @@ def run_authoring_gate(
             "gate": {"capture": "failed", "reproducibility": "failed", "validation": "failed", "eval": "failed"},
             "capture": None, "profile": None, "replay": {"status": "not-run"}, "eval": None,
             "production_index": {"before_digest": before, "after_digest": before, "unchanged_during_gate": True, "promoted": False},
-            "degradation": None, "issues": [{"code": "EXCLUDED_EXAMPLE_PATH"}],
+            "degradation": None, "removal_set": [], "issues": [{"code": "EXCLUDED_EXAMPLE_PATH"}],
         }
     before = _file_digest(production_index)
     issues: list[dict[str, Any]] = []
@@ -221,6 +241,25 @@ def run_authoring_gate(
             elif profile.get("conformance") == "structural" and profile.get("unresolved"):
                 issues.append({"code": "STRUCTURAL_UNRESOLVED"})
 
+    removal_set: list[str] = []
+    prior_name = None
+    meta_path = candidate_template / "meta.yaml"
+    if meta_path.is_file():
+        try:
+            prior_name = load_document(meta_path).get("name")
+        except Exception:
+            prior_name = None
+    prior_dir = _prior_template_dir(production_index, prior_name)
+    if prior_dir is not None:
+        try:
+            removal = _index_tool().detect_silent_removal(prior_dir, candidate_template, removed)
+        except Exception as exc:
+            issues.append({"code": "SILENT_DECISION_REMOVAL", "message": str(exc)})
+        else:
+            removal_set = [str(item) for item in removal["removed"]]
+            if removal["silent_removals"]:
+                issues.append({"code": "SILENT_DECISION_REMOVAL", "removed": removal["silent_removals"]})
+
     if not issues:
         eval_command = _command(eval_runner, ["--skill", "ui-template-author"])
         returncode, eval_payload, stderr = _run_json(eval_command, cwd)
@@ -278,6 +317,7 @@ def run_authoring_gate(
             "promoted": promoted,
         },
         "degradation": degradation,
+        "removal_set": removal_set,
         "issues": sorted(issues, key=canonical_json),
     }
     return report
