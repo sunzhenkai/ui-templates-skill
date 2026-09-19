@@ -11,6 +11,7 @@
    - 模板身份：`manage_template_index.py resolve <name> --json` 或 validator 输出的 meta version + contract digest；catalog 是否有同名模板；
    - 模板 provenance：`meta.sources[].ref/revision/captured_at`（候选来源身份的一部分，进入计划「模板来源与重建路径」行；provenance 不是 session source，不得据此自行 clone 或读取路径）；
    - 输出现状：输出根是否存在、是否含应用源码、checkpoint 是否有效。
+   - 生成物入库基线：`git ls-files -- example/<name>` 是否命中输出根或历史 `web-v*/`（命中即待确认项），根 `.gitignore` 是否忽略 `example/*/web/`；`prompts/**` 等既有跟踪内容单独记录，不属生成物。
 3. 用户陈述的现状与实际不符（如“web 已面目全非”但实际无应用源码）时如实记录，不阻塞、不虚构。
 
 ## Step 1 — 信息完整性校验与计划确认（共用 gate）
@@ -18,6 +19,7 @@
 按 SKILL.md「信息完整性校验与计划确认」执行：跑完校验清单 → 输出固定格式执行计划 → 等待用户显式确认。本模式特别核对的项：
 
 - 删除清单逐条路径（含 `templates/<name>`、输出根与历史 `web-v*/`）；清单内有未提交变更 → 待确认项；
+- **生成物入库**：输出根或历史 `web-v*/` 已被 git 跟踪、或根 `.gitignore` 未忽略输出根 → 待确认项；本 skill 无论确认结果如何都不执行 `git add`/`git commit`，跟踪文件去留由用户在确认中决定；
 - **template 来源（必为待确认项，不得代选）**：计划列出候选来源及其实际身份——catalog published 副本（version / contract digest / meta.sources 摘要）与/或用户本会话可提供的 session source——由用户显式选定。仅 catalog 可用时也要确认「领养 catalog 副本（含其来源身份）」这一决定本身，不得静默执行；用户要从源重建则必须给出 session source；
 - greenfield 栈选择：用户请求或 prompts 已声明 → 记录来源；未声明 → 待确认项（十层闭集）；
 - 需求源与 included/deferred/excluded 范围。
@@ -43,6 +45,7 @@ rm -rf -- example/<name>/web-v*/   # 仅当存在历史版本目录
 ```
 
 - 删除后 `find example/<name> templates/<name> -type f` 证明范围；剩余文件只允许是 `example/<name>/prompts/**`、`example/<name>/` 级配置（`.gitignore`、`.oxlintrc.json` 等）。
+- 删除清单内含 git 跟踪文件时，删除后 `git status` 出现 deletions 属预期：原样记入报告「生成物入库」行，本 skill 不执行 `git add`/`git commit` 去提交或掩盖这些 deletions。
 - `retire`/`delete` 任一步失败（如行不存在、状态非法）→ 停止并报告，不手工改 INDEX。
 - 若 Intake 发现输出根存在**有效** `.ui-template-apply/checkpoint.yaml` 且用户意图是续跑而非重删 → Step 1 计划改为续跑（简版确认），不执行本步删除；用户显式要求重删时不适用此豁免。
 
@@ -90,6 +93,7 @@ python3 skills/ui-template-apply/runtime/check_active_instance.py validate examp
 3. 每完成一个 phase 在测试报告记录，便于中断后续跑。
 4. 执行顺序（判定器已知局限）：`architecture-site` 必须先于 `adopt_package` 运行——判定器跳过 `.git`/`.ui-template-apply` 但不跳过 `.ui-template-design/`，adopt 之后再判定会把 Active Instance 误报 `existing`。若 adopt 已发生，以删除前 find 证据 + `--explicit-greenfield` 处置并在报告偏差节说明。
 5. 模板版本晋升后的重基序列（Impact-based Resume 全相位重开属预期，非故障）：按新契约更新 01-token-map / 02-routes / 04-components 的决策、`template_refs` 与 `pattern_refs` → 重算全部工件 digest → checkpoint `stable_ids` 并入新增 pattern/rule → 重绑 contract/template/binding digest 与 source_identity → Phase 8 证据全部重取后方可 complete。
+6. 生成完成后核对 `git status --short`：输出根下不得出现任何 staged（`A`/`M`/`R`）或新跟踪项，新文件应为 untracked 或被 `.gitignore` 忽略；异常记入报告「生成物入库」行，不擅自改根 `.gitignore`、不执行 `git add`。
 
 ## Step 5 — 回归与报告
 
@@ -103,4 +107,4 @@ make validate        # 或 /tmp/ui-template-governance-venv/bin/python scripts/v
   2. 测试 pins：`FIXED_REVISION` / `FIXED_CLOSURE_DIGEST`（fixture graph 变更后按测试 materialize 的同款 commit message/作者/日期重算）、eval `counts`/judges 计数、`test_contract_eval` 用例 id 注册表；
   3. eval 集合一致性：用例 `revision` 必须等于集合级 `revision`（否则 `EVAL_PARSE_FAILURE ... revision does not match collection`）；baseline 按.fixture 文件整体 sha 对账，新增用例必须登记，否则 `BASELINE_DIFF`。
 - example web 自身的构建/lint/测试属 apply 产物质量，在 Step 4 内完成；root governance 不以 web 质量决定模板通过。
-- 按 SKILL.md 报告模板输出（含「计划确认」行）；失败时给出阻断 gate 与 issue code，并如实申报 `templates/INDEX.md` 实际状态与已执行的回滚动作。
+- 按 SKILL.md 报告模板输出（含「计划确认」与「生成物入库」行）；失败时给出阻断 gate 与 issue code，并如实申报 `templates/INDEX.md` 实际状态与已执行的回滚动作。

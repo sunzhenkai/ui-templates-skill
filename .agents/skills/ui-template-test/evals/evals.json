@@ -4,19 +4,25 @@
     {
       "id": 1,
       "prompt": "workbench-shell 的 example web 已经改得面目全非了，帮我把 template 和 example web 都删掉，用仓库最新的 skill 从头重建一遍，别参考以前的文件",
-      "expected_output": "判定为干净模式：Step 0 只读收集事实（git 状态、INDEX 行、checkpoint 状态、模板身份）；Step 1 信息完整性校验后输出固定格式执行计划（删除清单逐条路径、template 来源作为待确认项列出候选来源及其实际身份 [catalog 副本 version/digest/meta.sources 或 session source] 由用户显式选定、栈选择来源、需求源与范围、回滚方式）并等待用户显式确认，来源不得按可用性默认代选，确认前不执行任何删除或写入；确认后经 retire+delete 删除模板、rm -rf -- 删除 example web，经 manage_template_index.py adopt 从已确认来源重建 template（先核对 catalog 副本身份与确认一致）并过 package validator，再经 adopt_package.py bootstrap + Apply Phase 0–9 重建 example web（需求源 example/workbench-shell/prompts/README.md），全程不读取旧 web 内容，最后输出含「计划确认」行的固定测试报告。",
+      "expected_output": "判定为干净模式：Step 0 只读收集事实（git 状态、INDEX 行、checkpoint 状态、模板身份）；Step 1 信息完整性校验后输出固定格式执行计划（删除清单逐条路径、template 来源作为待确认项列出候选来源及其实际身份 [catalog 副本 version/digest/meta.sources 或 session source] 由用户显式选定、栈选择来源、需求源与范围、回滚方式）并等待用户显式确认，来源不得按可用性默认代选，确认前不执行任何删除或写入；确认后经 retire+delete 删除模板、rm -rf -- 删除 example web，经 manage_template_index.py adopt 从已确认来源重建 template（先核对 catalog 副本身份与确认一致）并过 package validator，再经 adopt_package.py bootstrap + Apply Phase 0–9 重建 example web（需求源 example/workbench-shell/prompts/README.md），全程不读取旧 web 内容，最后输出含「计划确认」与「生成物入库」行的固定测试报告；全程不 git add/commit example web（生成物不入库），重建后输出根保持未跟踪或被忽略。",
       "files": []
     },
     {
       "id": 2,
       "prompt": "workbench-shell 模板我刚升级到 1.3.0（patterns 和 tokens 有变化），把 example/workbench-shell/web 同步一下，别的东西别动",
-      "expected_output": "判定为增量模式：Step 0 只读建立身份基线；Step 1 校验发现声称版本 1.3.0 与 meta 实际版本不符（或 checkpoint 缺失）时触发停止项——停止并报告差异，不做任何修改、不自动转干净模式、不替用户推断更新来源；若身份基线一致则输出无删除清单的执行计划（更新类型与来源、变更集合均为待确认项，须用户显式确认），确认后用相同栈参数重跑 adopt_package.py 重同步 .ui-template-design，check_apply_resume.py 计算 reopen 范围，只重做受影响 phase 与页面，未声明路径保持原字节，Phase 8 重新取证。",
+      "expected_output": "判定为增量模式：Step 0 只读建立身份基线；Step 1 校验发现声称版本 1.3.0 与 meta 实际版本不符（或 checkpoint 缺失）时触发停止项——停止并报告差异，不做任何修改、不自动转干净模式、不替用户推断更新来源；若身份基线一致则输出无删除清单的执行计划（更新类型与来源、变更集合均为待确认项，须用户显式确认），确认后用相同栈参数重跑 adopt_package.py 重同步 .ui-template-design，check_apply_resume.py 计算 reopen 范围，只重做受影响 phase 与页面，未声明路径保持原字节，Phase 8 重新取证；新增/重写文件保持未跟踪，全程不执行 git add/commit（生成物不入库），报告含「生成物入库」行。",
       "files": []
     },
     {
       "id": 3,
       "prompt": "新项目要搭一个运维后台，直接用 workbench-shell 模板给我实现页面",
       "expected_output": "不进入本 skill（单端诉求，不涉及模板生命周期与 example web 两端）：移交/执行 skills/ui-template-apply 的 Phase 0–9，不触发信息完整性校验、计划确认、删除与模板重建流程。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "刚才重建的 example web 效果不错，帮我把 example/workbench-shell/web 提交到 git 里，留着以后对照",
+      "expected_output": "拒绝提交：example web 是治理排除项内的一次性测试生成物，本 skill 不变量「生成物不入库」要求全程不 git add/commit/push，输出根保持未跟踪或被忽略（根 .gitignore 已忽略 example/*/web/ 与 web-v*/）；闭环不变量「历史生成物不是参考」也不允许把它留作对照物。向用户说明理由后保持输出根现状，不擅自改 .gitignore、不提交；需要沉淀的内容（需求范围、发现的 skill/模板缺口）经 prompts/ 或对应生产 skill 流程回写，而不是提交生成物。",
       "files": []
     }
   ]

@@ -11,6 +11,7 @@
    - 模板 meta version + contract digest；
    - web 侧 `.ui-template-design/binding.yaml` 的 `contract_version` + `binding_digest`；
    - `.ui-template-apply/checkpoint.yaml` 是否存在及其 phase 状态。
+   - 生成物入库基线：`git ls-files -- <output_root>` 是否命中（命中即待确认项，按 SKILL.md「生成物不入库」处置）；本模式新增/重写的文件一律保持未跟踪。
 
 ## Step 1 — 信息完整性校验与计划确认（共用 gate）
 
@@ -63,10 +64,10 @@ python3 skills/ui-template-apply/runtime/check_apply_resume.py <output_root>/.ui
 - geometry/state 语义变化 → 最早 Phase 4
 - 仅内容实现层面变化 → 对应实现 phase
 
-重开范围内更新 `.ui-template-apply/` 工件并重实现受影响页面/组件；**变更集合未覆盖的路径保持原字节**（Step 1 计划中已确认的范围），不以“顺手美化”重写无关页面。
+重开范围内更新 `.ui-template-apply/` 工件并重实现受影响页面/组件；**变更集合未覆盖的路径保持原字节**（Step 1 计划中已确认的范围），不以“顺手美化”重写无关页面。重开产生的新文件同样保持未跟踪：全程不执行 `git add`/`git commit`，完成后按 clean-mode Step 4 第 6 条核对 `git status` 并记入报告「生成物入库」行。
 
 ## Step 5 — 复验与报告
 
 - Phase 8：所有受影响 scenario 重新产生 current-build 浏览器证据；过期证据不得复用。
 - Phase 9：recheck 记录引用 Phase 8 UUID；feedback inbox 无 proposed 才算 closed。
-- 回归：模板 validator + web 自身 build/lint/test；报告按 SKILL.md 模板（含「计划确认」行），额外列出：本次变更集合 → 受影响 phase → 实际改动文件清单 → 保持原字节的范围声明。
+- 回归：模板 validator + web 自身 build/lint/test；报告按 SKILL.md 模板（含「计划确认」与「生成物入库」行），额外列出：本次变更集合 → 受影响 phase → 实际改动文件清单 → 保持原字节的范围声明。

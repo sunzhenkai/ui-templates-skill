@@ -74,6 +74,10 @@ lerna-debug.log*
 # ui-template-design skill local state (freeze/checkpoint, consumer-side)
 .ui-template-design/
 
+# Generated example webs (ui-template-test e2e artifacts; governance-excluded, never committed)
+example/*/web/
+example/*/web-v*/
+
 # Transient candidate workspaces. Keep only governance/candidates/<template-name>/ for promotion.
 governance/candidates/.work/
 governance/candidates/*-clean/
