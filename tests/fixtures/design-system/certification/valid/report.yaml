@@ -18,6 +18,13 @@ gate:
     output_root: output/root
     generated_at: '2026-09-09T00:00:00Z'
   apply_mode: bootstrap
+  active_instance:
+    status: frozen
+    contract_digest: {algorithm: sha256-canonical-json-v1, value: "1111111111111111111111111111111111111111111111111111111111111111"}
+    binding_digest: {algorithm: sha256-canonical-json-v1, value: "2222222222222222222222222222222222222222222222222222222222222222"}
+    projection_digest: {algorithm: sha256-canonical-json-v1, value: "3333333333333333333333333333333333333333333333333333333333333333"}
+  feedback:
+    package_feedback: closed
 status: passed
 records:
 - id: cert-list-page
@@ -39,16 +46,34 @@ records:
   - dimension: structure
     result: passed
     method: dom-geometry
+    oracle_measurement_ref: measurement-list
   - dimension: spacing
     result: passed
     method: computed-style
     tolerance: <=2px
+    oracle_measurement_ref: measurement-list
+  - dimension: typography
+    result: passed
+    method: computed-style
+    oracle_measurement_ref: measurement-list
   - dimension: color
     result: passed
     method: computed-style
+    oracle_measurement_ref: measurement-list
+  - dimension: border
+    result: passed
+    method: computed-style
+    oracle_measurement_ref: measurement-list
   evidence:
     current_screenshot: evidence/current-dashboard.png
     oracle_screenshot: evidence/oracle-dashboard.png
+    oracle_measurements:
+    - id: measurement-list
+      method: computed-style
+      dimension: structure
+      value: 1
+      unit: count
+      oracle_revision: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 - id: cert-toolbar
   pattern: pattern/toolbar
   package_digest:
@@ -68,13 +93,31 @@ records:
   - dimension: structure
     result: passed
     method: dom-geometry
+    oracle_measurement_ref: measurement-toolbar
   - dimension: spacing
     result: passed
     method: computed-style
     tolerance: <=2px
+    oracle_measurement_ref: measurement-toolbar
+  - dimension: typography
+    result: passed
+    method: computed-style
+    oracle_measurement_ref: measurement-toolbar
   - dimension: color
     result: passed
     method: computed-style
+    oracle_measurement_ref: measurement-toolbar
+  - dimension: border
+    result: passed
+    method: computed-style
+    oracle_measurement_ref: measurement-toolbar
   evidence:
     current_screenshot: evidence/current-list.png
     oracle_screenshot: evidence/oracle-list.png
+    oracle_measurements:
+    - id: measurement-toolbar
+      method: computed-style
+      dimension: structure
+      value: 1
+      unit: count
+      oracle_revision: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

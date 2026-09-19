@@ -1,15 +1,25 @@
 {
-  "accepted": true,
-  "outcome": "certification-accepted",
+  "accepted": false,
+  "outcome": "failed",
   "result": {
     "schema_version": 1,
     "target": "/home/wii/code/repos/github/sunzhenkai/ui-templates-skill/governance/candidates/workbench-shell/certification/report.yaml",
     "kind": "certification",
-    "valid": true,
-    "errors": [],
+    "valid": false,
+    "errors": [
+      {"code": "CERT_ACTIVE_INSTANCE_REQUIRED", "path": "gate.active_instance"},
+      {"code": "CERT_PACKAGE_FEEDBACK_OPEN", "path": "gate.feedback.package_feedback"},
+      {"code": "CERT_ASSERTION_COVERAGE_INCOMPLETE", "path": "records"},
+      {"code": "CERT_ASSERTION_UNANCHORED", "path": "records"}
+    ],
     "warnings": [],
     "digests": {}
   },
-  "failures": [],
+  "failures": [
+    {"code": "CERT_ACTIVE_INSTANCE_REQUIRED", "ownership": "package"},
+    {"code": "CERT_PACKAGE_FEEDBACK_OPEN", "ownership": "package"},
+    {"code": "CERT_ASSERTION_COVERAGE_INCOMPLETE", "ownership": "package"},
+    {"code": "CERT_ASSERTION_UNANCHORED", "ownership": "certification-prompt"}
+  ],
   "note": "accepted candidates still await explicit user promotion; a self-consistency outcome proves internal agreement only and must not be promoted; failed ownership must be written back to package, apply-skill or certification-prompt, followed by clean regeneration."
 }

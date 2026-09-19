@@ -63,7 +63,7 @@ python3 scripts/validate_design_system.py compute-digest .ui-template-design/des
 
 ## 完成定义
 
-可以声明完成，当且仅当：decision gates 均已选择或获得明确授权；UX Model 无 unresolved；`core/tokens.yaml` 已冻结且 projection 一致；Primitive/binding 路径闭合；声明的 Pattern/Page Type/layout 引用闭合；可执行规则已写入且本次扫描通过；Gallery 覆盖 stable IDs 且有 current-build 截图；视觉 loop 通过或 3 轮后升级人类；`design-system.yaml` 为 `frozen` 且 contract digest 一致，binding/projection digest 一致。`iterate` 另须：变更集合已声明、只动点名层、未声明路径保持原字节、扫描通过、freeze digest 已刷新。不得称为完成：只有 Markdown、只有 shadcn 初始化、只改了一个业务页、截图身份过期。全站未迁完不是失败。未装 Author/Apply、未用模板不是失败。
+可以声明完成，当且仅当：decision gates 均已选择或获得明确授权；UX Model 无 unresolved；`core/tokens.yaml` 已冻结且 projection 一致；Primitive/binding 路径闭合；声明的 Pattern/Page Type/layout 引用闭合；可执行规则已写入且本次扫描通过；Gallery 覆盖 stable IDs 且有 current-build 截图；视觉 loop 通过或 3 轮后升级人类；`design-system.yaml` 为 `frozen` 且 contract digest 一致，binding/projection digest 一致。高保真 Apply/Certification 只能消费这个 frozen Active Instance，并在认证 gate 记录三个 digest。`iterate` 另须：变更集合已声明、只动点名层、未声明路径保持原字节、扫描通过、freeze digest 已刷新。不得称为完成：只有 Markdown、只有 shadcn 初始化、只改了一个业务页、截图身份过期。全站未迁完不是失败。未装 Author/Apply、未用模板不是失败。
 
 ## 汇报
 

@@ -24,11 +24,11 @@ Template Certification Gate SHALL 是官方 Template Package publish 和 upgrade
 - **THEN** 记录停留在认证工件内；Apply checkpoint 校验继续拒绝 oracle identity 或 source-compare 输入进入实现会话
 
 ### Requirement: Certification uses source-blind generation
-Certification Gate SHALL 使用固定 Visual Oracle revision、candidate package identity 和固定 prompts，通过普通 Apply 生成干净构建；Apply runtime SHALL 不接收原版 checkout、原版样式文件、`meta.sources[]` 实现路径或历史生成物作为实现输入。
+Certification Gate SHALL 使用固定 Visual Oracle revision、candidate package identity、同一 identity 的 frozen Active Instance 和固定 prompts，通过普通 Apply 生成干净构建；Apply runtime SHALL 不接收原版 checkout、原版样式文件、`meta.sources[]` 实现路径或历史生成物作为实现输入。直接从 catalog bootstrap 的 Active Instance 可用于普通消费，但 SHALL NOT 获得 high-fidelity certification。
 
 #### Scenario: clean regeneration
 - **WHEN** gate 为 candidate 执行认证
-- **THEN** 它创建或使用显式声明的干净 output root，并记录 Apply Mode、package digest、oracle revision、prompts digest 和 build identity
+- **THEN** 它创建或使用显式声明的干净 output root，并记录 frozen Active Instance 的 contract/binding/projection digest、Apply Mode、package digest、oracle revision、prompts digest 和 build identity
 
 #### Scenario: implementation isolation
 - **WHEN** Apply runtime 请求原版源码路径或历史生成物
@@ -46,7 +46,7 @@ Certification Gate SHALL 使用固定 Visual Oracle revision、candidate package
 - **THEN** record 不可用于 certification，gate 要求重新生成并复验
 
 ### Requirement: Visual assertions support equivalence
-Pattern Equivalence Record SHALL 使用 Visual Equivalence 而非像素全等。每条 record SHALL 至少覆盖结构或层级、间距或密度、排版、色彩或表面、边框或分隔线中的相关 assertions；只有截图或主观“一致”结论 SHALL 不能通过。每条 assertion SHALL 引用 oracle 侧测量 evidence ref；无 oracle 侧锚定的自报数值 SHALL fail closed，不得用于 equivalence 判定。
+Pattern Equivalence Record SHALL 使用 Visual Equivalence 而非像素全等。每条 passed record SHALL 覆盖结构或层级、间距或密度、排版、色彩或表面、边框或分隔线五个维度组；只有截图或主观“一致”结论 SHALL 不能通过。每条 passed assertion SHALL 引用本 record 内 oracle 侧测量 evidence ref；无 oracle 侧锚定的自报数值 SHALL fail closed，不得用于 equivalence 判定。
 
 #### Scenario: density mismatch
 - **WHEN** oracle 与 current build 的间距或行高几何 assertion 超出声明容差
@@ -122,3 +122,10 @@ Certification Gate SHALL 从固定 oracle 生成 source-derived certification in
 #### Scenario: generated artifact patch
 - **WHEN** 认证输出目录在失败后被手工修补并复用旧 identity
 - **THEN** gate 因身份过期或 source-blind/regeneration violation 拒绝结果
+
+### Requirement: Package feedback closure blocks high-fidelity certification
+高保真认证 SHALL 要求全部 `ownership: package` feedback 已被 Authoring 处置并验证。proposed 或 open package feedback SHALL 阻断 certification；binding 或生成物补丁 SHALL NOT 取代 package feedback 的处置。
+
+#### Scenario: package feedback remains proposed
+- **WHEN** Active Instance 或 Apply 为 package 缺口写入 proposed feedback
+- **THEN** gate 以 `CERT_PACKAGE_FEEDBACK_OPEN` 失败，并要求 Authoring 回写、重新 freeze 和干净重生

@@ -69,8 +69,8 @@ L0–L6 只是变更集合标签。Intake 必须冻结**本次改哪些路径/�
 
 Apply 只有一种 source-blind 实现心智，Apply Mode 只有 `bootstrap | increment`；不存在 source oracle 对照模式。
 
-- 输入：digest 一致 Active Design System + 用户需求；`bootstrap` 可从 published package adopt-only 建立 Active Instance。
-- Intake：Active Instance 优先；缺 Active Instance 时只允许 `bootstrap` 从 published package adopt-only 建立；increment 停止。
+- 输入：digest 一致、已冻结的 Active Design System + 用户需求；高保真路径必须先经 Design 领养、binding 与 freeze。`bootstrap` 可从 published package adopt-only 建立 Active Instance，但这是明确降级路径，不能宣称高保真。
+- Intake：高保真任务缺 Active Instance 时停止并移交 Design；普通 bootstrap 可从 published package adopt-only 建立 Active Instance，increment 缺 Active Instance 停止。
 - greenfield：判定只看本次前端输出根。仓库已初始化但输出根仍是新应用时仍要先确认闭集技术架构；未确认不得写应用源码/依赖/工程配置。兄弟应用或功能规格不得自动确认。existing 只在该输出根已有栈时记录 observed stack。
 - 禁止：原版 checkout、`meta.sources[]` 实现路径、source oracle 身份、`.ui-template-apply/source-compare.yaml` 与历史生成物；runtime 校验发现即 `SOURCE_BLIND_VIOLATION` fail closed。
 - Pattern-bound composition：included route 必须映射到已声明 Page Type，引用的 Pattern/Primitive 必须可解析；缺少可复用控件时停止该层实现并生成 package feedback。
@@ -89,8 +89,9 @@ Apply 只有一种 source-blind 实现心智，Apply Mode 只有 `bootstrap | in
 ### 4.4 Template Certification Gate 与 Derived Component Family
 
 - Component Family 不新增第八层，也不维护手工清单；validator 沿 `page-types → patterns → primitives` 的 Stable Entity ID 引用与 evidence 推导闭集，悬空、重复、缺证据或 capability 不足 fail closed。
-- 官方 package publish/upgrade 前必须通过 Template Certification Gate：固定 Visual Oracle revision、candidate package 与固定 prompts，先 source-blind 干净 Apply，再按 Pattern 产生 Pattern Equivalence Records。
-- 验收采用 Visual Equivalence（结构、层级、密度、间距、排版、色彩/表面、边框/分隔线 assertions），不是整页像素克隆；截图-only 或主观“一致”不能通过。
+- 官方 package publish/upgrade 前必须通过 Template Certification Gate：固定 Visual Oracle revision、candidate package、冻结 Active Instance 与固定 prompts，先 source-blind 干净 Apply，再按 Pattern 产生 Pattern Equivalence Records。
+- 高保真验收采用 Visual Equivalence（结构/层级、间距/密度、排版、色彩/表面、边框/分隔线 assertions），不是整页像素克隆；每个通过 Pattern 必须覆盖全部维度组、逐条锚定 oracle measurement，截图-only 或主观“一致”不能通过。structural fidelity、source replay、measured expectations、certification passed 缺一不可。
+- `ownership: package` 的 feedback 未处置时高保真认证 fail closed；不得以 binding 或生成物补丁掩盖 package 缺口。
 - 失败差异只能归类 `package | apply-skill | certification-prompt` 回写，然后丢弃旧生成物、fresh build identity 干净重生；修补上一轮生成物永远无效。
 - gate 命令与 promotion request 规则见 `governance/release/CERTIFICATION-v1.md`；candidate 停留在 `governance/candidates/`，生产 catalog 切换需用户单独确认。
 
@@ -181,4 +182,4 @@ example/<name>/web*/       生成物，治理排除
 5. `example/**/web*` 不决定治理通过。
 6. 相关 contract eval 与模板 validator 通过。
 
-已发布模板相对可部署原版的视觉对齐是**使用本闭环的一次可选任务**，不是本文的发布门禁。无 session source 时已发布 repo 来源模板保持 `legacy-baseline`。
+无 session source 时已发布 repo 来源模板保持 `legacy-baseline`。这是 portable 可用性状态，不是高保真成功；高保真认证必须等待可部署 oracle 后完成，不能以 self-consistency、style-only 或 fidelity-unverified 替代。

@@ -17,7 +17,11 @@ gate:
     output_root: governance/candidates/workbench-shell/certification/current-output
     generated_at: '2026-09-15T14:40:48Z'
   apply_mode: bootstrap
-status: passed
+  active_instance:
+    status: pending
+  feedback:
+    package_feedback: open
+status: failed
 records:
 - id: cert-app-shell
   pattern: pattern/app-shell

@@ -22,7 +22,9 @@
         "oracle",
         "prompts_digest",
         "build",
-        "apply_mode"
+            "apply_mode",
+            "active_instance",
+            "feedback"
       ],
       "properties": {
         "package": {
@@ -112,6 +114,63 @@
             "bootstrap",
             "increment"
           ]
+        },
+        "active_instance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "frozen",
+                "pending"
+              ]
+            },
+            "contract_digest": {
+              "$ref": "common.schema.json#/$defs/digest"
+            },
+            "binding_digest": {
+              "$ref": "common.schema.json#/$defs/digest"
+            },
+            "projection_digest": {
+              "$ref": "common.schema.json#/$defs/digest"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "frozen"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "contract_digest",
+                  "binding_digest",
+                  "projection_digest"
+                ]
+              }
+            }
+          ]
+        },
+        "feedback": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "package_feedback"
+          ],
+          "properties": {
+            "package_feedback": {
+              "enum": [
+                "closed",
+                "open"
+              ]
+            }
+          }
         }
       }
     },
@@ -216,6 +275,10 @@
                     "border",
                     "divider"
                   ]
+                },
+                "oracle_measurement_ref": {
+                  "type": "string",
+                  "minLength": 1
                 },
                 "result": {
                   "enum": [

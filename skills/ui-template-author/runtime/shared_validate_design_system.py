@@ -942,6 +942,20 @@ def validate_certification(
     gate_package_digest = gate["package"].get("digest")
     build_identity = gate["build"].get("identity")
     oracle_revision = gate["oracle"].get("revision")
+    active_instance = gate.get("active_instance", {})
+    if not isinstance(active_instance, dict) or active_instance.get("status") != "frozen":
+        report.add(
+            "CERT_ACTIVE_INSTANCE_REQUIRED",
+            "gate.active_instance",
+            "high-fidelity certification requires a frozen Active Instance",
+        )
+    feedback = gate.get("feedback", {})
+    if not isinstance(feedback, dict) or feedback.get("package_feedback") != "closed":
+        report.add(
+            "CERT_PACKAGE_FEEDBACK_OPEN",
+            "gate.feedback.package_feedback",
+            "all package-owned feedback must be closed before high-fidelity certification",
+        )
 
     if package_root is not None:
         manifest_path = package_root / "design-system.yaml"
@@ -995,6 +1009,25 @@ def validate_certification(
             report.add("CERT_ORACLE_STALE", f"{where}.oracle_revision", "record oracle revision does not match the gate oracle")
         assertions = record.get("assertions", [])
         if record.get("verdict") == "passed":
+            assertion_dimensions = {
+                assertion.get("dimension")
+                for assertion in assertions
+                if isinstance(assertion, dict) and assertion.get("result") == "passed"
+            }
+            required_dimension_groups = (
+                {"structure", "hierarchy"},
+                {"spacing", "density"},
+                {"typography"},
+                {"color", "surface"},
+                {"border", "divider"},
+            )
+            if any(not dimensions & assertion_dimensions for dimensions in required_dimension_groups):
+                report.add(
+                    "CERT_ASSERTION_COVERAGE_INCOMPLETE",
+                    f"{where}.assertions",
+                    "a passed high-fidelity record must cover structure, spacing/density, typography, "
+                    "color/surface, and border/divider",
+                )
             if not any(isinstance(a, dict) and a.get("method") in MEASURABLE_ASSERTION_METHODS for a in assertions):
                 report.add("CERT_ASSERTION_NOT_MEASURABLE", f"{where}.assertions", "screenshot-only evidence cannot pass; at least one measurable assertion is required")
             if any(isinstance(a, dict) and a.get("result") == "failed" for a in assertions):
@@ -1056,6 +1089,22 @@ def validate_certification(
                 f"{where}.assertions",
                 "passed record carries no oracle-anchored evidence: a real oracle screenshot or a structural oracle measurement is required",
             )
+        if record.get("verdict") == "passed":
+            measurement_ids = {
+                measurement.get("id")
+                for measurement in (measurements if isinstance(measurements, list) else [])
+                if isinstance(measurement, dict) and isinstance(measurement.get("id"), str)
+            }
+            for assertion_index, assertion in enumerate(assertions):
+                if not isinstance(assertion, dict) or assertion.get("result") != "passed":
+                    continue
+                reference = assertion.get("oracle_measurement_ref")
+                if reference not in measurement_ids:
+                    report.add(
+                        "CERT_ASSERTION_UNANCHORED",
+                        f"{where}.assertions.{assertion_index}.oracle_measurement_ref",
+                        "each passed assertion must reference an oracle measurement in this record",
+                    )
         if inventory_patterns is not None and record.get("pattern") not in inventory_patterns:
             report.add("CERT_RECORD_NOT_IN_INVENTORY", f"{where}.pattern", "record pattern is not part of the certification inventory")
         pattern_id = record.get("pattern")
