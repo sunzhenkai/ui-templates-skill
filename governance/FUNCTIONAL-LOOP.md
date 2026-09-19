@@ -92,7 +92,7 @@ Apply 只有一种 source-blind 实现心智，Apply Mode 只有 `bootstrap | in
 - 官方 package publish/upgrade 前必须通过 Template Certification Gate：固定 Visual Oracle revision、candidate package、冻结 Active Instance 与固定 prompts，先 source-blind 干净 Apply，再按 Pattern 产生 Pattern Equivalence Records。
 - 高保真验收采用 Visual Equivalence（结构/层级、间距/密度、排版、色彩/表面、边框/分隔线 assertions），不是整页像素克隆；每个通过 Pattern 必须覆盖全部维度组、逐条锚定 oracle measurement，截图-only 或主观“一致”不能通过。structural fidelity、source replay、measured expectations、certification passed 缺一不可。
 - `ownership: package` 的 feedback 未处置时高保真认证 fail closed；不得以 binding 或生成物补丁掩盖 package 缺口。
-- 失败差异只能归类 `package | apply-skill | certification-prompt` 回写，然后丢弃旧生成物、fresh build identity 干净重生；修补上一轮生成物永远无效。
+- 失败差异只能归类 `package | binding | apply-skill | certification-prompt` 回写，然后丢弃旧生成物、fresh build identity 干净重生；修补上一轮生成物永远无效。
 - gate 命令与 promotion request 规则见 `governance/release/CERTIFICATION-v1.md`；candidate 停留在 `governance/candidates/`，生产 catalog 切换需用户单独确认。
 
 ## 5. 模板管理闭环
@@ -137,7 +137,7 @@ INDEX 表头固定为：名称、风格描述、来源类型、采集日期、�
 执行顺序（即 Template Certification Gate 的失败回写循环，见 4.4）：
 
 1. 冻结对照物：原版 revision、prompts、candidate package。
-2. 失败差异按 `package | apply-skill | certification-prompt` 归类，禁止先改生成物。
+2. 失败差异按 `package | binding | apply-skill | certification-prompt` 归类，禁止先改生成物。
 3. 只改归属面：壳/token/组件/evidence → candidate package 或 Author skill；阶段/取证/source-blind 不稳 → Apply skill；固定 prompts 或 assertion 设计不足 → certification-prompt。
 4. 有 session source 才允许抬升 observed / 写 fidelity；capture 必答事实矩阵（inset 内容卡片几何、page_mode 必答问题）沉默即 fail closed，exclusions 是唯一合法的「显式不知道」。
 5. 干净 output root + fresh build identity 重新 source-blind Apply，重跑完整 gate；两次干净重生稳定才算闭环。

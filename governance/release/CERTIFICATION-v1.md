@@ -45,6 +45,7 @@ python3 scripts/run_template_certification.py verify \
 ## 失败回写边界
 
 - `package`：Pattern/token/evidence 契约缺口 → 更新 candidate 后重新认证。
+- `binding`：Frozen Active Instance 缺失、未冻结或与 candidate identity 失配 → 修复 binding/Active Instance 后重新认证。
 - `apply-skill`：阶段、取证或 source-blind 执行不稳 → 修 Apply skill 后重新认证。
 - `certification-prompt`：build/oracle 身份失配或 assertion 设计不足 → 修固定 prompts 后重新认证。
 
