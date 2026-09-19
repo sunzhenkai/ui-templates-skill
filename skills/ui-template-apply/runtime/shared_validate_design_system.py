@@ -376,6 +376,67 @@ def walk_tokens(node: Any, prefix: str = "") -> set[str]:
     return found
 
 
+VISUAL_COLOR_ROLES = {
+    "canvas": ("color.app-shell", "color.page-canvas"),
+    "surface": ("color.surface",),
+    "surface-hover": ("color.surface-hover",),
+    "surface-selected": ("color.surface-selected",),
+    "border": ("color.surface-border",),
+    "divider": ("color.divider",),
+    "text-primary": ("color.text-primary",),
+    "text-secondary": ("color.text-secondary",),
+    "text-muted": ("color.text-muted",),
+    "text-disabled": ("color.text-disabled",),
+    "text-on-primary": ("color.text-on-primary",),
+    "link": ("color.link",),
+    "brand-primary": ("color.primary",),
+    "brand-hover": ("color.primary-hover",),
+    "status-success": ("color.status-success",),
+    "status-warning": ("color.status-warning",),
+    "status-danger": ("color.status-danger",),
+}
+VISUAL_TYPE_ROLES = ("typography.heading", "typography.body", "typography.secondary")
+
+
+def _token_record(tokens: dict[str, Any], path: str) -> dict[str, Any] | None:
+    current: Any = tokens
+    for segment in path.split("."):
+        if not isinstance(current, dict) or segment not in current:
+            return None
+        current = current[segment]
+    return current if isinstance(current, dict) and "value" in current and "origin" in current else None
+
+
+def validate_visual_role_closure(layers: dict[str, Path], report: Report) -> None:
+    """High-fidelity packages must expose visual roles, not only sampled values."""
+    token_path = layers.get("tokens")
+    token_document = load_document(token_path) if token_path and token_path.is_file() else {}
+    tokens = token_document.get("tokens")
+    if not isinstance(tokens, dict):
+        report.add("VISUAL_ROLE_MISSING", "layers.tokens", "visual role closure requires a token document")
+        return
+    for role, paths in VISUAL_COLOR_ROLES.items():
+        present = [(path, record) for path in paths if (record := _token_record(tokens, path)) is not None]
+        if not present:
+            report.add("VISUAL_ROLE_MISSING", f"tokens.{role}", f"missing required visual role: {role}")
+        elif all(record.get("origin") == "default" for _, record in present):
+            report.add(
+                "VISUAL_ROLE_DEFAULTED",
+                f"tokens.{role}",
+                f"visual role {role} cannot be satisfied only by default tokens",
+            )
+    for role in VISUAL_TYPE_ROLES:
+        record = _token_record(tokens, role)
+        if record is None:
+            report.add("TYPOGRAPHY_ROLE_MISSING", f"tokens.{role}", f"missing required typography role: {role}")
+        elif record.get("origin") == "default":
+            report.add(
+                "TYPOGRAPHY_ROLE_DEFAULTED",
+                f"tokens.{role}",
+                f"typography role {role} cannot be satisfied by a default token",
+            )
+
+
 def _declared_token_paths(node: Any, prefix: str = "") -> set[str]:
     """All dotted token paths, including group paths, not just leaves."""
     paths: set[str] = set()
@@ -1177,7 +1238,13 @@ def validate_binding(root: Path, manifest: dict[str, Any], layers: dict[str, Pat
     return binding
 
 
-def validate_target(target: Path, kind: str, *, require_component_family: bool = False) -> dict[str, Any]:
+def validate_target(
+    target: Path,
+    kind: str,
+    *,
+    require_component_family: bool = False,
+    require_visual_role_closure: bool = False,
+) -> dict[str, Any]:
     report = Report(kind, target)
     manifest_path = target / "design-system.yaml"
     if not manifest_path.is_file():
@@ -1201,6 +1268,8 @@ def validate_target(target: Path, kind: str, *, require_component_family: bool =
     report.component_family = derive_component_family(manifest, layers, ids)
     if require_component_family:
         enforce_family_closure(report.component_family, report)
+    if require_visual_role_closure:
+        validate_visual_role_closure(layers, report)
     if kind == "active":
         validate_binding(target, manifest, layers, report)
     return report.to_dict()
@@ -1303,6 +1372,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="fail closed when family members lack evidence or have dangling references",
     )
+    validate.add_argument(
+        "--require-visual-role-closure",
+        action="store_true",
+        help="require source-derived visual color and typography roles for high-fidelity use",
+    )
     validate.add_argument("--migration", type=Path)
     validate.add_argument("--migration-target", type=Path)
     validate.add_argument("--vendor", type=Path)
@@ -1350,7 +1424,14 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
         return 0 if payload["valid"] else 1
 
-    reports = [validate_target(args.target.resolve(), args.kind, require_component_family=args.require_component_family)]
+    reports = [
+        validate_target(
+            args.target.resolve(),
+            args.kind,
+            require_component_family=args.require_component_family,
+            require_visual_role_closure=args.require_visual_role_closure,
+        )
+    ]
     if args.migration:
         reports.append(validate_migration(args.migration.resolve(), args.migration_target.resolve() if args.migration_target else None))
     if args.vendor:

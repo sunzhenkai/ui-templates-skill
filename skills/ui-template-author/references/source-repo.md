@@ -42,6 +42,7 @@ Generate-from-source 使用 `design-system/v1` candidate 时仍必须走同一 s
 ```bash
 python3 runtime/capture_repo_fidelity.py capture-request.yaml \
   --source-root /session/source/checkout \
+  --graph-root /session/capture-artifact \
   --receipt-out staging/capture-receipt.json
 ```
 
@@ -49,7 +50,7 @@ python3 runtime/capture_repo_fidelity.py capture-request.yaml \
 
 这不是 TSX parser：runtime 不用 regex 冒充 AST，不解释 class/source syntax，**不执行来源代码**（包括 package script、compiler、bundler、hook 或来源程序）。`.tsx`、`.jsx`、`.js`、任意 source tree 猜测及未知 graph schema/profile 一律 `unsupported`；调用方必须先由获授权的可信工具在 session source 内显式生成 literal graph，或收窄/改用 style-only，禁止静默抽样。禁止用散文、代表页面截图或抽样 TSX 代替 tracked literal graph。
 
-可写入 required shell slot 占位的骨架 graph（不解析源码）：
+可写入 required shell slot 占位的骨架 graph（不解析源码）。当 source 属于第三方或只读 checkout 时，骨架必须写到当前仓库的受控 session/candidate artifact root，绝不写入 source：
 
 ```bash
 python3 runtime/capture_repo_fidelity.py --init-source-graph ui-source-graph.yaml

@@ -22,13 +22,13 @@ Capture request 的 `source_id` / `source_revision` 绑定的是**本会话 sess
 - `exclusions`：`out-of-scope|platform-mismatch|non-ui`；
 - `dynamic`：`runtime-expression|computed-import|conditional-definition|unknown-export`，scope 命中即 unresolved。
 
-Fact 只表达三个 facet：`layout_scenes`、`component_geometry`、`state_presentations`。identity 固定 `id/facet/subject/context/slot/state/property/rule_id`；value 仅为 `token-ref` 或闭集 semantic（如 `none|zero|auto|intrinsic|fill|non-wrap|non-shrink|underline|visible|hidden|viewport|region|inline|block|horizontal|vertical|overlay|inset|flush` 及槽位 role / `"0"`–`"32"`）。layout property 另含 `shell_variant`、`slot_role`、`slot_order`、`anchor_role`。无任意数字、CSS class、framework primitive 或 executable expression。negative semantic 必须显式 `negative: true`。shell usage 必须闭合 chrome composition，否则 `CHROME_COMPOSITION_INCOMPLETE`。
+Fact 只表达三个 facet：`layout_scenes`、`component_geometry`、`state_presentations`。identity 固定 `id/facet/subject/context/slot/state/property/rule_id`；实现投影 value 仍仅为 `token-ref` 或闭集 semantic（如 `none|zero|auto|intrinsic|fill|non-wrap|non-shrink|underline|visible|hidden|viewport|region|inline|block|horizontal|vertical|overlay|inset|flush` 及槽位 role / `"0"`–`"32"`）。如来源声明精确 CSS 值，value 可附 `observed: {kind: css-length|css-color, value: <非空字符串>}`：它是带 locator 的 source 观测，不是 package 的第二份 token 权威；Author 必须将其映射到 `tokens.yaml` 的 token-ref 后才能发布。layout property 另含 `shell_variant`、`slot_role`、`slot_order`、`anchor_role`。无任意可执行表达式、CSS class 或 framework primitive。negative semantic 必须显式 `negative: true`。shell usage 必须闭合 chrome composition，否则 `CHROME_COMPOSITION_INCOMPLETE`。
 
 Locator 固定为 `<graph_path>#/<collection>/<stable-id>`；capture digest 针对 canonical literal node，不依赖 YAML 顺序或行号。来源 revision、scope、decisions、limits、graph digest、definitions/exports/imports/usages/exclusions/dynamic/facts/unresolved 共同进入 closure digest。
 
 ## 安全与确定性
 
-Runtime 只对**本会话 session source root** 执行 `git rev-parse HEAD`，随后读取 graph 数据；拒绝 absolute/traversal、symlink、`example/`、revision mismatch。禁止从已发布 `meta.sources[]`、sibling 或 `/tmp` 猜测该 root。它不导入来源模块，不执行 shell/package/编译器，不访问网络，也不把完整 AST/call graph/source snapshot 发布进模板。该有限子集无法表达的 repo 必须 fail unsupported/unresolved 或请求用户提供可信 literal graph，不能猜测。
+Runtime 只对**本会话 session source root** 执行 `git rev-parse HEAD`；默认从该 root 读取 graph。调用方也可显式提供 source 外的 artifact root：graph 仍须为安全相对路径、内容 digest 与 source revision 一同进入 receipt，但 source checkout 不得被写入、暂存或提交。拒绝 absolute/traversal、symlink、`example/`、revision mismatch。禁止从已发布 `meta.sources[]`、sibling 或 `/tmp` 猜测该 root。它不导入来源模块，不执行 shell/package/编译器，不访问网络，也不把完整 AST/call graph/source snapshot 发布进模板。该有限子集无法表达的 repo 必须 fail unsupported/unresolved 或请求用户提供可信 literal graph，不能猜测。
 
 ## Mandatory question matrix（close-layout-fidelity-blind-spots）
 

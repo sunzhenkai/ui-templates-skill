@@ -64,7 +64,7 @@ python3 skills/ui-template-author/runtime/manage_template_index.py adopt <name> 
 
 **路径 B：从源重建**——用户确认使用其本会话提供的可读 session source（仓库路径/设计文档/URL）时执行。走 author 完整 Generate → Validate（`--require-source-replay`）→ Eval → staging Index → Report；未冻结变更集合不得 Generate；任一 gate 失败停止，INDEX 由 staging gate 保证不变。
 
-capture-graph commit 机制（确定性，先于 capture 运行）：literal graph 必须放在 session source 内、被 git 跟踪、与 HEAD 字节一致，否则 `SOURCE_GRAPH_NOT_AT_REVISION` 硬停止。做法：authored graph 提交进 session source checkout，形成本次的 capture-graph commit（对应 meta.sources 的「upstream X; capture-graph commit Y」格式）；每次修改 graph 都重新提交，并同步更新 capture request 的 `source_revision` 与 HEAD 绑定。测试 fixture 的确定性 revision pin 依赖固定 commit message/作者/日期（仓内惯例 `fixed literal graph fixture` + 固定日期），重算 pin 时必须与测试的 materialize 完全一致。
+capture artifact 机制（确定性，先于 capture 运行）：literal graph 可位于显式 `--graph-root` 的受控 session/candidate artifact 目录；它以 canonical graph digest 与 source HEAD revision 共同绑定到 receipt。source checkout 只用于 `git rev-parse HEAD`，不得因 capture 被写入、暂存或提交。每次 graph 修改都重新 capture/replay 并更新 receipt；`--graph-root` 必须由本会话显式提供，不能从 provenance 推断。
 
 ## Step 4 — 重建 example web（委托 ui-template-apply）
 

@@ -80,6 +80,40 @@ class RepoCaptureTests(unittest.TestCase):
             self.assertEqual("SOURCE_GRAPH_NOT_AT_REVISION", changed["error"]["code"])
             self.assertEqual(0, changed["executed"])
 
+    def test_external_capture_artifact_keeps_source_checkout_read_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            source, request_path, _ = self.materialize(temp)
+            artifact_root = Path(temp) / "artifact"
+            artifact_root.mkdir()
+            shutil.copy2(source / "ui-source-graph.yaml", artifact_root / "ui-source-graph.yaml")
+            before = subprocess.run(
+                ["git", "status", "--porcelain"], cwd=source, text=True, capture_output=True, check=True,
+            ).stdout
+            captured = capture_from_files(request_path, source, artifact_root)
+            replayed = replay(load_document(request_path), source, captured, artifact_root)
+            after = subprocess.run(
+                ["git", "status", "--porcelain"], cwd=source, text=True, capture_output=True, check=True,
+            ).stdout
+            self.assertEqual("captured", captured["status"])
+            self.assertEqual("passed", replayed["status"])
+            self.assertEqual(before, after)
+
+    def test_observed_css_value_is_preserved_without_becoming_package_value(self) -> None:
+        def observed(graph):
+            graph["usages"][0]["facts"][0]["value"]["observed"] = {
+                "kind": "css-length",
+                "value": "16px",
+            }
+
+        with tempfile.TemporaryDirectory() as temp:
+            source, request_path, _ = self.materialize(temp, observed)
+            captured = capture_from_files(request_path, source)
+            fact = next(item for item in captured["facts"] if item["value"].get("observed"))
+            self.assertEqual({"kind": "semantic", "value": "none"}, {
+                key: fact["value"][key] for key in ("kind", "value")
+            })
+            self.assertEqual({"kind": "css-length", "value": "16px"}, fact["value"]["observed"])
+
     def test_dynamic_ambiguity_and_limit_are_unresolved_without_sampling(self) -> None:
         def dynamic(graph):
             graph["dynamic"].append({

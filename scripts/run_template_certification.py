@@ -208,6 +208,7 @@ def run_validator(package: Path, *, require_family: bool) -> tuple[int, dict[str
     ]
     if require_family:
         command.append("--require-component-family")
+        command.append("--require-visual-role-closure")
     process = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
     try:
         payload = json.loads(process.stdout)
