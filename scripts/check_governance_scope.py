@@ -96,14 +96,21 @@ def git_changed_path_names() -> list[str]:
 
 def guard_example_paths(paths: list[str] | None = None) -> list[str]:
     names = paths if paths is not None else git_changed_path_names()
-    # example/workbench-shell/web 与 prompts 是闭环交付/修复面；
+    # example/workbench-shell 常驻只有 prompts；web 生成代码已删除，前缀保留给未来重建；
+    # 两个根级 web 配套 dotfile 已随生成物移除，只对这两个确切路径放行；
     # 冻结排除样例（web-v2/web-v3/docs 等）仍然拒绝任何变更。
     allowed_prefixes = ("example/workbench-shell/web/", "example/workbench-shell/prompts/")
+    allowed_removed_paths = {
+        "example/workbench-shell/.gitignore",
+        "example/workbench-shell/.oxlintrc.json",
+    }
     hits = sorted(
         {
             name
             for name in names
-            if path_has_example_prefix(name) and not name.startswith(allowed_prefixes)
+            if path_has_example_prefix(name)
+            and not name.startswith(allowed_prefixes)
+            and name not in allowed_removed_paths
         }
     )
     return [f"EXAMPLE_PATH_IN_SCOPE: {name}" for name in hits]
