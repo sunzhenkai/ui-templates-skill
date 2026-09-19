@@ -1,0 +1,16 @@
+schema: design-system-rules/v1
+items:
+  - {id: rule/LAYOUT-001, statement: "Use the observed inset shell slot order and preserve its header-trigger and chat-fab anchors.", severity: must, status: active}
+  - {id: rule/LAYOUT-002, statement: "Board columns do not wrap or shrink and scroll on the inline axis.", severity: must, token_refs: [token/size.board-column, token/space.4], status: active}
+  - {id: rule/LAYOUT-003, statement: "Master-detail uses a horizontal split with block scrolling in both panes; its context panel is region-scoped.", severity: must, status: active}
+  - {id: rule/LAYOUT-005, statement: "Dialog overlays are viewport-scoped and viewport-anchored when open.", severity: must, status: active}
+  - {id: rule/LAYOUT-102, statement: "Settings uses vertical navigation and independent regional block scrolling for navigation and content.", severity: must, status: active}
+  - {id: rule/LAYOUT-104, statement: "Place the chat launcher using its declared size and inset tokens.", severity: must, token_refs: [token/space.chat-launcher-size, token/space.chat-launcher-inset], status: active}
+  - {id: rule/LAYOUT-106, statement: "Use the declared header-height token for board headers and toolbars.", severity: must, token_refs: [token/space.header-height], status: active}
+  - {id: rule/LAYOUT-107, statement: "Inset page canvas has zero inline-start padding and declared canvas surface geometry.", severity: must, token_refs: [token/space.2, token/radius.xl, token/color.surface-border, token/shadow.surface], status: active}
+  - {id: rule/QUALITY-001, statement: "Dialog content uses the declared padding, radius, and floating shadow.", severity: must, token_refs: [token/space.4, token/radius.xl, token/shadow.floating], status: active}
+  - {id: rule/QUALITY-102, statement: "An open overlay is visible and has no text decoration.", severity: must, status: active}
+  - {id: rule/QUALITY-103, statement: "Navigation items remove underline; their observed active and hover fills use their declared surface tokens.", severity: must, token_refs: [token/color.sidebar-accent, token/color.surface-hover, token/color.surface-selected], status: active}
+  - {id: rule/QUALITY-104, statement: "Input and settings navigation expose a focus-visible border using the ring token.", severity: must, token_refs: [token/color.ring], status: active}
+  - {id: rule/QUALITY-101, statement: "Buttons and inputs use the declared lg radius.", severity: must, token_refs: [token/radius.lg], status: active}
+  - {id: rule/AX-101, statement: "Action controls use the declared focus ring and observed hover fill.", severity: must, token_refs: [token/color.ring-focus, token/color.primary-hover], status: active}

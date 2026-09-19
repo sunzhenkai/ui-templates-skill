@@ -1,25 +1,40 @@
 {
+  "active_instance": {
+    "binding_digest": {
+      "algorithm": "sha256-canonical-json-v1",
+      "value": "d08d333321f12fdfcb227046b7a2c52899c9a3e4cfe461b84c245eb5cb5c61b6"
+    },
+    "contract_digest": {
+      "algorithm": "sha256-canonical-json-v1",
+      "value": "5d41fcca2c992154c258b4679725b2b3c3806e5b93322f58054f35150a1df6ff"
+    },
+    "projection_digest": {
+      "algorithm": "sha256-canonical-json-v1",
+      "value": "61381c61bd435e9d852897f1e39490421ecd34ebf3739c956bc646e4c1913473"
+    },
+    "status": "frozen"
+  },
   "apply_mode": "bootstrap",
   "build": {
-    "generated_at": "2026-09-15T14:40:26Z",
-    "identity": "workbench-shell-current-20260915-02",
+    "generated_at": "2026-09-19T03:46:28Z",
+    "identity": "workbench-shell-reimport-20260919",
     "output_root": "governance/candidates/workbench-shell/certification/current-output"
   },
   "oracle": {
     "kind": "git-revision",
-    "revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    "revision": "2df765a3c8f39789c9fb76316378bcffc20d22d9"
   },
   "package": {
     "digest": {
       "algorithm": "sha256-canonical-json-v1",
-      "value": "20be2559f7a5074879da0d2eb6f611dc62a52b5d6ddb595b9eb9d34f8dde1a6c"
+      "value": "5d62dee4cb1b3830d5724b02a1ef45828ce6a03cd5bb3c0ef61a9a3874f91452"
     },
     "id": "workbench-shell",
     "version": "3.0.0"
   },
   "prompts_digest": {
     "algorithm": "sha256-tree-v1",
-    "value": "0ae0db006b3174dba40981bacb2be55aa077b5fe6f11e63c05d99087e71de968"
+    "value": "d3e423f5b69a73b9acd812b658319ab248d6127dfc56f64242746586b8726e29"
   },
   "schema": "template-certification-gate-identity/v1",
   "source_blind": {

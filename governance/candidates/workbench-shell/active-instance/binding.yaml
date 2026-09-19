@@ -1,0 +1,31 @@
+schema: design-system-binding/v1
+contract_id: workbench-shell
+contract_version: 3.0.0
+output_root: example/workbench-shell/web
+stack:
+  language: typescript
+  ui_framework: react
+  bundler: vite
+  routing: react-router
+  styling: tailwind
+  component_system: shadcn
+  package_manager: pnpm
+primitive_paths: {}
+projections:
+- name: css-variables
+  target: src/styles/tokens.yaml
+  mechanism: css-variables
+  mappings:
+  - token: token/color.primary
+    native_key: :root.--color-primary
+  - token: token/color.surface
+    native_key: :root.--color-surface
+  - token: token/space.4
+    native_key: :root.--space-4
+  digest:
+    algorithm: sha256-canonical-json-v1
+    value: 8793cde5f8e73ac4a40c4cd9a585f9a20a01d294ace89634e1eb3956093ba180
+updated_at: '2026-09-19T03:45:00Z'
+binding_digest:
+  algorithm: sha256-canonical-json-v1
+  value: d08d333321f12fdfcb227046b7a2c52899c9a3e4cfe461b84c245eb5cb5c61b6
