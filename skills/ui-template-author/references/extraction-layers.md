@@ -2,6 +2,10 @@
 
 L0–L6 只是变更集合的标签，不是七层完成仪式。从源创建或更新必须声明**本次改哪些路径或组件**；未纳入的文件保持原字节。禁止用“3–5 个代表组件”冒充完整 coverage。
 
+## 拓扑嵌套投影（L1/L3）
+
+`core/layout.yaml` 的 placement regions 不是必然平级。采集图中 `container_role` 事实（如 inset 壳里 `page-header` / `page-toolbar` 的容器是 `page-canvas`）必须投影为 region 的 `parent` 与对应 `contains` 关系；validator 对 parent 悬空、parent 与 contains 边不一致 fail closed。把「卡内 header」拍平成「root 平级子节点」会直接导致 Apply 把 header 实现在内容卡外——投影时丢失嵌套等同于伪造拓扑。同理，`nav-group` 等侧栏 slot 的 border 事实（token-ref 或 `none` negative）必须保留：inset 壳「侧栏无边框、分隔由 canvas 提供」的负空间事实缺失时，Apply 会以组件库默认边框补位。
+
 ## 声明准入（写入前的统一前置）
 
 四种来源（web/repo/image/doc）只决定**如何采集**；写入 package 前的准入判据一致。每条候选声明必须过三证，缺一即 omit，不得降级写入：

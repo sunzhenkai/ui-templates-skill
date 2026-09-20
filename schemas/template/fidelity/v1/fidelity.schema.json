@@ -236,6 +236,11 @@
         "horizontal",
         "vertical",
         "overlay",
+        "icon-label",
+        "label-only",
+        "root",
+        "whole-trigger",
+        "split-trigger",
         "inset",
         "flush",
         "workspace-switcher",
@@ -462,6 +467,9 @@
         },
         "description": {
           "type": "string"
+        },
+        "parent": {
+          "$ref": "#/$defs/stableId"
         }
       }
     },
@@ -809,6 +817,9 @@
           "$ref": "#/$defs/valueRef"
         },
         "shadow": {
+          "$ref": "#/$defs/valueRef"
+        },
+        "anatomy": {
           "$ref": "#/$defs/valueRef"
         }
       }

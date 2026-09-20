@@ -153,6 +153,7 @@ usages:
     locator: "ui-source-graph.yaml#/usages/usage.navigation-link"
     facts:
       - {id: fact.navigation.decoration-none, facet: state_presentations, subject: link, context: navigation-link, slot: item, state: hover, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-002}
+      - {id: fact.navigation.decoration-default, facet: state_presentations, subject: link, context: navigation-link, slot: item, state: default, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-002}
       - {id: fact.navigation.background, facet: state_presentations, subject: link, context: navigation-link, slot: item, state: hover, property: background, value: {kind: token-ref, value: themes.light.sidebar-hover}, negative: false, rule_id: QUALITY-002}
   - id: usage.entity-row-link
     definition_id: component.link
@@ -164,6 +165,7 @@ usages:
     locator: "ui-source-graph.yaml#/usages/usage.entity-row-link"
     facts:
       - {id: fact.entity-row.decoration-none, facet: state_presentations, subject: link, context: entity-row-link, slot: row, state: hover, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-003}
+      - {id: fact.entity-row.decoration-default, facet: state_presentations, subject: link, context: entity-row-link, slot: row, state: default, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-003}
   - id: usage.button-link
     definition_id: component.link
     scene: shell
@@ -174,6 +176,7 @@ usages:
     locator: "ui-source-graph.yaml#/usages/usage.button-link"
     facts:
       - {id: fact.button-link.underline, facet: state_presentations, subject: link, context: button-link, slot: label, state: hover, property: text_decoration, value: {kind: semantic, value: underline}, negative: false, rule_id: QUALITY-004}
+      - {id: fact.button-link.decoration-default, facet: state_presentations, subject: link, context: button-link, slot: label, state: default, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-004}
   - id: usage.inline-prose-link
     definition_id: component.link
     scene: shell
@@ -184,6 +187,7 @@ usages:
     locator: "ui-source-graph.yaml#/usages/usage.inline-prose-link"
     facts:
       - {id: fact.prose-link.underline, facet: state_presentations, subject: link, context: inline-prose-link, slot: text, state: hover, property: text_decoration, value: {kind: semantic, value: underline}, negative: false, rule_id: QUALITY-005}
+      - {id: fact.prose-link.underline-default, facet: state_presentations, subject: link, context: inline-prose-link, slot: text, state: default, property: text_decoration, value: {kind: semantic, value: underline}, negative: false, rule_id: QUALITY-005}
 exclusions:
   - {id: exclusion.mobile, locator: "ui-source-graph.yaml#/exclusions/exclusion.mobile", reason: platform-mismatch}
 dynamic: []

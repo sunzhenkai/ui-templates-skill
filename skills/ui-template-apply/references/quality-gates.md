@@ -20,7 +20,11 @@
 
 ### 布局、滚动与响应式
 
-对 coverage 声明的每个 viewport/platform 验证 root/内部滚动归属、稳定 chrome、无意外横向滚动、允许横滚的替代操作、导航/动作降级、浮层/FAB/安全区和 included 页面模式。每条记录必须引用 route 的 `layout_ref`、`pattern_refs` 与 `structural_verification`；结构化 placement 场景还需验证 relation/order、scroll owner 和 responsive mode。若存在 `fidelity.yaml`，Phase 8 required scenario IDs 由 profile records 派生，并把 Active Instance `core/layout.yaml` 的 placement `geometry` 记录（每 token 一条 computed-style/logical-geometry 场景，如 `phase8:placement-geometry:<layout>:<geometry>:<token>`）与 pattern 闭包（每 pattern 一条存在性+位置场景，如 `phase8:pattern-presence:<layout>:<pattern>`，section-nav 类 pattern 断言其位于内容卡片内部声明位置）一并纳入派生集合；派生集合缺少任一应产场景即 missing scenario fail closed；negative facts 不得被组件库默认覆盖。`structural_verification=unavailable` 时只能记录 style/pattern 证据，不得输出 profile-verified。记录 `LAYOUT-###`/`RESP-###`；不强制模板未声明的固定三个视口。
+对 coverage 声明的每个 viewport/platform 验证 root/内部滚动归属、稳定 chrome、无意外横向滚动、允许横滚的替代操作、导航/动作降级、浮层/FAB/安全区和 included 页面模式。每条记录必须引用 route 的 `layout_ref`、`pattern_refs` 与 `structural_verification`；结构化 placement 场景还需验证 relation/order、scroll owner、responsive mode，以及 **containment 嵌套**：placement regions 带 `parent` 的 route 必须断言子 region 的 bounding box 落在父 region 内（`phase8:containment:` / `phase8:placement-containment:` scenario），header 属于哪张卡按拓扑记录判定。若存在 `fidelity.yaml`，Phase 8 required scenario IDs 由 profile records 派生，并把 Active Instance `core/layout.yaml` 的 placement `geometry` 记录（每 token 一条 computed-style/logical-geometry 场景，如 `phase8:placement-geometry:<layout>:<geometry>:<token>`）与 pattern 闭包（每 pattern 一条存在性+位置场景，如 `phase8:pattern-presence:<layout>:<pattern>`，section-nav 类 pattern 断言其位于内容卡片内部声明位置）一并纳入派生集合；派生集合缺少任一应产场景即 missing scenario fail closed；negative facts 不得被组件库默认覆盖（含侧栏/chrome 分隔的 border `none`：模板未声明的边框即 failed）。`structural_verification=unavailable` 时只能记录 style/pattern 证据，不得输出 profile-verified。记录 `LAYOUT-###`/`RESP-###`；不强制模板未声明的固定三个视口。
+
+### 触发器命中区与链接基线
+
+选择类控件（select/combobox/dropdown）的交互验证必须覆盖 affordance 命中区：点击尾随 chevron 图标中心必须激活触发器（`whole-trigger`）或其独立控件（`split-trigger`），图标中心落在触发控件 bounding box 之外即 failed（AX/交互证据）。链接类元素在 default 态的 computed `text-decoration-line` 必须等于模板对应 context 的 state presentation 记录值（含 `none` negative facts）；静息下划线/hover 消失等与记录相反的模式即 failed。
 
 ### Tokens 与 computed style
 

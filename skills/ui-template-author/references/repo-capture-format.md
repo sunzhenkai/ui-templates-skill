@@ -22,7 +22,7 @@ Capture request 的 `source_id` / `source_revision` 绑定的是**本会话 sess
 - `exclusions`：`out-of-scope|platform-mismatch|non-ui`；
 - `dynamic`：`runtime-expression|computed-import|conditional-definition|unknown-export`，scope 命中即 unresolved。
 
-Fact 只表达三个 facet：`layout_scenes`、`component_geometry`、`state_presentations`。identity 固定 `id/facet/subject/context/slot/state/property/rule_id`；实现投影 value 仍仅为 `token-ref` 或闭集 semantic（如 `none|zero|auto|intrinsic|fill|non-wrap|non-shrink|underline|visible|hidden|viewport|region|inline|block|horizontal|vertical|overlay|inset|flush` 及槽位 role / `"0"`–`"32"`）。如来源声明精确 CSS 值，value 可附 `observed: {kind: css-length|css-color, value: <非空字符串>}`：它是带 locator 的 source 观测，不是 package 的第二份 token 权威；Author 必须将其映射到 `tokens.yaml` 的 token-ref 后才能发布。layout property 另含 `shell_variant`、`slot_role`、`slot_order`、`anchor_role`。无任意可执行表达式、CSS class 或 framework primitive。negative semantic 必须显式 `negative: true`。shell usage 必须闭合 chrome composition，否则 `CHROME_COMPOSITION_INCOMPLETE`。
+Fact 只表达三个 facet：`layout_scenes`、`component_geometry`、`state_presentations`。identity 固定 `id/facet/subject/context/slot/state/property/rule_id`；实现投影 value 仍仅为 `token-ref` 或闭集 semantic（如 `none|zero|auto|intrinsic|fill|non-wrap|non-shrink|underline|visible|hidden|viewport|region|inline|block|horizontal|vertical|overlay|inset|flush|icon-label|label-only|root|whole-trigger|split-trigger` 及槽位 role / `"0"`–`"32"`）。如来源声明精确 CSS 值，value 可附 `observed: {kind: css-length|css-color, value: <非空字符串>}`：它是带 locator 的 source 观测，不是 package 的第二份 token 权威；Author 必须将其映射到 `tokens.yaml` 的 token-ref 后才能发布。layout property 另含 `shell_variant`、`slot_role`、`slot_order`、`anchor_role`、`container_role`。无任意可执行表达式、CSS class 或 framework primitive。negative semantic 必须显式 `negative: true`；正向 semantic（如 `underline`）标 `negative: true` 是自相矛盾，一律拒绝（`NEGATIVE_FACT_INVALID`）。shell usage 必须闭合 chrome composition，否则 `CHROME_COMPOSITION_INCOMPLETE`。
 
 Locator 固定为 `<graph_path>#/<collection>/<stable-id>`；capture digest 针对 canonical literal node，不依赖 YAML 顺序或行号。来源 revision、scope、decisions、limits、graph digest、definitions/exports/imports/usages/exclusions/dynamic/facts/unresolved 共同进入 closure digest。
 
@@ -49,3 +49,14 @@ closure 只证明 scope 内问题已闭合；本节问题由机器强制，沉�
 3. **section-nav 解剖与页面上下文状态**：必须记录 `anatomy` 事实（闭集语义 `icon-label | label-only`），以及 selected/hover 的 `background` token-ref 且绑定 page-surface token（含 `sidebar` 的 token 路径不算作答）。
 
 作答方式与第一轮一致：facts 或指向目标 definition 的显式 exclusions。`fidelity.yaml` 的 `mandatory_answers` 覆盖以上全部条目。
+
+## Mandatory question matrix — round 3（close-chrome-containment-and-interaction-blind-spots）
+
+在第二轮基础上追加（同一 fail-closed 语义，gaps 标签 `chrome-containment:` / `chrome-separation:` / `state-decoration:` / `trigger-anatomy:`）。四问针对的是已被真实生成物证实丢失的四类事实：inset 壳内 header 的容器归属、侧栏分隔负空间、链接默认态文本装饰、选择类控件触发器解剖。
+
+1. **chrome 容器归属**：shell scene 声明 `shell_variant: inset` 且声明了 `page-header` / `page-toolbar` slot 时，每个此类 slot 必须携带 `container_role` 事实（layout_scenes facet，闭集语义 `root | page-canvas | canvas`）。header 在 inset 卡内还是卡外是布局形态决定，不得由采集沉默交给 Apply 默认。投影时 `container_role` 生成 fidelity region 的 `parent` 与对应 `contains` 关系（`region.<scene>.<slot>` 嵌套于 `region.<scene>.<container>`），并派生 `phase8:containment:` scenario。
+2. **chrome 分隔负空间**：shell scene 声明 `shell_variant: inset` 且声明了 `nav-group` slot 时，`nav-group` slot 必须携带 `border` 事实（token-ref，或语义 `none` 且 `negative: true`）。inset 壳的「侧栏自身无边框、分隔由 canvas 的 ring/inset 提供」是必须显式记录的否定性事实；缺失视为未作答，不得让 Apply 以组件库默认边框补位。
+3. **链接默认态文本装饰**：scope.contexts 中命中链接 context 闭集（`navigation-link | entity-row-link | button-link | inline-prose-link`）的每个 context，必须在 `state: default` 上携带 `text_decoration` 事实（`underline`，或 `none` 且 `negative: true`）。全局「链接无下划线」基线按 context 分别闭合，不得把单一 context 推广为全局规则。`underline` 这类正向语义标记 `negative: true` 一律拒绝（`NEGATIVE_FACT_INVALID`）；fidelity 侧对同 record 的 `text_decoration: underline` + negative fact 报 `FIDELITY_STATE_DECORATION_CONFLICT`。
+4. **选择类控件触发器解剖**：scope 内名称命中 `select | combobox | dropdown | dropdown-menu` 的组件必须携带 `anatomy` 事实（component_geometry facet，闭集语义 `whole-trigger | split-trigger`）：`whole-trigger` 表示整行触发器是单一命中控件、尾随 affordance 图标只是其内部装饰（图标命中区属于触发器）；`split-trigger` 表示 affordance 是独立可点控件。该事实投影进 component geometry，Apply 不得发明与解剖相反的命中结构。
+
+作答方式与前两轮一致：facts 或指向目标 definition（scene/component/context）的显式 exclusions；`fidelity.yaml` 的 `mandatory_answers` 覆盖以上全部条目。

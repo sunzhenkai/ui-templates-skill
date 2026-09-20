@@ -29,12 +29,14 @@ FACT_PROPERTIES = {
     "padding_block_end", "padding_inline_start", "gap", "inset_block_start",
     "inset_inline_end", "inset_block_end", "inset_inline_start", "size", "radius",
     "surface", "border", "shadow", "background", "text", "text_decoration",
-    "visibility", "container_presentation", "anatomy", *CHROME_FACT_PROPERTIES,
+    "visibility", "container_presentation", "anatomy", "container_role",
+    *CHROME_FACT_PROPERTIES,
 }
 SEMANTIC_VALUES = {
     "none", "zero", "auto", "intrinsic", "fill", "non-wrap", "non-shrink",
     "underline", "visible", "hidden", "viewport", "region", "inline", "block",
-    "horizontal", "vertical", "overlay", "icon-label", "label-only", *CHROME_SEMANTIC_VALUES,
+    "horizontal", "vertical", "overlay", "icon-label", "label-only",
+    "root", "whole-trigger", "split-trigger", *CHROME_SEMANTIC_VALUES,
 }
 NEGATIVE_VALUES = {"none", "zero", "non-wrap", "non-shrink", "hidden"}
 HARD_LIMITS = {
@@ -168,6 +170,13 @@ def _validate_fact(raw: Any, where: str) -> dict[str, Any]:
         raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where}.negative must be boolean")
     if value["kind"] == "semantic" and value["value"] in NEGATIVE_VALUES and not fact["negative"]:
         raise CaptureError("NEGATIVE_FACT_NOT_EXPLICIT", f"{where} must mark {value['value']} as negative")
+    if value["kind"] == "semantic" and value["value"] not in NEGATIVE_VALUES and fact["negative"]:
+        # Positive semantics (e.g. underline) marked negative is a self-contradiction:
+        # "no underline" is expressed as value none + negative true, never underline + negative.
+        raise CaptureError(
+            "NEGATIVE_FACT_INVALID",
+            f"{where} marks positive semantic {value['value']} as negative; use none/negative for absence",
+        )
     return fact
 
 
@@ -504,7 +513,9 @@ def capture(request_data: Any, source_root: Path, graph_root: Path | None = None
                 "shell usage is missing a complete chrome composition",
                 gaps=gaps,
             )
-        matrix_gaps = mandatory_fact_gaps(graph, request["graph_path"], request["scope"]["scenes"])
+        matrix_gaps = mandatory_fact_gaps(
+            graph, request["graph_path"], request["scope"]["scenes"], request["scope"]["contexts"],
+        )
         if matrix_gaps:
             raise CaptureError(
                 MANDATORY_FACT_MISSING,

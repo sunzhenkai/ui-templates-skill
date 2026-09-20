@@ -827,6 +827,25 @@ def validate_placement(
                     "placement relation endpoint is dangling",
                     missing=missing,
                 )
+        for relation in scene.get("relations", []):
+            if not (isinstance(relation, dict) and relation.get("type") in ("contains", "owns")):
+                continue
+            declared_parent = next(
+                (
+                    item.get("parent")
+                    for item in regions
+                    if isinstance(item, dict) and item.get("id") == relation.get("to")
+                ),
+                None,
+            )
+            if declared_parent is not None and declared_parent != relation.get("from"):
+                fail(
+                    f"layers.layout.{route_id}.placement.relations",
+                    "contains/owns relation from contradicts region parent",
+                    region=relation.get("to"),
+                    edge_from=relation.get("from"),
+                    declared_parent=declared_parent,
+                )
         for domain in scene.get("scroll_domains", []):
             if isinstance(domain, dict) and domain.get("owner") not in region_ids:
                 fail(
@@ -1238,6 +1257,62 @@ def validate_binding(root: Path, manifest: dict[str, Any], layers: dict[str, Pat
     return binding
 
 
+def validate_fidelity_sidecar(target: Path, report: Report) -> None:
+    """Minimal closed semantics for the optional structural fidelity sidecar.
+
+    The sidecar is the source of Apply's derived expectations; self-contradictory
+    records (e.g. underline recorded as a negative fact) pass through as valid
+    expectations and defeat the gate, so they fail closed here.
+    """
+    path = target / "fidelity.yaml"
+    if not path.is_file():
+        return
+    data = load_document(path)
+    if not isinstance(data, dict) or data.get("conformance") != "structural":
+        return
+    for index, record in enumerate(data.get("state_presentations") or []):
+        if not isinstance(record, dict):
+            continue
+        decoration = record.get("text_decoration")
+        negatives = {
+            item.get("property")
+            for item in record.get("negative_facts") or []
+            if isinstance(item, dict)
+        }
+        if decoration == "underline" and "text_decoration" in negatives:
+            report.add(
+                "FIDELITY_STATE_DECORATION_CONFLICT",
+                f"fidelity.state_presentations.{index}.text_decoration",
+                f"underline cannot also be a negative fact; absence is none + negative (record {record.get('id')})",
+            )
+    for index, scene in enumerate(data.get("layout_scenes") or []):
+        if not isinstance(scene, dict):
+            continue
+        regions = [item for item in scene.get("regions") or [] if isinstance(item, dict)]
+        region_ids = {item.get("id") for item in regions if isinstance(item.get("id"), str)}
+        for region in regions:
+            parent = region.get("parent")
+            if isinstance(parent, str) and parent not in region_ids:
+                report.add(
+                    "FIDELITY_REGION_PARENT_DANGLING",
+                    f"fidelity.layout_scenes.{index}.regions",
+                    f"fidelity region parent is dangling (parent {parent}, region {region.get('id')})",
+                )
+        for relation in scene.get("relations") or []:
+            if not (isinstance(relation, dict) and relation.get("type") in ("contains", "owns")):
+                continue
+            declared = next(
+                (item.get("parent") for item in regions if item.get("id") == relation.get("to")),
+                None,
+            )
+            if declared is not None and declared != relation.get("from"):
+                report.add(
+                    "FIDELITY_CONTAINMENT_CONFLICT",
+                    f"fidelity.layout_scenes.{index}.relations",
+                    f"contains/owns relation from contradicts region parent (region {relation.get('to')})",
+                )
+
+
 def validate_target(
     target: Path,
     kind: str,
@@ -1265,6 +1340,7 @@ def validate_target(
     validate_claim_admission(layers, ids, report)
     validate_primitive_contracts(layers, documents, report)
     validate_placement(manifest, layers, ids, documents, report)
+    validate_fidelity_sidecar(target, report)
     report.component_family = derive_component_family(manifest, layers, ids)
     if require_component_family:
         enforce_family_closure(report.component_family, report)

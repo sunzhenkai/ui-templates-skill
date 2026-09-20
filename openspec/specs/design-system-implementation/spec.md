@@ -223,3 +223,77 @@ When structural fidelity is unavailable, Apply SHALL preserve style and componen
 #### Scenario: Prose upgraded to constraint
 - **WHEN** an Apply artifact converts an unstructured layout note into an ordered chrome or topology assertion
 - **THEN** Apply state validation fails and requires either removal of the assertion or a template upgrade through Authoring
+
+### Requirement: Architecture site detection ignores session state
+
+Apply 的 architecture-site 判定 SHALL 只依据输出根内的应用源码与依赖清单；会话状态目录（`.ui-template-apply` 账本、`.ui-template-design` Active Instance、`.git`）SHALL NOT 使输出根被判为 `existing`。adopt-only bootstrap 先落 Active Instance 后，输出根 SHALL 仍判定 `greenfield` 并等待架构确认。
+
+#### Scenario: adopt 后仍判定 greenfield
+
+- **WHEN** 输出根仅含 `.ui-template-design/`（design-system.yaml、binding.yaml、core/）与 `.ui-template-apply/`
+- **THEN** `architecture-site` 判定 `greenfield`
+
+#### Scenario: 工程文件出现仍判定 existing
+
+- **WHEN** 同一输出根出现 `package.json` 或应用源码文件
+- **THEN** `architecture-site` 判定 `existing`，与会话状态目录无关
+
+### Requirement: Derivable Phase 8 scenario enumeration
+
+Phase 8 required scenario 全集 SHALL 可由只读工具从 fidelity profile、Active Instance `core/layout.yaml` placement 与 measured expectation set 确确定性枚举，且与 checkpoint 校验的 fail-closed 集合同源同值。Apply 会话 SHALL 在采集 evidence 前获得该全集。
+
+#### Scenario: 采集前枚举全集
+
+- **WHEN** 会话以 fidelity/layout/expectations 三输入运行 `scenarios` 子命令
+- **THEN** 输出的 scenario ID 集合与 checkpoint 对同一模板执行 `FIDELITY_SCENARIO_COVERAGE_MISSING` 校验所要求的集合一致
+
+#### Scenario: 无 structural sidecar
+
+- **WHEN** 模板不携带 fidelity sidecar 或 conformance 非 structural
+- **THEN** 枚举结果为空集，chrome composition 类 scenario 保持 unavailable 语义
+
+### Requirement: Apply artifact write-time lint
+
+Apply 状态工具 SHALL 提供只读的产物写时校验入口，对单个 `.ui-template-apply` 产物报告：YAML/JSON 可解析、无裸日期（时间戳必须是带引号字符串）、digest 字段必须是 `{algorithm, value}` canonical 对象、值可 canonical JSON 编码。该校验 SHALL NOT 修改任何文件，SHALL NOT 替代 checkpoint/verification 门禁。
+
+#### Scenario: 裸日期与字符串 digest 被拒
+
+- **WHEN** 产物含 `created_at: 2026-09-20`（裸日期）或 `template_digest: git:abc`（身份字符串）
+- **THEN** lint 以非零退出报告对应 finding
+
+#### Scenario: 合规产物通过
+
+- **WHEN** 时间戳为带引号字符串、digest 为 canonical 对象、flow 序列条目已加引号
+- **THEN** lint 通过且不改动文件
+
+### Requirement: Placement containment consumption
+
+结构化 placement 可用时，Apply SHALL 按 placement regions 的 `parent` / `contains` 树实现嵌套（如 inset 壳里 `page-header`、`page-toolbar` 嵌套于 `page-canvas`）：header 属于哪张卡是采集事实，不是 Apply 的自由决定；regions 全部平级时才允许平级实现。给侧栏、分隔或 chrome 追加模板未声明的 border/ring 同样是布局形态决策：fidelity negative facts（如 `nav-group` border `none`）SHALL 按无装饰实现，组件库默认边框 SHALL NOT 覆盖；模板对该语义沉默时进入 unresolved 等待用户裁决。
+
+#### Scenario: 卡内 header 按嵌套实现
+
+- **WHEN** Active Instance layout placement 声明 `page-header` 的 parent 为 `page-canvas`
+- **THEN** 实现中 page header 的 bounding box 位于内容卡内，Phase 8 containment scenario 通过
+
+#### Scenario: 未声明的侧栏边框失败
+
+- **WHEN** fidelity 记录 `nav-group` border `none` negative fact，而实现的侧栏出现边框
+- **THEN** Phase 8 对应 negative scenario 记 failed
+
+### Requirement: Trigger hit-area follows anatomy
+
+选择类控件（select/combobox/dropdown）SHALL 按模板 component anatomy 事实实现触发器结构：`whole-trigger` 表示整行触发器是唯一命中控件、尾随 affordance 图标是其内部装饰（命中区必须覆盖图标位置）；`split-trigger` 表示 affordance 独立可点。模板未声明触发器解剖时 SHALL NOT 默认发明，进入 unresolved。Phase 8 交互验证 SHALL 覆盖 affordance 命中区：点击尾随图标中心必须激活触发器（或其独立控件），图标中心落在触发控件 bounding box 之外即 failed。
+
+#### Scenario: 图标点击穿透失效
+
+- **WHEN** 实现的下拉 chevron 图标中心位于触发控件 bounding box 之外且点击无效果
+- **THEN** Phase 8 affordance 命中区记录 failed
+
+### Requirement: Link baseline from default-state presentation
+
+链接类 semantic element 的静息 text-decoration SHALL 消费模板对应 context 的 default 态 state presentation（含 `none` negative facts），SHALL NOT 以浏览器或组件库默认下划线状态实现。Phase 8 SHALL 对 default 态 computed `text-decoration-line` 与记录值逐 context 比对；静息下划线、hover 消失等与记录相反的模式即 failed。
+
+#### Scenario: 静息下划线违背记录
+
+- **WHEN** 模板记录 `navigation-link` default 态 `text_decoration: none`（negative），而实现中导航链接静息 computed `text-decoration-line: underline`
+- **THEN** Phase 8 对应 state scenario 记 failed

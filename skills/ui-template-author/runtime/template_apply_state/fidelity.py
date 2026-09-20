@@ -45,6 +45,9 @@ def project_layout(profile: dict[str, Any] | None) -> list[str]:
         for fact in scene.get("negative_facts") or []:
             if isinstance(fact, dict):
                 identities.append(f"layout-negative:{scene_id}:{fact.get('property')}:{fact.get('value')}")
+        for region in scene.get("regions") or []:
+            if isinstance(region, dict) and isinstance(region.get("parent"), str):
+                identities.append(f"containment:{scene_id}:{region.get('id')}:in:{region['parent']}")
     return _sorted_ids(identities)
 
 
@@ -90,7 +93,7 @@ def derive_scenario_ids(
         return []
     identities: list[str] = []
     for item in project_layout(profile):
-        if item.startswith(("scroll:", "overlay:", "layout-negative:", "shell_variant:", "slot:", "anchor:")):
+        if item.startswith(("scroll:", "overlay:", "layout-negative:", "shell_variant:", "slot:", "anchor:", "containment:")):
             identities.append(f"phase8:{item}")
     for item in project_geometry_state(profile):
         identities.append(f"phase8:{item}")
@@ -117,6 +120,11 @@ def derive_scenario_ids(
                     )
             for pattern in placement.get("pattern_refs") or []:
                 identities.append(f"phase8:pattern-presence:{layout_id}:{pattern}")
+            for region in placement.get("regions") or []:
+                if isinstance(region, dict) and isinstance(region.get("parent"), str):
+                    identities.append(
+                        f"phase8:placement-containment:{layout_id}:{region.get('id')}:in:{region['parent']}"
+                    )
             for domain in placement.get("scroll_domains") or []:
                 if isinstance(domain, dict) and domain.get("owner"):
                     identities.append(
