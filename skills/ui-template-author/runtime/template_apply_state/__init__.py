@@ -11,6 +11,8 @@ from .fidelity import (
 from .state import (
     ApplyStateError,
     Finding,
+    artifact_value,
+    build_checkpoint,
     build_identity,
     canonical_digest,
     canonical_json_bytes,
@@ -34,6 +36,8 @@ from .state import (
 __all__ = [
     "ApplyStateError",
     "Finding",
+    "artifact_value",
+    "build_checkpoint",
     "build_identity",
     "canonical_digest",
     "canonical_json_bytes",

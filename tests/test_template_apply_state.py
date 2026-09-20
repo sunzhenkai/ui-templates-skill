@@ -27,7 +27,7 @@ from scripts.template_apply_state import (
     validate_feedback_inbox,
     validate_verification,
 )
-from scripts.template_apply_state.state import PHASE_ARTIFACTS, _artifact_value
+from scripts.template_apply_state.state import PHASE_ARTIFACTS, artifact_value
 
 NOW = "2026-09-03T16:00:00Z"
 
@@ -64,6 +64,7 @@ class ApplyStateTests(unittest.TestCase):
         record = self._record("passed" if kind == "phase-8-verification" else "recheck-passed", evidence)
         if kind == "phase-8-verification":
             record["id"] = self.phase8_record_id
+            record["scenario_ids"] = ["phase8:demo:default"]
         else:
             record["phase8_record_id"] = self.phase8_record_id
         return {
@@ -113,7 +114,7 @@ class ApplyStateTests(unittest.TestCase):
         for phase in range(10):
             artifacts = []
             for relative in PHASE_ARTIFACTS[phase]:
-                artifacts.append({"path": relative, "digest": canonical_digest(_artifact_value(self.root / relative))})
+                artifacts.append({"path": relative, "digest": canonical_digest(artifact_value(self.root / relative))})
             phases.append({"id": phase, "status": "complete", "artifacts": artifacts, "evidence_refs": []})
         return {
             "schema_version": 2,
@@ -614,7 +615,7 @@ class ApplyStateTests(unittest.TestCase):
         architecture.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False), encoding="utf-8")
         for item in phase0["artifacts"]:
             if item["path"] == "00-architecture.yaml":
-                item["digest"] = canonical_digest(_artifact_value(architecture))
+                item["digest"] = canonical_digest(artifact_value(architecture))
         findings = self.validate()
         blocked_phases = {finding.phase for finding in findings if finding.code == "ARCHITECTURE_UNCONFIRMED"}
         self.assertEqual(set(range(10)), blocked_phases)
@@ -627,6 +628,151 @@ class ApplyStateTests(unittest.TestCase):
         self.assertIn("CHECKPOINT_RESOLVED_PATH_MISMATCH", {item.code for item in self.validate()})
         self.checkpoint["template"].pop("resolved_path")
         self.assertIn("CHECKPOINT_TEMPLATE_PIN_INCOMPLETE", {item.code for item in self.validate()})
+
+    def test_schema_dir_candidates_cover_repo_runtime_and_installed_layouts(self) -> None:
+        from scripts.template_apply_state.state import _schema_dir_candidates, _schema_store
+
+        installed = Path("/home/x/.claude/skills/ui-template-apply/runtime/template_apply_state/state.py")
+        candidates = _schema_dir_candidates(installed)
+        self.assertEqual(Path("/home/x/.claude/skills/ui-template-apply/runtime/schemas/template/v2"), candidates[0])
+        self.assertEqual(Path("/home/x/.claude/skills/ui-template-apply/schemas/template/v2"), candidates[1])
+        self.assertEqual(
+            Path("/home/x/.claude/skills/ui-template-author/runtime/schemas/template/v2"),
+            candidates[2],
+        )
+        repo_root = Path(__file__).resolve().parents[1]
+        store = _schema_store()
+        self.assertEqual(repo_root / "schemas/template/v2", store.directory)
+        self.assertIn("checkpoint.schema.json", store.schemas)
+
+    def test_schema_store_missing_schema_file_raises_actionable_error(self) -> None:
+        from scripts.template_apply_state.state import _schema_findings
+
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError, "schema 文件缺失"):
+                _schema_findings(
+                    "architecture", {"schema_version": 2}, "00-architecture.yaml", schema_dir=Path(temp),
+                )
+
+    def test_apply_checkpoint_marker_skips_only_checkpoint_kind(self) -> None:
+        from scripts.template_apply_state.state import _schema_findings
+
+        marked = {"schema": "design-system-apply-checkpoint/v1", "records": []}
+        self.assertEqual([], _schema_findings("checkpoint", marked, "checkpoint.yaml"))
+        self.assertNotEqual([], _schema_findings("verification", marked, "08-verification.json"))
+
+    def test_phase8_records_require_scenario_ids_and_phase9_forbids_them(self) -> None:
+        from scripts.template_apply_state.state import _schema_findings
+
+        schema_dir = Path(__file__).resolve().parents[1] / "schemas/template/v2"
+
+        def record(scenario_ids: list[str] | None) -> dict:
+            item = self._record("passed", "evidence/phase8.txt")
+            if scenario_ids is None:
+                item.pop("scenario_ids", None)
+            else:
+                item["scenario_ids"] = scenario_ids
+            return item
+
+        def phase8(item: dict) -> dict:
+            return {
+                "schema_version": 2, "kind": "phase-8-verification",
+                "template_digest": canonical_digest(self.template),
+                "source_identity": self.source, "build_identity": self.build,
+                "browser_identity": "Chromium 128", "records": [item], "created_at": NOW,
+            }
+
+        missing = _schema_findings("verification", phase8(record(None)), "08.json", schema_dir=schema_dir, phase=8)
+        self.assertTrue(any("scenario_ids" in item.message for item in missing))
+        self.assertEqual([], _schema_findings("verification", phase8(record(["phase8:demo:default"])), "08.json", schema_dir=schema_dir, phase=8))
+        forbidden = self._verification("phase-9-review")
+        forbidden["records"][0]["scenario_ids"] = ["phase8:demo:default"]
+        findings = _schema_findings("verification", forbidden, "09.md", schema_dir=schema_dir, phase=9)
+        self.assertTrue(any("scenario_ids" in item.message for item in findings))
+
+    def test_bootstrap_site_flip_after_implementation_does_not_mismatch(self) -> None:
+        from scripts.template_apply_state.state import _architecture_findings
+
+        (self.root.parent / "src").mkdir()
+        (self.root.parent / "src/main.ts").write_text("export {}\n", encoding="utf-8")
+        landed = _architecture_findings(self.root, {8: {"status": "complete"}}, None)
+        self.assertNotIn("ARCHITECTURE_SITE_MISMATCH", {item.code for item in landed})
+        early = _architecture_findings(self.root, {4: {"status": "complete"}}, None)
+        self.assertIn("ARCHITECTURE_SITE_MISMATCH", {item.code for item in early})
+        unconfirmed = yaml.safe_load((self.root / "00-architecture.yaml").read_text(encoding="utf-8"))
+        unconfirmed["confirmed_by_user"] = False
+        (self.root / "00-architecture.yaml").write_text(yaml.safe_dump(unconfirmed, allow_unicode=True, sort_keys=False), encoding="utf-8")
+        flushed = _architecture_findings(self.root, {8: {"status": "complete"}}, None)
+        self.assertIn("ARCHITECTURE_SITE_MISMATCH", {item.code for item in flushed})
+
+    def test_scroll_owner_list_reports_finding_instead_of_typeerror(self) -> None:
+        from scripts.template_apply_state.state import _route_composition_findings
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "02-routes.yaml").write_text(yaml.safe_dump({
+                "routes": [{
+                    "id": "route/detail", "path": "/detail", "page_type": "page-type/detail",
+                    "pattern_refs": ["pattern/list-page"], "layout_ref": "layout/main",
+                    "scroll_owner": ["region-canvas"], "structural_verification": "available",
+                    "placement_plan": {"template_refs": ["pattern/list-page"]},
+                }],
+            }, sort_keys=False), encoding="utf-8")
+            placement_context = {
+                "layouts": {"layout/main": {"id": "layout/main", "page_type": "page-type/detail", "placement": {
+                    "scroll_domains": [
+                        {"id": "pane-nav", "axis": "y", "owner": "region-nav"},
+                        {"id": "pane-canvas", "axis": "y", "owner": "region-canvas"},
+                    ],
+                }}},
+                "page_type_patterns": {"page-type/detail": ["pattern/list-page"]},
+            }
+            findings = _route_composition_findings(
+                root,
+                {2: {"status": "complete"}},
+                {"page_types": {"page-type/detail"}, "patterns": {"pattern/list-page"}},
+                placement_context=placement_context,
+                structural_available=True,
+            )
+            codes = {item.code for item in findings}
+            self.assertIn("SCROLL_OWNER_UNTRACE", codes)
+            self.assertIn("MULTI_PANE_ROOT_REQUIRED", codes)
+
+    def test_recovery_decision_splits_checkpoint_valid_from_resume_cursor(self) -> None:
+        decision = recovery_decision([], self.checkpoint)
+        self.assertTrue(decision["checkpoint_valid"])
+        self.assertIsNone(decision["earliest_phase"])
+        blocked = recovery_decision([Finding("CHECKPOINT_TOKEN_DRIFT", "checkpoint.yaml#tokens_digest", "tokens 语义已变化", 1)], self.checkpoint)
+        self.assertFalse(blocked["checkpoint_valid"])
+        self.assertEqual(1, blocked["earliest_phase"])
+        self.assertNotIn("valid", decision)
+
+    def test_build_checkpoint_round_trips_zero_findings(self) -> None:
+        from scripts.template_apply_state import build_checkpoint
+
+        checkpoint = build_checkpoint(
+            template_value=self.template,
+            tokens_value=self.tokens,
+            scope=self.scope,
+            source_identity=self.source,
+            build_identity=self.build,
+            fidelity_value=None,
+            now=NOW,
+        )
+        self.assertEqual("design-system-apply-checkpoint/v1", checkpoint["schema"])
+        self.assertEqual("catalog/demo", checkpoint["template"]["resolved_path"])
+        self.assertEqual(canonical_digest(self.template), checkpoint["template"]["digest"])
+        self.assertEqual([phase["id"] for phase in checkpoint["phases"]], list(range(10)))
+        self.assertEqual([], validate_checkpoint(
+            checkpoint,
+            apply_root=self.root,
+            template_value=self.template,
+            tokens_value=self.tokens,
+            scope=self.scope,
+            source_identity=self.source,
+            build_identity=self.build,
+            known_rule_ids={"NN-001"},
+        ))
 
 
 class CliScenariosAndLintTests(unittest.TestCase):
@@ -710,6 +856,61 @@ class CliScenariosAndLintTests(unittest.TestCase):
             code, payload = self._run_cli("artifact-lint", str(bad))
         self.assertEqual(1, code)
         self.assertEqual("ARTIFACT_UNPARSEABLE", payload["findings"][0]["code"])
+
+    def test_digest_cli_uses_markdown_envelope_and_structured_loading(self) -> None:
+        from scripts.template_apply_state import canonical_digest
+
+        with tempfile.TemporaryDirectory() as temp:
+            md = Path(temp) / "09-review.md"
+            md.write_text("# Review\r\n| a | b |\r\n", encoding="utf-8")
+            code, payload = self._run_cli("digest", str(md))
+            self.assertEqual(0, code)
+            self.assertEqual(
+                canonical_digest({"media_type": "text/markdown", "text": "# Review\n| a | b |\n"}),
+                payload,
+            )
+            structured = Path(temp) / "a.yaml"
+            structured.write_text("b: 2\na: [1]\n", encoding="utf-8")
+            code, payload = self._run_cli("digest", str(structured))
+            self.assertEqual(0, code)
+            self.assertEqual(canonical_digest({"a": [1], "b": 2}), payload)
+
+    def test_checkpoint_init_round_trips_checkpoint_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            template = base / "meta.yaml"
+            template.write_text(
+                yaml.safe_dump({"schema_version": 2, "name": "demo", "template_version": "2.0.0"}),
+                encoding="utf-8",
+            )
+            tokens = base / "tokens.yaml"
+            tokens.write_text("schema_version: 2\nthemes: {}\n", encoding="utf-8")
+            scope = base / "scope.yaml"
+            scope.write_text(
+                yaml.safe_dump({"scope": {"included": ["/"], "deferred": [], "excluded": []}}),
+                encoding="utf-8",
+            )
+            argv = [
+                "--template", str(template), "--tokens", str(tokens), "--scope", str(scope),
+                "--source-identity", "git:abc:clean", "--build-identity", "build:x",
+            ]
+            code, payload = self._run_cli(
+                "checkpoint-init", "--apply-root", str(base / ".ui-template-apply"), *argv,
+            )
+            self.assertEqual(0, code)
+            self.assertTrue(payload["valid"])
+
+            code, payload = self._run_cli(
+                "checkpoint-init", "--apply-root", str(base / ".ui-template-apply"), *argv,
+            )
+            self.assertEqual(1, code)
+            self.assertIn("已存在", payload["error"])
+
+            code, payload = self._run_cli("checkpoint", "--apply-root", str(base / ".ui-template-apply"), *argv)
+            self.assertEqual(0, code)
+            self.assertTrue(payload["checkpoint_valid"])
+            self.assertEqual([], payload["findings"])
+            self.assertEqual(0, payload["earliest_phase"])
 
 
 if __name__ == "__main__":

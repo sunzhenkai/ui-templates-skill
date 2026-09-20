@@ -34,6 +34,11 @@ class SchemaStore:
 
     def errors(self, kind: str, instance: Any) -> list[tuple[str, str, dict[str, Any]]]:
         filename = SCHEMA_FILES[kind]
+        if filename not in self.schemas:
+            raise ValueError(
+                f"schema 文件缺失: {filename} 不在 {self.directory}；"
+                "template v2 schema 应位于仓库根 schemas/template/v2、runtime/schemas/template/v2 或兄弟 skill ui-template-author/runtime/schemas/template/v2"
+            )
         validator = Draft202012Validator(
             self.schemas[filename], registry=self.registry, format_checker=FormatChecker(),
         )

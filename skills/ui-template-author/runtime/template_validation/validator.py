@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -18,6 +19,21 @@ from .fidelity import (
     FidelityError,
     UNKNOWN,
 )
+
+
+def _ensure_template_authoring_import_path() -> None:
+    """仓库 scripts 布局与兄弟 skill 安装布局下自解析 template_authoring。"""
+    here = Path(__file__).resolve()
+    for candidate in (
+        here.parents[1] / "template_authoring",
+        here.parents[3] / "ui-template-author" / "runtime" / "template_authoring",
+    ):
+        if (candidate / "chrome.py").is_file() and str(candidate) not in sys.path:
+            sys.path.insert(0, str(candidate))
+
+
+_ensure_template_authoring_import_path()
+
 from template_authoring.chrome import LAYOUT_HIGH_WITHOUT_CHROME, chrome_complete_sidecar
 from .loading import LoadError, load_data
 from .model import ValidationResult

@@ -223,7 +223,7 @@ def build_identity(command: str, artifact: Path) -> str:
     return "build:" + canonical_digest(payload)["value"]
 
 
-def _artifact_value(path: Path) -> Any:
+def artifact_value(path: Path) -> Any:
     if path.suffix.lower() in {".yaml", ".yml", ".json"}:
         return load_structured(path)
     if path.suffix.lower() == ".md":
@@ -231,15 +231,37 @@ def _artifact_value(path: Path) -> Any:
     return {"media_type": "application/octet-stream", "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
 
 
+def _schema_dir_candidates(here: Path) -> list[Path]:
+    # repo scripts 布局 → 仓库根 canonical；runtime 布局 → 自带 portable 拷贝；
+    # 安装态 apply skill schema 归 author skill 所有 → 兄弟目录 discovery。
+    return [
+        here.parents[1] / "schemas/template/v2",
+        here.parents[2] / "schemas/template/v2",
+        here.parents[3] / "ui-template-author/runtime/schemas/template/v2",
+    ]
+
+
 def _schema_store(schema_dir: Path | None = None) -> SchemaStore:
-    directory = schema_dir or Path(__file__).resolve().parents[2] / "schemas/template/v2"
-    return SchemaStore(directory)
+    if schema_dir is not None:
+        return SchemaStore(schema_dir)
+    here = Path(__file__).resolve()
+    candidates = _schema_dir_candidates(here)
+    for candidate in candidates:
+        if (candidate / "checkpoint.schema.json").is_file():
+            return SchemaStore(candidate)
+    raise ApplyStateError(
+        "template v2 schema 目录未找到（已探测: "
+        + "; ".join(str(item) for item in candidates)
+        + "）；安装态应随 ui-template-author/runtime/schemas/template/v2 存在，或用 schema_dir 显式指定"
+    )
 
 
 def _schema_findings(kind: str, data: Any, path: str, schema_dir: Path | None = None, phase: int | None = None) -> list[Finding]:
     if not isinstance(data, dict):
         return [Finding("APPLY_SCHEMA_INVALID", path, "记录根必须是 object", phase)]
-    if data.get("schema") == "design-system-apply-checkpoint/v1":
+    # design-system-apply-checkpoint/v1 是 apply 会话 checkpoint 的文档化格式，
+    # 由 validate_checkpoint 自身逐项校验；该标记不得豁免其他 kind 的 schema 校验。
+    if kind == "checkpoint" and data.get("schema") == "design-system-apply-checkpoint/v1":
         return []
     if data.get("schema_version") != 2:
         return [Finding("APPLY_SCHEMA_UNSUPPORTED", path, "仅支持 schema_version: 2", phase, {"declared": data.get("schema_version")})]
@@ -382,7 +404,18 @@ def _architecture_findings(
                 ))
             else:
                 detected = detect_architecture_site(target)
-                if data.get("site") != detected:
+                # bootstrap 实现落地后输出根必然翻转为 existing；这是本次会话的预期结果，
+                # 不是 Phase 0 误判——只有实现开始前（Phase <5）的翻转才是站点声明错误。
+                implementation_landed = any(
+                    phase.get("status") == "complete" for phase_id, phase in phases.items()
+                    if isinstance(phase_id, int) and phase_id >= 5
+                )
+                site_mismatch = data.get("site") != detected and not (
+                    data.get("site") == "greenfield"
+                    and data.get("confirmed_by_user")
+                    and implementation_landed
+                )
+                if site_mismatch:
                     findings.append(Finding(
                         "ARCHITECTURE_SITE_MISMATCH",
                         "00-architecture.yaml#site",
@@ -520,7 +553,7 @@ def validate_checkpoint(
                 findings.append(Finding("CHECKPOINT_ARTIFACT_MISSING", str(raw_path), "checkpoint artifact 不存在", phase_id))
                 continue
             try:
-                actual_digest = canonical_digest(_artifact_value(artifact))
+                actual_digest = canonical_digest(artifact_value(artifact))
             except (ApplyStateError, OSError, UnicodeError) as exc:
                 findings.append(Finding("CHECKPOINT_ARTIFACT_INVALID", str(raw_path), "artifact 无法读取", phase_id, {"error": str(exc)}))
                 continue
@@ -765,7 +798,15 @@ def _route_composition_findings(
                     if isinstance(domain, dict)
                 } - {None}
                 scroll_owner = raw.get("scroll_owner")
-                if scroll_owner is not None and owners and scroll_owner not in owners:
+                if scroll_owner is not None and not isinstance(scroll_owner, str):
+                    findings.append(Finding(
+                        "SCROLL_OWNER_UNTRACE",
+                        f"02-routes.yaml#{route_path}.scroll_owner",
+                        "scroll_owner 必须是单字符串（绑定 layout placement 的 scroll domain owner region id）；多窗格滚动用 multi_pane: true 表达，不是列表",
+                        2,
+                        {"declared_type": type(scroll_owner).__name__},
+                    ))
+                elif scroll_owner is not None and owners and scroll_owner not in owners:
                     findings.append(Finding(
                         "SCROLL_OWNER_UNTRACE",
                         f"02-routes.yaml#{route_path}.scroll_owner",
@@ -908,6 +949,7 @@ def _route_composition_findings(
 
 
 def recovery_decision(findings: Iterable[Finding], checkpoint: dict[str, Any]) -> dict[str, Any]:
+    """checkpoint_valid 只看 findings；earliest_phase 是独立维度的 resume 游标。"""
     findings = _sorted_findings(findings)
     candidate_phases = [finding.phase for finding in findings if finding.phase is not None]
     for phase in checkpoint.get("phases", []) if isinstance(checkpoint.get("phases"), list) else []:
@@ -915,10 +957,78 @@ def recovery_decision(findings: Iterable[Finding], checkpoint: dict[str, Any]) -
             candidate_phases.append(phase["id"])
     earliest = min(candidate_phases) if candidate_phases else None
     return {
-        "valid": not findings and earliest is None,
+        "checkpoint_valid": not findings,
         "earliest_phase": earliest,
         "findings": [finding.to_dict() for finding in findings],
     }
+
+
+def build_checkpoint(
+    *,
+    template_value: Any,
+    tokens_value: Any,
+    scope: dict[str, Any],
+    source_identity: str,
+    build_identity: str,
+    mode: str = "bootstrap",
+    fidelity_value: Any | None = None,
+    origin: str | None = None,
+    resolved_path: str | None = None,
+    output_root: str | None = None,
+    contract: dict[str, Any] | None = None,
+    binding_digest: dict[str, Any] | None = None,
+    change_set: list[str] | None = None,
+    now: str | None = None,
+) -> dict[str, Any]:
+    """生成与 validate_checkpoint 口径一致、可零 findings 通过校验的 checkpoint。
+
+    template.digest 与 tokens_digest 必须用与校验器相同的 identity 口径计算：
+    有 fidelity sidecar 时绑定 {template, fidelity}，否则只绑 template。
+    """
+    if mode not in {"bootstrap", "increment"}:
+        raise ApplyStateError("mode 只能是 bootstrap 或 increment")
+    identity_value = template_value if fidelity_value is None else {"template": template_value, "fidelity": fidelity_value}
+    current = _template_identity(template_value)
+    name = current.get("name")
+    if not isinstance(name, str) or not name:
+        raise ApplyStateError("模板 meta 缺少 name，无法生成 checkpoint")
+    if (origin is None) != (resolved_path is None):
+        raise ApplyStateError("origin 与 resolved_path 必须成对提供或同时缺省")
+    if origin is None:
+        origin, resolved_path = "catalog", f"catalog/{name}"
+    if origin not in {"catalog", "project"}:
+        raise ApplyStateError("origin 只能是 catalog 或 project")
+    expected_path = f"{'templates' if origin == 'project' else 'catalog'}/{name}"
+    if resolved_path != expected_path:
+        raise ApplyStateError(f"resolved_path 与 origin/name 不一致: 期望 {expected_path}")
+    fidelity_profile = fidelity_value.get("profile") if isinstance(fidelity_value, dict) else None
+    checkpoint: dict[str, Any] = {
+        "schema": "design-system-apply-checkpoint/v1",
+        "mode": mode,
+        "template": {
+            "name": name,
+            "version": current.get("version"),
+            "origin": origin,
+            "resolved_path": resolved_path,
+            "fidelity": fidelity_profile if isinstance(fidelity_profile, str) else "legacy-baseline",
+            "digest": canonical_digest(identity_value),
+        },
+        "tokens_digest": canonical_digest(tokens_value),
+        "scope": scope,
+        "source_identity": source_identity,
+        "build_identity": build_identity,
+        "phases": [{"id": phase_id, "status": "pending", "artifacts": []} for phase_id in range(10)],
+        "updated_at": _timestamp(now),
+    }
+    if output_root is not None:
+        checkpoint["output_root"] = output_root
+    if contract is not None:
+        checkpoint["contract"] = contract
+    if binding_digest is not None:
+        checkpoint["binding_digest"] = binding_digest
+    if change_set is not None:
+        checkpoint["change_set"] = change_set
+    return checkpoint
 
 
 def recover_checkpoint(checkpoint: dict[str, Any], decision: dict[str, Any]) -> dict[str, Any]:

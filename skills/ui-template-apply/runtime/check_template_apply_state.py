@@ -7,8 +7,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from template_apply_state import (
     ApplyStateError,
+    artifact_value,
+    build_checkpoint,
     build_identity,
     canonical_digest,
     detect_architecture_site,
@@ -20,6 +24,7 @@ from template_apply_state import (
     validate_feedback_inbox,
     validate_verification,
 )
+from template_apply_state.state import DIGEST_ALGORITHM
 
 
 def collect_active_layers(active_instance: Path) -> dict[str, set[str]] | None:
@@ -71,6 +76,27 @@ def parser() -> argparse.ArgumentParser:
     sub = result.add_subparsers(dest="command", required=True)
     digest = sub.add_parser("digest")
     digest.add_argument("path", type=Path)
+    init = sub.add_parser(
+        "checkpoint-init",
+        help="生成一次通过 checkpoint 校验的 checkpoint.yaml（自动计算 template.digest/tokens_digest）",
+    )
+    init.add_argument("--apply-root", type=Path, required=True)
+    init.add_argument("--template", type=Path, required=True, help="模板 meta 或含 meta 的 envelope")
+    init.add_argument("--tokens", type=Path, required=True)
+    init.add_argument("--scope", type=Path, required=True)
+    init.add_argument("--fidelity", type=Path, help="模板/Active Instance 的 fidelity.yaml；缺省按 legacy-baseline")
+    init.add_argument("--source-identity", required=True)
+    init.add_argument("--build-identity", required=True)
+    init.add_argument("--mode", choices=["bootstrap", "increment"], default="bootstrap")
+    init.add_argument("--origin", choices=["catalog", "project"], help="缺省 catalog")
+    init.add_argument("--resolved-path", help="缺省按 origin 推导 catalog|templates/<name>")
+    init.add_argument("--output-root", help="相对消费项目根的输出根")
+    init.add_argument("--contract-id")
+    init.add_argument("--contract-version")
+    init.add_argument("--contract-digest", help="contract digest 的 sha256 hex；落盘为 canonical {algorithm, value} 对象")
+    init.add_argument("--binding-digest", help="binding digest 的 sha256 hex；落盘为 canonical {algorithm, value} 对象")
+    init.add_argument("--change-set", action="append", help="可重复；记录本次 increment 的 change set")
+    init.add_argument("--force", action="store_true", help="允许覆盖已存在的 checkpoint.yaml")
     source = sub.add_parser("source-identity")
     source.add_argument("root", type=Path)
     site = sub.add_parser("architecture-site", help="判定本次前端输出根，不是仓库根")
@@ -125,11 +151,55 @@ def parser() -> argparse.ArgumentParser:
     return result
 
 
+def run_checkpoint_init(args: argparse.Namespace) -> int:
+    contract: dict[str, Any] | None = None
+    if any([args.contract_id, args.contract_version, args.contract_digest]):
+        if not all([args.contract_id, args.contract_version, args.contract_digest]):
+            print(json.dumps({"valid": False, "error": "--contract-id/--contract-version/--contract-digest 必须同时提供"}, ensure_ascii=False))
+            return 1
+        contract = {
+            "id": args.contract_id,
+            "version": args.contract_version,
+            "digest": {"algorithm": DIGEST_ALGORITHM, "value": args.contract_digest},
+        }
+    scope_doc = load_structured(args.scope)
+    scope = scope_doc.get("scope", scope_doc) if isinstance(scope_doc, dict) else scope_doc
+    try:
+        checkpoint = build_checkpoint(
+            template_value=load_structured(args.template),
+            tokens_value=load_structured(args.tokens),
+            scope=scope,
+            source_identity=args.source_identity,
+            build_identity=args.build_identity,
+            mode=args.mode,
+            fidelity_value=load_structured(args.fidelity) if args.fidelity else None,
+            origin=args.origin,
+            resolved_path=args.resolved_path,
+            output_root=args.output_root,
+            contract=contract,
+            binding_digest={"algorithm": DIGEST_ALGORITHM, "value": args.binding_digest} if args.binding_digest else None,
+            change_set=args.change_set,
+        )
+    except ApplyStateError as exc:
+        print(json.dumps({"valid": False, "error": str(exc)}, ensure_ascii=False))
+        return 1
+    target = args.apply_root / "checkpoint.yaml"
+    if target.exists() and not args.force:
+        print(json.dumps({"valid": False, "error": f"{target} 已存在；确认覆盖请加 --force"}, ensure_ascii=False))
+        return 1
+    args.apply_root.mkdir(parents=True, exist_ok=True)
+    target.write_text(yaml.safe_dump(checkpoint, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    print(json.dumps({"valid": True, "path": str(target), "checkpoint": checkpoint}, ensure_ascii=False, sort_keys=True))
+    return 0
+
+
 def main() -> int:
     args = parser().parse_args()
     if args.command == "digest":
-        print(json.dumps(canonical_digest(load_structured(args.path)), ensure_ascii=False, sort_keys=True))
+        print(json.dumps(canonical_digest(artifact_value(args.path)), ensure_ascii=False, sort_keys=True))
         return 0
+    if args.command == "checkpoint-init":
+        return run_checkpoint_init(args)
     if args.command == "source-identity":
         print(source_identity(args.root))
         return 0
@@ -263,6 +333,8 @@ def main() -> int:
         )
         payload = recovery_decision(findings, checkpoint)
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
+    if args.command == "checkpoint":
+        return 0 if payload["checkpoint_valid"] else 1
     return 0 if payload["valid"] else 1
 
 

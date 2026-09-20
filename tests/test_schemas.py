@@ -60,7 +60,7 @@ class SchemaTests(unittest.TestCase):
             with self.subTest(case=case["id"], paths=paths):
                 self.assertTrue(errors)
                 self.assertTrue(any(path.startswith(case["expected_path"]) or case["expected_path"].startswith(path) for path in paths))
-        self.assertEqual(schema_cases, 14)
+        self.assertEqual(schema_cases, 15)
 
     def test_semantic_bad_fixtures_have_stable_codes(self) -> None:
         for case in self.bad:
@@ -78,6 +78,16 @@ class SchemaTests(unittest.TestCase):
                 self.assertIn(case["expected_semantic"], codes)
 
 
+
+    def test_template_v2_runtime_copy_matches_canonical(self) -> None:
+        canonical = ROOT / "schemas/template/v2"
+        runtime = ROOT / "skills/ui-template-author/runtime/schemas/template/v2"
+        self.assertEqual(
+            {path.name for path in canonical.glob("*.schema.json")},
+            {path.name for path in runtime.glob("*.schema.json")},
+        )
+        for path in sorted(canonical.glob("*.schema.json")):
+            self.assertEqual(path.read_bytes(), (runtime / path.name).read_bytes(), path.name)
 
     def test_legacy_schema_field_is_explicitly_unsupported(self) -> None:
         validator = TemplateValidator(ROOT)

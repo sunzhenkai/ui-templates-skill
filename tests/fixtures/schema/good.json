@@ -280,6 +280,9 @@
         "state": "default",
         "evidence_refs": [
           "evidence/a.png"
+        ],
+        "scenario_ids": [
+          "phase8:demo:default"
         ]
       }
     ],

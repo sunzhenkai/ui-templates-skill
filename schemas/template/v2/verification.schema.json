@@ -19,7 +19,7 @@
       "if": {"properties": {"kind": {"const": "phase-8-verification"}}, "required": ["kind"]},
       "then": {
         "properties": {
-          "records": {"items": {"allOf": [{"$ref": "#/$defs/record"}, {"properties": {"status": {"enum": ["passed", "failed", "waived"]}}, "not": {"required": ["phase8_record_id"]}}]}}
+          "records": {"items": {"allOf": [{"$ref": "#/$defs/record"}, {"properties": {"status": {"enum": ["passed", "failed", "waived"]}}, "required": ["scenario_ids"], "not": {"required": ["phase8_record_id"]}}]}}
         }
       }
     },
@@ -27,7 +27,7 @@
       "if": {"properties": {"kind": {"const": "phase-9-review"}}, "required": ["kind"]},
       "then": {
         "properties": {
-          "records": {"items": {"allOf": [{"$ref": "#/$defs/record"}, {"required": ["phase8_record_id"], "properties": {"status": {"enum": ["recheck-passed", "recheck-failed"]}}}]}}
+          "records": {"items": {"allOf": [{"$ref": "#/$defs/record"}, {"required": ["phase8_record_id"], "properties": {"status": {"enum": ["recheck-passed", "recheck-failed"]}}, "not": {"required": ["scenario_ids"]}}]}}
         }
       }
     }

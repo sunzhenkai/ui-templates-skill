@@ -80,7 +80,18 @@ python3 skills/ui-template-apply/runtime/check_template_apply_state.py artifact-
 5. `fidelity.yaml` 检测：structural 记录 profile/conformance/scope/canonical digest 与 unresolved decisions；无 sidecar 明确 `structural fidelity unavailable`（legacy-baseline）；style-only 明确未提供 layout/geometry/state；未知 profile 停止。checkpoint `template.digest` 必须绑定 `{template: meta, fidelity: profile}` 的 canonical digest；有 sidecar 但缺该绑定不得进入 Phase 5。
 6. Gate：schema/origin/checker 通过，范围与非目标经确认。不得把原版源码或已有生成物写入 intake 作为实现输入；生成物落到本次约定的空目录或当前输出目录，不得参考已有生成物。用户要求对齐原版时仍只消费 Active Instance，并把对照需求移交模板认证链路（见 [source-blind-boundary.md](source-blind-boundary.md)）；不得读取原版或记录 oracle 实现输入。
 
-`00-architecture.yaml` 使用 `architecture.schema.json`：必填 `output_root`（相对消费项目根，禁止 `..`）；`site` 为 `greenfield | existing` 且必须与对该输出根的探测一致；`layers` 固定为 language、UI framework、bundler、routing、styling、client/server state、data access、unit/browser verification、package manager、repo shape；greenfield 必须有 `confirmed_by_user: true` 与预声明 `build_identity`，可记录拟用 `init_command` 与 `observed_constraints`；existing 必须记录 `observed_stack`。greenfield 未确认前只允许写 `.ui-template-apply/`，不得写依赖清单、工程配置或应用源码；后续任何 phase 不得 complete。
+`00-architecture.yaml` 使用 `architecture.schema.json`：必填 `output_root`（相对消费项目根，禁止 `..`）；`site` 为 `greenfield | existing` 且必须与对该输出根的探测一致——bootstrap 实现落地后探测翻转为 `existing` 是本次会话的预期结果，checkpoint 在 `confirmed_by_user: true` 且任一 Phase ≥5 complete 时不再报 `ARCHITECTURE_SITE_MISMATCH`，不要回改 Phase 0 产物。`layers` 固定 11 键，不得追加 `notes` 等扩展键，`observed_constraints`/`init_command` 是字符串不是列表：
+
+```yaml
+schema_version: 2
+site: greenfield
+output_root: apps/agent-web
+confirmed_by_user: true
+build_identity: build:<sha>
+layers: {language: typescript, ui_framework: react, bundler: vite, routing: react-router, styling: tailwind, state: zustand, data: tanstack-query, unit_test: vitest, browser: playwright, package_manager: pnpm, repo_shape: monorepo-app}
+```
+
+greenfield 必须有 `confirmed_by_user: true` 与预声明 `build_identity`，可记录拟用 `init_command` 与 `observed_constraints`；existing 必须记录 `observed_stack`。greenfield 未确认前只允许写 `.ui-template-apply/`，不得写依赖清单、工程配置或应用源码；后续任何 phase 不得 complete。
 
 ## Phase 1 — Design direction & token freeze
 
@@ -92,7 +103,7 @@ Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可�
 
 ## Phase 2 — IA/layout/routes（`02-routes.yaml`）
 
-记录 route、页面模式、入口/主要动作、URL params、`layout_ref`、`page_type`、`pattern_refs`、`scroll_owner`、`structural_verification`、响应式矩阵及无效状态；跨页目的地为 link。每个 included route 必须有 `placement_plan`：页面单一职责、主要信息、主要动作、信息分组、阅读/焦点顺序、动作顺序和响应式降级位置，并引用相关 `LOCAL-PLACEMENT-###`。结构化 placement 可用时，`layout_ref`、Pattern closure、relation/order、scroll owner 和 responsive mode 必须与 Active Instance topology 闭合；**topology 的嵌套关系同样是硬约束**：placement regions 的 `parent` / `contains` 树（如 inset 壳里 `page-header`、`page-toolbar` 嵌套于 `page-canvas`）必须按嵌套实现——header 属于哪张卡是采集事实，不是 Apply 的自由决定；regions 全部平级时才允许平级实现。不要求目标 DOM 或技术栈同构。无结构化 fidelity/topology 时 `structural_verification` 必须写 `unavailable`，不得把 prose slots/breakpoints 升格为 shell variant、ordered chrome slots、scroll owner 或 topology 约束。Gate：每个 included route 与该模板 `coverage.page_modes` 有确定映射；`pattern_refs` 全部存在且属于绑定 Page Type；placement plan 的主要信息/动作和分组可追溯到页面职责；已声明的 wrap/scroll record 不得被根滚动或自动换行替代。placement plan 的每条**布局形态决策**（页面 full-bleed/通栏、内容卡片化、浮层归属、二级导航位置、chrome 分隔方式等）SHALL 携带 `template_refs` 并解析到模板 placement geometry、rule 或 pattern 的稳定 ID；模板对该语义沉默而 Apply 欲自行决定时，该决策进入 unresolved 并停止等待用户裁决，SHALL NOT 以 local rule 静默补位；**给侧栏、分隔或 chrome 追加模板未声明的 border/ring 同样是布局形态决策**，fidelity 的 negative facts（如 `nav-group` border `none`）必须按无装饰实现，组件库默认边框不得覆盖；路由闭合校验对缺失或悬空的 `template_refs` 分别报 `PLACEMENT_TEMPLATE_TRACE_MISSING` 与 `PLACEMENT_TEMPLATE_REF_DANGLING`（phase 2）。当 binding 声明的 component system 在已加载 vendor 参考中提供壳层原语（如 inset 内容容器）时，壳层实现 SHALL 从该原语起步，偏离必须记录理由与用户确认。
+记录 route、页面模式、入口/主要动作、URL params、`layout_ref`、`page_type`、`pattern_refs`、`scroll_owner`、`structural_verification`、响应式矩阵及无效状态；跨页目的地为 link。机器形状硬约束（由 checkpoint 路由闭合校验强制）：`structural_verification` 只接受字面量 `available | unavailable`，写 prose 即 `PLACEMENT_VERIFICATION_AVAILABILITY_INVALID`；`scroll_owner` 是**单字符串**且精确等于绑定 layout placement 的 scroll domain owner region id，多窗格滚动用 `multi_pane: true` 表达、不得写成列表（类型或悬空均报 `SCROLL_OWNER_UNTRACE`）；绑定 layout 有多于一个 scroll domain owner 时 route 必须 `multi_pane: true` 且页面根 overflow-hidden 分窗格滚动（`MULTI_PANE_ROOT_REQUIRED`）；`placement_plan.template_refs` 必填且解析到模板 stable ID（`PLACEMENT_TEMPLATE_TRACE_MISSING`/`PLACEMENT_TEMPLATE_REF_DANGLING`）。每个 included route 必须有 `placement_plan`：页面单一职责、主要信息、主要动作、信息分组、阅读/焦点顺序、动作顺序和响应式降级位置，并引用相关 `LOCAL-PLACEMENT-###`。结构化 placement 可用时，`layout_ref`、Pattern closure、relation/order、scroll owner 和 responsive mode 必须与 Active Instance topology 闭合；**topology 的嵌套关系同样是硬约束**：placement regions 的 `parent` / `contains` 树（如 inset 壳里 `page-header`、`page-toolbar` 嵌套于 `page-canvas`）必须按嵌套实现——header 属于哪张卡是采集事实，不是 Apply 的自由决定；regions 全部平级时才允许平级实现。不要求目标 DOM 或技术栈同构。无结构化 fidelity/topology 时 `structural_verification` 必须写 `unavailable`，不得把 prose slots/breakpoints 升格为 shell variant、ordered chrome slots、scroll owner 或 topology 约束。Gate：每个 included route 与该模板 `coverage.page_modes` 有确定映射；`pattern_refs` 全部存在且属于绑定 Page Type；placement plan 的主要信息/动作和分组可追溯到页面职责；已声明的 wrap/scroll record 不得被根滚动或自动换行替代。placement plan 的每条**布局形态决策**（页面 full-bleed/通栏、内容卡片化、浮层归属、二级导航位置、chrome 分隔方式等）SHALL 携带 `template_refs` 并解析到模板 placement geometry、rule 或 pattern 的稳定 ID；模板对该语义沉默而 Apply 欲自行决定时，该决策进入 unresolved 并停止等待用户裁决，SHALL NOT 以 local rule 静默补位；**给侧栏、分隔或 chrome 追加模板未声明的 border/ring 同样是布局形态决策**，fidelity 的 negative facts（如 `nav-group` border `none`）必须按无装饰实现，组件库默认边框不得覆盖；路由闭合校验对缺失或悬空的 `template_refs` 分别报 `PLACEMENT_TEMPLATE_TRACE_MISSING` 与 `PLACEMENT_TEMPLATE_REF_DANGLING`（phase 2）。当 binding 声明的 component system 在已加载 vendor 参考中提供壳层原语（如 inset 内容容器）时，壳层实现 SHALL 从该原语起步，偏离必须记录理由与用户确认。
 
 ## Phase 3 — Project structure（`03-structure.md`）
 
@@ -124,7 +135,7 @@ python3 skills/ui-template-apply/runtime/check_template_apply_state.py scenarios
   --expectations <active-instance>/measured-expectations.yaml
 ```
 
-输出即 Phase 8 必须覆盖的确定性 scenario ID 全集（profile 布局/几何/状态 + placement geometry/pattern 闭包 + measured expectations 三类来源）；每条 verification record 的 `scenario_ids[]` 声明其覆盖项，checkpoint 会按该全集 fail closed。chrome composition scenario 只从 structural sidecar 已声明的 variant/slot/anchor 派生；无 sidecar 时这些 scenario unavailable，且不得标 profile-verified。通用 skill 不要求 `chat-fab`、A–E 或 Board。每条 UUID record 必含：rule ID、profile record ID（若有）、`scenario_ids[]`、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。所有派生 scenario IDs 的并集必须完整覆盖；校验器对 missing scenario fail closed。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
+输出是采集全集（profile 布局/几何/状态 + placement geometry/pattern 闭包 + measured expectations 三类来源）。覆盖口径有两个集合：checkpoint 覆盖门禁按 **fidelity profile 派生集**（`derive_scenario_ids(fidelity)`）fail closed；`scenarios --layout --expectations` 全集是它的超集。**按全集采集**——只按 fidelity 子集采集会在 checkpoint 门禁才暴露缺口；每条 verification record 的 `scenario_ids[]` 声明其覆盖项。record UUID 逐条唯一：同一 scenario 在不同 viewport/theme/state 轮次各生成独立 UUID（uuid5 输入须含 viewport/theme/state 维度），复用 scenario 级 UUID 即 `VERIFICATION_RECORD_DUPLICATE`。chrome composition scenario 只从 structural sidecar 已声明的 variant/slot/anchor 派生；无 sidecar 时这些 scenario unavailable，且不得标 profile-verified。通用 skill 不要求 `chat-fab`、A–E 或 Board。每条 UUID record 必含：rule ID、profile record ID（若有）、`scenario_ids[]`、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。所有派生 scenario IDs 的并集必须完整覆盖；校验器对 missing scenario fail closed。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
 
 ## Phase 9 — Review & feedback（`09-review.md`, `feedback/`）
 
@@ -140,14 +151,20 @@ python3 ui-template-author/runtime/manage_template_index.py apply-close --apply-
 
 ## checkpoint 与身份
 
-新会话 `checkpoint.yaml` 符合 `design-system-apply-checkpoint/v1`，固定含 mode、0–9 十个有序 phase、contract id/version/digest、binding digest、projection digests、stable IDs、change set、output root、artifact digest、source identity、build identity、updated_at；旧 schema v2 checkpoint 只用于迁移或只读恢复审计。恢复校验必须把 checkpoint `template.name`/`template.version` 分别绑定当前模板 meta 的 `name`/`template_version`（兼容显式 envelope 的 `version` 字段）；任一 identity 字段不一致均为 Phase 0 失效，不能只靠可伪造的 digest 通过。digest 统一为：安全解析值 → UTF-8 sorted-key canonical JSON（`ensure_ascii=false`、无多余空白、拒绝 NaN）→ SHA-256，算法标识 `sha256-canonical-json-v1`。因此 YAML 格式/键序变化不使 tokens 失效，语义变化会。
+新会话 `checkpoint.yaml` 符合 `design-system-apply-checkpoint/v1`，固定含 mode、0–9 十个有序 phase、contract id/version/digest、binding digest、projection digests、stable IDs、change set、output root、artifact digest、source identity、build identity、updated_at；旧 schema v2 checkpoint 只用于迁移或只读恢复审计。**新会话用 `checkpoint-init` 生成骨架**（自动计算 `template.digest`/`tokens_digest`，一次通过 `checkpoint` 校验，不手写、不试错）；该格式由 `validate_checkpoint` 逐项校验，`schema:` 标记不豁免其他文件的 schema 校验。恢复校验必须把 checkpoint `template.name`/`template.version` 分别绑定当前模板 meta 的 `name`/`template_version`（兼容显式 envelope 的 `version` 字段）；任一 identity 字段不一致均为 Phase 0 失效，不能只靠可伪造的 digest 通过。digest 统一为：安全解析值 → UTF-8 sorted-key canonical JSON（`ensure_ascii=false`、无多余空白、拒绝 NaN）→ SHA-256，算法标识 `sha256-canonical-json-v1`。因此 YAML 格式/键序变化不使 tokens 失效，语义变化会。
 
 恢复用 `check_apply_resume.py` 计算 Impact-based Resume：digest 失配全量重开；否则按 change set 依赖面重开最早 phase。source identity：有 Git 时记录 commit + dirty diff digest；无 Git 时记录目标源码快照 digest。build identity 来自目标项目声明的构建命令/产物，必须非空且可复现；不得写“latest”。
 
-仓库工具入口（存在时；安装态使用 `skills/ui-template-apply/runtime/check_template_apply_state.py`）：
+工具入口按布局二选一，下例以仓库布局书写；安装布局把前缀换成 `python3 ~/.claude/skills/ui-template-apply/runtime/check_template_apply_state.py`（`check_active_instance.py` 等其他 runtime 工具同口径），无需设置 PYTHONPATH：
 
 ```bash
-python3 scripts/check_template_apply_state.py digest <yaml-or-json>
+python3 scripts/check_template_apply_state.py checkpoint-init \
+  --apply-root .ui-template-apply --template <template-meta-or-envelope> \
+  --tokens <template/tokens.yaml> --scope <scope-yaml> \
+  [--fidelity <template/fidelity.yaml>] [--mode bootstrap] [--origin catalog] \
+  [--output-root apps/agent-web] [--contract-id <id> --contract-version <semver> --contract-digest <sha256>] \
+  --source-identity <revision> --build-identity <build-id>
+python3 scripts/check_template_apply_state.py digest <yaml-or-json-or-md>
 python3 scripts/check_template_apply_state.py source-identity <project-root>
 python3 scripts/check_template_apply_state.py architecture-site <output-root>
 python3 scripts/check_template_apply_state.py build-identity <build-artifact> --command '<actual-build-command>'
@@ -163,6 +180,8 @@ python3 scripts/check_template_apply_state.py feedback .ui-template-apply/feedba
 python3 scripts/check_template_apply_state.py feedback-merge .ui-template-apply/feedback <candidate.yaml> \
   --apply-root .ui-template-apply --known-rule-id NN-001 [--known-rule-id AX-001 ...]
 ```
+
+`checkpoint` 输出两个独立维度：`checkpoint_valid` 只看 findings（门禁是否干净）；`earliest_phase` 是 resume 游标（会话中途 pending 阶段使其非 null，不是失败）。`digest` 对 `.md` 产物按换行归一 envelope 计算，与 checkpoint artifact 校验同口径。
 
 ## 恢复：从最早失效 phase 重新打开
 
