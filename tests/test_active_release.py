@@ -25,10 +25,11 @@ class ActiveReleaseTests(unittest.TestCase):
             for item in json.loads(FIXTURE.read_text(encoding="utf-8"))["cases"]
         }
 
-    def test_repository_active_release_reports_pending_high_fidelity_recapture(self) -> None:
+    def test_repository_active_release_is_clean_after_accepted_certification(self) -> None:
+        """认证接受后 active release 不得再报 CERTIFICATION_STALE；回退即失败。"""
         report = active.check_repository(ROOT, ROOT / "governance/scope.yaml")
-        self.assertEqual("failed", report["status"])
-        self.assertIn("CERTIFICATION_STALE", {item["code"] for item in report["findings"]})
+        self.assertEqual("passed", report["status"])
+        self.assertNotIn("CERTIFICATION_STALE", {item["code"] for item in report["findings"]})
         self.assertEqual([], report["pending_overlays"])
         self.assertTrue(all(item["content_read"] is False and item["traversed"] is False for item in report["exclusions"]))
         self.assertEqual("readability-only-no-semantic-rewrite", report["immutable_history"]["policy"])
@@ -43,8 +44,8 @@ class ActiveReleaseTests(unittest.TestCase):
 
         with mock.patch.object(active, "_safe_text", side_effect=recording):
             report = active.check_repository(ROOT, ROOT / "governance/scope.yaml")
-        self.assertEqual("failed", report["status"])
-        self.assertIn("CERTIFICATION_STALE", {item["code"] for item in report["findings"]})
+        self.assertEqual("passed", report["status"])
+        self.assertNotIn("CERTIFICATION_STALE", {item["code"] for item in report["findings"]})
         web_v2 = "example/workbench-shell/" + "web-v2/"
         web_v3 = "example/workbench-shell/" + "web-v3/"
         self.assertFalse(any(path.startswith(web_v2) for path in reads))

@@ -1,26 +1,26 @@
 schema: oracle-deployment/v1
 oracle:
   kind: git-revision
-  revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
 deployment:
-  cwd: .
-  serve: python3 .oracle-harness/serve_oracle.py
-  ready_url: http://127.0.0.1:3100
-  ready_timeout_seconds: 600
+  cwd: example/workbench-shell/web-v3
+  serve: pnpm preview --port 4199 --strictPort
+  ready_url: http://127.0.0.1:4199
+  ready_timeout_seconds: 300
 capture:
   settle_ms: 6000
   full_page: true
   routes:
   - id: app-shell
-    path: /seed/app-shell
+    path: /demo/issues
   - id: workspace-board
-    path: /seed/workspace-board
+    path: /demo/issues?__oracle_action=board
   - id: settings-section-nav
-    path: /seed/settings-section-nav
+    path: /demo/settings
   - id: master-detail
-    path: /seed/master-detail
+    path: /demo/issues/DEMO-1
   - id: overlay-dialog
-    path: /seed/overlay-dialog
+    path: /demo/issues?__oracle_action=open-new-issue
   viewports:
   - id: desktop
     width: 1440
@@ -37,7 +37,7 @@ capture:
     dimension: surface
     unit: css-color
     tolerance: exact
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-workspace-board-header-height
     route: workspace-board
     viewport: desktop
@@ -47,7 +47,7 @@ capture:
     dimension: spacing
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-settings-nav-width
     route: settings-section-nav
     viewport: desktop
@@ -57,7 +57,7 @@ capture:
     dimension: spacing
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-master-detail-pane-split
     route: master-detail
     viewport: desktop
@@ -67,7 +67,7 @@ capture:
     dimension: structure
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-overlay-dialog-shape
     route: overlay-dialog
     viewport: desktop
@@ -77,7 +77,7 @@ capture:
     dimension: surface
     unit: css-length
     tolerance: exact
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-app-shell-content-width
     route: app-shell
     viewport: desktop
@@ -87,7 +87,7 @@ capture:
     dimension: structure
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-app-shell-header-height
     route: app-shell
     viewport: desktop
@@ -97,7 +97,7 @@ capture:
     dimension: spacing
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-app-shell-title-size
     route: app-shell
     viewport: desktop
@@ -107,7 +107,7 @@ capture:
     dimension: typography
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-app-shell-header-border
     route: app-shell
     viewport: desktop
@@ -117,7 +117,7 @@ capture:
     dimension: border
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-workspace-board-content-width
     route: workspace-board
     viewport: desktop
@@ -127,7 +127,7 @@ capture:
     dimension: structure
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-workspace-board-title-size
     route: workspace-board
     viewport: desktop
@@ -137,7 +137,7 @@ capture:
     dimension: typography
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-workspace-board-title-color
     route: workspace-board
     viewport: desktop
@@ -147,7 +147,7 @@ capture:
     dimension: color
     unit: css-color
     tolerance: exact
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-workspace-board-header-border
     route: workspace-board
     viewport: desktop
@@ -157,7 +157,7 @@ capture:
     dimension: border
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-settings-nav-structure-width
     route: settings-section-nav
     viewport: desktop
@@ -167,7 +167,7 @@ capture:
     dimension: structure
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-settings-title-size
     route: settings-section-nav
     viewport: desktop
@@ -177,7 +177,7 @@ capture:
     dimension: typography
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-settings-card-surface
     route: settings-section-nav
     viewport: desktop
@@ -187,7 +187,7 @@ capture:
     dimension: surface
     unit: css-color
     tolerance: exact
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-settings-nav-border
     route: settings-section-nav
     viewport: desktop
@@ -197,7 +197,7 @@ capture:
     dimension: border
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-master-detail-header-height
     route: master-detail
     viewport: desktop
@@ -207,7 +207,7 @@ capture:
     dimension: spacing
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-master-detail-activity-size
     route: master-detail
     viewport: desktop
@@ -217,7 +217,7 @@ capture:
     dimension: typography
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-master-detail-text-color
     route: master-detail
     viewport: desktop
@@ -227,7 +227,7 @@ capture:
     dimension: color
     unit: css-color
     tolerance: exact
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-master-detail-header-border
     route: master-detail
     viewport: desktop
@@ -237,7 +237,7 @@ capture:
     dimension: border
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-overlay-dialog-width
     route: overlay-dialog
     viewport: desktop
@@ -247,7 +247,7 @@ capture:
     dimension: structure
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-overlay-dialog-height
     route: overlay-dialog
     viewport: desktop
@@ -257,7 +257,7 @@ capture:
     dimension: spacing
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-overlay-dialog-text-size
     route: overlay-dialog
     viewport: desktop
@@ -267,7 +267,7 @@ capture:
     dimension: typography
     unit: px
     tolerance: <=2px
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3
   - id: oracle-overlay-dialog-borderless
     route: overlay-dialog
     viewport: desktop
@@ -277,4 +277,4 @@ capture:
     dimension: border
     unit: px
     tolerance: exact
-    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    oracle_revision: 421ef77aa886a19eeb24386e156c190bbd36dfb3

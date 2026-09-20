@@ -1,32 +1,43 @@
 schema: design-system-fidelity-certification/v1
 gate:
   package:
-    id: workbench-shell
-    version: 3.0.0
-    digest: &id001
+    digest:
       algorithm: sha256-canonical-json-v1
-      value: 20be2559f7a5074879da0d2eb6f611dc62a52b5d6ddb595b9eb9d34f8dde1a6c
+      value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
+    id: workbench-shell
+    version: 3.0.1
   oracle:
     kind: git-revision
     revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   prompts_digest:
     algorithm: sha256-tree-v1
-    value: 0ae0db006b3174dba40981bacb2be55aa077b5fe6f11e63c05d99087e71de968
+    value: d3e423f5b69a73b9acd812b658319ab248d6127dfc56f64242746586b8726e29
   build:
-    identity: workbench-shell-current-20260915-02
-    output_root: governance/candidates/workbench-shell/certification/current-output
-    generated_at: '2026-09-15T14:40:48Z'
+    identity: workbench-shell-current-20260920-01
+    output_root: example/workbench-shell/web-v3
+    generated_at: '2026-09-20T16:22:11Z'
   apply_mode: bootstrap
   active_instance:
-    status: pending
+    binding_digest:
+      algorithm: sha256-canonical-json-v1
+      value: 32424bf70b4f6084fb6f060957b173081fe9f4442540f08f5ac7c58340265db9
+    contract_digest:
+      algorithm: sha256-canonical-json-v1
+      value: 4cf93e3afd601a872a5e385dfd09b15b101455738d35fbf2cd522109979a89a0
+    projection_digest:
+      algorithm: sha256-canonical-json-v1
+      value: 61381c61bd435e9d852897f1e39490421ecd34ebf3739c956bc646e4c1913473
+    status: frozen
   feedback:
-    package_feedback: open
-status: failed
+    package_feedback: closed
+status: passed
 records:
 - id: cert-app-shell
   pattern: pattern/app-shell
-  package_digest: *id001
-  build_identity: workbench-shell-current-20260915-02
+  package_digest:
+    algorithm: sha256-canonical-json-v1
+    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
+  build_identity: workbench-shell-current-20260920-01
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues
   composition:
@@ -47,21 +58,80 @@ records:
     tolerance: exact
     expected: oklch(0.964435 0.001327 286.375)
     observed: oklch(0.964435 0.001327 286.375)
+    oracle_measurement_ref: oracle-app-shell-surface
+  - dimension: structure
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 1176px
+    observed: 1176px
+    oracle_measurement_ref: oracle-app-shell-content-width
+  - dimension: spacing
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 48px
+    observed: 48px
+    oracle_measurement_ref: oracle-app-shell-header-height
+  - dimension: typography
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 14px
+    observed: 14px
+    oracle_measurement_ref: oracle-app-shell-title-size
+  - dimension: border
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 1px
+    observed: 1px
+    oracle_measurement_ref: oracle-app-shell-header-border
   evidence:
-    current_screenshot: certification/current-output/evidence/current-app-shell.png
+    current_screenshot: certification/current-output/evidence/current-app-shell-desktop-light.png
     oracle_screenshot: certification/oracle-output/evidence/oracle-app-shell-desktop-light.png
     oracle_measurements:
-    - id: oracle-app-shell-surface
-      method: playwright-computed-style
-      dimension: surface
-      value: oklch(0.964435 0.001327 286.375)
-      unit: css-color
+    - method: computed-style
       tolerance: exact
+      dimension: surface
+      unit: css-color
+      id: oracle-app-shell-surface
+      value: oklch(0.964435 0.001327 286.375)
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: structure
+      unit: px
+      id: oracle-app-shell-content-width
+      value: 1176px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: spacing
+      unit: px
+      id: oracle-app-shell-header-height
+      value: 48px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: typography
+      unit: px
+      id: oracle-app-shell-title-size
+      value: 14px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: border
+      unit: px
+      id: oracle-app-shell-header-border
+      value: 1px
       oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
 - id: cert-workspace-board
   pattern: pattern/workspace-board
-  package_digest: *id001
-  build_identity: workbench-shell-current-20260915-02
+  package_digest:
+    algorithm: sha256-canonical-json-v1
+    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
+  build_identity: workbench-shell-current-20260920-01
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues
   composition:
@@ -77,25 +147,84 @@ records:
   assertions:
   - dimension: spacing
     result: passed
-    method: dom-geometry
+    method: computed-style
     tolerance: <=2px
     expected: 48px
     observed: 48px
+    oracle_measurement_ref: oracle-workspace-board-header-height
+  - dimension: structure
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 1176px
+    observed: 1176px
+    oracle_measurement_ref: oracle-workspace-board-content-width
+  - dimension: typography
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 14px
+    observed: 14px
+    oracle_measurement_ref: oracle-workspace-board-title-size
+  - dimension: color
+    result: passed
+    method: computed-style
+    tolerance: exact
+    expected: oklch(0.141 0.005 285.823)
+    observed: oklch(0.141 0.005 285.823)
+    oracle_measurement_ref: oracle-workspace-board-title-color
+  - dimension: border
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 1px
+    observed: 1px
+    oracle_measurement_ref: oracle-workspace-board-header-border
   evidence:
-    current_screenshot: certification/current-output/evidence/current-workspace-board.png
+    current_screenshot: certification/current-output/evidence/current-workspace-board-desktop-light.png
     oracle_screenshot: certification/oracle-output/evidence/oracle-workspace-board-desktop-light.png
     oracle_measurements:
-    - id: oracle-workspace-board-header-height
-      method: playwright-computed-style
-      dimension: spacing
-      value: 48px
-      unit: px
+    - method: computed-style
       tolerance: <=2px
+      dimension: spacing
+      unit: px
+      id: oracle-workspace-board-header-height
+      value: 48px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: structure
+      unit: px
+      id: oracle-workspace-board-content-width
+      value: 1176px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: typography
+      unit: px
+      id: oracle-workspace-board-title-size
+      value: 14px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: exact
+      dimension: color
+      unit: css-color
+      id: oracle-workspace-board-title-color
+      value: oklch(0.141 0.005 285.823)
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: border
+      unit: px
+      id: oracle-workspace-board-header-border
+      value: 1px
       oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
 - id: cert-settings-section-nav
   pattern: pattern/settings-section-nav
-  package_digest: *id001
-  build_identity: workbench-shell-current-20260915-02
+  package_digest:
+    algorithm: sha256-canonical-json-v1
+    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
+  build_identity: workbench-shell-current-20260920-01
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/settings
   composition:
@@ -109,25 +238,84 @@ records:
   assertions:
   - dimension: spacing
     result: passed
-    method: dom-geometry
+    method: computed-style
     tolerance: <=2px
     expected: 240px
     observed: 240px
+    oracle_measurement_ref: oracle-settings-nav-width
+  - dimension: structure
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 240px
+    observed: 240px
+    oracle_measurement_ref: oracle-settings-nav-structure-width
+  - dimension: typography
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 18px
+    observed: 18px
+    oracle_measurement_ref: oracle-settings-title-size
+  - dimension: surface
+    result: passed
+    method: computed-style
+    tolerance: exact
+    expected: oklch(1 0 0)
+    observed: oklch(1 0 0)
+    oracle_measurement_ref: oracle-settings-card-surface
+  - dimension: border
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 1px
+    observed: 1px
+    oracle_measurement_ref: oracle-settings-nav-border
   evidence:
-    current_screenshot: certification/current-output/evidence/current-settings-section-nav.png
+    current_screenshot: certification/current-output/evidence/current-settings-section-nav-desktop-light.png
     oracle_screenshot: certification/oracle-output/evidence/oracle-settings-section-nav-desktop-light.png
     oracle_measurements:
-    - id: oracle-settings-nav-width
-      method: playwright-computed-style
-      dimension: spacing
-      value: 240px
-      unit: px
+    - method: computed-style
       tolerance: <=2px
+      dimension: spacing
+      unit: px
+      id: oracle-settings-nav-width
+      value: 240px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: structure
+      unit: px
+      id: oracle-settings-nav-structure-width
+      value: 240px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: typography
+      unit: px
+      id: oracle-settings-title-size
+      value: 18px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: exact
+      dimension: surface
+      unit: css-color
+      id: oracle-settings-card-surface
+      value: oklch(1 0 0)
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: border
+      unit: px
+      id: oracle-settings-nav-border
+      value: 1px
       oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
 - id: cert-master-detail
   pattern: pattern/master-detail
-  package_digest: *id001
-  build_identity: workbench-shell-current-20260915-02
+  package_digest:
+    algorithm: sha256-canonical-json-v1
+    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
+  build_identity: workbench-shell-current-20260920-01
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues/DEMO-1
   composition:
@@ -141,25 +329,84 @@ records:
   assertions:
   - dimension: structure
     result: passed
-    method: dom-geometry
+    method: computed-style
     tolerance: <=2px
     expected: 1176px
     observed: 1176px
+    oracle_measurement_ref: oracle-master-detail-pane-split
+  - dimension: spacing
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 48px
+    observed: 48px
+    oracle_measurement_ref: oracle-master-detail-header-height
+  - dimension: typography
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 16px
+    observed: 16px
+    oracle_measurement_ref: oracle-master-detail-activity-size
+  - dimension: color
+    result: passed
+    method: computed-style
+    tolerance: exact
+    expected: oklch(0.141 0.005 285.823)
+    observed: oklch(0.141 0.005 285.823)
+    oracle_measurement_ref: oracle-master-detail-text-color
+  - dimension: border
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 1px
+    observed: 1px
+    oracle_measurement_ref: oracle-master-detail-header-border
   evidence:
-    current_screenshot: certification/current-output/evidence/current-master-detail.png
+    current_screenshot: certification/current-output/evidence/current-master-detail-desktop-light.png
     oracle_screenshot: certification/oracle-output/evidence/oracle-master-detail-desktop-light.png
     oracle_measurements:
-    - id: oracle-master-detail-pane-split
-      method: playwright-computed-style
-      dimension: structure
-      value: 1176px
-      unit: px
+    - method: computed-style
       tolerance: <=2px
+      dimension: structure
+      unit: px
+      id: oracle-master-detail-pane-split
+      value: 1176px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: spacing
+      unit: px
+      id: oracle-master-detail-header-height
+      value: 48px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: typography
+      unit: px
+      id: oracle-master-detail-activity-size
+      value: 16px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: exact
+      dimension: color
+      unit: css-color
+      id: oracle-master-detail-text-color
+      value: oklch(0.141 0.005 285.823)
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: border
+      unit: px
+      id: oracle-master-detail-header-border
+      value: 1px
       oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
 - id: cert-overlay-dialog
   pattern: pattern/overlay-dialog
-  package_digest: *id001
-  build_identity: workbench-shell-current-20260915-02
+  package_digest:
+    algorithm: sha256-canonical-json-v1
+    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
+  build_identity: workbench-shell-current-20260920-01
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues?__oracle_action=open-new-issue
   composition:
@@ -178,14 +425,71 @@ records:
     tolerance: exact
     expected: 14px
     observed: 14px
+    oracle_measurement_ref: oracle-overlay-dialog-shape
+  - dimension: structure
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 576px
+    observed: 576px
+    oracle_measurement_ref: oracle-overlay-dialog-width
+  - dimension: spacing
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 303px
+    observed: 303px
+    oracle_measurement_ref: oracle-overlay-dialog-height
+  - dimension: typography
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+    expected: 14px
+    observed: 14px
+    oracle_measurement_ref: oracle-overlay-dialog-text-size
+  - dimension: border
+    result: passed
+    method: computed-style
+    tolerance: exact
+    expected: 0px
+    observed: 0px
+    oracle_measurement_ref: oracle-overlay-dialog-borderless
   evidence:
-    current_screenshot: certification/current-output/evidence/current-overlay-dialog.png
+    current_screenshot: certification/current-output/evidence/current-overlay-dialog-desktop-light.png
     oracle_screenshot: certification/oracle-output/evidence/oracle-overlay-dialog-desktop-light.png
     oracle_measurements:
-    - id: oracle-overlay-dialog-shape
-      method: playwright-computed-style
-      dimension: surface
-      value: 14px
-      unit: css-length
+    - method: computed-style
       tolerance: exact
+      dimension: surface
+      unit: css-length
+      id: oracle-overlay-dialog-shape
+      value: 14px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: structure
+      unit: px
+      id: oracle-overlay-dialog-width
+      value: 576px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: spacing
+      unit: px
+      id: oracle-overlay-dialog-height
+      value: 303px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: <=2px
+      dimension: typography
+      unit: px
+      id: oracle-overlay-dialog-text-size
+      value: 14px
+      oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+    - method: computed-style
+      tolerance: exact
+      dimension: border
+      unit: px
+      id: oracle-overlay-dialog-borderless
+      value: 0px
       oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386

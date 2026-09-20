@@ -1,6 +1,6 @@
 schema: design-system-meta/v1
 name: workbench-shell
-version: 3.0.0
+version: 3.0.1
 description: Neutral dual-theme workbench app shell with an inset canvas, dense 14px
   interface, crisp separation and restrained blue accents.
 sources:

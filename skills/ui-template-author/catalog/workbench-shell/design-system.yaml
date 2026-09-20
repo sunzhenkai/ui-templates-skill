@@ -1,6 +1,6 @@
 schema: design-system/v1
 id: workbench-shell
-version: 3.0.0
+version: 3.0.1
 status: frozen
 capability: page-system
 layers:
@@ -16,7 +16,7 @@ updated_at: '2026-09-15T00:00:00Z'
 layer_digests:
   tokens:
     algorithm: sha256-canonical-json-v1
-    value: 93e57f8ef230fce8dc2cedfa17d227230b4cf7516a2e83149456e4332633fc1d
+    value: b30f417e28bc81529f294b37463e6b2b2f5ac6579e8ae8acf967b5d01b464666
   primitives:
     algorithm: sha256-canonical-json-v1
     value: f5fb5ef65f54ab09e231b43e5fbf861585a8adf70ec6ee5598bc6374ba658eb2
@@ -37,4 +37,4 @@ layer_digests:
     value: f5b6c10df8e68a7e201228939308b8b2b3591265e736e62642977a9418a04329
 contract_digest:
   algorithm: sha256-canonical-json-v1
-  value: 20be2559f7a5074879da0d2eb6f611dc62a52b5d6ddb595b9eb9d34f8dde1a6c
+  value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e

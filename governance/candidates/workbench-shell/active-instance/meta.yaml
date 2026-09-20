@@ -1,16 +1,21 @@
 schema: design-system-meta/v1
 name: workbench-shell
-version: 3.0.0
-description: Portable workbench shell captured from a closed structural source graph and CSS token declarations.
+version: 3.0.1
+description: Portable workbench shell captured from a closed structural source graph
+  and CSS token declarations.
 sources:
-  - id: source-001
-    type: repo
-    ref: session-source:multica
-    revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9
-    captured_at: "2026-09-19T02:28:00Z"
-captured_at: "2026-09-19"
-platforms: [web]
-tags: [workbench, shell, candidate]
+- id: source-001
+  type: repo
+  ref: session-source:multica
+  revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9
+  captured_at: '2026-09-19T02:28:00Z'
+captured_at: '2026-09-19'
+platforms:
+- web
+tags:
+- workbench
+- shell
+- candidate
 confidence:
   overall: medium
   layout: high
@@ -18,32 +23,80 @@ confidence:
   components: medium
 coverage:
   platforms:
-    declared: [web]
-    observed: [web]
+    declared:
+    - web
+    observed:
+    - web
     defaulted: []
     unsupported: []
   viewports:
-    declared: [desktop, mobile]
+    declared:
+    - desktop
+    - mobile
     observed: []
     defaulted: []
-    unsupported: [desktop, mobile]
+    unsupported:
+    - desktop
+    - mobile
   themes:
-    declared: [light, dark]
-    observed: [light, dark]
+    declared:
+    - light
+    - dark
+    observed:
+    - light
+    - dark
     defaulted: []
     unsupported: []
   page_modes:
-    declared: [shell, board, settings, master-detail, dialog]
-    observed: [shell, board, settings, master-detail, dialog]
+    declared:
+    - shell
+    - board
+    - settings
+    - master-detail
+    - dialog
+    observed:
+    - shell
+    - board
+    - settings
+    - master-detail
+    - dialog
     defaulted: []
     unsupported: []
   components:
-    declared: [app-sidebar, button, chat-fab, command-palette, data-table, dialog, input, page-header, settings-nav]
-    observed: [app-sidebar, button, chat-fab, command-palette, data-table, dialog, input, page-header, settings-nav]
+    declared:
+    - app-sidebar
+    - button
+    - chat-fab
+    - command-palette
+    - data-table
+    - dialog
+    - input
+    - page-header
+    - settings-nav
+    observed:
+    - app-sidebar
+    - button
+    - chat-fab
+    - command-palette
+    - data-table
+    - dialog
+    - input
+    - page-header
+    - settings-nav
     defaulted: []
     unsupported: []
   states:
-    declared: [default, hover, active, focus-visible, open]
-    observed: [default, hover, active, focus-visible, open]
+    declared:
+    - default
+    - hover
+    - active
+    - focus-visible
+    - open
+    observed:
+    - default
+    - hover
+    - active
+    - focus-visible
+    - open
     defaulted: []
     unsupported: []

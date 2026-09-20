@@ -3,8 +3,9 @@ GOVERNANCE_VENV ?= /tmp/ui-template-governance-venv
 GOVERNANCE_PYTHON ?= $(GOVERNANCE_VENV)/bin/python
 REPORT_DIR ?= governance-reports
 DIST_DIR ?= dist
+PROMOTE_NAME ?= workbench-shell
 
-.PHONY: bootstrap validate test eval bundle
+.PHONY: bootstrap validate test eval bundle promote
 
 bootstrap:
 	$(PYTHON) -m venv "$(GOVERNANCE_VENV)"
@@ -27,3 +28,9 @@ eval:
 
 bundle:
 	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py build --output-dir "$(DIST_DIR)"
+
+# candidate → templates → author catalog 晋级链；catalog --write 自带认证门禁。
+promote:
+	"$(GOVERNANCE_PYTHON)" scripts/promote_candidate.py --name "$(PROMOTE_NAME)"
+	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py catalog --write
+	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py catalog --check

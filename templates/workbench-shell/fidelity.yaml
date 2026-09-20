@@ -854,9 +854,6 @@ state_presentations:
   text_decoration: none
   visibility: visible
   container_presentation: none
-  negative_facts:
-  - property: text_decoration
-    value: none
   provenance:
     source_id: source-002
     source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
@@ -870,6 +867,9 @@ state_presentations:
     source_span_sha256: sha256:1aab50714604db38dd7e7d7075fd19688649f9e06cf2bcb6ffe0ad86289d627d
     captured_at: '2026-01-01T00:00:00Z'
     confidence: high
+  negative_facts:
+  - property: text_decoration
+    value: underline
 - id: state.nav-link.navigation-link.hover.item
   subject_role: nav-link
   context: navigation-link

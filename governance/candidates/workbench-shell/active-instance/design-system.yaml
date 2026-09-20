@@ -1,6 +1,6 @@
 schema: design-system/v1
 id: workbench-shell
-version: 3.0.0
+version: 3.0.1
 status: frozen
 capability: page-system
 layers:
@@ -13,7 +13,7 @@ layers:
   evidence: core/evidence.yaml
 contract_digest:
   algorithm: sha256-canonical-json-v1
-  value: 5d41fcca2c992154c258b4679725b2b3c3806e5b93322f58054f35150a1df6ff
+  value: 4cf93e3afd601a872a5e385dfd09b15b101455738d35fbf2cd522109979a89a0
 created_at: '2026-09-19'
 updated_at: '2026-09-19T02:28:00Z'
 layer_digests:

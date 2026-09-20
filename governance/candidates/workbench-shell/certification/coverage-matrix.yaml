@@ -1,19 +1,23 @@
 schema: design-system-certification-coverage-matrix/v1
-status: pending-oracle
+status: ready
 package:
   id: workbench-shell
-  version: 3.0.0
+  version: 3.0.1
   digest:
     algorithm: sha256-canonical-json-v1
-    value: 20be2559f7a5074879da0d2eb6f611dc62a52b5d6ddb595b9eb9d34f8dde1a6c
+    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
 oracle:
   revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
 required_dimension_groups:
-- [structure, hierarchy]
-- [spacing, density]
-- [typography]
-- [color, surface]
-- [border, divider]
+- - structure
+  - hierarchy
+- - spacing
+  - density
+- - typography
+- - color
+  - surface
+- - border
+  - divider
 records:
 - pattern: pattern/app-shell
   route: /demo/issues
@@ -46,4 +50,5 @@ blocked_by:
 - package-feedback-closure
 notes:
 - This is a source-derived starting matrix, not a high-fidelity certification result.
-- Oracle recovery must expand each stable pattern to all observed states, themes, and viewports before certification.
+- Oracle recovery must expand each stable pattern to all observed states, themes,
+  and viewports before certification.

@@ -1,6 +1,6 @@
 schema: design-system-binding/v1
 contract_id: workbench-shell
-contract_version: 3.0.0
+contract_version: 3.0.1
 output_root: example/workbench-shell/web
 stack:
   language: typescript
@@ -28,4 +28,4 @@ projections:
 updated_at: '2026-09-19T03:45:00Z'
 binding_digest:
   algorithm: sha256-canonical-json-v1
-  value: d08d333321f12fdfcb227046b7a2c52899c9a3e4cfe461b84c245eb5cb5c61b6
+  value: 32424bf70b4f6084fb6f060957b173081fe9f4442540f08f5ac7c58340265db9

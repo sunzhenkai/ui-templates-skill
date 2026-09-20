@@ -12,7 +12,8 @@ CERTIFICATION = ROOT / "governance/candidates/workbench-shell/certification"
 
 
 class HighFidelityCertificationTests(unittest.TestCase):
-    def test_pending_oracle_candidate_cannot_be_accepted(self) -> None:
+    def test_accepted_certification_stays_valid(self) -> None:
+        """report.yaml 通过认证后必须保持有效：这是晋级门禁的前提，回退即测试失败。"""
         process = subprocess.run(
             [
                 sys.executable,
@@ -29,14 +30,10 @@ class HighFidelityCertificationTests(unittest.TestCase):
             capture_output=True,
             check=False,
         )
-        self.assertNotEqual(0, process.returncode, process.stderr)
+        self.assertEqual(0, process.returncode, process.stdout)
         payload = json.loads(process.stdout)
-        self.assertFalse(payload["accepted"])
-        codes = {failure["code"] for failure in payload["failures"]}
-        self.assertIn("CERT_ACTIVE_INSTANCE_REQUIRED", codes)
-        self.assertIn("CERT_PACKAGE_FEEDBACK_OPEN", codes)
-        self.assertIn("CERT_ASSERTION_COVERAGE_INCOMPLETE", codes)
-        self.assertIn("CERT_COVERAGE_MATRIX_PENDING", codes)
+        self.assertTrue(payload["accepted"])
+        self.assertEqual("certification-accepted", payload["outcome"])
 
 
 if __name__ == "__main__":
