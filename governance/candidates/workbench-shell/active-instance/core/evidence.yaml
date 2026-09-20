@@ -1,0 +1,58 @@
+schema: design-system-evidence/v1
+items:
+  - id: evidence-token-css
+    kind: token
+    target: token/color.app-shell
+    origin: source
+    source_id: source-001
+    source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9
+    locator: packages/ui/styles/tokens.css
+    method: CSS custom-property declaration
+    confidence: high
+    captured_at: "2026-09-19T02:28:00Z"
+  - id: evidence-layout-shell
+    kind: layout
+    target: route/workbench
+    origin: source
+    source_id: source-001
+    source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9
+    locator: ui-source-graph.yaml#/usages/usage.shell
+    method: closed source graph fact extraction
+    confidence: high
+    captured_at: "2026-09-19T02:28:00Z"
+  - id: evidence-layout-board
+    kind: layout
+    target: route/board
+    origin: source
+    source_id: source-001
+    source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9
+    locator: ui-source-graph.yaml#/usages/usage.board-columns
+    method: closed source graph fact extraction
+    confidence: high
+    captured_at: "2026-09-19T02:28:00Z"
+  - id: evidence-default-action-colors
+    kind: default
+    target: token/color.primary-hover
+    origin: default
+    basis: "The capture refers to a primary hover role but the CSS token path contains no dedicated primary-hover or ring-focus declaration; conservative fallback is explicitly declared."
+    confidence: low
+    captured_at: "2026-09-19T02:28:00Z"
+  - {id: evidence-workbench-page, kind: layout, target: page-type/workbench, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/scene.shell", method: closed source graph definition, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-board-page, kind: layout, target: page-type/board, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/scene.board", method: closed source graph definition, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-settings-page, kind: layout, target: page-type/settings, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/scene.settings", method: closed source graph definition, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-master-detail-page, kind: layout, target: page-type/master-detail, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/scene.master-detail", method: closed source graph definition, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-dialog-page, kind: layout, target: page-type/dialog, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/scene.dialog", method: closed source graph definition, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-workbench-pattern, kind: layout, target: pattern/workbench-shell, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.shell", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-board-pattern, kind: layout, target: pattern/board-columns, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.board-columns", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-settings-pattern, kind: layout, target: pattern/settings-navigation, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.settings-section-nav", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-master-detail-pattern, kind: layout, target: pattern/master-detail, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.master-detail-layout", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-dialog-pattern, kind: component, target: pattern/dialog-overlay, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.dialog-content", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-sidebar-primitive, kind: component, target: primitive/app-sidebar, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.app-sidebar-width", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-button-primitive, kind: component, target: primitive/button, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.button-geometry", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-chat-primitive, kind: component, target: primitive/chat-fab, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.chat-fab-geometry", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-command-palette-primitive, kind: component, target: primitive/command-palette, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/component.command-palette", method: closed source graph definition, confidence: medium, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-table-primitive, kind: component, target: primitive/data-table, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.board-columns", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-dialog-primitive, kind: component, target: primitive/dialog, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.dialog-content", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-input-primitive, kind: component, target: primitive/input, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.input-geometry", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-header-primitive, kind: component, target: primitive/page-header, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.board", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+  - {id: evidence-settings-nav-primitive, kind: component, target: primitive/settings-nav, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.settings-section-nav", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}

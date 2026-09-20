@@ -29,12 +29,14 @@ FACT_PROPERTIES = {
     "padding_block_end", "padding_inline_start", "gap", "inset_block_start",
     "inset_inline_end", "inset_block_end", "inset_inline_start", "size", "radius",
     "surface", "border", "shadow", "background", "text", "text_decoration",
-    "visibility", "container_presentation", "anatomy", *CHROME_FACT_PROPERTIES,
+    "visibility", "container_presentation", "anatomy", "container_role",
+    *CHROME_FACT_PROPERTIES,
 }
 SEMANTIC_VALUES = {
     "none", "zero", "auto", "intrinsic", "fill", "non-wrap", "non-shrink",
     "underline", "visible", "hidden", "viewport", "region", "inline", "block",
-    "horizontal", "vertical", "overlay", "icon-label", "label-only", *CHROME_SEMANTIC_VALUES,
+    "horizontal", "vertical", "overlay", "icon-label", "label-only",
+    "root", "whole-trigger", "split-trigger", *CHROME_SEMANTIC_VALUES,
 }
 NEGATIVE_VALUES = {"none", "zero", "non-wrap", "non-shrink", "hidden"}
 HARD_LIMITS = {
@@ -149,7 +151,7 @@ def _validate_fact(raw: Any, where: str) -> dict[str, Any]:
     for key in ("context", "slot", "state"):
         if fact[key] is not None:
             _id(fact[key], f"{where}.{key}")
-    value = _closed(fact["value"], f"{where}.value", {"kind", "value"})
+    value = _closed(fact["value"], f"{where}.value", {"kind", "value"}, {"observed"})
     if value["kind"] == "semantic":
         if value["value"] not in SEMANTIC_VALUES:
             raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where}.value has unsupported semantic value")
@@ -157,10 +159,24 @@ def _validate_fact(raw: Any, where: str) -> dict[str, Any]:
         _id(value["value"], f"{where}.value.value")
     else:
         raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where}.value.kind is unsupported")
+    observed = value.get("observed")
+    if observed is not None:
+        observed = _closed(observed, f"{where}.value.observed", {"kind", "value"})
+        if observed["kind"] not in {"css-length", "css-color"}:
+            raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where}.value.observed.kind is unsupported")
+        if not isinstance(observed["value"], str) or not observed["value"]:
+            raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where}.value.observed.value must be a non-empty string")
     if not isinstance(fact["negative"], bool):
         raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where}.negative must be boolean")
     if value["kind"] == "semantic" and value["value"] in NEGATIVE_VALUES and not fact["negative"]:
         raise CaptureError("NEGATIVE_FACT_NOT_EXPLICIT", f"{where} must mark {value['value']} as negative")
+    if value["kind"] == "semantic" and value["value"] not in NEGATIVE_VALUES and fact["negative"]:
+        # Positive semantics (e.g. underline) marked negative is a self-contradiction:
+        # "no underline" is expressed as value none + negative true, never underline + negative.
+        raise CaptureError(
+            "NEGATIVE_FACT_INVALID",
+            f"{where} marks positive semantic {value['value']} as negative; use none/negative for absence",
+        )
     return fact
 
 
@@ -309,18 +325,18 @@ def _validate_request(raw: Any) -> dict[str, Any]:
     return request
 
 
-def _root_and_graph(source_root: Path, relative: str) -> tuple[Path, Path]:
-    lexical_root = source_root.absolute()
+def _root_and_graph(graph_root: Path, relative: str) -> tuple[Path, Path]:
+    lexical_root = graph_root.absolute()
     if "example" in lexical_root.parts:
-        raise CaptureError("EXCLUDED_SOURCE_ROOT", "example/** cannot be a capture source")
-    root = source_root.resolve(strict=True)
-    if source_root.is_symlink():
-        raise CaptureError("SOURCE_ROOT_SYMLINK", "source root must not be a symlink")
+        raise CaptureError("EXCLUDED_GRAPH_ROOT", "example/** cannot own a capture artifact")
+    root = graph_root.resolve(strict=True)
+    if graph_root.is_symlink():
+        raise CaptureError("GRAPH_ROOT_SYMLINK", "capture artifact root must not be a symlink")
     graph = root / relative
     cursor = graph
     while cursor != root:
         if cursor.is_symlink():
-            raise CaptureError("SOURCE_PATH_SYMLINK", f"source path uses symlink: {relative}")
+            raise CaptureError("GRAPH_PATH_SYMLINK", f"capture artifact path uses symlink: {relative}")
         cursor = cursor.parent
         if cursor == cursor.parent:
             break
@@ -333,7 +349,7 @@ def _root_and_graph(source_root: Path, relative: str) -> tuple[Path, Path]:
     try:
         graph.relative_to(root)
     except ValueError as exc:
-        raise CaptureError("SOURCE_BOUNDARY", "graph escapes authorized source root") from exc
+        raise CaptureError("GRAPH_BOUNDARY", "graph escapes authorized artifact root") from exc
     if not graph.is_file():
         raise CaptureError("SOURCE_GRAPH_MISSING", f"graph is not a file: {relative}")
     return root, graph
@@ -386,13 +402,18 @@ def _verify_graph_at_revision(root: Path, relative: str) -> None:
                 graph_path=relative,
             ) from exc
 
-def capture(request_data: Any, source_root: Path) -> dict[str, Any]:
+def capture(request_data: Any, source_root: Path, graph_root: Path | None = None) -> dict[str, Any]:
     request = _validate_request(request_data)
-    root, graph_file = _root_and_graph(source_root, request["graph_path"])
-    head = _head(root)
+    source = source_root.resolve(strict=True)
+    if source_root.is_symlink():
+        raise CaptureError("SOURCE_ROOT_SYMLINK", "source root must not be a symlink")
+    graph_owner = source if graph_root is None else graph_root
+    root, graph_file = _root_and_graph(graph_owner, request["graph_path"])
+    head = _head(source)
     if head != request["source_revision"]:
         raise CaptureError("SOURCE_REVISION_MISMATCH", "checkout revision does not match intake", expected=request["source_revision"], actual=head)
-    _verify_graph_at_revision(root, request["graph_path"])
+    if graph_root is None:
+        _verify_graph_at_revision(source, request["graph_path"])
     graph_bytes = graph_file.read_bytes()
     if len(graph_bytes) > request["limits"]["max_graph_bytes"]:
         return _limit_receipt(request, head, "max_graph_bytes", len(graph_bytes))
@@ -492,7 +513,9 @@ def capture(request_data: Any, source_root: Path) -> dict[str, Any]:
                 "shell usage is missing a complete chrome composition",
                 gaps=gaps,
             )
-        matrix_gaps = mandatory_fact_gaps(graph, request["graph_path"], request["scope"]["scenes"])
+        matrix_gaps = mandatory_fact_gaps(
+            graph, request["graph_path"], request["scope"]["scenes"], request["scope"]["contexts"],
+        )
         if matrix_gaps:
             raise CaptureError(
                 MANDATORY_FACT_MISSING,
@@ -544,17 +567,17 @@ def _limit_receipt(request: dict[str, Any], head: str, limit: str, actual: int, 
     return {**semantic, "closure_digest": digest(semantic)}
 
 
-def capture_from_files(request_path: Path, source_root: Path) -> dict[str, Any]:
+def capture_from_files(request_path: Path, source_root: Path, graph_root: Path | None = None) -> dict[str, Any]:
     if request_path.suffix.lower() not in SUPPORTED_SUFFIXES:
         raise CaptureError("UNSUPPORTED_REQUEST_FORMAT", "request must be JSON or YAML")
-    return capture(load_document(request_path), source_root)
+    return capture(load_document(request_path), source_root, graph_root)
 
 
-def replay(request_data: Any, source_root: Path, expected_receipt: Any) -> dict[str, Any]:
+def replay(request_data: Any, source_root: Path, expected_receipt: Any, graph_root: Path | None = None) -> dict[str, Any]:
     if not isinstance(expected_receipt, dict):
         raise CaptureError("RECEIPT_INVALID", "expected receipt must be an object")
     try:
-        actual = capture(request_data, source_root)
+        actual = capture(request_data, source_root, graph_root)
     except CaptureError as exc:
         return {
             "status": "failed", "declared": 1, "resolved": 0, "executed": 0, "passed": 0,

@@ -12,12 +12,12 @@ REQUIRED_PADDING = (
 )
 LAYOUT_PROPERTIES = {
     "arrangement", "fill", "wrap", "shrink", "scroll_inline", "scroll_block", "root_scroll",
-    "overlay_scope", "overlay_anchor", *CHROME_FACT_PROPERTIES,
+    "overlay_scope", "overlay_anchor", "container_role", *CHROME_FACT_PROPERTIES,
 }
 GEOMETRY_PROPERTIES = {
     "padding_block_start", "padding_inline_end", "padding_block_end", "padding_inline_start",
     "gap", "inset_block_start", "inset_inline_end", "inset_block_end", "inset_inline_start",
-    "size", "radius", "surface", "border", "shadow",
+    "size", "radius", "surface", "border", "shadow", "anatomy",
 }
 STATE_VALUE_FIELDS = {"background", "text", "border"}
 NEGATIVE_SEMANTICS = {"none", "zero", "non-wrap", "non-shrink", "hidden"}
@@ -89,6 +89,7 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
         },
         str(request.get("graph_path") or "ui-source-graph.yaml"),
         [str(item) for item in (scope.get("scenes") or [])],
+        [str(item) for item in (scope.get("contexts") or [])],
     )
     layout_groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     geometry_groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
@@ -199,11 +200,32 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
                 "role": role if role in ANCHOR_ROLES else role,
                 "region": region_id,
             })
+        # container_role facts project to nested regions: a slot declared inside
+        # the inset canvas (page-canvas) nests under that region instead of root.
+        container_of: dict[Any, str] = {}
+        for fact in group:
+            if fact["property"] == "container_role" and isinstance(fact.get("value"), dict):
+                raw = fact["value"].get("value")
+                if isinstance(raw, str):
+                    container_of[fact.get("slot")] = raw
+        region_ids = {item["id"] for item in regions}
+        for item in regions:
+            if item["id"] == f"region.{scene}.root":
+                continue
+            container = container_of.get(item["role"])
+            if container and container != "root":
+                parent_id = f"region.{scene}.{container}"
+                if parent_id in region_ids and parent_id != item["id"]:
+                    item["parent"] = parent_id
         relations = []
         for item in regions:
             if item["id"] == f"region.{scene}.root":
                 continue
-            relation = {"type": "contains", "from": f"region.{scene}.root", "to": item["id"]}
+            relation = {
+                "type": "contains",
+                "from": item.get("parent", f"region.{scene}.root"),
+                "to": item["id"],
+            }
             matching = next((slot for slot in slots if slot["region"] == item["id"]), None)
             if matching is not None:
                 relation["order"] = matching["order"]
@@ -276,6 +298,13 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
         }
         if record["text_decoration"] == "none" and not any(item["property"] == "text_decoration" for item in record["negative_facts"]):
             record["negative_facts"].append({"property": "text_decoration", "value": "none"})
+        if record["text_decoration"] == "underline" and any(
+            item["property"] == "text_decoration" for item in record["negative_facts"]
+        ):
+            raise ValueError(
+                f"state presentation {record['id']} is self-contradictory: "
+                "underline cannot be a negative fact; absence is value none + negative true"
+            )
         state_presentations.append(record)
     unresolved = []
     for item in receipt.get("unresolved") or []:

@@ -62,6 +62,16 @@ fallback: null
 
 优先项目已有可重复浏览器脚本，再用可用 MCP/浏览器工具采集。所有 evidence 必须绑定当前 source/build/template identity。没有任何真实浏览器路径时停止，不用单测、静态 DOM 或截图 mock 替代 Phase 8。
 
+### current-build computed-style 取证方法
+
+模板 token 的 expected 不得与 computed value 直接做字符串比较——浏览器会把 `oklch()`/`color-mix()` 序列化成 rgb/其他形式，字面比对必然假阴性。取证断言按以下方法写：
+
+1. **probe 元素模式（首选）**：在页面里插入一个离屏元素，挂上与目标元素相同的 token 工具类（如 `bg-sidebar-accent`、`rounded-xl`、`border border-ring`），读取其 computed value 与目标元素比较。两边经过同一序列化路径，等值即「目标消费了该 token」。
+2. **canvas 归一化兜底**：`ctx.fillStyle = a; ctx.fillStyle = b` 比较归一化结果，可解析多数颜色函数等价；但 `color-mix()` 不被 canvas 解析，此类 token 以 probe 等值为准，canvas 结果只作记录。
+3. **focus-visible 采集**：`:focus-visible` 只在键盘路径触发；脚本取证用 `element.focus({ focusVisible: true } as FocusOptions)`（TS 下需断言），不要依赖 `el.focus()`。
+4. **AX tree**：新版 Playwright 已移除 `page.accessibility`；用 CDP session 的 `Accessibility.getFullAXTree`。
+5. **slot 顺序锚点**：chrome slot 顺序（LAYOUT-103）可验证的前提是 DOM 有稳定锚点——实现时给每个 slot 元素挂 `data-slot` 属性（建议 `data-slot="slot-<order>-<role>"`，如 `slot-2-search`、`slot-10-page-canvas`），取证按 `data-slot` 前缀选择并比较几何顺序；多值属性用 `[data-slot~="..."]` 选择器。
+
 ## Review
 
 自动 review 不可用时进行独立人工复核，仍生成 `09-review.md` 结构化 front matter。findings 必须引用 template 或 local rule ID、route/viewport/theme/state、expected/actual、evidence、fix 和 re-check；P0/P1 不得只写 prose 接受。设计复核至少检查风格角色一致性、信息 primitive 语义、任务组/主要动作放置和响应式降级。

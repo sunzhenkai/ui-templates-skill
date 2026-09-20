@@ -239,6 +239,19 @@ INTERACTIVE_CONTROL_NAMES = frozenset({
     "button", "icon-button", "input", "textarea", "select", "combobox",
     "checkbox", "switch", "nav-item", "menu-item", "tabs", "pagination",
 })
+# Round 3: component names that trigger the trigger-anatomy question
+# (whole-row trigger vs separately-clickable affordance icon).
+TRIGGER_CONTROL_NAMES = frozenset({"select", "combobox", "dropdown", "dropdown-menu"})
+TRIGGER_ANATOMY_VALUES = frozenset({"whole-trigger", "split-trigger"})
+# Round 3: link interaction contexts whose default-state text decoration is
+# mandatory (the global "no underline unless opt-in" baseline is per-context).
+LINK_CONTEXTS = frozenset({"navigation-link", "entity-row-link", "button-link", "inline-prose-link"})
+# Round 3: header-like chrome slots whose containing region must be answered
+# for inset shells (page-header inside the inset canvas vs outside it), plus
+# the nav slot whose own border presence/absence separates chrome from canvas.
+HEADER_CONTAINER_SLOTS = ("page-header", "page-toolbar")
+NAV_SEPARATION_SLOT = "nav-group"
+CONTAINER_ROLE_VALUES = frozenset({"root", "page-canvas", "canvas"})
 SECTION_NAV_SLOT = "section-nav"
 # Master-detail scenes must place both panes and state the context panel.
 DETAIL_PANE_SLOTS = ("master-pane", "detail-pane")
@@ -273,10 +286,15 @@ def _excluded_definition_ids(graph: dict[str, Any], graph_path: str) -> set[str]
     return targets
 
 
-def _matrix_questions(graph: dict[str, Any], graph_path: str, scene_names: list[str]) -> dict[str, tuple[str, str]]:
-    """Mandatory question matrix (rounds 1+2) -> label -> (state, owner_kind).
+def _matrix_questions(
+    graph: dict[str, Any],
+    graph_path: str,
+    scene_names: list[str],
+    context_names: list[str] | None = None,
+) -> dict[str, tuple[str, str]]:
+    """Mandatory question matrix (rounds 1-3) -> label -> (state, owner_kind).
 
-    state: observed | excluded | unresolved. owner_kind: scene | component.
+    state: observed | excluded | unresolved. owner_kind: scene | component | context.
     """
     scenes = _scene_definitions(graph)
     excluded_ids = _excluded_definition_ids(graph, graph_path)
@@ -287,6 +305,14 @@ def _matrix_questions(graph: dict[str, Any], graph_path: str, scene_names: list[
 
     def scene_facts(name: str) -> list[dict[str, Any]]:
         return _scene_facts(graph, scenes.get(name) or {})
+
+    def all_facts() -> list[dict[str, Any]]:
+        collected: list[dict[str, Any]] = []
+        for item in definitions:
+            collected.extend(fact for fact in item.get("facts") or [] if isinstance(fact, dict))
+        for usage in usages:
+            collected.extend(fact for fact in usage.get("facts") or [] if isinstance(fact, dict))
+        return collected
 
     # ---- round 1: layout placement questions ----
     for name in scene_names:
@@ -310,6 +336,46 @@ def _matrix_questions(graph: dict[str, Any], graph_path: str, scene_names: list[
                     key = f"inset-canvas:{label}:{name}"
                     answer = "observed" if canvas_properties & set(options) else "unresolved"
                     states[key] = ("excluded" if scene_excluded else answer, "scene")
+                # ---- round 3: chrome containment and separation ----
+                declared_header_slots = {
+                    item.get("slot")
+                    for item in facts
+                    if item.get("property") == "slot_role"
+                    and isinstance(item.get("value"), dict)
+                    and item.get("value", {}).get("value") in HEADER_CONTAINER_SLOTS
+                }
+                if declared_header_slots:
+                    contained = {
+                        item.get("slot")
+                        for item in facts
+                        if item.get("property") == "container_role"
+                        and isinstance(item.get("value"), dict)
+                        and item.get("value", {}).get("value") in CONTAINER_ROLE_VALUES
+                    }
+                    states[f"chrome-containment:{name}"] = (
+                        (
+                            "excluded" if scene_excluded
+                            else "observed" if declared_header_slots <= contained
+                            else "unresolved"
+                        ),
+                        "scene",
+                    )
+                declared_nav = any(
+                    item.get("property") == "slot_role"
+                    and isinstance(item.get("value"), dict)
+                    and item.get("value", {}).get("value") == NAV_SEPARATION_SLOT
+                    for item in facts
+                )
+                if declared_nav:
+                    nav_border = any(
+                        item.get("property") == "border"
+                        and item.get("slot") == NAV_SEPARATION_SLOT
+                        for item in facts
+                    )
+                    states[f"chrome-separation:{name}"] = (
+                        ("excluded" if scene_excluded else "observed" if nav_border else "unresolved"),
+                        "scene",
+                    )
         elif kind == "master-detail":
             pane_slots = {item.get("slot") for item in facts}
             states[f"detail-panes:{name}"] = (
@@ -408,6 +474,53 @@ def _matrix_questions(graph: dict[str, Any], graph_path: str, scene_names: list[
             ("excluded" if component_excluded else "observed" if focus_facts else "unresolved"),
             "component",
         )
+
+    # ---- round 3: trigger anatomy for select-like controls ----
+    for name in sorted(components):
+        if name not in TRIGGER_CONTROL_NAMES:
+            continue
+        component = components[name]
+        component_excluded = component.get("id") in excluded_ids
+        anatomy_facts = [
+            item
+            for item in (component.get("facts") or []) + [
+                fact
+                for usage in usages
+                if usage.get("component") == name
+                for fact in (usage.get("facts") or [])
+            ]
+            if isinstance(item, dict)
+            and item.get("property") == "anatomy"
+            and isinstance(item.get("value"), dict)
+            and item.get("value", {}).get("value") in TRIGGER_ANATOMY_VALUES
+        ]
+        states[f"trigger-anatomy:{name}"] = (
+            ("excluded" if component_excluded else "observed" if anatomy_facts else "unresolved"),
+            "component",
+        )
+
+    # ---- round 3: default-state link decoration per declared context ----
+    every_fact = all_facts()
+    context_definitions = {
+        item.get("name"): item for item in definitions if item.get("kind") == "context"
+    }
+    for name in sorted(context_names or []):
+        if name not in LINK_CONTEXTS:
+            continue
+        context_excluded = (context_definitions.get(name) or {}).get("id") in excluded_ids
+        decoration_facts = [
+            item
+            for item in every_fact
+            if isinstance(item, dict)
+            and item.get("facet") == "state_presentations"
+            and item.get("context") == name
+            and item.get("state") == "default"
+            and item.get("property") == "text_decoration"
+        ]
+        states[f"state-decoration:{name}"] = (
+            ("excluded" if context_excluded else "observed" if decoration_facts else "unresolved"),
+            "context",
+        )
     return states
 
 
@@ -417,14 +530,25 @@ def _is_interactive_control(name: str | None) -> bool:
     return name in INTERACTIVE_CONTROL_NAMES or name.endswith("-nav") or name.endswith("-nav-item")
 
 
-def mandatory_fact_gaps(graph: dict[str, Any], graph_path: str, scene_names: list[str]) -> list[str]:
-    """Answer-state check for the mandatory question matrix over included scenes/components."""
-    states = _matrix_questions(graph, graph_path, scene_names)
+def mandatory_fact_gaps(
+    graph: dict[str, Any],
+    graph_path: str,
+    scene_names: list[str],
+    context_names: list[str] | None = None,
+) -> list[str]:
+    """Answer-state check for the mandatory question matrix over included scenes/components/contexts."""
+    states = _matrix_questions(graph, graph_path, scene_names, context_names)
     return sorted(key for key, (state, _kind) in states.items() if state == "unresolved")
 
 
 def mandatory_answer_states(
-    graph: dict[str, Any], graph_path: str, scene_names: list[str]
+    graph: dict[str, Any],
+    graph_path: str,
+    scene_names: list[str],
+    context_names: list[str] | None = None,
 ) -> dict[str, str]:
     """Per-item answer state for the mandatory question matrix."""
-    return {key: state for key, (state, _kind) in _matrix_questions(graph, graph_path, scene_names).items()}
+    return {
+        key: state
+        for key, (state, _kind) in _matrix_questions(graph, graph_path, scene_names, context_names).items()
+    }

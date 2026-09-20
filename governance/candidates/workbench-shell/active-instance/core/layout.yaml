@@ -1,0 +1,65 @@
+schema: design-system-layout/v1
+items:
+  - id: route/workbench
+    name: Workbench shell
+    page_type: page-type/workbench
+    slots: [workspace-switcher, search, compose, nav-group, pin-list, rail, header-trigger, page-header, page-toolbar, page-canvas, footer-utility, chat-fab]
+    rule_refs: [rule/LAYOUT-001, rule/LAYOUT-107, rule/LAYOUT-104]
+    placement:
+      id: workbench-shell
+      shell_variant: inset
+      regions:
+        - {id: shell, role: shell}
+        - {id: canvas, role: page-canvas, parent: shell}
+      slots:
+        - {id: switcher, role: workspace-switcher, region: shell, order: 1}
+        - {id: search, role: search, region: shell, order: 2}
+        - {id: compose, role: compose, region: shell, order: 3}
+        - {id: nav-group, role: nav-group, region: shell, order: 4}
+        - {id: pin-list, role: pin-list, region: shell, order: 5}
+        - {id: rail, role: rail, region: shell, order: 6}
+        - {id: header-trigger, role: header-trigger, region: shell, order: 7}
+        - {id: page-header, role: page-header, region: shell, order: 8}
+        - {id: page-toolbar, role: page-toolbar, region: shell, order: 9}
+        - {id: page-canvas, role: page-canvas, region: canvas, order: 10}
+        - {id: footer-utility, role: footer-utility, region: shell, order: 11}
+        - {id: chat-fab, role: chat-fab, region: shell, order: 12}
+      relations:
+        - {type: contains, from: shell, to: canvas}
+        - {type: horizontal, from: shell, to: canvas}
+      geometry:
+        - {id: canvas-radius, role: radius, token: token/radius.xl}
+        - {id: canvas-border, role: border, token: token/color.surface-border}
+        - {id: canvas-shadow, role: shadow, token: token/shadow.surface}
+      pattern_refs: [pattern/workbench-shell]
+      evidence_refs: [evidence-layout-shell]
+  - id: route/board
+    name: Board
+    page_type: page-type/board
+    slots: [page-header, page-toolbar, columns]
+    rule_refs: [rule/LAYOUT-002, rule/LAYOUT-106]
+    placement:
+      id: board-columns
+      regions: [{id: board, role: board}]
+      relations: [{type: horizontal, from: board, to: board}]
+      scroll_domains: [{id: columns-inline, axis: inline, owner: board, nested_in: null}]
+      geometry:
+        - {id: column-width, role: column-width, token: token/size.board-column}
+        - {id: column-gap, role: column-gap, token: token/space.4}
+      pattern_refs: [pattern/board-columns]
+      evidence_refs: [evidence-layout-board]
+  - id: route/settings
+    name: Settings
+    page_type: page-type/settings
+    slots: [section-nav, page-canvas]
+    rule_refs: [rule/LAYOUT-102]
+  - id: route/master-detail
+    name: Master detail
+    page_type: page-type/master-detail
+    slots: [master-pane, detail-pane, context-panel]
+    rule_refs: [rule/LAYOUT-003]
+  - id: route/dialog
+    name: Dialog
+    page_type: page-type/dialog
+    slots: [overlay, content]
+    rule_refs: [rule/LAYOUT-005]

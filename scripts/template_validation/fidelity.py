@@ -353,6 +353,37 @@ def validate_semantics(
         gaps = chrome_record_gaps(record)
         if gaps:
             add(CHROME_INCOMPLETE, "included shell scene chrome composition 不完整", where, gaps=gaps)
+        for region_index, region in enumerate(record.get("regions") or []):
+            if not isinstance(region, dict):
+                continue
+            parent = region.get("parent")
+            if isinstance(parent, str) and parent not in region_set:
+                add(
+                    "FIDELITY_REGION_PARENT_DANGLING",
+                    "region parent 引用未知 region",
+                    f"{where}.regions.{region_index}.parent",
+                    parent=parent,
+                )
+        for relation in record.get("relations") or []:
+            if not (isinstance(relation, dict) and relation.get("type") in ("contains", "owns")):
+                continue
+            declared = next(
+                (
+                    item.get("parent")
+                    for item in record.get("regions") or []
+                    if isinstance(item, dict) and item.get("id") == relation.get("to")
+                ),
+                None,
+            )
+            if declared is not None and declared != relation.get("from"):
+                add(
+                    "FIDELITY_CONTAINMENT_CONFLICT",
+                    "contains/owns 边 from 与 region 声明的 parent 不一致",
+                    f"{where}.relations",
+                    region=relation.get("to"),
+                    edge_from=relation.get("from"),
+                    declared_parent=declared,
+                )
 
     for index, record in enumerate(data.get("component_geometry") or []):
         if not isinstance(record, dict):
@@ -378,6 +409,13 @@ def validate_semantics(
         negatives = {(item.get("property"), item.get("value")) for item in record.get("negative_facts") or [] if isinstance(item, dict)}
         if decoration == "none" and ("text_decoration", "none") not in negatives:
             add("FIDELITY_NEGATIVE_FACT_MISSING", "text_decoration none 必须作为 explicit negative fact", f"state_presentations.{index}.negative_facts")
+        if decoration == "underline" and any(property_name == "text_decoration" for property_name, _value in negatives):
+            add(
+                "FIDELITY_STATE_DECORATION_CONFLICT",
+                "underline 不能同时登记为 negative fact；缺失下划线应记录为 none + negative",
+                f"state_presentations.{index}.text_decoration",
+                record=record.get("id"),
+            )
     for key, entries in sorted(state_index.items(), key=lambda item: canonical_json(item[0])):
         decorations = {item[1] for item in entries}
         if len(entries) > 1 and ("none" in decorations and "underline" in decorations):

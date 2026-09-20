@@ -25,11 +25,11 @@ metadata:
 
 ## 信息完整性校验与计划确认（两模式共用 gate）
 
-任何删除或写入之前必须先过这一关；确认前只允许只读收集（`ls`/`find`/`cat`/`git status`/`resolve`/validator `--json`），不得执行 `retire`/`delete`/`adopt`/`rm` 或写任何文件。
+任何删除或写入之前必须先过这一关；确认前只允许只读收集（`ls`/`find`/`cat`/`git status`/`git ls-files`/`resolve`/validator `--json`），不得执行 `retire`/`delete`/`adopt`/`rm` 或写任何文件。
 
 **信息完整性校验**——按三类处置，结论写入计划：
 
-1. 仓库事实（自动核验，缺了就地补全）：模板 INDEX 行与状态、meta version + contract digest、catalog 是否有同名模板、输出根现状（是否存在/是否有有效 checkpoint）、需求源文件存在性、git 工作区状态、删除清单内未提交变更。
+1. 仓库事实（自动核验，缺了就地补全）：模板 INDEX 行与状态、meta version + contract digest、catalog 是否有同名模板、输出根现状（是否存在/是否有有效 checkpoint）、需求源文件存在性、git 工作区状态、删除清单内未提交变更、输出根是否已被 git 跟踪（`git ls-files` 命中即待确认项）以及根 `.gitignore` 是否忽略输出根。
 2. 用户决策项（列入计划「待确认项」，确认时一次性解决；一律由用户显式选择，skill 不得按可用性默认代选）：**template 来源**——干净模式为重建来源（catalog published 副本领养 vs 用户本会话提供 session source 从源重建），计划必须列出各候选的实际来源身份（version / contract digest / meta.sources 摘要）；增量模式为更新类型与来源（update-from-source / update-portable / update-from-feedback 及对应 session source 或 feedback 路径）。此外还有：功能范围（无 prompts 时）、greenfield 栈选择（十层闭集）、增量变更集合（用户未说明改了哪些层时）。
 3. 停止项（无法通过确认解决即停止，不进计划）：模板名对不上 INDEX 与 catalog、用户声称版本 ≠ meta 实际版本、web 无有效 Active Instance/checkpoint 而请求增量同步。
 
@@ -62,6 +62,7 @@ metadata:
 - **生产正文只读**：不修改 `skills/**`、catalog 只读、不改 `.agents/skills/` 下其他 skill、不改 `openspec/changes/archive/**` 与 immutable history；`example/**` 与 `docs/**` 是治理排除项，root governance 不以其质量决定发布。
 - **固定环境命令**：治理命令使用 `/tmp/ui-template-governance-venv/bin/python`（缺失时先 `make bootstrap`）；validator 是 `scripts/validate_design_system.py validate <pkg> --kind package --json`。
 - **幂等续跑（中断恢复）**：非用户显式重删的场景下，每步执行前先检查该步产物是否已存在且通过校验（template 目录 + validator 通过 → 跳过重建；输出根存在有效 checkpoint → 走 Apply 的 Impact-based Resume 续跑），从最近有效状态继续；续跑同样先过「计划确认」的简版流程。
+- **生成物不入库**：example web（输出根及其全部内容，含 `.ui-template-apply/`、`.ui-template-design/`、构建产物与历史 `web-v*/`）是一次性测试生成物，本 skill 全程不执行 `git add`/`git commit`/`git push`，生成物保持未跟踪或被忽略状态（根 `.gitignore` 已忽略 `example/*/web/` 与 `example/*/web-v*/`）。输出根已被 git 跟踪、或 `.gitignore` 未覆盖输出根时列入计划待确认项；核对结果写入报告「生成物入库」行。`example/<name>/prompts/` 与 example 级配置不属生成物，仍按原状入库，不在本条约束内。
 - **产物归属**：模板只写 `templates/<name>/`；web 及其 `.ui-template-apply/`、`.ui-template-design/` 只写 `example/<name>/` 下约定输出根。不自动 publish、tag、archive 或 promote；catalog replacement 需用户单独确认。
 
 ## 测试报告
@@ -74,6 +75,7 @@ metadata:
 - 计划确认: <已确认（待确认项落定结果） | validate-only 未进两模式>
 - template: <name>@<version>, contract digest <sha>, validator: pass/fail
 - example web: <output_root>, apply phases completed: 0–9（列未完成项）, Phase 8 evidence: <n> records
+- 生成物入库: <未提交（untracked/ignored）| 异常: <被跟踪/被暂存路径逐条>>
 - 删除清单（clean 模式）: <paths>
 - 委托执行: <实际读取并执行的各生产 skill 文件>
 - 回归: <make validate / make test 结果；模板 validator 结果>

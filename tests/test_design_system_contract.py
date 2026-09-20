@@ -76,6 +76,16 @@ class DesignSystemContractTests(unittest.TestCase):
             self.assertNotEqual(0, code)
             self.assertIn("BINDING_MISSING", codes)
 
+    def test_visual_role_closure_is_an_explicit_high_fidelity_gate(self) -> None:
+        code, report = self.run_validator(
+            FIXTURES / "packages/page-system-fixture",
+            "package",
+            "--require-visual-role-closure",
+        )
+        codes = {item["code"] for item in report["errors"]}
+        self.assertNotEqual(0, code)
+        self.assertIn("VISUAL_ROLE_MISSING", codes)
+
     def test_provenance_coverage_confidence_cross_checks(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

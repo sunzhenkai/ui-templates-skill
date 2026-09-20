@@ -24,6 +24,11 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         help="Session source checkout for this capture; never infer from published meta.sources[]",
     )
+    parser.add_argument(
+        "--graph-root",
+        type=Path,
+        help="Optional explicit root for a session capture artifact; source checkout remains read-only.",
+    )
     parser.add_argument("--receipt-out", type=Path)
     parser.add_argument("--replay-receipt", type=Path)
     parser.add_argument(
@@ -53,8 +58,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.request is None or args.source_root is None:
         parser.error("request and --source-root are required unless --init-source-graph is set")
     try:
-        receipt = capture_from_files(args.request, args.source_root)
-        payload = replay(load_document(args.request), args.source_root, load_document(args.replay_receipt)) if args.replay_receipt else receipt
+        receipt = capture_from_files(args.request, args.source_root, args.graph_root)
+        payload = replay(
+            load_document(args.request), args.source_root, load_document(args.replay_receipt), args.graph_root,
+        ) if args.replay_receipt else receipt
         if args.receipt_out:
             args.receipt_out.parent.mkdir(parents=True, exist_ok=True)
             args.receipt_out.write_text(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")

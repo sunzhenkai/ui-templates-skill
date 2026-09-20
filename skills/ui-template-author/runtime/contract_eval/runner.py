@@ -664,6 +664,12 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             (site_root / ".ui-template-apply").mkdir()
             (site_root / ".ui-template-apply/checkpoint.yaml").write_text("schema_version: 2\n", encoding="utf-8")
             ledger_site = detect_architecture_site(site_root)
+            (site_root / ".ui-template-design").mkdir()
+            (site_root / ".ui-template-design/design-system.yaml").write_text("schema: design-system/v1\n", encoding="utf-8")
+            (site_root / ".ui-template-design/binding.yaml").write_text("schema: design-system-binding/v1\n", encoding="utf-8")
+            (site_root / ".ui-template-design/core").mkdir()
+            (site_root / ".ui-template-design/core/tokens.yaml").write_text("schema: design-system-tokens/v1\n", encoding="utf-8")
+            active_instance_site = detect_architecture_site(site_root)
             (site_root / "package.json").write_text("{}\n", encoding="utf-8")
             existing_site = detect_architecture_site(site_root)
             explicit_site = detect_architecture_site(site_root, explicit_greenfield=True)
@@ -710,6 +716,7 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "empty_greenfield": empty_site == "greenfield",
             "placeholder_greenfield": placeholder_site == "greenfield",
             "ledger_ignored": ledger_site == "greenfield",
+            "active_instance_ignored": active_instance_site == "greenfield",
             "package_json_existing": existing_site == "existing",
             "explicit_keeps_named_greenfield": explicit_site == "greenfield",
             "nested_empty_greenfield": nested_empty == "greenfield",

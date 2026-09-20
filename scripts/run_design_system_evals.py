@@ -110,7 +110,7 @@ def certification_cases(root_tmp: Path) -> list[dict[str, object]]:
     report = run_cert(VALIDATOR, placeholder_root / "report.yaml", candidate)
     cases.append(result(
         "certification-oracle-placeholder-rejected", False, report,
-        ["CERT_ORACLE_EVIDENCE_PLACEHOLDER", "CERT_ASSERTION_UNANCHORED"],
+        ["CERT_ORACLE_EVIDENCE_PLACEHOLDER"],
     ))
 
     # Inline oracle measurements anchor a record when no oracle screenshot exists.
@@ -118,18 +118,10 @@ def certification_cases(root_tmp: Path) -> list[dict[str, object]]:
     shutil.copytree(fixtures / "valid", measurement_root)
     report_path = measurement_root / "report.yaml"
     text = report_path.read_text(encoding="utf-8")
-    measurement = (
-        "    oracle_measurements:\n"
-        "    - id: measurement-dashboard-sidebar\n"
-        "      method: computed-style\n"
-        "      dimension: spacing\n"
-        "      value: 256px\n"
-        "      unit: px\n"
-        "      tolerance: <=2px\n"
-        f"      oracle_revision: {'a' * 40}\n"
-    )
-    text = text.replace("    oracle_screenshot: evidence/oracle-dashboard.png\n", measurement, 1)
-    text = text.replace("    oracle_screenshot: evidence/oracle-list.png\n", measurement, 1)
+    # The valid fixture already carries oracle measurements for per-assertion
+    # anchoring. Remove screenshots to verify measurements remain sufficient.
+    text = text.replace("    oracle_screenshot: evidence/oracle-dashboard.png\n", "", 1)
+    text = text.replace("    oracle_screenshot: evidence/oracle-list.png\n", "", 1)
     report_path.write_text(text, encoding="utf-8")
     report = run_cert(VALIDATOR, report_path, candidate)
     cases.append(result("certification-oracle-measurement-anchors-record", True, report, []))

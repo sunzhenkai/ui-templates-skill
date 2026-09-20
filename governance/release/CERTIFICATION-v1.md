@@ -8,6 +8,7 @@
 | --- | --- |
 | Visual Oracle | 固定 git revision；出处只留在 `meta.sources[]` 与 AGENTS 出处段 |
 | Candidate package | `governance/candidates/<name>/`；digest 为 canonical contract digest |
+| Frozen Active Instance | 由 Design 从同一 candidate 领养并冻结；contract、binding、projection digest 均须写入 gate |
 | 固定 prompts | prompts 文件或目录 tree digest；不写入 package |
 | Output root | 显式声明；必须干净（不存在或为空），禁止复用已修补的上一轮生成物 |
 | Build identity | 每次重生取 fresh 值；`latest` 无效 |
@@ -19,11 +20,12 @@
 python3 scripts/run_template_certification.py prepare \
   --oracle-revision <fixed-revision> \
   --package governance/candidates/<name> \
+  --active-instance <frozen-active-instance-root> \
   --prompts governance/candidates/<name>/prompts \
   --output-root <explicit-clean-root> \
   --build-identity <fresh-build-id>
 
-# 2. 通过普通 Apply（bootstrap | increment）在 output root 干净生成；
+# 2. 通过普通 Apply（bootstrap | increment）消费上述冻结 Active Instance 并在 output root 干净生成；
 #    Apply 不接收原版 checkout、meta.sources[] 路径或历史生成物。
 
 # 3. 生成 certification inventory（oracle 侧 source facts，replayable provenance）
@@ -34,6 +36,7 @@ python3 scripts/run_template_certification.py validate-inventory \
 python3 scripts/run_template_certification.py verify \
   --report governance/candidates/<name>/certification/report.yaml \
   --inventory governance/candidates/<name>/certification/inventory.yaml \
+  --coverage-matrix governance/candidates/<name>/certification/coverage-matrix.yaml \
   --package-root governance/candidates/<name> \
   --output-root <explicit-clean-root> \
   --oracle-revision <fixed-revision>
@@ -42,10 +45,12 @@ python3 scripts/run_template_certification.py verify \
 ## 失败回写边界
 
 - `package`：Pattern/token/evidence 契约缺口 → 更新 candidate 后重新认证。
+- `binding`：Frozen Active Instance 缺失、未冻结或与 candidate identity 失配 → 修复 binding/Active Instance 后重新认证。
 - `apply-skill`：阶段、取证或 source-blind 执行不稳 → 修 Apply skill 后重新认证。
 - `certification-prompt`：build/oracle 身份失配或 assertion 设计不足 → 修固定 prompts 后重新认证。
 
 禁止通过修改上一轮生成物并复用旧 identity 来闭合失败；output root 不干净或 identity 复用时 gate 拒绝。
+`ownership: package` 的 feedback 必须全部处于终态；任何 proposed/open package feedback 均阻断认证。每个 passed Pattern Record 必须覆盖结构/层级、间距/密度、排版、色彩/表面和边框/分隔线，且每一条通过 assertion 引用同 record 内的 oracle measurement。
 
 ## Promotion request（release check）
 

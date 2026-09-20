@@ -24,6 +24,21 @@ class GovernanceScopeTests(unittest.TestCase):
         self.assertEqual(["EXAMPLE_PATH_IN_SCOPE: example/workbench-shell/web-v3/src/x.ts"], findings)
         self.assertEqual([], scope.guard_example_paths())
 
+    def test_example_guard_allows_only_prompts_web_prefix_and_removed_dotfiles(self) -> None:
+        import check_governance_scope as scope
+
+        paths = [
+            "example/workbench-shell/prompts/README.md",
+            "example/workbench-shell/web/src/App.tsx",
+            "example/workbench-shell/.gitignore",
+            "example/workbench-shell/.oxlintrc.json",
+            "example/workbench-shell/stray-file.txt",
+        ]
+        self.assertEqual(
+            ["EXAMPLE_PATH_IN_SCOPE: example/workbench-shell/stray-file.txt"],
+            scope.guard_example_paths(paths),
+        )
+
     def test_root_fixture_layout_is_complete(self) -> None:
         fixture_root = ROOT / "tests/fixtures"
         for name in ("schema", "validator", "migrator", "feedback-checkpoint", "eval", "bundle", "mirror", "mutations", "repo-capture", "fidelity"):

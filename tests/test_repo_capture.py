@@ -18,8 +18,8 @@ from template_authoring.capture import CaptureError, capture_from_files, load_do
 from template_authoring.gate import run_authoring_gate
 
 FIXTURE = ROOT / "tests/fixtures/repo-capture"
-FIXED_REVISION = "1805654239c3192972c34d8fcb70b9ebe304a096"
-FIXED_CLOSURE_DIGEST = "sha256:50616383b3fc991ed582652656b66e3f0ddb97d27b53501884281997fab7ea9e"
+FIXED_REVISION = "849813d57c05f7d0e70ffc798c1f0b77abf6429b"
+FIXED_CLOSURE_DIGEST = "sha256:6abf3d1a1a37aca19bad00c2c2ed9175b6e3181264202481b6e9dec6152f3ad8"
 
 
 class RepoCaptureTests(unittest.TestCase):
@@ -66,7 +66,7 @@ class RepoCaptureTests(unittest.TestCase):
             self.assertFalse(first["unresolved"])
             self.assertGreaterEqual(first["summary"]["definitions"], 12)
             self.assertEqual(12, first["summary"]["usages"])
-            self.assertEqual(7, first["summary"]["negative_facts"])
+            self.assertEqual(10, first["summary"]["negative_facts"])
             identities = [(item["id"], item["status"]) for item in first["facts"]]
             self.assertEqual(identities, [(item["id"], item["status"]) for item in second["facts"]])
             replayed = replay(load_document(request_path), source, first)
@@ -79,6 +79,40 @@ class RepoCaptureTests(unittest.TestCase):
             self.assertEqual("failed", changed["status"])
             self.assertEqual("SOURCE_GRAPH_NOT_AT_REVISION", changed["error"]["code"])
             self.assertEqual(0, changed["executed"])
+
+    def test_external_capture_artifact_keeps_source_checkout_read_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            source, request_path, _ = self.materialize(temp)
+            artifact_root = Path(temp) / "artifact"
+            artifact_root.mkdir()
+            shutil.copy2(source / "ui-source-graph.yaml", artifact_root / "ui-source-graph.yaml")
+            before = subprocess.run(
+                ["git", "status", "--porcelain"], cwd=source, text=True, capture_output=True, check=True,
+            ).stdout
+            captured = capture_from_files(request_path, source, artifact_root)
+            replayed = replay(load_document(request_path), source, captured, artifact_root)
+            after = subprocess.run(
+                ["git", "status", "--porcelain"], cwd=source, text=True, capture_output=True, check=True,
+            ).stdout
+            self.assertEqual("captured", captured["status"])
+            self.assertEqual("passed", replayed["status"])
+            self.assertEqual(before, after)
+
+    def test_observed_css_value_is_preserved_without_becoming_package_value(self) -> None:
+        def observed(graph):
+            graph["usages"][0]["facts"][0]["value"]["observed"] = {
+                "kind": "css-length",
+                "value": "16px",
+            }
+
+        with tempfile.TemporaryDirectory() as temp:
+            source, request_path, _ = self.materialize(temp, observed)
+            captured = capture_from_files(request_path, source)
+            fact = next(item for item in captured["facts"] if item["value"].get("observed"))
+            self.assertEqual({"kind": "semantic", "value": "none"}, {
+                key: fact["value"][key] for key in ("kind", "value")
+            })
+            self.assertEqual({"kind": "css-length", "value": "16px"}, fact["value"]["observed"])
 
     def test_dynamic_ambiguity_and_limit_are_unresolved_without_sampling(self) -> None:
         def dynamic(graph):

@@ -36,6 +36,10 @@ OWNERSHIP_BY_CODE = {
     "CERT_ORACLE_EVIDENCE_PLACEHOLDER": "certification-prompt",
     "CERT_ORACLE_MEASUREMENT_INVALID": "certification-prompt",
     "CERT_ASSERTION_UNANCHORED": "certification-prompt",
+    "CERT_ASSERTION_COVERAGE_INCOMPLETE": "certification-prompt",
+    "CERT_ACTIVE_INSTANCE_REQUIRED": "binding",
+    "CERT_ACTIVE_INSTANCE_IDENTITY_MISMATCH": "binding",
+    "CERT_PACKAGE_FEEDBACK_OPEN": "package",
     "CERT_RECORD_MISSING": "package",
     "CERT_RECORD_NOT_IN_INVENTORY": "package",
     "CERT_OVER_FRAGMENTED": "package",
@@ -88,6 +92,7 @@ def write_gate_identity(
     *,
     oracle_revision: str,
     package: dict[str, Any],
+    active_instance: dict[str, Any],
     prompts_digest: dict[str, str],
     build_identity: str,
     apply_mode: str,
@@ -99,6 +104,7 @@ def write_gate_identity(
         "schema": "template-certification-gate-identity/v1",
         "oracle": {"kind": "git-revision", "revision": oracle_revision},
         "package": package,
+        "active_instance": active_instance,
         "prompts_digest": prompts_digest,
         "build": {
             "identity": build_identity,
@@ -158,6 +164,43 @@ def classify(report: dict[str, Any]) -> list[dict[str, str]]:
     return classified
 
 
+def validate_coverage_matrix(path: Path, report_path: Path) -> list[dict[str, str]]:
+    """Require a source-derived scenario matrix before accepting a certification."""
+    try:
+        matrix = yaml.safe_load(path.read_text(encoding="utf-8"))
+        certification = yaml.safe_load(report_path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as exc:
+        return [{"code": "CERT_COVERAGE_MATRIX_INVALID", "path": str(path), "message": str(exc)}]
+    if not isinstance(matrix, dict) or matrix.get("schema") != "design-system-certification-coverage-matrix/v1":
+        return [{"code": "CERT_COVERAGE_MATRIX_INVALID", "path": str(path), "message": "unsupported coverage matrix"}]
+    if matrix.get("status") != "ready":
+        return [{
+            "code": "CERT_COVERAGE_MATRIX_PENDING",
+            "path": str(path),
+            "message": "coverage matrix is pending oracle capture and cannot certify high fidelity",
+        }]
+    required = matrix.get("records")
+    if not isinstance(required, list) or not required:
+        return [{"code": "CERT_COVERAGE_MATRIX_INVALID", "path": str(path), "message": "matrix requires records"}]
+    actual = {
+        (record.get("pattern"), record.get("route"), record.get("state"), record.get("theme"), record.get("viewport"))
+        for record in certification.get("records", [])
+        if isinstance(record, dict) and record.get("verdict") == "passed"
+    }
+    missing = [
+        entry for entry in required
+        if not isinstance(entry, dict)
+        or (entry.get("pattern"), entry.get("route"), entry.get("state"), entry.get("theme"), entry.get("viewport")) not in actual
+    ]
+    if missing:
+        return [{
+            "code": "CERT_COVERAGE_MATRIX_INCOMPLETE",
+            "path": str(path),
+            "message": f"{len(missing)} required pattern scenario(s) have no passed record",
+        }]
+    return []
+
+
 def run_validator(package: Path, *, require_family: bool) -> tuple[int, dict[str, Any]]:
     command = [
         sys.executable, str(ROOT / "scripts/validate_design_system.py"),
@@ -165,12 +208,52 @@ def run_validator(package: Path, *, require_family: bool) -> tuple[int, dict[str
     ]
     if require_family:
         command.append("--require-component-family")
+        command.append("--require-visual-role-closure")
     process = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
     try:
         payload = json.loads(process.stdout)
     except json.JSONDecodeError as exc:
         raise SystemExit(f"VALIDATOR_INVALID_JSON: {exc}\n{process.stderr}") from exc
     return process.returncode, payload
+
+
+def active_instance_identity(active_instance: Path, package: dict[str, Any]) -> dict[str, Any]:
+    """Require certification to consume a frozen Design-owned Active Instance."""
+    command = [
+        sys.executable, str(ROOT / "scripts/validate_design_system.py"),
+        "validate", str(active_instance), "--kind", "active",
+    ]
+    process = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
+    try:
+        report = json.loads(process.stdout)
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"ACTIVE_INSTANCE_VALIDATOR_INVALID_JSON: {exc}\n{process.stderr}") from exc
+    if process.returncode != 0:
+        raise SystemExit(
+            "CERT_ACTIVE_INSTANCE_REQUIRED: certification requires a valid frozen Active Instance\n"
+            + json.dumps(report, ensure_ascii=False)
+        )
+    manifest_path = active_instance / "design-system.yaml"
+    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("id") != package["id"] or manifest.get("version") != package["version"]:
+        raise SystemExit("CERT_ACTIVE_INSTANCE_IDENTITY_MISMATCH: frozen Active Instance differs from candidate")
+    digests = report.get("digests", {})
+    required = ("contract", "binding")
+    if any(not isinstance(digests.get(name, {}).get("recorded"), dict) for name in required):
+        raise SystemExit("CERT_ACTIVE_INSTANCE_REQUIRED: active validation did not produce all required digests")
+    binding = yaml.safe_load((active_instance / "binding.yaml").read_text(encoding="utf-8"))
+    projections = binding.get("projections") if isinstance(binding, dict) else None
+    if not isinstance(projections, list) or not projections:
+        raise SystemExit("CERT_ACTIVE_INSTANCE_REQUIRED: frozen Active Instance has no Token Projection")
+    projection_digest = hashlib.sha256(
+        json.dumps(projections, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    return {
+        "status": "frozen",
+        "contract_digest": digests["contract"]["recorded"],
+        "binding_digest": digests["binding"]["recorded"],
+        "projection_digest": {"algorithm": "sha256-canonical-json-v1", "value": projection_digest},
+    }
 
 
 def cmd_prepare(args: argparse.Namespace) -> int:
@@ -200,11 +283,13 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         "version": manifest["version"],
         "digest": {"algorithm": "sha256-canonical-json-v1", "value": canonical_digest(digest_input)},
     }
+    active_block = active_instance_identity(args.active_instance.resolve(), package_block)
     prompts_value = prompts_digest_value(args.prompts.resolve())
     identity_path = write_gate_identity(
         output_root,
         oracle_revision=args.oracle_revision,
         package=package_block,
+        active_instance=active_block,
         prompts_digest={"algorithm": "sha256-tree-v1", "value": prompts_value},
         build_identity=args.build_identity,
         apply_mode=args.apply_mode,
@@ -215,6 +300,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         "output_root": output_root.as_posix(),
         "gate_identity": identity_path.relative_to(output_root).as_posix(),
         "package": package_block,
+        "active_instance": active_block,
         "prompts_digest": {"algorithm": "sha256-tree-v1", "value": prompts_value},
         "oracle_revision": args.oracle_revision,
         "build_identity": args.build_identity,
@@ -235,6 +321,11 @@ def cmd_verify(args: argparse.Namespace) -> int:
         violations = scan_source_blind_violations(args.output_root.resolve(), args.oracle_revision)
         payload["errors"].extend(violations)
         if violations:
+            payload["valid"] = False
+    if args.coverage_matrix is not None:
+        coverage_violations = validate_coverage_matrix(args.coverage_matrix.resolve(), report_path)
+        payload["errors"].extend(coverage_violations)
+        if coverage_violations:
             payload["valid"] = False
     ownership = classify(payload)
     accepted = payload["valid"]
@@ -275,6 +366,7 @@ def parser() -> argparse.ArgumentParser:
     prepare = sub.add_parser("prepare", help="source-blind 干净重生前置：gate identity 与 clean output root")
     prepare.add_argument("--oracle-revision", required=True, help="固定 Visual Oracle git revision")
     prepare.add_argument("--package", type=Path, required=True, help="candidate package 目录")
+    prepare.add_argument("--active-instance", type=Path, required=True, help="已冻结且与 candidate 一致的 Active Instance")
     prepare.add_argument("--prompts", type=Path, required=True, help="固定 prompts 文件或目录")
     prepare.add_argument("--output-root", type=Path, required=True, help="显式 clean output root")
     prepare.add_argument("--build-identity", required=True, help="fresh build identity；不得复用旧值")
@@ -288,6 +380,7 @@ def parser() -> argparse.ArgumentParser:
     verify.add_argument("--evidence-root", type=Path)
     verify.add_argument("--output-root", type=Path, help="clean build 输出根；提供时执行 source-blind 扫描")
     verify.add_argument("--oracle-revision", help="与 gate identity 比对用的 oracle revision")
+    verify.add_argument("--coverage-matrix", type=Path, help="source-derived Pattern scenario coverage matrix")
 
     inventory = sub.add_parser("validate-inventory", help="校验 certification inventory")
     inventory.add_argument("document", type=Path)
