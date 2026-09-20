@@ -110,6 +110,18 @@ def parser() -> argparse.ArgumentParser:
         help="Active Instance 根目录；提供时校验 Pattern-bound route composition",
     )
     checkpoint.add_argument("--known-rule-id", action="append", default=None)
+    scenarios = sub.add_parser(
+        "scenarios",
+        help="枚举 fidelity profile + core/layout placement + measured expectations 派生的 Phase 8 必备 scenario IDs",
+    )
+    scenarios.add_argument("--fidelity", type=Path, help="模板/Active Instance 的 fidelity.yaml")
+    scenarios.add_argument("--layout", type=Path, help="core/layout.yaml（placement geometry/pattern 闭包场景来源）")
+    scenarios.add_argument("--expectations", type=Path, help="measured-expectations.yaml（期望比对场景来源）")
+    lint = sub.add_parser(
+        "artifact-lint",
+        help="对单个 apply 产物做写时校验：YAML 可解析、无裸日期、digest 字段为 canonical 对象、可 canonical JSON 编码",
+    )
+    lint.add_argument("path", type=Path)
     return result
 
 
@@ -138,6 +150,69 @@ def main() -> int:
     if args.command == "build-identity":
         print(build_identity(args.build_command, args.artifact))
         return 0
+    if args.command == "scenarios":
+        from template_apply_state.fidelity import derive_scenario_ids
+
+        profile = load_structured(args.fidelity) if args.fidelity else None
+        layout = load_structured(args.layout) if args.layout else None
+        expectations = load_structured(args.expectations) if args.expectations else None
+        ids = derive_scenario_ids(profile, layout, expectations)
+        payload = {
+            "count": len(ids),
+            "scenarios": ids,
+            "inputs": {
+                "fidelity": bool(args.fidelity),
+                "layout": bool(args.layout),
+                "expectations": bool(args.expectations),
+            },
+        }
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
+    if args.command == "artifact-lint":
+        import datetime as _dt
+
+        findings: list[dict[str, object]] = []
+        try:
+            data: object = load_structured(args.path)
+        except (ApplyStateError, OSError) as exc:
+            print(json.dumps({"valid": False, "findings": [{"code": "ARTIFACT_UNPARSEABLE", "path": str(args.path), "message": str(exc)}]}, ensure_ascii=False, indent=2))
+            return 1
+
+        def walk(node: object, pointer: str) -> None:
+            if isinstance(node, dict):
+                for key, value in node.items():
+                    child = f"{pointer}/{key}"
+                    if isinstance(key, str) and key.endswith("digest"):
+                        ok = (
+                            isinstance(value, dict)
+                            and set(value) == {"algorithm", "value"}
+                            and all(isinstance(item, str) and item for item in value.values())
+                        )
+                        if not ok:
+                            findings.append({
+                                "code": "ARTIFACT_DIGEST_SHAPE_INVALID",
+                                "path": child,
+                                "message": "digest 字段必须是 {algorithm, value} canonical 对象（字符串值），不得是裸字符串或空",
+                            })
+                    walk(value, child)
+            elif isinstance(node, list):
+                for index, value in enumerate(node):
+                    walk(value, f"{pointer}/{index}")
+            elif isinstance(node, (_dt.datetime, _dt.date)):
+                findings.append({
+                    "code": "ARTIFACT_BARE_DATE",
+                    "path": pointer,
+                    "message": "时间戳必须写成带引号的字符串；裸日期无法 canonical JSON 编码",
+                })
+
+        walk(data, "")
+        try:
+            canonical_digest(data)
+        except ApplyStateError as exc:
+            findings.append({"code": "ARTIFACT_NOT_CANONICAL", "path": str(args.path), "message": str(exc)})
+        payload = {"valid": not findings, "findings": findings}
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0 if payload["valid"] else 1
     known_rule_ids = set(args.known_rule_id) if getattr(args, "known_rule_id", None) is not None else None
     if args.command == "feedback":
         findings = validate_feedback_inbox(

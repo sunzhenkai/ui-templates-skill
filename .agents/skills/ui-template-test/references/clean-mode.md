@@ -91,7 +91,7 @@ python3 skills/ui-template-apply/runtime/check_active_instance.py validate examp
    - 需求源是 `example/<name>/prompts/README.md` 时，其功能范围 = included 范围（Step 1 已确认）；prompts 与模板 capability 冲突时按模板 capability 边界收敛并在报告记录。
    - Phase 8 必须有真实浏览器证据（无浏览器能力时停止请求运行方式，静态检查不替代）；Phase 9 通过且无 proposed feedback 才算会话 closed。
 3. 每完成一个 phase 在测试报告记录，便于中断后续跑。
-4. 执行顺序（判定器已知局限）：`architecture-site` 必须先于 `adopt_package` 运行——判定器跳过 `.git`/`.ui-template-apply` 但不跳过 `.ui-template-design/`，adopt 之后再判定会把 Active Instance 误报 `existing`。若 adopt 已发生，以删除前 find 证据 + `--explicit-greenfield` 处置并在报告偏差节说明。
+4. 执行顺序：`architecture-site` 在删除后、`adopt_package` 前运行（空输出根上的判定证据最干净）。判定器跳过全部会话状态目录（`.git`、`.ui-template-apply`、`.ui-template-design`），adopt 落位 Active Instance 之后再判定也不会把 greenfield 误报 `existing`；工程文件（依赖清单/源码）一旦出现仍按 `existing` 判定。
 5. 模板版本晋升后的重基序列（Impact-based Resume 全相位重开属预期，非故障）：按新契约更新 01-token-map / 02-routes / 04-components 的决策、`template_refs` 与 `pattern_refs` → 重算全部工件 digest → checkpoint `stable_ids` 并入新增 pattern/rule → 重绑 contract/template/binding digest 与 source_identity → Phase 8 证据全部重取后方可 complete。
 6. 生成完成后核对 `git status --short`：输出根下不得出现任何 staged（`A`/`M`/`R`）或新跟踪项，新文件应为 untracked 或被 `.gitignore` 忽略；异常记入报告「生成物入库」行，不擅自改根 `.gitignore`、不执行 `git add`。
 

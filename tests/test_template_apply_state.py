@@ -555,6 +555,23 @@ class ApplyStateTests(unittest.TestCase):
             self.assertEqual("existing", detect_architecture_site(root))
             self.assertEqual("greenfield", detect_architecture_site(root, explicit_greenfield=True))
 
+    def test_architecture_site_ignores_active_instance_state_dir(self) -> None:
+        # adopt-only bootstrap 先落 .ui-template-design Active Instance，输出根仍是 greenfield
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / ".ui-template-design").mkdir()
+            (root / ".ui-template-design/design-system.yaml").write_text("schema: design-system/v1\n", encoding="utf-8")
+            (root / ".ui-template-design/binding.yaml").write_text("schema: design-system-binding/v1\n", encoding="utf-8")
+            (root / ".ui-template-design/core").mkdir()
+            (root / ".ui-template-design/core/tokens.yaml").write_text("schema: design-system-tokens/v1\n", encoding="utf-8")
+            self.assertEqual("greenfield", detect_architecture_site(root))
+            (root / ".ui-template-apply").mkdir()
+            (root / ".ui-template-apply/checkpoint.yaml").write_text("schema_version: 2\n", encoding="utf-8")
+            self.assertEqual("greenfield", detect_architecture_site(root))
+            # 工程文件一旦出现仍按 existing 判定，不受状态目录影响
+            (root / "package.json").write_text("{}\n", encoding="utf-8")
+            self.assertEqual("existing", detect_architecture_site(root))
+
     def test_architecture_site_uses_output_root_not_repo_root(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             repo = Path(temp)
@@ -610,6 +627,90 @@ class ApplyStateTests(unittest.TestCase):
         self.assertIn("CHECKPOINT_RESOLVED_PATH_MISMATCH", {item.code for item in self.validate()})
         self.checkpoint["template"].pop("resolved_path")
         self.assertIn("CHECKPOINT_TEMPLATE_PIN_INCOMPLETE", {item.code for item in self.validate()})
+
+
+class CliScenariosAndLintTests(unittest.TestCase):
+    """scenarios / artifact-lint 子命令：Phase 8 证据集合前置枚举与产物写时校验。"""
+
+    ROOT = Path(__file__).resolve().parents[1]
+
+    def _run_cli(self, *argv: str) -> tuple[int, dict]:
+        import subprocess
+        import sys
+
+        proc = subprocess.run(
+            [sys.executable, str(self.ROOT / "scripts/check_template_apply_state.py"), *argv],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            cwd=self.ROOT,
+        )
+        return proc.returncode, json.loads(proc.stdout)
+
+    def test_scenarios_cli_matches_derive_scenario_ids(self) -> None:
+        from scripts.template_validation.loading import load_data
+        from scripts.template_apply_state.fidelity import derive_scenario_ids
+
+        fidelity = self.ROOT / "templates/workbench-shell/fidelity.yaml"
+        layout = self.ROOT / "templates/workbench-shell/core/layout.yaml"
+        expectations = self.ROOT / "templates/workbench-shell/measured-expectations.yaml"
+        code, payload = self._run_cli(
+            "scenarios",
+            "--fidelity", str(fidelity),
+            "--layout", str(layout),
+            "--expectations", str(expectations),
+        )
+        self.assertEqual(0, code)
+        expected = derive_scenario_ids(
+            load_data(fidelity), load_data(layout), load_data(expectations)
+        )
+        self.assertEqual(expected, payload["scenarios"])
+        self.assertEqual(len(expected), payload["count"])
+        self.assertIn("phase8:expectation:expectation-app-shell", payload["scenarios"])
+        self.assertTrue(payload["inputs"]["layout"])
+
+    def test_scenarios_cli_without_sidecar_reports_empty(self) -> None:
+        code, payload = self._run_cli("scenarios")
+        self.assertEqual(0, code)
+        self.assertEqual([], payload["scenarios"])
+        self.assertEqual(0, payload["count"])
+
+    def test_artifact_lint_accepts_quoted_timestamps_and_digest_objects(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            good = Path(temp) / "good.yaml"
+            good.write_text(
+                "schema_version: 2\n"
+                "created_at: '2026-09-20T00:00:00Z'\n"
+                "template_digest: {algorithm: sha256-canonical-json-v1, value: abc123}\n"
+                "items: [\"快捷键帮助(?)\", \"@成员\"]\n",
+                encoding="utf-8",
+            )
+            code, payload = self._run_cli("artifact-lint", str(good))
+        self.assertEqual(0, code)
+        self.assertTrue(payload["valid"])
+
+    def test_artifact_lint_flags_bare_dates_and_digest_shapes(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            bad = Path(temp) / "bad.yaml"
+            bad.write_text(
+                "schema_version: 2\ncreated_at: 2026-09-20\ntemplate_digest: git:abc123\n",
+                encoding="utf-8",
+            )
+            code, payload = self._run_cli("artifact-lint", str(bad))
+        self.assertEqual(1, code)
+        codes = {item["code"] for item in payload["findings"]}
+        self.assertIn("ARTIFACT_BARE_DATE", codes)
+        self.assertIn("ARTIFACT_DIGEST_SHAPE_INVALID", codes)
+        self.assertIn("ARTIFACT_NOT_CANONICAL", codes)
+
+    def test_artifact_lint_reports_flow_sequence_parse_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            bad = Path(temp) / "flow.yaml"
+            bad.write_text("entry_points: [快捷键帮助(?)， 各页对话框]\n", encoding="utf-8")
+            code, payload = self._run_cli("artifact-lint", str(bad))
+        self.assertEqual(1, code)
+        self.assertEqual("ARTIFACT_UNPARSEABLE", payload["findings"][0]["code"])
+
 
 if __name__ == "__main__":
     unittest.main()

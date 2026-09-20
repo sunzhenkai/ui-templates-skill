@@ -194,12 +194,17 @@ def resolve_architecture_output_root(apply_root: Path, output_root: str) -> Path
 
 
 def detect_architecture_site(root: Path, *, explicit_greenfield: bool = False) -> str:
-    """判定输出根是 greenfield 还是 existing；仓库根与会话账本不参与判定。"""
+    """判定输出根是 greenfield 还是 existing；仓库根与会话账本不参与判定。
+
+    会话状态目录（.ui-template-apply 账本、.ui-template-design Active Instance）
+    不是应用源码或依赖清单：adopt-only bootstrap 先落 Active Instance 后，
+    输出根仍 SHALL 判定 greenfield，等待架构确认后才写工程文件。
+    """
     if explicit_greenfield or not root.exists():
         return "greenfield"
     for path in root.rglob("*"):
         relative = path.relative_to(root)
-        if relative.parts and relative.parts[0] in {".git", ".ui-template-apply"}:
+        if relative.parts and relative.parts[0] in {".git", ".ui-template-apply", ".ui-template-design"}:
             continue
         if not path.is_file():
             continue

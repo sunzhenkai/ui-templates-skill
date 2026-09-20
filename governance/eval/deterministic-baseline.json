@@ -25,7 +25,7 @@
       "status": "passed"
     },
     "apply-greenfield-architecture-gate": {
-      "fixture_sha256": "9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2",
+      "fixture_sha256": "ad3995efca8d4cf71989befe3b194378c57f95a925e2341c642855d7190fdc68",
       "status": "passed"
     },
     "apply-information-semantics-contract": {
@@ -81,7 +81,7 @@
       "status": "passed"
     },
     "apply-session-closed-delete-hint": {
-      "fixture_sha256": "9e7e9a357847a997152e20f0bdcd76b18884282fad72f3d87108eb7ea455f3f2",
+      "fixture_sha256": "ad3995efca8d4cf71989befe3b194378c57f95a925e2341c642855d7190fdc68",
       "status": "passed"
     },
     "apply-source-blind-rejection": {

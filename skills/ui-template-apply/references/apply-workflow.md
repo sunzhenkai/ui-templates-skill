@@ -57,11 +57,22 @@ digest 算法为 `sha256-canonical-json-v1`。
 
 不得把这些消费项目工程决定回写模板。每个 artifact 都登记在 checkpoint 对应 phase 的 `artifacts[]`，digest 算法为 `sha256-canonical-json-v1`；YAML/JSON 安全解析后 canonicalize，Markdown 以换行归一后的文本 envelope canonicalize。
 
+**产物写时纪律（写完即跑 `artifact-lint`，不要等 checkpoint 门禁才暴露）**：
+
+```bash
+python3 skills/ui-template-apply/runtime/check_template_apply_state.py artifact-lint <apply-root>/02-routes.yaml
+```
+
+1. YAML flow 序列（`[...]`、`{...}`）内的中文或含 `? : @ ,` 的条目一律加引号：`entry_points: ["快捷键帮助(?)", "各页对话框"]`；裸量会直接解析失败。
+2. 时间戳一律写成带引号字符串（`created_at: '2026-09-20T00:00:00Z'`）；裸日期（`2026-09-20`）会被 YAML 解析为 date 对象，无法 canonical JSON 编码。
+3. digest 字段（`template_digest`/`binding_digest` 等）必须是 `{algorithm: sha256-canonical-json-v1, value: <sha256>}` 对象，不得写成 `git:...` 之类的身份字符串（身份字符串属于 `source_identity`/`build_identity`）。
+4. 单键值不要写 `key: -`（会被当作块序列标记）；空值写 `""` 或省略。
+
 ## Phase 0 — Intake（`00-intake.md`）
 
 1. 模板解析：先运行 `ui-template-author/runtime/manage_template_index.py resolve <name>`（`require-published` 默认不播种）。项目 `published` 行 `origin=project`；项目 `retired` 停止且不得救回；项目没有该行时只读兄弟目录 `ui-template-author/catalog/` 并 pin，`origin=catalog`，不得创建项目 `templates/`。仅当项目库与 catalog 都没有该 published 模板时停止并移交 Authoring。
 2. 记录 `00-intake.md`：模板 name/version/digest/`origin`/`resolved_path`、平台、成功流程，以及 `included/deferred/excluded` 范围。
-3. 架构判定：判定对象是本次前端**输出根**（将写入应用源码的目录），不是仓库根或兄弟应用；先运行 `architecture-site <output-root>`。
+3. 架构判定：判定对象是本次前端**输出根**（将写入应用源码的目录），不是仓库根或兄弟应用；先运行 `architecture-site <output-root>`。会话状态目录（`.ui-template-apply` 账本、`.ui-template-design` Active Instance）不是应用源码，不参与判定——adopt-only bootstrap 先落 Active Instance 后输出根仍是 greenfield。
    - `greenfield`：输出根不存在、为空、只有空子目录或 git 占位，或用户要求从零搭建。必须写出 `00-architecture.yaml`（含相对项目根的 `output_root`）并经用户确认闭集层（language、UI framework、bundler、routing、styling、state、data、unit/browser、package manager、repo shape），未确认不得写应用源码，不得把任何栈写成 Apply 默认。仓库已初始化但输出根仍是新应用时仍是 `greenfield`，必须停下选型。
    - 兄弟应用、workspace 约定或功能规格里的技术提及只可作为候选，不得当作确认；`project-init` 仅在用户明确要脚手架且所选栈落在其 reference 时作为确认后执行器。
    - `existing`：仅在该输出根已有依赖清单或实质源码时成立，只记录观察到的栈。
@@ -104,11 +115,20 @@ Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可�
 
 记录必须符合 schema v2 `verification.schema.json`，`kind: phase-8-verification`，顶层绑定当前 template digest、source identity、build identity、browser identity。Phase 8 SHALL 在模板派生 scenario 之外消费随包发布的 measured expectation set（`.ui-template-design/measured-expectations.yaml`）：每个 `entries[]` 条目产生一条 `phase8:expectation:<id>` scenario，记录 expected/actual/tolerance/result 与 evidence ref；比对 SHALL NOT 读取 oracle 实例，也 SHALL NOT 把 oracle revision/locator 写入 checkpoint。checkpoint 的 `fidelity.expectation_digest` 绑定当前 expectation set，`fidelity.comparisons[]` 记录逐条结论；任一身份变化使既有比对结果过期并要求重新比对。绑定 package 未携带该集合时，`fidelity.status` 记 `fidelity-unverified` 并在汇报中说明未做 oracle 锚定比对，SHALL NOT 声称保真通过。每条 UUID record 必含：rule ID、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。evidence 文件放 `evidence/`；截图、trace、AX、console、computed-style 或脚本输出必须可定位。
 
-按模板 coverage、included route 和 fidelity records 确定性生成 required scenario IDs，不使用固定“三视口/十项”等数量代替模板声明。chrome composition scenario 只从 structural sidecar 已声明的 variant/slot/anchor 派生；无 sidecar 时这些 scenario unavailable，且不得标 profile-verified。通用 skill 不要求 `chat-fab`、A–E 或 Board。每条 UUID record 必含：rule ID、profile record ID（若有）、`scenario_ids[]`、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。所有派生 scenario IDs 的并集必须完整覆盖；校验器对 missing scenario fail closed。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
+按模板 coverage、included route 和 fidelity records 确定性生成 required scenario IDs，不使用固定“三视口/十项”等数量代替模板声明。**采集前先枚举全集**，缺口在写记录时即暴露，不要等 checkpoint 门禁：
+
+```bash
+python3 skills/ui-template-apply/runtime/check_template_apply_state.py scenarios \
+  --fidelity <active-instance>/fidelity.yaml \
+  --layout <active-instance>/core/layout.yaml \
+  --expectations <active-instance>/measured-expectations.yaml
+```
+
+输出即 Phase 8 必须覆盖的确定性 scenario ID 全集（profile 布局/几何/状态 + placement geometry/pattern 闭包 + measured expectations 三类来源）；每条 verification record 的 `scenario_ids[]` 声明其覆盖项，checkpoint 会按该全集 fail closed。chrome composition scenario 只从 structural sidecar 已声明的 variant/slot/anchor 派生；无 sidecar 时这些 scenario unavailable，且不得标 profile-verified。通用 skill 不要求 `chat-fab`、A–E 或 Board。每条 UUID record 必含：rule ID、profile record ID（若有）、`scenario_ids[]`、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。所有派生 scenario IDs 的并集必须完整覆盖；校验器对 missing scenario fail closed。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
 
 ## Phase 9 — Review & feedback（`09-review.md`, `feedback/`）
 
-`09-review.md` 必须以 YAML front matter 开头；front matter 使用同一 verification schema，`kind: phase-9-review`，顶层同样必须绑定执行复验的 `browser_identity`。每条记录仅允许 `recheck-passed | recheck-failed`，并以 `phase8_record_id` 引用一条 Phase 8 UUID；引用的 rule ID、expected、route、viewport、theme、state 必须一致，`actual` 与 evidence refs 记录修复后的 current-build 复验结果。一个 Phase 8 record 最多对应一条 Phase 9 record，未知或重复引用均 fail closed。保留的 Phase 8 `failed` 仅在其关联记录为 `recheck-passed` 且 Phase 9 记录整体有效时闭合；未关联、`recheck-failed` 或身份过期仍阻止完成。正文可写 P0/P1/P2 解释与取舍。
+`09-review.md` 必须以 YAML front matter 开头；front matter 使用同一 verification schema，`kind: phase-9-review`，顶层同样必须绑定执行复验的 `browser_identity`。每条记录仅允许 `recheck-passed | recheck-failed`，并以 `phase8_record_id` 引用一条 Phase 8 UUID；引用的 rule ID、expected、route、viewport、theme、state 必须一致——**这六个字段直接从被引用的 Phase 8 record 复制，不要手写重述**（`expected` 措辞不同即 `VERIFICATION_RECHECK_IDENTITY_MISMATCH`）；`created_at` 写带引号字符串，`template_digest` 用 canonical 对象（见「产物写时纪律」）。`actual` 与 evidence refs 记录修复后的 current-build 复验结果。一个 Phase 8 record 最多对应一条 Phase 9 record，未知或重复引用均 fail closed。保留的 Phase 8 `failed` 仅在其关联记录为 `recheck-passed` 且 Phase 9 记录整体有效时闭合；未关联、`recheck-failed` 或身份过期仍阻止完成。正文可写 P0/P1/P2 解释与取舍。
 
 Phase 9 先分类 feedback ownership：`package` 写 `design-system-feedback/v1` proposed 记录并移交 Author；`binding` 只按用户确认的 binding change set 修复；`apply-skill` 回写本 skill。旧 schema v2 feedback 只用于迁移读取。创建/合并规则见本文件“Feedback”。
 

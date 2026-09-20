@@ -11,6 +11,8 @@ cases:
             value: true
           - path: [ledger_ignored]
             value: true
+          - path: [active_instance_ignored]
+            value: true
           - path: [package_json_existing]
             value: true
           - path: [explicit_keeps_named_greenfield]

@@ -37,6 +37,19 @@ python3 skills/ui-template-apply/runtime/check_apply_resume.py .ui-template-appl
 
 The checkpoint `template.digest` MUST bind canonical JSON of the package meta plus the unchanged fidelity profile when one exists. Any template, contract, binding, projection or fidelity digest mismatch blocks selective continuation and reopens all phases. Otherwise only dependent phases reopen; undeclared paths remain original bytes.
 
+### Identity / digest 对照表
+
+字段名都叫 digest，取值来源不同；填错会在 verification/checkpoint 门禁 fail closed：
+
+| 字段 | 位置 | 取值与计算式 |
+| --- | --- | --- |
+| `template.digest` | checkpoint | `sha256-canonical-json-v1` over `{template: <meta.yaml 解析值>, fidelity: <fidelity.yaml 解析值>}`；无 sidecar 时只对 meta。校验器即按此重算比对 |
+| `template_digest` | 08-verification / 09-review | 必须与上面 checkpoint `template.digest` **同值**（同一 `{algorithm, value}` 对象，不是字符串） |
+| `contract.digest` / `contract_digest` | checkpoint / design-system.yaml | manifest 声明的 `contract_digest`（七层 core 的契约摘要）；**不等于** template digest，不要互相代填 |
+| `binding_digest` | checkpoint / binding.yaml | `binding.yaml` 自带字段，adopt 后原样读取，不重算 |
+| `source_identity` | checkpoint / verification | `git:<commit>:clean` 或 `git:<commit>:dirty:<payload-sha>`，由 `source-identity` 子命令输出；是身份**字符串**，不是 digest 对象 |
+| `build_identity` | checkpoint / verification | `build:<sha>`，由 `build-identity` 子命令对实际构建命令 + 产物树计算；必须非空可复现，不得写 "latest" |
+
 ## Vendor loading
 
 Resolve allowed references from the user-confirmed binding:
