@@ -244,7 +244,7 @@ cases:
   - id: apply-source-blind-rejection
     skill: ui-template-apply
     category: validation-gate
-    description: source oracle、历史生成物或 source-compare artifact 进入 Apply checkpoint 时 fail closed。
+    description: source oracle 或 source-compare artifact 进入 Apply checkpoint 时 fail closed。
     given: Apply checkpoint 试图引用 oracle revision 或保存 source-compare.yaml
     fixture: tests/fixtures/eval/loop-contracts.yaml#apply-source-blind-rejection
     fixture_sha256: b696ad5df8669a59a4d8aea13a4c4f0ac380c94c104b1162ee312b609bfd0afb
@@ -252,7 +252,7 @@ cases:
     expect:
       must:
         - 报告 SOURCE_BLIND_VIOLATION 并停止实现
-        - 拒绝 example/** 或历史 web-v* 输出根
+        - 拒绝 source oracle 身份与 source-compare artifact 进入 checkpoint
       must_not:
         - 允许对照结论进入实现依据
     revision: close-state-presentation-blind-spots

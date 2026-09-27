@@ -25,8 +25,8 @@ class SamplePromotionTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.repo = Path(self.temp.name) / "repo"
         self.repo.mkdir()
-        (self.repo / "example/sample").mkdir(parents=True)
-        (self.repo / "example/sample/README.md").write_text("sample\n", encoding="utf-8")
+        (self.repo / "samples/sample").mkdir(parents=True)
+        (self.repo / "samples/sample/README.md").write_text("sample\n", encoding="utf-8")
         (self.repo / "openspec/changes/sample-change").mkdir(parents=True)
         (self.repo / "openspec/changes/sample-change/proposal.md").write_text("change\n", encoding="utf-8")
         (self.repo / "evidence").mkdir()
@@ -59,7 +59,7 @@ class SamplePromotionTests(unittest.TestCase):
         self.gates = self.repo / "gates.yaml"
         self.gates.write_text(yaml.safe_dump({"gates": gates}, sort_keys=False), encoding="utf-8")
 
-    def build(self, sample: str = "example/sample") -> dict:
+    def build(self, sample: str = "samples/sample") -> dict:
         return promotion.build_report(
             self.repo,
             sample,
@@ -107,9 +107,9 @@ class SamplePromotionTests(unittest.TestCase):
         gates["frozen_install"]["frozen_identity"] = "lockfile-sha256:fixture"
         self.gates.write_text(yaml.safe_dump({"gates": gates}, sort_keys=False), encoding="utf-8")
 
-    def test_web_v2_and_web_v3_are_rejected_before_git_sample_lookup(self) -> None:
-        prefix = "example/workbench-shell/"
-        for sample in (prefix + "web-v2", prefix + "web-v3"):
+    def test_excluded_example_samples_are_rejected_before_git_sample_lookup(self) -> None:
+        samples = ("example/sample-app", "example/sample-library/src")
+        for sample in samples:
             with self.subTest(sample=sample), mock.patch.object(promotion, "tracked_revision") as tracked:
                 with self.assertRaisesRegex(promotion.PromotionError, "PROMOTION_SAMPLE_EXCLUDED"):
                     self.build(sample)
@@ -118,8 +118,8 @@ class SamplePromotionTests(unittest.TestCase):
     def test_output_cannot_modify_sample_or_excluded_path(self) -> None:
         with self.assertRaisesRegex(promotion.PromotionError, "PROMOTION_OUTPUT_IN_SAMPLE"):
             promotion.build_report(
-                self.repo, "example/sample", "sample-change", self.revision, self.gates,
-                self.repo / "example/sample/promotion.json",
+                self.repo, "samples/sample", "sample-change", self.revision, self.gates,
+                self.repo / "samples/sample/promotion.json",
                 scope_path=self.repo / "governance/scope.yaml",
                 schema_path=self.repo / "schemas/governance/sample-promotion-report.schema.json",
             )

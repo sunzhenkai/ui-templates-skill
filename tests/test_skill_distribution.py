@@ -107,7 +107,7 @@ class SkillDistributionTests(unittest.TestCase):
             ".agents/skills/ui-template-manager/**", ".agents/skills/openspec-*/**",
             ".kiro/skills/**", "skills/*/patches/**", "skills/*/experience/**",
             "skills/*/examples/**", "openspec/**", "governance/scope.yaml",
-            "governance/baselines/**", "docs/**", "example/**", "semantic-review/**",
+            "docs/**", "example/**", "semantic-review/**",
             "**/ui-ux-pro-max/**",
         ):
             self.assertIn(required, exclusions)

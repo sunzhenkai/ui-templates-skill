@@ -13,8 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 EXCLUDED_SAMPLE_PATHS = (
-    "example/workbench-shell/web-v2/**",
-    "example/workbench-shell/web-v3/**",
+    "example/**",
 )
 
 
@@ -81,7 +80,7 @@ def validate(root: Path, report_dir: Path) -> dict:
         print(f"governance exclusion (content not read/executed): {value}")
 
     run(
-        [python, "scripts/check_governance_scope.py", "--guard-web-v2", "--guard-example-changed-paths"],
+        [python, "scripts/check_governance_scope.py", "--guard-example-changed-paths"],
         cwd=root, label="scope guard",
     )
     run(

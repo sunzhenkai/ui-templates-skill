@@ -98,7 +98,7 @@ cases:
     skill: ui-template-author
     category: prohibited-content
     description: validator/eval 输入包含 example/ 前缀时立即失败且不把该路径当作通过证据。
-    given: 校验路径为 example/workbench-shell/web-v3
+    given: 校验路径为 example/sample-app/src/App.tsx
     fixture: tests/fixtures/eval/fidelity-contracts.yaml#fidelity-example-exclusion
     fixture_sha256: 9686509d698e8c911e2853b2e1fd0e91f9effc7646447500028da091e652d2db
     judge: script

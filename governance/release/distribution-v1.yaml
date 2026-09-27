@@ -87,7 +87,6 @@ exclusions:
   - skills/*/examples/**
   - openspec/**
   - governance/scope.yaml
-  - governance/baselines/**
   - docs/**
   - example/**
   - semantic-review/**

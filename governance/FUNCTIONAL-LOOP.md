@@ -47,7 +47,7 @@ published Template Package
 不变量：
 
 1. **生成物不是修复面。** 视觉差回写 Authoring、Apply 或模板。
-2. **Apply 零原版依赖。** 实现时禁止打开原版 checkout、历史 `web/`、`web-v*`。
+2. **Apply 零原版依赖。** 实现时禁止打开原版 checkout、历史生成物。
 3. **原版只出现在两个窗口：** Author 的 session source；保真对照的临时部署。
 4. **重生才是完成证明。** 改完模板/skill 之后必须用新产物再验收。
 5. **分层抽取。** chrome → tokens → scene → 原子组件 → 复合组件，禁止抽样冒充完整。
@@ -146,7 +146,7 @@ INDEX 表头固定为：名称、风格描述、来源类型、采集日期、�
 
 ## 7. 项目规约（四条不变量）
 
-**I1 生成物不是修复面。** 保真修复只回写 skill / 模板 / prompts。`example/**/web*` 与历史 `web-v*` 是治理排除项，不得当发布证据。
+**I1 生成物不是修复面。** 保真修复只回写 skill / 模板 / prompts。`example/**` 是治理排除项，不得当发布证据。
 
 **I2 Apply 零原版、零历史 web。** 实现不得打开原版 checkout、`meta.sources[]` 路径或已有生成物。对照物只有当前模板、当前 skill、本会话可部署原版。
 

@@ -1277,7 +1277,7 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
         }
     from template_validation.validator import validate_paths
 
-    payload = validate_paths([Path("example") / "workbench-shell" / "web-v3"], root).to_dict()
+    payload = validate_paths([Path("example") / "sample-app" / "src" / "App.tsx"], root).to_dict()
     return {
         "exit_code": payload.get("exit_code"),
         "code": (payload.get("findings") or [{}])[0].get("code"),

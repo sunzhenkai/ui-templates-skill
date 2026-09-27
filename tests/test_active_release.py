@@ -46,10 +46,8 @@ class ActiveReleaseTests(unittest.TestCase):
             report = active.check_repository(ROOT, ROOT / "governance/scope.yaml")
         self.assertEqual("passed", report["status"])
         self.assertNotIn("CERTIFICATION_STALE", {item["code"] for item in report["findings"]})
-        web_v2 = "example/workbench-shell/" + "web-v2/"
-        web_v3 = "example/workbench-shell/" + "web-v3/"
-        self.assertFalse(any(path.startswith(web_v2) for path in reads))
-        self.assertFalse(any(path.startswith(web_v3) for path in reads))
+        sample = "example/sample-app/"
+        self.assertFalse(any(path.startswith(sample) for path in reads))
 
     def test_mutation_broken_link_has_stable_code(self) -> None:
         findings = active.check_markdown_links(
