@@ -1,0 +1,13 @@
+schema_version: 1
+profile: repo-structural-v1
+conformance: style-only
+platforms: [web]
+style_only_reason: 用户明确要求只提取视觉语言，不发布 layout/geometry/state records
+scope:
+  scenes: []
+  components: []
+  contexts: []
+layout_scenes: []
+component_geometry: []
+state_presentations: []
+unresolved: []

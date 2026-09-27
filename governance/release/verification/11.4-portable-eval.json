@@ -1,0 +1,328 @@
+{
+  "baseline": {
+    "diff": {
+      "added": [],
+      "changed": [],
+      "removed": []
+    },
+    "path": "governance/eval/deterministic-baseline.json",
+    "status": "not-checked"
+  },
+  "counts": {
+    "declared": 17,
+    "executed": 17,
+    "llm": 2,
+    "parsed": 17,
+    "script": 15
+  },
+  "failures": [],
+  "fixture_hashes": {
+    "apply-out-of-scope-rejected": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "apply-requires-reference-reading": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "apply-token-freeze": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "authoring-normalizes-and-fills-defaults": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "authoring-out-of-scope-rejected": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "authoring-updates-index": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "browser-verification-evidence": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "doc-source-routed-correctly": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "estimated-values-labeled": "d7637a9e3389bd851b4a7c92ae9b5713a98f2e96e9eb6f1f419b3044ed3ae2c3",
+    "existing-template-ask-update-or-new": "d7637a9e3389bd851b4a7c92ae9b5713a98f2e96e9eb6f1f419b3044ed3ae2c3",
+    "no-apply-handoff-after-authoring": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "no-apply-without-template": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "no-engineering-structure-in-template": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "no-phase-skipping": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "routing-semantics-enforced": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "spec-wins-over-apply": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+    "tokens-yaml-required-and-complete": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d"
+  },
+  "results": [
+    {
+      "blocking": true,
+      "category": "routing",
+      "details": [
+        "PASS file_contains skills/ui-template-apply/SKILL.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#apply-out-of-scope-rejected",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "apply-out-of-scope-rejected",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template-apply",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "installation",
+      "details": [
+        "PASS file_contains skills/ui-template-apply/SKILL.md",
+        "PASS file_contains skills/ui-template/SKILL.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#apply-requires-reference-reading",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "apply-requires-reference-reading",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template-apply",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "origin",
+      "details": [
+        "PASS file_contains skills/ui-template-apply/references/apply-workflow.md",
+        "PASS json_schema_validity schemas/template/v2/tokens.schema.json expected=false"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#apply-token-freeze",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "apply-token-freeze",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template-apply",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "origin",
+      "details": [
+        "PASS file_contains skills/ui-template/references/source-web.md",
+        "PASS file_contains skills/ui-template/SKILL.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#authoring-normalizes-and-fills-defaults",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "authoring-normalizes-and-fills-defaults",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "routing",
+      "details": [
+        "PASS file_contains skills/ui-template/SKILL.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#authoring-out-of-scope-rejected",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "authoring-out-of-scope-rejected",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "validation-gate",
+      "details": [
+        "PASS ordered_contains skills/ui-template/SKILL.md: ['### 1. Generate', '### 2. Validate', '### 3. Eval', '### 4. Index', '### 5. Report']",
+        "PASS file_contains skills/ui-template/SKILL.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#authoring-updates-index",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "authoring-updates-index",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "validation-gate",
+      "details": [
+        "PASS file_contains skills/ui-template-apply/references/quality-gates.md",
+        "PASS file_contains skills/ui-template-apply/SKILL.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#browser-verification-evidence",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "browser-verification-evidence",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template-apply",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "routing",
+      "details": [
+        "PASS file_contains skills/ui-template/SKILL.md",
+        "PASS file_contains skills/ui-template/references/source-doc.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#doc-source-routed-correctly",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "doc-source-routed-correctly",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template",
+      "status": "passed"
+    },
+    {
+      "blocking": false,
+      "category": "origin",
+      "details": [
+        "\u56fa\u5b9a prompt/rubric/result schema \u5df2\u79bb\u7ebf\u9a8c\u8bc1\uff1b\u672a\u8c03\u7528\u6a21\u578b\u6216\u7f51\u7edc"
+      ],
+      "execution": "llm-asset-validation",
+      "fixture": "tests/fixtures/eval/llm-contracts.yaml#estimated-values-labeled",
+      "fixture_sha256": "d7637a9e3389bd851b4a7c92ae9b5713a98f2e96e9eb6f1f419b3044ed3ae2c3",
+      "id": "estimated-values-labeled",
+      "judge": "llm",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template",
+      "status": "asset-valid"
+    },
+    {
+      "blocking": false,
+      "category": "routing",
+      "details": [
+        "\u56fa\u5b9a prompt/rubric/result schema \u5df2\u79bb\u7ebf\u9a8c\u8bc1\uff1b\u672a\u8c03\u7528\u6a21\u578b\u6216\u7f51\u7edc"
+      ],
+      "execution": "llm-asset-validation",
+      "fixture": "tests/fixtures/eval/llm-contracts.yaml#existing-template-ask-update-or-new",
+      "fixture_sha256": "d7637a9e3389bd851b4a7c92ae9b5713a98f2e96e9eb6f1f419b3044ed3ae2c3",
+      "id": "existing-template-ask-update-or-new",
+      "judge": "llm",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template",
+      "status": "asset-valid"
+    },
+    {
+      "blocking": true,
+      "category": "routing",
+      "details": [
+        "PASS file_contains skills/ui-template/SKILL.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#no-apply-handoff-after-authoring",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "no-apply-handoff-after-authoring",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "routing",
+      "details": [
+        "PASS file_contains skills/ui-template-apply/SKILL.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#no-apply-without-template",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "no-apply-without-template",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template-apply",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "prohibited-content",
+      "details": [
+        "PASS file_contains skills/ui-template/SKILL.md",
+        "PASS file_contains skills/ui-template/references/spec-format.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#no-engineering-structure-in-template",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "no-engineering-structure-in-template",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "checkpoint",
+      "details": [
+        "PASS file_contains skills/ui-template-apply/references/apply-workflow.md",
+        "PASS path_exists scripts/check_template_apply_state.py"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#no-phase-skipping",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "no-phase-skipping",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template-apply",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "routing",
+      "details": [
+        "PASS file_contains skills/ui-template-apply/references/quality-gates.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#routing-semantics-enforced",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "routing-semantics-enforced",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template-apply",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "feedback",
+      "details": [
+        "PASS file_contains skills/ui-template-apply/references/template-contract.md",
+        "PASS file_contains skills/ui-template/references/feedback-lifecycle.md"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#spec-wins-over-apply",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "spec-wins-over-apply",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template-apply",
+      "status": "passed"
+    },
+    {
+      "blocking": true,
+      "category": "schema",
+      "details": [
+        "PASS path_exists schemas/template/v2/tokens.schema.json",
+        "PASS file_contains skills/ui-template/references/spec-format.md",
+        "PASS json_schema_validity schemas/template/v2/tokens.schema.json expected=true"
+      ],
+      "execution": "script",
+      "fixture": "tests/fixtures/eval/script-contracts.yaml#tokens-yaml-required-and-complete",
+      "fixture_sha256": "461d2bfe8b3de98f6203ca90e2b99879bd8c6cd8a726bc06f9548ae97305bb5d",
+      "id": "tokens-yaml-required-and-complete",
+      "judge": "script",
+      "revision": "harden-template-lifecycle-eval-v1",
+      "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+      "skill": "ui-template",
+      "status": "passed"
+    }
+  ],
+  "revision": "untracked+eval.7155d392223d3d67",
+  "runner_version": "1.0.0",
+  "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+  "schema_version": 1,
+  "status": "passed"
+}

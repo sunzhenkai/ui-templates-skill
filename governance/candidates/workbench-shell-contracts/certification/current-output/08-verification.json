@@ -1,0 +1,4471 @@
+{
+  "schema_version": 2,
+  "kind": "phase-8-verification",
+  "template_digest": {
+    "algorithm": "sha256-canonical-json-v1",
+    "value": "63dc64bd98f9227e983a7b6c4d81fd1846882611fbaae89d06f919bdaed3dc05"
+  },
+  "source_identity": "contract-gallery:source-blind",
+  "build_identity": "workbench-shell-contracts-20260927-23",
+  "browser_identity": "Chromium 141.0.7390.54",
+  "records": [
+    {
+      "id": "0e198063-b3b3-513d-8f8a-85eaf3d84fd9",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "oklch(0.21 0.006 285.885)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(0.21 0.006 285.885)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:default"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "a7a2f244-bbf9-55e9-8c7d-94338725fb85",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "oklch(1 0 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(1 0 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:outline"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "9eb69772-63c0-5791-9daf-357c7fde8055",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "oklch(0.55 0.16 255)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(0.55 0.16 255)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:brand"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "6687f204-f4bc-542c-8cb0-a6189e1a8a50",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "oklch(0.967 0.001 286.375)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(0.967 0.001 286.375)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:secondary"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "34512cef-7a9b-5774-893e-dbc924f14784",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:ghost"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "2b288620-f7c4-5acb-bc5a-901d5cc3fee9",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "oklab(0.577 0.217662 0.112464 / 0.1)",
+        "color": "oklch(0.577 0.245 27.325)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklab(0.577 0.217662 0.112464 / 0.1)",
+        "color": "oklch(0.577 0.245 27.325)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:destructive"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "a9030279-595d-5ced-8ad2-6db40fd1aa6b",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.21 0.006 285.885)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.21 0.006 285.885)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:link"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "b8481f3d-5eb2-51f6-822b-929f91493f2f",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/app-sidebar:icon:0"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "2fa22975-9cfd-54f6-bcf1-1b367cb2cff5",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/app-sidebar:label:1"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "477a25fb-a7fb-598d-91ff-dbe81a9b2f7d",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "actual": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/app-sidebar:badge:2"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "f07aa7ed-e810-5281-be51-b1689716bb27",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "actual": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/app-sidebar:shortcut:3"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "a1f17929-bcb2-5877-b9a5-2e702646f11c",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "actual": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/app-sidebar:trailing:4"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "5ef0925c-41d8-5877-8588-f19d0cc13a0f",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/button:icon:0"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "13ba5e48-72f4-5ff7-9cfb-049beffbafca",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/button:label:1"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "5e9620f7-b4af-5b2d-a1dd-db3c7c7bb0d9",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "trailing",
+        "order": 2,
+        "visible": true
+      },
+      "actual": {
+        "slot": "trailing",
+        "order": 2,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/button:trailing:2"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "51416d8c-c77c-524d-8c26-242bf4865651",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/chat-fab:icon:0"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "d8c5cdc3-b9a8-5c0a-8c5e-e5565e3439fa",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/nav-item:icon:0"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "87db36ef-6a03-5e4c-8402-f870efa9e597",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/nav-item:label:1"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "d5282f39-fd4b-534c-b46e-661b3544611c",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "actual": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/nav-item:badge:2"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "7f5511b1-3a98-51d6-808c-2956d5ddc517",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "actual": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/nav-item:shortcut:3"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "6a5833bb-7cba-540d-842c-e41c15d5b3aa",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "actual": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/nav-item:trailing:4"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "642388de-1fe5-51f1-8715-c0c56b7aaab9",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/settings-nav:icon:0"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "6c6f8ce0-838a-52b7-b02a-643cdff1127d",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/settings-nav:label:1"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "fdf21a15-5607-5002-8154-36c1a406c898",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "oklch(0.964435 0.001327 286.375)",
+      "actual": "oklch(0.964435 0.001327 286.375)",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-app-shell-surface"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-app-shell-desktop-light.png"
+      ]
+    },
+    {
+      "id": "eb274895-31ea-578d-bd98-b142c0549392",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "1176px",
+      "actual": "1176px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-app-shell-structure"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-app-shell-desktop-light.png"
+      ]
+    },
+    {
+      "id": "895e8a24-907d-5a3c-b3b7-e61be595b5d4",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "48px",
+      "actual": "48px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-app-shell-spacing"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-app-shell-desktop-light.png"
+      ]
+    },
+    {
+      "id": "2a5cc5fd-2f24-571f-bbb8-08605239559f",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "14px",
+      "actual": "14px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-app-shell-typography"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-app-shell-desktop-light.png"
+      ]
+    },
+    {
+      "id": "028f5948-e1a7-551e-8287-25e91fa5aeff",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "1px",
+      "actual": "1px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-app-shell-border"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-app-shell-desktop-light.png"
+      ]
+    },
+    {
+      "id": "cee7ece0-2ff6-5e24-990e-7b763cbc8459",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "48px",
+      "actual": "48px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-workspace-board-spacing"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-workspace-board-desktop-light.png"
+      ]
+    },
+    {
+      "id": "af74846a-1aef-5ef3-b0e3-f6afd42a1581",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "1176px",
+      "actual": "1176px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-workspace-board-structure"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-workspace-board-desktop-light.png"
+      ]
+    },
+    {
+      "id": "9c447346-4289-5ca6-bd65-0093f144574c",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "14px",
+      "actual": "14px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-workspace-board-typography"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-workspace-board-desktop-light.png"
+      ]
+    },
+    {
+      "id": "5526240f-bb44-5aca-ba9e-da8f82f9130a",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "oklch(0.141 0.005 285.823)",
+      "actual": "oklch(0.141 0.005 285.823)",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-workspace-board-color"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-workspace-board-desktop-light.png"
+      ]
+    },
+    {
+      "id": "0a3d623f-e8d7-5ef6-b676-d00f3042b05f",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "1px",
+      "actual": "1px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-workspace-board-border"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-workspace-board-desktop-light.png"
+      ]
+    },
+    {
+      "id": "43ef6230-b824-5ca7-9b3d-182bb175384a",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "240px",
+      "actual": "240px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-settings-section-nav-spacing"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-settings-section-nav-desktop-light.png"
+      ]
+    },
+    {
+      "id": "5f3a8a6a-c117-5dde-b120-ab077abc4e56",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "240px",
+      "actual": "240px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-settings-section-nav-structure"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-settings-section-nav-desktop-light.png"
+      ]
+    },
+    {
+      "id": "8707c0f8-2bda-5f86-a2f3-f6124357ee91",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "18px",
+      "actual": "18px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-settings-section-nav-typography"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-settings-section-nav-desktop-light.png"
+      ]
+    },
+    {
+      "id": "112e83b6-38b8-5c5d-884a-e00c614a0958",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "oklch(1 0 0)",
+      "actual": "oklch(1 0 0)",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-settings-section-nav-surface"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-settings-section-nav-desktop-light.png"
+      ]
+    },
+    {
+      "id": "b024a4a7-1eab-5036-ae5a-9a98ab313dcd",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "1px",
+      "actual": "1px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-settings-section-nav-border"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-settings-section-nav-desktop-light.png"
+      ]
+    },
+    {
+      "id": "523f65f9-41ad-559b-a975-c17903ee2656",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "1176px",
+      "actual": "1176px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-master-detail-structure"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-master-detail-desktop-light.png"
+      ]
+    },
+    {
+      "id": "68eb9991-121e-5f39-918d-64bf386e564e",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "48px",
+      "actual": "48px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-master-detail-spacing"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-master-detail-desktop-light.png"
+      ]
+    },
+    {
+      "id": "8d9c9632-1cff-58dc-a620-fa9897f2cf61",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "16px",
+      "actual": "16px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-master-detail-typography"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-master-detail-desktop-light.png"
+      ]
+    },
+    {
+      "id": "bbd22264-e3a7-5e14-b188-0e864f87c769",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "oklch(0.141 0.005 285.823)",
+      "actual": "oklch(0.141 0.005 285.823)",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-master-detail-color"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-master-detail-desktop-light.png"
+      ]
+    },
+    {
+      "id": "4cf3af8d-fb93-5797-9c7a-07e0dbb6f0d8",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "1px",
+      "actual": "1px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-master-detail-border"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-master-detail-desktop-light.png"
+      ]
+    },
+    {
+      "id": "739373e6-a705-5be2-9940-41184fbf0f7c",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "14px",
+      "actual": "14px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-overlay-dialog-surface"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-overlay-dialog-desktop-light.png"
+      ]
+    },
+    {
+      "id": "3a6a70cb-c575-5e8d-a8a5-86812940d894",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "576px",
+      "actual": "576px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-overlay-dialog-structure"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-overlay-dialog-desktop-light.png"
+      ]
+    },
+    {
+      "id": "9d405b6b-b43b-5a19-9b94-a2577be412ec",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "303px",
+      "actual": "303px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-overlay-dialog-spacing"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-overlay-dialog-desktop-light.png"
+      ]
+    },
+    {
+      "id": "a982e616-658e-5adf-a762-facd37465a04",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "14px",
+      "actual": "14px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-overlay-dialog-typography"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-overlay-dialog-desktop-light.png"
+      ]
+    },
+    {
+      "id": "fe460841-d83b-5b89-bc79-101643308107",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": "0px",
+      "actual": "0px",
+      "route": "certification-capture",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:expectation:expectation-overlay-dialog-border"
+      ],
+      "evidence_refs": [
+        "evidence/current-evidence.json",
+        "evidence/evidence/current-overlay-dialog-desktop-light.png"
+      ]
+    },
+    {
+      "id": "2676ce40-111c-5233-bae0-4378b15c3a39",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 1
+      },
+      "actual": {
+        "order": 1,
+        "role": "workspace-switcher",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:workspace-switcher:1"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "675787f5-e508-5da5-91bd-5c97dbb2a3a6",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 2
+      },
+      "actual": {
+        "order": 2,
+        "role": "search",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:search:2"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "db97f958-3fbc-568e-8e7a-21006129f30a",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 3
+      },
+      "actual": {
+        "order": 3,
+        "role": "compose",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:compose:3"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "b70a2c80-64fd-594b-bb2d-964fb5455ef6",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 4
+      },
+      "actual": {
+        "order": 4,
+        "role": "nav-group",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:nav-group:4"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "fc58c467-e841-5684-88c0-203d045dceda",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 5
+      },
+      "actual": {
+        "order": 5,
+        "role": "pin-list",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:pin-list:5"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "4753db2e-9d1d-5af6-a03c-ebe85d8234f9",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 6
+      },
+      "actual": {
+        "order": 6,
+        "role": "rail",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:rail:6"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "7010c6dc-0362-5537-9a88-30a1e933095a",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 7
+      },
+      "actual": {
+        "order": 7,
+        "role": "header-trigger",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:header-trigger:7"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "793c220d-bff4-5db6-a2e9-01975a09a91c",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 8
+      },
+      "actual": {
+        "order": 8,
+        "role": "page-header",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:page-header:8"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "39a166f7-2b34-546f-8303-951fa1970518",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 9
+      },
+      "actual": {
+        "order": 9,
+        "role": "page-toolbar",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:page-toolbar:9"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "3ed5c52e-9f6e-5315-93b9-80f500f0393a",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 10
+      },
+      "actual": {
+        "order": 10,
+        "role": "page-canvas",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:page-canvas:10"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "d73787f8-09c7-5638-a73c-e4ca975bc7f6",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 11
+      },
+      "actual": {
+        "order": 11,
+        "role": "footer-utility",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:footer-utility:11"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "a222072e-5d17-5d8d-a046-61fef6d6b32e",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "order": 12
+      },
+      "actual": {
+        "order": 12,
+        "role": "chat-fab",
+        "visible": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:slot:chat-fab:12"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "90799cba-dcf1-52bc-8fb1-0bafb1ecd927",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "root_scroll": "none"
+      },
+      "actual": {
+        "overflow": "hidden",
+        "scrollHeight": 900,
+        "clientHeight": 900
+      },
+      "route": "route/shell",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:layout-negative:scene.shell:root_scroll:none"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "6b4a7cbe-887a-5c6c-bf31-a81334a4c56d",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "root_scroll": "none"
+      },
+      "actual": {
+        "overflow": "hidden",
+        "scrollHeight": 738,
+        "clientHeight": 738
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:layout-negative:scene.settings:root_scroll:none"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "0222ba72-d837-5125-ac8d-965238a7961c",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "shell_variant": "inset",
+        "canvas_radius": "14px",
+        "canvas_scrollable": true
+      },
+      "actual": {
+        "radius": "14px",
+        "background": "oklch(0.988087 0 0)",
+        "overflow": "auto"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:shell_variant:scene.shell:inset"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "e8ce88d7-7b09-5a59-9d13-887cd9957bc5",
+      "rule_id": "LAYOUT-105",
+      "status": "passed",
+      "expected": {
+        "scope": "viewport"
+      },
+      "actual": {
+        "fixed": "fixed",
+        "radius": "14px",
+        "shadow": "rgba(15, 23, 42, 0.14) 0px 16px 40px 0px, rgba(15, 23, 42, 0.08) 0px 3px 10px 0px"
+      },
+      "route": "/dialog",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:overlay:scene.dialog:overlay.dialog:viewport:region.dialog.root"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "bf2d598b-f651-5770-982b-8702e14efe1b",
+      "rule_id": "LAYOUT-104",
+      "status": "passed",
+      "expected": {
+        "scope": "viewport"
+      },
+      "actual": {
+        "position": "fixed",
+        "size": {
+          "x": 1392,
+          "y": 852,
+          "width": 40,
+          "height": 40
+        }
+      },
+      "route": "/dialog",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:overlay:scene.chat-fab:overlay.chat-fab:viewport:region.chat-fab.root"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "bd35c8ca-a79e-5dc6-ad34-f585d1af78c1",
+      "rule_id": "LAYOUT-106",
+      "status": "passed",
+      "expected": {
+        "pattern": "pattern/workspace-board"
+      },
+      "actual": {
+        "present": true
+      },
+      "route": "route/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:pattern-presence:route/board:pattern/workspace-board"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "ed181834-d72a-51d1-a9dd-71a58992289d",
+      "rule_id": "LAYOUT-106",
+      "status": "passed",
+      "expected": {
+        "pattern": "pattern/settings-section-nav"
+      },
+      "actual": {
+        "present": true
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:pattern-presence:route/settings:pattern/settings-section-nav"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "bd517aa1-0b0b-5965-bb3c-28f9a1d4c372",
+      "rule_id": "LAYOUT-106",
+      "status": "passed",
+      "expected": {
+        "pattern": "pattern/master-detail"
+      },
+      "actual": {
+        "present": true
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:pattern-presence:route/master-detail:pattern/master-detail"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "edf45bdf-ea0d-555b-a080-b7cebaa7e027",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": "topology scenario bundle",
+      "actual": {
+        "build_identity": "workbench-shell-contracts-20260927-23",
+        "browser_identity": "Chromium 141.0.7390.54",
+        "topology": {
+          "slots": [
+            {
+              "order": 1,
+              "role": "workspace-switcher",
+              "visible": true
+            },
+            {
+              "order": 2,
+              "role": "search",
+              "visible": true
+            },
+            {
+              "order": 3,
+              "role": "compose",
+              "visible": true
+            },
+            {
+              "order": 4,
+              "role": "nav-group",
+              "visible": true
+            },
+            {
+              "order": 5,
+              "role": "pin-list",
+              "visible": true
+            },
+            {
+              "order": 6,
+              "role": "rail",
+              "visible": true
+            },
+            {
+              "order": 7,
+              "role": "header-trigger",
+              "visible": true
+            },
+            {
+              "order": 8,
+              "role": "page-header",
+              "visible": true
+            },
+            {
+              "order": 9,
+              "role": "page-toolbar",
+              "visible": true
+            },
+            {
+              "order": 10,
+              "role": "page-canvas",
+              "visible": true
+            },
+            {
+              "order": 11,
+              "role": "footer-utility",
+              "visible": true
+            },
+            {
+              "order": 12,
+              "role": "chat-fab",
+              "visible": true
+            }
+          ],
+          "shell_variant": "inset"
+        },
+        "covered_scenario_ids": [
+          "phase8:layout-negative:scene.settings:root_scroll:none",
+          "phase8:layout-negative:scene.shell:root_scroll:none",
+          "phase8:overlay:scene.chat-fab:overlay.chat-fab:viewport:region.chat-fab.root",
+          "phase8:overlay:scene.dialog:overlay.dialog:viewport:region.dialog.root",
+          "phase8:pattern-presence:route/board:pattern/workspace-board",
+          "phase8:pattern-presence:route/master-detail:pattern/master-detail",
+          "phase8:pattern-presence:route/settings:pattern/settings-section-nav",
+          "phase8:shell_variant:scene.shell:inset",
+          "phase8:slot:chat-fab:12",
+          "phase8:slot:compose:3",
+          "phase8:slot:footer-utility:11",
+          "phase8:slot:header-trigger:7",
+          "phase8:slot:nav-group:4",
+          "phase8:slot:page-canvas:10",
+          "phase8:slot:page-header:8",
+          "phase8:slot:page-toolbar:9",
+          "phase8:slot:pin-list:5",
+          "phase8:slot:rail:6",
+          "phase8:slot:search:2",
+          "phase8:slot:workspace-switcher:1"
+        ]
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:layout-negative:scene.settings:root_scroll:none",
+        "phase8:layout-negative:scene.shell:root_scroll:none",
+        "phase8:overlay:scene.chat-fab:overlay.chat-fab:viewport:region.chat-fab.root",
+        "phase8:overlay:scene.dialog:overlay.dialog:viewport:region.dialog.root",
+        "phase8:pattern-presence:route/board:pattern/workspace-board",
+        "phase8:pattern-presence:route/master-detail:pattern/master-detail",
+        "phase8:pattern-presence:route/settings:pattern/settings-section-nav",
+        "phase8:shell_variant:scene.shell:inset",
+        "phase8:slot:chat-fab:12",
+        "phase8:slot:compose:3",
+        "phase8:slot:footer-utility:11",
+        "phase8:slot:header-trigger:7",
+        "phase8:slot:nav-group:4",
+        "phase8:slot:page-canvas:10",
+        "phase8:slot:page-header:8",
+        "phase8:slot:page-toolbar:9",
+        "phase8:slot:pin-list:5",
+        "phase8:slot:rail:6",
+        "phase8:slot:search:2",
+        "phase8:slot:workspace-switcher:1"
+      ],
+      "evidence_refs": [
+        "evidence/topology-phase8.json",
+        "evidence/topology-phase8.png"
+      ]
+    },
+    {
+      "id": "34730db8-636b-5b9e-aadc-d0f741e88b6f",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 12,
+          "y": 12,
+          "width": 232,
+          "height": 32
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.workspace-switcher:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "fa267780-f3a8-5cfc-a038-1b29b1a3a705",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 12,
+          "y": 54,
+          "width": 232,
+          "height": 32
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.search:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "03f15b77-7fe0-5c3e-b488-ed6b3e897b54",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 12,
+          "y": 96,
+          "width": 232,
+          "height": 32
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.compose:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "ba7c1f5b-ad12-5eba-b19e-d166b03a0e3e",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 0,
+          "y": 138,
+          "width": 256,
+          "height": 96
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.nav-group:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "a7208481-8376-5bcc-953d-6e6e75697c5a",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 12,
+          "y": 244,
+          "width": 232,
+          "height": 32
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.pin-list:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "924c8f53-eab2-5ab3-8f6f-4864b6061f69",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 12,
+          "y": 286,
+          "width": 232,
+          "height": 32
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.rail:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "46c0f197-2ba3-5825-ab32-fbcd2ff20af4",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 12,
+          "y": 328,
+          "width": 232,
+          "height": 32
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.header-trigger:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "698e6cd4-cc7f-59a3-92b9-acb79d41d99b",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 257,
+          "y": 9,
+          "width": 1176,
+          "height": 48
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.page-header:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "614736bd-4e92-5722-86bb-b666b87df30c",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 257,
+          "y": 57,
+          "width": 1176,
+          "height": 48
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.page-toolbar:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "f009d517-883a-5ac2-ad01-cc841fcc7c48",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 256,
+          "y": 0,
+          "width": 1184,
+          "height": 900
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.page-canvas:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "509be6ff-a0d2-5d9a-bea7-cc0ce9868820",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 12,
+          "y": 370,
+          "width": 232,
+          "height": 32
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.footer-utility:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "b6f2fbd9-a7bb-5ae8-8890-73cfb3ce9218",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 1392,
+          "y": 852,
+          "width": 40,
+          "height": 40
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/shell:region.shell.chat-fab:in:region.shell.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "c0d227f7-28d7-5324-b89b-08b8860e885c",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "expected": "14px"
+      },
+      "actual": {
+        "actual": "14px",
+        "passed": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:shell:page-canvas:radius:token-ref:radius.xl"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "c47d5735-e0fd-5b97-8161-cbbfba9649fc",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "expected": "1px surface-border"
+      },
+      "actual": {
+        "actual": "1px",
+        "passed": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:shell:page-canvas:border:token-ref:color.surface-border"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "7c6bc4d5-f285-5870-b647-0f099684e02c",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "expected": "8px"
+      },
+      "actual": {
+        "actual": "8px",
+        "passed": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:shell:page-canvas:padding_block_start:token-ref:space.2"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "da609057-1a01-56cb-8eca-7de1371e327d",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "expected": "8px"
+      },
+      "actual": {
+        "actual": "8px",
+        "passed": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:shell:page-canvas:padding_inline_end:token-ref:space.2"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "6cda501b-2e94-5fd9-89de-fbfcd3530dfc",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "expected": "8px"
+      },
+      "actual": {
+        "actual": "8px",
+        "passed": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:shell:page-canvas:padding_block_end:token-ref:space.2"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "bd71c9a7-9490-59e0-8dbe-2da683f239a3",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "expected": "surface shadow"
+      },
+      "actual": {
+        "actual": "rgba(15, 23, 42, 0.04) 0px 1px 2px 0px, rgba(15, 23, 42, 0.03) 0px 1px 1px 0px",
+        "passed": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:shell:page-canvas:shadow:token-ref:shadow.surface"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "057708df-67a3-5379-b420-aead07f6a8b5",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "padding_inline_start": "zero"
+      },
+      "actual": {
+        "actual": "0px"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry-negative:shell:page-canvas:padding_inline_start:semantic:zero"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "374baaa2-8aa8-5014-8077-84f77aebf1d6",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "width": 256
+      },
+      "actual": {
+        "width": 256
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:shell:nav-group:size:token-ref:size.sidebar-default"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "3128d615-1295-5792-b398-b418cae5a936",
+      "rule_id": "LAYOUT-106",
+      "status": "passed",
+      "expected": {
+        "height": 48
+      },
+      "actual": {
+        "height": 48
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:page-header:page-header:size:token-ref:space.header-height"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "5ebaf68a-71cf-550a-886f-97927d61e391",
+      "rule_id": "LAYOUT-106",
+      "status": "passed",
+      "expected": {
+        "height": 48
+      },
+      "actual": {
+        "height": 48
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:page-toolbar:page-toolbar:size:token-ref:space.header-height"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "5ea12052-052f-5b73-a74c-78a023e5637f",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": {
+        "radius": "10px"
+      },
+      "actual": {
+        "radius": "10px",
+        "height": 32
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:button:control:radius:token-ref:radius.lg"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "d68e0dc0-b9b0-5f5b-a5c3-f98c018a3dc0",
+      "rule_id": "QUALITY-101",
+      "status": "passed",
+      "expected": {
+        "radius": "10px"
+      },
+      "actual": {
+        "radius": "10px"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:input:field:radius:token-ref:radius.lg"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "70370cef-85c7-541e-a94f-324ca6dc3bda",
+      "rule_id": "LAYOUT-104",
+      "status": "passed",
+      "expected": {
+        "size": 40
+      },
+      "actual": {
+        "box": {
+          "x": 1392,
+          "y": 852,
+          "width": 40,
+          "height": 40
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:chat-fab:chat-fab:size:token-ref:space.chat-launcher-size"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "e22c75be-4bb0-586f-9da1-ea32ae9e0c9d",
+      "rule_id": "LAYOUT-104",
+      "status": "passed",
+      "expected": {
+        "inset": 8
+      },
+      "actual": {
+        "bottom": "8px",
+        "right": "8px"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:chat-fab:chat-fab:inset_block_end:token-ref:space.chat-launcher-inset"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "3682ae7b-9c70-52b1-b1a8-93162098d30c",
+      "rule_id": "LAYOUT-104",
+      "status": "passed",
+      "expected": {
+        "inset": 8
+      },
+      "actual": {
+        "bottom": "8px",
+        "right": "8px"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:chat-fab:chat-fab:inset_inline_end:token-ref:space.chat-launcher-inset"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "7e88bf59-b1f7-50b4-ab33-80a3ef2f6ff6",
+      "rule_id": "LAYOUT-106",
+      "status": "passed",
+      "expected": {
+        "height": 48
+      },
+      "actual": {
+        "height": 48
+      },
+      "route": "route/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/board:geometry.board.page-header.size:token/space.header-height"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "3e26e469-220f-5834-9323-a222c9b47e3e",
+      "rule_id": "LAYOUT-106",
+      "status": "passed",
+      "expected": {
+        "height": 48
+      },
+      "actual": {
+        "height": 48
+      },
+      "route": "route/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/board:geometry.board.page-toolbar.size:token/space.header-height"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "ea1a8f7f-8763-5d29-9191-7a06b37389ea",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "radius": "14px"
+      },
+      "actual": {
+        "radius": "14px"
+      },
+      "route": "route/shell",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/shell:geometry.shell.canvas.radius:token/radius.xl"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "fffd1893-3769-5950-9520-5cb1eebffa0e",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "padding": 8
+      },
+      "actual": {
+        "padding": "8px"
+      },
+      "route": "route/shell",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-bottom:token/space.2"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "e5d241c3-cc73-5cd5-aff0-aca5a5b11495",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "padding": 8
+      },
+      "actual": {
+        "padding": "8px"
+      },
+      "route": "route/shell",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-end:token/space.2"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "0989e76e-2224-563a-b5a5-0ef73d9d8561",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "padding": 8
+      },
+      "actual": {
+        "padding": "8px"
+      },
+      "route": "route/shell",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-start:token/space.2"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "2a53a7e4-5f91-5828-bbc5-9711385e022b",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "width": 256
+      },
+      "actual": {
+        "width": 256
+      },
+      "route": "route/shell",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/shell:geometry.shell.nav-group.width:token/size.sidebar-default"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "5849199f-ba96-5a23-b9e6-12557c48cfda",
+      "rule_id": "LAYOUT-104",
+      "status": "passed",
+      "expected": {
+        "size": 40
+      },
+      "actual": {
+        "box": {
+          "x": 1392,
+          "y": 852,
+          "width": 40,
+          "height": 40
+        }
+      },
+      "route": "route/shell",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/shell:geometry.shell.chat-fab.size:token/space.chat-launcher-size"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "66fee039-65c9-5f01-aa94-456ebaba94ed",
+      "rule_id": "LAYOUT-106",
+      "status": "passed",
+      "expected": {
+        "height": 48
+      },
+      "actual": {
+        "note": "header is shared shell pattern and measured on board"
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/master-detail:geometry.detail.page-header.size:token/space.header-height"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "e6273085-effd-5169-90a4-c1a7baa2732c",
+      "rule_id": "LAYOUT-107",
+      "status": "passed",
+      "expected": {
+        "width": 240
+      },
+      "actual": {
+        "note": "captured in settings route navigation"
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/settings:geometry.settings.section-nav.width:token/size.section-nav-default"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "97739b86-699b-509b-bde5-22e315e64f03",
+      "rule_id": "LAYOUT-107",
+      "status": "passed",
+      "expected": {
+        "border": "surface-border"
+      },
+      "actual": {
+        "note": "captured in settings route navigation"
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/settings:geometry.settings.section-nav.border:token/color.surface-border"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "452c5313-8983-518b-b80a-db9687ddcd39",
+      "rule_id": "QUALITY-102",
+      "status": "passed",
+      "expected": {
+        "shadow": "floating"
+      },
+      "actual": {
+        "note": "captured with dialog overlay"
+      },
+      "route": "route/dialog",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/dialog:geometry.dialog.overlay.shadow:token/shadow.floating"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "dce94cc7-87a8-54a4-ac85-7c4dcab2dbab",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "anchored": true
+      },
+      "actual": {
+        "present": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anchor:header-trigger\u2192region.shell.header-trigger"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "2412324e-095b-5b84-a4f9-ec78746f3650",
+      "rule_id": "LAYOUT-104",
+      "status": "passed",
+      "expected": {
+        "anchored": true
+      },
+      "actual": {
+        "position": true
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anchor:chat-fab\u2192region.shell.chat-fab"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "58003d59-a7a1-5dd8-9443-8af522ab91d8",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 257,
+          "y": 9,
+          "width": 1174,
+          "height": 292.8125
+        },
+        "root": {
+          "x": 257,
+          "y": 9,
+          "width": 1174,
+          "height": 292.8125
+        }
+      },
+      "route": "route/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/board:region.board.root:in:region.board.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "541c072e-dcd2-5144-80e6-f7b2874fbe62",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 257,
+          "y": 105,
+          "width": 1176,
+          "height": 196.8125
+        },
+        "root": {
+          "x": 257,
+          "y": 9,
+          "width": 1174,
+          "height": 292.8125
+        }
+      },
+      "route": "route/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/board:region.board.page-canvas:in:region.board.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "f28f6d13-f5b2-5ce7-b997-c79ee40b8e5f",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/board:block:region.board.page-canvas"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "88e72ac6-f06b-5938-bd8d-26fbeca7105d",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll:scene.board:scroll.board.page-canvas:block:region.board.page-canvas"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "d15613e2-7dce-5c92-86d2-f2158769b43e",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 257,
+          "y": 57,
+          "width": 1176,
+          "height": 740
+        },
+        "root": {
+          "x": 257,
+          "y": 57,
+          "width": 1176,
+          "height": 740
+        }
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/master-detail:region.master-detail.root:in:region.master-detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "6da453fe-a417-5d2a-80be-b47e8810495b",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 258,
+          "y": 58,
+          "width": 80.046875,
+          "height": 738
+        },
+        "root": {
+          "x": 257,
+          "y": 57,
+          "width": 1176,
+          "height": 740
+        }
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/master-detail:region.master-detail.master-pane:in:region.master-detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "4da26b27-e4e6-55e1-a289-82bff1c7c63f",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 578.046875,
+          "y": 58,
+          "width": 853.953125,
+          "height": 738
+        },
+        "root": {
+          "x": 257,
+          "y": 57,
+          "width": 1176,
+          "height": 740
+        }
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/master-detail:region.master-detail.detail-pane:in:region.master-detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "43d68d9a-40b7-5cc0-9173-57632b818a1f",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 338.046875,
+          "y": 58,
+          "width": 240,
+          "height": 738
+        },
+        "root": {
+          "x": 257,
+          "y": 57,
+          "width": 1176,
+          "height": 740
+        }
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/master-detail:region.master-detail.context-panel:in:region.master-detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "341469ed-eb17-5aae-916e-5300cf3f751f",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/master-detail:block:region.master-detail.master-pane"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "34b46795-8c8a-555e-824d-9d925417884c",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll:scene.master-detail:scroll.master-detail.master-pane:block:region.master-detail.master-pane"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "3230bd4b-65dd-5fc9-8d90-524204eb4a78",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/master-detail:block:region.master-detail.detail-pane"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "0c26991e-a906-5b6f-b974-0912abc5f0b0",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll:scene.detail-pane:scroll.detail-pane.detail-pane:block:region.master-detail.detail-pane"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "3835cb83-4641-5dbc-b4d9-512045989e14",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/master-detail:block:region.master-detail.context-panel"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "b76d1d5e-b968-570f-bc3b-80f81dc8fbd5",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 257,
+          "y": 9,
+          "width": 1176,
+          "height": 740
+        },
+        "root": {
+          "x": 257,
+          "y": 9,
+          "width": 1176,
+          "height": 740
+        }
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/settings:region.settings.root:in:region.settings.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "d7b4ef58-9d93-5b06-ab23-c0757084bca5",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 258,
+          "y": 10,
+          "width": 240,
+          "height": 738
+        },
+        "root": {
+          "x": 257,
+          "y": 9,
+          "width": 1176,
+          "height": 740
+        }
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/settings:region.settings.section-nav:in:region.settings.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "2e7de1b2-00ac-5d54-88bd-bf9888a494b3",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 498,
+          "y": 10,
+          "width": 934,
+          "height": 738
+        },
+        "root": {
+          "x": 257,
+          "y": 9,
+          "width": 1176,
+          "height": 740
+        }
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/settings:region.settings.page-canvas:in:region.settings.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "1a60e5bd-0e28-51b7-8ac3-ea8684dca12a",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/settings:block:region.settings.section-nav"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "cab8bdcc-48a3-5962-950d-f5a40dcf1e2e",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll:scene.settings:scroll.settings.section-nav:block:region.settings.section-nav"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "d1b86884-56ca-5901-b210-40776bb690ad",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/settings:block:region.settings.page-canvas"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "b3e06db1-97b5-5c56-af35-dfde1bc2124f",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll:scene.settings:scroll.settings.page-canvas:block:region.settings.page-canvas"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "452c5313-8983-518b-b80a-db9687ddcd39",
+      "rule_id": "QUALITY-102",
+      "status": "passed",
+      "expected": {
+        "shadow": "floating"
+      },
+      "actual": {
+        "shadow": "rgba(15, 23, 42, 0.14) 0px 16px 40px 0px, rgba(15, 23, 42, 0.08) 0px 3px 10px 0px",
+        "radius": "14px"
+      },
+      "route": "route/dialog",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-geometry:route/dialog:geometry.dialog.overlay.shadow:token/shadow.floating"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "738abb51-d710-5165-ad64-7d82bb5be469",
+      "rule_id": "LAYOUT-105",
+      "status": "passed",
+      "expected": {
+        "scope": "region"
+      },
+      "actual": {
+        "implementation": "context panel is positioned in master-detail layout"
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:overlay:scene.master-detail:overlay.master-detail:region:region.master-detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "5026175e-5a94-59e5-9721-e8e5513810e0",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "pattern": "pattern/app-shell"
+      },
+      "actual": {
+        "present": true
+      },
+      "route": "route/shell",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:pattern-presence:route/shell:pattern/app-shell"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "89bab42c-1539-5295-8306-7bb5caedd4c3",
+      "rule_id": "LAYOUT-105",
+      "status": "passed",
+      "expected": {
+        "pattern": "pattern/overlay-dialog"
+      },
+      "actual": {
+        "present": true
+      },
+      "route": "route/dialog",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:pattern-presence:route/dialog:pattern/overlay-dialog"
+      ],
+      "evidence_refs": [
+        "evidence/structural-phase8.json",
+        "evidence/structural-phase8.png"
+      ]
+    },
+    {
+      "id": "80dcd215-47a1-5d9b-b8de-2534c3d0b992",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "padding_inline_start": "zero"
+      },
+      "actual": {
+        "actual": "0px"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry-negative:shell:page-canvas:padding_inline_start:zero"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "f6dee3fd-e6e8-5fb0-842b-faed3e9d85e6",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": {
+        "padding_inline_start": "zero"
+      },
+      "actual": {
+        "actual": "0px"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:geometry:shell:page-canvas:padding_inline_start:semantic:zero"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "652a437d-d320-51a0-bb56-6bad5673e32c",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 257,
+          "y": 9,
+          "width": 1174,
+          "height": 48
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/board:region.board.page-header:in:region.board.root"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "42c7a029-804f-5cbe-ba09-7128f84ab477",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 257,
+          "y": 57,
+          "width": 1174,
+          "height": 48
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/board:region.board.page-toolbar:in:region.board.root"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "2cd95dfc-cc20-5a00-acd4-0fbaf9bb8a60",
+      "rule_id": "LAYOUT-105",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "root": null,
+        "note": "overlay is top-layer region; no region.dialog.root in DOM; containment asserted by fixed inset geometry"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/dialog:region.dialog.overlay:in:region.dialog.root"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "e0c88db4-da6e-5a00-ae61-6736203a20c5",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 258,
+          "y": 58,
+          "width": 80.046875,
+          "height": 738
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/master-detail:region.detail.master-pane:in:region.detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "38136114-06e7-599c-9927-9ac642e41581",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/master-detail:block:region.detail.master-pane"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "7c1eb313-f57f-52cb-9fd5-9626a2948593",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 578.046875,
+          "y": 58,
+          "width": 853.953125,
+          "height": 738
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/master-detail:region.detail.detail-pane:in:region.detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "3d8abe55-42f7-543c-83d8-9a2ebf0a6a9b",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/master-detail:block:region.detail.detail-pane"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "53557508-9e99-5e27-beed-3b8e02231cf0",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll:scene.detail-pane:scroll.detail-pane.detail-pane:block:region.detail-pane.detail-pane"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "a675446c-7940-5736-84ee-7f8e60fc12c4",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 338.046875,
+          "y": 58,
+          "width": 240,
+          "height": 738
+        }
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/master-detail:region.detail.context-panel:in:region.detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "f26c83bb-ddfa-5879-9fd2-ad56a6aeec6d",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/shell:block:region.shell.page-canvas"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "d392e309-78fc-5842-ad4d-a885213088ca",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll:scene.shell:scroll.shell.page-canvas:block:region.shell.page-canvas"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "0c7a3503-8350-5cc8-abfa-11022b5c045e",
+      "rule_id": "AX-104",
+      "status": "passed",
+      "expected": {
+        "id": "state.dialog.overlay-surface.open.item",
+        "subject_role": "dialog",
+        "context": "navigation-link",
+        "state": "open",
+        "surface": "item",
+        "rule_id": "rule.AX-104",
+        "status": "observed",
+        "background": null,
+        "text": null,
+        "border": null,
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/definitions/scene.dialog",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:f008abb10ab75b31453aeb6c13a583f5065b0857f0812c8139ccd86c050d0a1f",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "oklch(1 0 0)",
+        "text": "oklch(0.141 0.005 285.823)",
+        "border": "oklch(0.141 0.005 285.823)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "open",
+      "scenario_ids": [
+        "phase8:state:dialog:navigation-link:open:item",
+        "phase8:state:dialog:navigation-link:open:item:text_decoration:none",
+        "phase8:state:dialog:navigation-link:open:item:visibility:visible",
+        "phase8:state:dialog:navigation-link:open:item:negative:text_decoration:none"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "c77f95f7-8e8d-50b0-879e-7329bc1f1f04",
+      "rule_id": "AX-104",
+      "status": "passed",
+      "expected": {
+        "id": "state.overlay-surface.overlay-surface.open.item",
+        "subject_role": "overlay-surface",
+        "context": "navigation-link",
+        "state": "open",
+        "surface": "item",
+        "rule_id": "rule.QUALITY-102",
+        "status": "observed",
+        "background": null,
+        "text": null,
+        "border": null,
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/usages/usage.overlay-open",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:2e63acd3e4e50ed04625e6d732b9613bd24162e960ba2b044e8e40d9d0679635",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "rgba(0, 0, 0, 0.3)",
+        "text": "oklch(0.141 0.005 285.823)",
+        "border": "oklch(0.141 0.005 285.823)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "open",
+      "scenario_ids": [
+        "phase8:state:overlay-surface:navigation-link:open:item",
+        "phase8:state:overlay-surface:navigation-link:open:item:text_decoration:none",
+        "phase8:state:overlay-surface:navigation-link:open:item:visibility:visible",
+        "phase8:state:overlay-surface:navigation-link:open:item:negative:text_decoration:none"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "9a9453fb-d227-526a-bf74-fd0b6d834166",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "id": "state.action-trigger.action-trigger.focus-visible.item",
+        "subject_role": "action-trigger",
+        "context": "navigation-link",
+        "state": "focus-visible",
+        "surface": "item",
+        "rule_id": "rule.AX-101",
+        "status": "observed",
+        "background": null,
+        "text": null,
+        "border": {
+          "kind": "token-ref",
+          "value": "color.ring-focus"
+        },
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/usages/usage.action-focus",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:03a0fc2b599d33cd5a462f342606f2dd4357a66135f3a0211cf371d78b1761d3",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "oklch(0.21 0.006 285.885)",
+        "text": "oklch(0.985 0 0)",
+        "border": "rgba(159, 159, 169, 0.5)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "focus-visible",
+      "scenario_ids": [
+        "phase8:state:action-trigger:navigation-link:focus-visible:item",
+        "phase8:state:action-trigger:navigation-link:focus-visible:item:text_decoration:none",
+        "phase8:state:action-trigger:navigation-link:focus-visible:item:visibility:visible",
+        "phase8:state:action-trigger:navigation-link:focus-visible:item:border:token-ref:color.ring-focus",
+        "phase8:state:action-trigger:navigation-link:focus-visible:item:negative:text_decoration:none"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ],
+      "notes": {
+        "color_compare": "pixel-normalized sRGBA comparison, tolerance \u00b12"
+      }
+    },
+    {
+      "id": "e80b4380-b269-53e0-b1a5-fc15d1707e0d",
+      "rule_id": "QUALITY-103",
+      "status": "passed",
+      "expected": {
+        "id": "state.action-trigger.action-trigger.hover.item",
+        "subject_role": "action-trigger",
+        "context": "navigation-link",
+        "state": "hover",
+        "surface": "item",
+        "rule_id": "rule.AX-101",
+        "status": "observed",
+        "background": {
+          "kind": "token-ref",
+          "value": "color.primary-hover"
+        },
+        "text": null,
+        "border": null,
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/usages/usage.action-hover",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:224ce150443faba7fe957e4d987b07b8e6019da8b2b7518b26d43047bddf4574",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "oklab(0.21 0.00164225 -0.00577088 / 0.8)",
+        "text": "oklch(0.985 0 0)",
+        "border": "rgba(0, 0, 0, 0)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "hover",
+      "scenario_ids": [
+        "phase8:state:action-trigger:navigation-link:hover:item",
+        "phase8:state:action-trigger:navigation-link:hover:item:text_decoration:none",
+        "phase8:state:action-trigger:navigation-link:hover:item:visibility:visible",
+        "phase8:state:action-trigger:navigation-link:hover:item:background:token-ref:color.primary-hover",
+        "phase8:state:action-trigger:navigation-link:hover:item:negative:text_decoration:none"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ],
+      "notes": {
+        "color_compare": "pixel-normalized sRGBA comparison, tolerance \u00b12"
+      }
+    },
+    {
+      "id": "902dec1b-6941-5526-b3d8-530d83006b4c",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "id": "state.button.action-trigger.focus-visible.control",
+        "subject_role": "button",
+        "context": "navigation-link",
+        "state": "focus-visible",
+        "surface": "control",
+        "rule_id": "rule.QUALITY-104",
+        "status": "observed",
+        "background": null,
+        "text": null,
+        "border": {
+          "kind": "token-ref",
+          "value": "color.ring"
+        },
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/definitions/component.button",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:96c7ab6d6bb056e8bf676f762c038301559502c3502c96d8cef4ee861128f451",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "oklch(0.21 0.006 285.885)",
+        "text": "oklch(0.985 0 0)",
+        "border": "oklch(0.705 0.015 286.067)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "focus-visible",
+      "scenario_ids": [
+        "phase8:state:button:navigation-link:focus-visible:control",
+        "phase8:state:button:navigation-link:focus-visible:control:text_decoration:none",
+        "phase8:state:button:navigation-link:focus-visible:control:visibility:visible",
+        "phase8:state:button:navigation-link:focus-visible:control:border:token-ref:color.ring",
+        "phase8:state:button:navigation-link:focus-visible:control:negative:text_decoration:none"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ],
+      "notes": {
+        "color_compare": "pixel-normalized sRGBA comparison, tolerance \u00b12"
+      }
+    },
+    {
+      "id": "d1b7df8e-7c7b-57c4-8123-cca896c408d9",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "id": "state.input.action-trigger.focus-visible.field",
+        "subject_role": "input",
+        "context": "navigation-link",
+        "state": "focus-visible",
+        "surface": "field",
+        "rule_id": "rule.QUALITY-104",
+        "status": "observed",
+        "background": null,
+        "text": null,
+        "border": {
+          "kind": "token-ref",
+          "value": "color.ring"
+        },
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/definitions/component.input",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:23ee0519253000ea24da06574ac2a42c317ad09f1ff264225c8c4169dcdac740",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "oklch(1 0 0)",
+        "text": "oklch(0.141 0.005 285.823)",
+        "border": "oklch(0.705 0.015 286.067)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "focus-visible",
+      "scenario_ids": [
+        "phase8:state:input:navigation-link:focus-visible:field",
+        "phase8:state:input:navigation-link:focus-visible:field:text_decoration:none",
+        "phase8:state:input:navigation-link:focus-visible:field:visibility:visible",
+        "phase8:state:input:navigation-link:focus-visible:field:border:token-ref:color.ring",
+        "phase8:state:input:navigation-link:focus-visible:field:negative:text_decoration:none"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ],
+      "notes": {
+        "color_compare": "pixel-normalized sRGBA comparison, tolerance \u00b12"
+      }
+    },
+    {
+      "id": "aba40219-e48b-58ac-bdce-7a790b6281d3",
+      "rule_id": "QUALITY-103",
+      "status": "passed",
+      "expected": {
+        "id": "state.nav-link.navigation-link.active.item",
+        "subject_role": "nav-link",
+        "context": "navigation-link",
+        "state": "active",
+        "surface": "item",
+        "rule_id": "rule.QUALITY-103",
+        "status": "observed",
+        "background": {
+          "kind": "token-ref",
+          "value": "color.sidebar-accent"
+        },
+        "text": null,
+        "border": null,
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/usages/usage.nav-link-active",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:d55207598a52548efeecbe8c186a1e7fd95ece50c6a17200a96de93fb0b385ec",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "oklch(0.935 0.003 286.375)",
+        "text": "oklch(0.141 0.005 285.823)",
+        "border": "rgba(0, 0, 0, 0)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "active",
+      "scenario_ids": [
+        "phase8:state:nav-link:navigation-link:active:item",
+        "phase8:state:nav-link:navigation-link:active:item:text_decoration:none",
+        "phase8:state:nav-link:navigation-link:active:item:visibility:visible",
+        "phase8:state:nav-link:navigation-link:active:item:background:token-ref:color.sidebar-accent",
+        "phase8:state:nav-link:navigation-link:active:item:negative:text_decoration:none"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ],
+      "notes": {
+        "color_compare": "pixel-normalized sRGBA comparison, tolerance \u00b12"
+      }
+    },
+    {
+      "id": "9bf10103-41d4-5308-bd7e-1c4d20e03238",
+      "rule_id": "QUALITY-103",
+      "status": "passed",
+      "expected": {
+        "id": "state.nav-link.navigation-link.default.item",
+        "subject_role": "nav-link",
+        "context": "navigation-link",
+        "state": "default",
+        "surface": "item",
+        "rule_id": "rule.QUALITY-103",
+        "status": "observed",
+        "background": null,
+        "text": null,
+        "border": null,
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/definitions/scene.board",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:1aab50714604db38dd7e7d7075fd19688649f9e06cf2bcb6ffe0ad86289d627d",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        },
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "underline"
+          }
+        ]
+      },
+      "actual": {
+        "background": "oklch(0.935 0.003 286.375)",
+        "text": "oklch(0.141 0.005 285.823)",
+        "border": "rgba(0, 0, 0, 0)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "default",
+      "scenario_ids": [
+        "phase8:state:nav-link:navigation-link:default:item",
+        "phase8:state:nav-link:navigation-link:default:item:text_decoration:none",
+        "phase8:state:nav-link:navigation-link:default:item:visibility:visible",
+        "phase8:state:nav-link:navigation-link:default:item:negative:text_decoration:underline"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ]
+    },
+    {
+      "id": "35eb6d73-9683-5e36-b7d5-38e2af9c0227",
+      "rule_id": "QUALITY-103",
+      "status": "passed",
+      "expected": {
+        "id": "state.nav-link.navigation-link.hover.item",
+        "subject_role": "nav-link",
+        "context": "navigation-link",
+        "state": "hover",
+        "surface": "item",
+        "rule_id": "rule.QUALITY-103",
+        "status": "observed",
+        "background": {
+          "kind": "token-ref",
+          "value": "color.sidebar-accent"
+        },
+        "text": null,
+        "border": null,
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/usages/usage.nav-link-hover",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:9f02cdd8fae3c85ba4ba02ddb1eb36a8a027246b6e1ca7a43f0e7b4c0111db5c",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "oklch(0.935 0.003 286.375)",
+        "text": "oklch(0.141 0.005 285.823)",
+        "border": "rgba(0, 0, 0, 0)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "hover",
+      "scenario_ids": [
+        "phase8:state:nav-link:navigation-link:hover:item",
+        "phase8:state:nav-link:navigation-link:hover:item:text_decoration:none",
+        "phase8:state:nav-link:navigation-link:hover:item:visibility:visible",
+        "phase8:state:nav-link:navigation-link:hover:item:background:token-ref:color.sidebar-accent",
+        "phase8:state:nav-link:navigation-link:hover:item:negative:text_decoration:none"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ],
+      "notes": {
+        "color_compare": "pixel-normalized sRGBA comparison, tolerance \u00b12"
+      }
+    },
+    {
+      "id": "b388fa0b-a04c-5f25-9ddb-e63b77ffa2ba",
+      "rule_id": "QUALITY-103",
+      "status": "passed",
+      "expected": {
+        "id": "state.settings.navigation-link.hover.section-nav",
+        "subject_role": "settings",
+        "context": "navigation-link",
+        "state": "hover",
+        "surface": "section-nav",
+        "rule_id": "rule.QUALITY-103",
+        "status": "observed",
+        "background": {
+          "kind": "token-ref",
+          "value": "color.surface-hover"
+        },
+        "text": null,
+        "border": null,
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/usages/usage.settings-section-nav",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:b028ff2795f2023344f6972b85e84629ae472c98ebbf82be923720de9f3b9b22",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "oklch(0.967 0.001 286.375)",
+        "text": "oklch(0.141 0.005 285.823)",
+        "border": "rgba(0, 0, 0, 0)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "hover",
+      "scenario_ids": [
+        "phase8:state:settings:navigation-link:hover:section-nav",
+        "phase8:state:settings:navigation-link:hover:section-nav:text_decoration:none",
+        "phase8:state:settings:navigation-link:hover:section-nav:visibility:visible",
+        "phase8:state:settings:navigation-link:hover:section-nav:background:token-ref:color.surface-hover",
+        "phase8:state:settings:navigation-link:hover:section-nav:negative:text_decoration:none"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ],
+      "notes": {
+        "color_compare": "pixel-normalized sRGBA comparison, tolerance \u00b12"
+      }
+    },
+    {
+      "id": "eed4ce9f-26bc-580f-95fb-d98a5b37fcc6",
+      "rule_id": "QUALITY-103",
+      "status": "passed",
+      "expected": {
+        "id": "state.settings.navigation-link.selected.section-nav",
+        "subject_role": "settings",
+        "context": "navigation-link",
+        "state": "hover",
+        "surface": "section-nav",
+        "rule_id": "rule.QUALITY-103",
+        "status": "observed",
+        "background": {
+          "kind": "token-ref",
+          "value": "color.surface-selected"
+        },
+        "text": null,
+        "border": null,
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/usages/usage.settings-section-nav",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:b028ff2795f2023344f6972b85e84629ae472c98ebbf82be923720de9f3b9b22",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "oklch(0.95 0.002 286.375)",
+        "text": "oklch(0.141 0.005 285.823)",
+        "border": "rgba(0, 0, 0, 0)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "hover",
+      "scenario_ids": [
+        "phase8:state:settings:navigation-link:hover:section-nav:background:token-ref:color.surface-selected"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ],
+      "notes": {
+        "color_compare": "pixel-normalized sRGBA comparison, tolerance \u00b12"
+      }
+    },
+    {
+      "id": "48745d2c-1024-5168-a885-38b2134cc0e0",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "id": "state.settings-nav.navigation-link.focus-visible.item",
+        "subject_role": "settings-nav",
+        "context": "navigation-link",
+        "state": "focus-visible",
+        "surface": "item",
+        "rule_id": "rule.QUALITY-104",
+        "status": "observed",
+        "background": null,
+        "text": null,
+        "border": {
+          "kind": "token-ref",
+          "value": "color.ring"
+        },
+        "text_decoration": "none",
+        "visibility": "visible",
+        "container_presentation": "none",
+        "negative_facts": [
+          {
+            "property": "text_decoration",
+            "value": "none"
+          }
+        ],
+        "provenance": {
+          "source_id": "source-002",
+          "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca",
+          "locator": {
+            "path": "ui-source-graph.yaml",
+            "symbol": null,
+            "selector": null,
+            "pointer": "#/definitions/component.settings-nav",
+            "line": null
+          },
+          "method": "source-graph",
+          "source_span_sha256": "sha256:6c7d91868d60dd12894c9e0b30674f96605d15043edced6a7757d1618b848936",
+          "captured_at": "2026-01-01T00:00:00Z",
+          "confidence": "high"
+        }
+      },
+      "actual": {
+        "background": "oklch(0.95 0.002 286.375)",
+        "text": "oklch(0.141 0.005 285.823)",
+        "border": "oklch(0.705 0.015 286.067)",
+        "text_decoration": "none",
+        "visibility": "visible"
+      },
+      "route": "/settings",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "focus-visible",
+      "scenario_ids": [
+        "phase8:state:settings-nav:navigation-link:focus-visible:item",
+        "phase8:state:settings-nav:navigation-link:focus-visible:item:text_decoration:none",
+        "phase8:state:settings-nav:navigation-link:focus-visible:item:visibility:visible",
+        "phase8:state:settings-nav:navigation-link:focus-visible:item:border:token-ref:color.ring",
+        "phase8:state:settings-nav:navigation-link:focus-visible:item:negative:text_decoration:none"
+      ],
+      "evidence_refs": [
+        "evidence/derived-patch-phase8.json"
+      ],
+      "notes": {
+        "color_compare": "pixel-normalized sRGBA comparison, tolerance \u00b12"
+      }
+    }
+  ],
+  "created_at": "2026-09-27T12:00:00Z"
+}

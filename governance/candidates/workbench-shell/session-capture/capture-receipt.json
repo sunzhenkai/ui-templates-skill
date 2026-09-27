@@ -1,0 +1,3756 @@
+{
+  "capture_profile": "repo-literal-graph-v1",
+  "capture_schema_version": 1,
+  "closure": {
+    "definitions": [
+      {
+        "exports": [
+          "app-sidebar"
+        ],
+        "facts": [],
+        "id": "component.app-sidebar",
+        "kind": "component",
+        "locator": "ui-source-graph.yaml#/definitions/component.app-sidebar",
+        "name": "app-sidebar",
+        "source_span_sha256": "sha256:6420b9250f731c464e67407861779a2a0d6ff0c0ad972459955c45a7ec612278"
+      },
+      {
+        "exports": [
+          "button"
+        ],
+        "facts": [],
+        "id": "component.button",
+        "kind": "component",
+        "locator": "ui-source-graph.yaml#/definitions/component.button",
+        "name": "button",
+        "source_span_sha256": "sha256:f9bca5005876bf42d098d19100336c269d8fcd64d7ca294e838a7a4bb873e2a1"
+      },
+      {
+        "exports": [
+          "chat-fab"
+        ],
+        "facts": [],
+        "id": "component.chat-fab",
+        "kind": "component",
+        "locator": "ui-source-graph.yaml#/definitions/component.chat-fab",
+        "name": "chat-fab",
+        "source_span_sha256": "sha256:11a420522765a2cbabbbea9cbae65dc8a8333073223217c9080173abc4dc8ed2"
+      },
+      {
+        "exports": [
+          "command-palette"
+        ],
+        "facts": [],
+        "id": "component.command-palette",
+        "kind": "component",
+        "locator": "ui-source-graph.yaml#/definitions/component.command-palette",
+        "name": "command-palette",
+        "source_span_sha256": "sha256:a083d0e9d27af348b678978a5da778a8d0801ea927e5286e911df227abd5ae26"
+      },
+      {
+        "exports": [
+          "data-table"
+        ],
+        "facts": [],
+        "id": "component.data-table",
+        "kind": "component",
+        "locator": "ui-source-graph.yaml#/definitions/component.data-table",
+        "name": "data-table",
+        "source_span_sha256": "sha256:65d6f0538f1063b7a95f8709debb198d8208daea614c7d162f0aa5755422c443"
+      },
+      {
+        "exports": [
+          "dialog"
+        ],
+        "facts": [],
+        "id": "component.dialog",
+        "kind": "component",
+        "locator": "ui-source-graph.yaml#/definitions/component.dialog",
+        "name": "dialog",
+        "source_span_sha256": "sha256:eafcb430cab9698c0933c1810b4b2e73361bd84496ac082420a34f46c690ea86"
+      },
+      {
+        "exports": [
+          "input"
+        ],
+        "facts": [],
+        "id": "component.input",
+        "kind": "component",
+        "locator": "ui-source-graph.yaml#/definitions/component.input",
+        "name": "input",
+        "source_span_sha256": "sha256:aea247c8846ecc6e8e31af31f7008787aa15cc6af94c4dd5440a604eae815520"
+      },
+      {
+        "exports": [
+          "page-header"
+        ],
+        "facts": [],
+        "id": "component.page-header",
+        "kind": "component",
+        "locator": "ui-source-graph.yaml#/definitions/component.page-header",
+        "name": "page-header",
+        "source_span_sha256": "sha256:98adb78127175aeda847729039dba61297687d8bd7b7d87eb05fd03a81a26c88"
+      },
+      {
+        "exports": [
+          "settings-nav"
+        ],
+        "facts": [],
+        "id": "component.settings-nav",
+        "kind": "component",
+        "locator": "ui-source-graph.yaml#/definitions/component.settings-nav",
+        "name": "settings-nav",
+        "source_span_sha256": "sha256:3def90481d327362f77934cc706af7eec05121183b1e0c6b4f02c6f05a78ccc3"
+      },
+      {
+        "exports": [],
+        "facts": [],
+        "id": "context.action-trigger",
+        "kind": "context",
+        "locator": "ui-source-graph.yaml#/definitions/context.action-trigger",
+        "name": "action-trigger",
+        "source_span_sha256": "sha256:d7a55e670a5891e4d06ec167d372fd877e0470c639a4ec2999f85649d4458d79"
+      },
+      {
+        "exports": [],
+        "facts": [],
+        "id": "context.navigation-link",
+        "kind": "context",
+        "locator": "ui-source-graph.yaml#/definitions/context.navigation-link",
+        "name": "navigation-link",
+        "source_span_sha256": "sha256:1ee2df7c1b4f066c5a5ae3246a1d82d1a59330632bf1675695f52ec787c52970"
+      },
+      {
+        "exports": [],
+        "facts": [],
+        "id": "context.overlay-surface",
+        "kind": "context",
+        "locator": "ui-source-graph.yaml#/definitions/context.overlay-surface",
+        "name": "overlay-surface",
+        "source_span_sha256": "sha256:671c31d7690c4fc149ed91f8ed12c74f674cd8f3229b8561a99ecebfcd4b9271"
+      },
+      {
+        "exports": [
+          "shell"
+        ],
+        "facts": [],
+        "id": "entry.shell",
+        "kind": "entry",
+        "locator": "ui-source-graph.yaml#/definitions/entry.shell",
+        "name": "shell-entry",
+        "source_span_sha256": "sha256:e95c3e0c878ff39a237d0d023ed5a547c3f0079c3f8c891a39370f378cda6d0c"
+      },
+      {
+        "exports": [
+          "board-scene"
+        ],
+        "facts": [],
+        "id": "scene.board",
+        "kind": "scene",
+        "locator": "ui-source-graph.yaml#/definitions/scene.board",
+        "name": "board",
+        "source_span_sha256": "sha256:cf5ec2e1b0342fb485ade1ad7db08de7a952438e35ed8b72c4e71a3d8aae5ccd"
+      },
+      {
+        "exports": [
+          "dialog-scene"
+        ],
+        "facts": [],
+        "id": "scene.dialog",
+        "kind": "scene",
+        "locator": "ui-source-graph.yaml#/definitions/scene.dialog",
+        "name": "dialog",
+        "source_span_sha256": "sha256:7568cd01bf9f2e84f64482ad1c7d8d2e9e9e84369714f3495e75d683b734c6d3"
+      },
+      {
+        "exports": [
+          "master-detail-scene"
+        ],
+        "facts": [],
+        "id": "scene.master-detail",
+        "kind": "scene",
+        "locator": "ui-source-graph.yaml#/definitions/scene.master-detail",
+        "name": "master-detail",
+        "source_span_sha256": "sha256:8d3ac67ee3a024052cdfb878ed3fb39c2f88d67ffd4ae5d779b06ae7157efcda"
+      },
+      {
+        "exports": [
+          "settings-scene"
+        ],
+        "facts": [],
+        "id": "scene.settings",
+        "kind": "scene",
+        "locator": "ui-source-graph.yaml#/definitions/scene.settings",
+        "name": "settings",
+        "source_span_sha256": "sha256:2b1cffdd11c3b9588dd577bdfc09faafeba3114b52725317b44b52a5cabfebbb"
+      },
+      {
+        "exports": [
+          "shell-scene"
+        ],
+        "facts": [],
+        "id": "scene.shell",
+        "kind": "scene",
+        "locator": "ui-source-graph.yaml#/definitions/scene.shell",
+        "name": "shell",
+        "source_span_sha256": "sha256:29d15e8a228c5cf3e65457aaad51a14e1e873db8af52bf663951151e8d831d2e"
+      },
+      {
+        "exports": [
+          "theme"
+        ],
+        "facts": [],
+        "id": "theme.core",
+        "kind": "theme",
+        "locator": "ui-source-graph.yaml#/definitions/theme.core",
+        "name": "core",
+        "source_span_sha256": "sha256:15a09b9b917785bd148168e9cd50676206c02f83fcb09bf1ed1273ef4ccfb8a0"
+      }
+    ],
+    "dynamic": [],
+    "exclusions": [
+      {
+        "id": "exclusion.board-section-nav",
+        "locator": "ui-source-graph.yaml#/definitions/scene.board",
+        "reason": "out-of-scope"
+      },
+      {
+        "id": "exclusion.mobile",
+        "locator": "ui-source-graph.yaml#/exclusions/exclusion.mobile",
+        "reason": "platform-mismatch"
+      }
+    ],
+    "exports": [
+      {
+        "definition_id": "component.app-sidebar",
+        "symbol": "app-sidebar"
+      },
+      {
+        "definition_id": "component.button",
+        "symbol": "button"
+      },
+      {
+        "definition_id": "component.chat-fab",
+        "symbol": "chat-fab"
+      },
+      {
+        "definition_id": "component.command-palette",
+        "symbol": "command-palette"
+      },
+      {
+        "definition_id": "component.data-table",
+        "symbol": "data-table"
+      },
+      {
+        "definition_id": "component.dialog",
+        "symbol": "dialog"
+      },
+      {
+        "definition_id": "component.input",
+        "symbol": "input"
+      },
+      {
+        "definition_id": "component.page-header",
+        "symbol": "page-header"
+      },
+      {
+        "definition_id": "component.settings-nav",
+        "symbol": "settings-nav"
+      },
+      {
+        "definition_id": "entry.shell",
+        "symbol": "shell"
+      },
+      {
+        "definition_id": "scene.board",
+        "symbol": "board-scene"
+      },
+      {
+        "definition_id": "scene.dialog",
+        "symbol": "dialog-scene"
+      },
+      {
+        "definition_id": "scene.master-detail",
+        "symbol": "master-detail-scene"
+      },
+      {
+        "definition_id": "scene.settings",
+        "symbol": "settings-scene"
+      },
+      {
+        "definition_id": "scene.shell",
+        "symbol": "shell-scene"
+      },
+      {
+        "definition_id": "theme.core",
+        "symbol": "theme"
+      }
+    ],
+    "imports": [
+      {
+        "from_definition": "entry.shell",
+        "id": "import.action-context",
+        "locator": "ui-source-graph.yaml#/imports/import.action-context",
+        "source_span_sha256": "sha256:c53d7516e4fff399316343a8a4e595bf51e894da4b0632895b665499589aa61f",
+        "to_definition": "context.action-trigger"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.app-sidebar",
+        "locator": "ui-source-graph.yaml#/imports/import.app-sidebar",
+        "source_span_sha256": "sha256:f803eea2ee13afa5adbbb88e2dffe07b037471d106366143e564a2e0454eb359",
+        "to_definition": "component.app-sidebar"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.board",
+        "locator": "ui-source-graph.yaml#/imports/import.board",
+        "source_span_sha256": "sha256:d87d86f606cd90410706fe48933cd8006c684dd56a9f243c1079675683a9c96c",
+        "to_definition": "scene.board"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.button",
+        "locator": "ui-source-graph.yaml#/imports/import.button",
+        "source_span_sha256": "sha256:dfa77cbe6310b05063f58e86fc693c1fe46e1245ec483747f8c965f065794ef7",
+        "to_definition": "component.button"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.chat-fab",
+        "locator": "ui-source-graph.yaml#/imports/import.chat-fab",
+        "source_span_sha256": "sha256:e2e3c673d887c16ae70eda43ec8e9ea5a3fafcbf9cd15902b93a2a9758517a45",
+        "to_definition": "component.chat-fab"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.command-palette",
+        "locator": "ui-source-graph.yaml#/imports/import.command-palette",
+        "source_span_sha256": "sha256:97244c2fa7fa008a95307583664c259f1994cf11bf1c64e5a709ba3cc8a0bcce",
+        "to_definition": "component.command-palette"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.data-table",
+        "locator": "ui-source-graph.yaml#/imports/import.data-table",
+        "source_span_sha256": "sha256:4651938f0ce90055073a9f5b79c3fbd5d47433ef9f5f9f88339db54bbd4878d5",
+        "to_definition": "component.data-table"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.dialog",
+        "locator": "ui-source-graph.yaml#/imports/import.dialog",
+        "source_span_sha256": "sha256:f493f769759b75c25cba1161ac8001f22cdc97e35b0b3f3c48b3e65bc2362cb9",
+        "to_definition": "component.dialog"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.dialog-scene",
+        "locator": "ui-source-graph.yaml#/imports/import.dialog-scene",
+        "source_span_sha256": "sha256:d20c382eeb43ff60758233ab7994af163d4ab995ef5a29ce63d0102d6ad2d861",
+        "to_definition": "scene.dialog"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.input",
+        "locator": "ui-source-graph.yaml#/imports/import.input",
+        "source_span_sha256": "sha256:b3e7dca8b2f4a4e72707435d7ad12d8aad82aba8858a3302c04b0e1b22b6b95b",
+        "to_definition": "component.input"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.master-detail",
+        "locator": "ui-source-graph.yaml#/imports/import.master-detail",
+        "source_span_sha256": "sha256:1f215582b626f1e7ad2336f1ff8a41ca584483211b2a792a35e89b67299c674b",
+        "to_definition": "scene.master-detail"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.nav-context",
+        "locator": "ui-source-graph.yaml#/imports/import.nav-context",
+        "source_span_sha256": "sha256:30427cd078ee0e95f3a3eb93e97158d211f18a7a505dc0eea937d2677bae4389",
+        "to_definition": "context.navigation-link"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.overlay-context",
+        "locator": "ui-source-graph.yaml#/imports/import.overlay-context",
+        "source_span_sha256": "sha256:dcd9625ac22b5ff2a8e6a5a84b0a53676b14b7c9d8b80ea446d42232ef66c38c",
+        "to_definition": "context.overlay-surface"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.page-header",
+        "locator": "ui-source-graph.yaml#/imports/import.page-header",
+        "source_span_sha256": "sha256:92bf6343f3991b461be4c47931039722f093a4eac0b037974da3c33832c05b3b",
+        "to_definition": "component.page-header"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.settings",
+        "locator": "ui-source-graph.yaml#/imports/import.settings",
+        "source_span_sha256": "sha256:4bb19acfec09c70d3856dee62997557142544546d83473bc0f7358f489c817d6",
+        "to_definition": "scene.settings"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.settings-nav",
+        "locator": "ui-source-graph.yaml#/imports/import.settings-nav",
+        "source_span_sha256": "sha256:7a28d70b6bc034b5348b73b746c5478430951e6c1bae3edfe65b8fc4a6ee12fe",
+        "to_definition": "component.settings-nav"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.shell",
+        "locator": "ui-source-graph.yaml#/imports/import.shell",
+        "source_span_sha256": "sha256:421b63848e5293df0aecf155103faf21afcb615aff4d4847c8b7eff29010dfbb",
+        "to_definition": "scene.shell"
+      },
+      {
+        "from_definition": "entry.shell",
+        "id": "import.theme",
+        "locator": "ui-source-graph.yaml#/imports/import.theme",
+        "source_span_sha256": "sha256:52ce9cd0e3f9368d2721a072ced6762b312182047996c59c9e20807958eb9165",
+        "to_definition": "theme.core"
+      }
+    ],
+    "usages": [
+      {
+        "component": "button",
+        "context": "action-trigger",
+        "definition_id": "component.button",
+        "facts": [
+          {
+            "context": "action-trigger",
+            "facet": "state_presentations",
+            "id": "fact.action.focus-border",
+            "negative": false,
+            "property": "border",
+            "rule_id": "AX-101",
+            "slot": "control",
+            "state": "focus-visible",
+            "subject": "button",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.ring-focus"
+            }
+          }
+        ],
+        "id": "usage.action-focus",
+        "locator": "ui-source-graph.yaml#/usages/usage.action-focus",
+        "scene": "board",
+        "slot": "control",
+        "source_span_sha256": "sha256:c2ef7cafaacb93949eee0341eb9f2d9df1c482004349636fa264dc86e56200ba",
+        "state": "focus-visible"
+      },
+      {
+        "component": "button",
+        "context": "action-trigger",
+        "definition_id": "component.button",
+        "facts": [
+          {
+            "context": "action-trigger",
+            "facet": "state_presentations",
+            "id": "fact.action.hover-bg",
+            "negative": false,
+            "property": "background",
+            "rule_id": "AX-101",
+            "slot": "control",
+            "state": "hover",
+            "subject": "button",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.primary-hover"
+            }
+          },
+          {
+            "context": "action-trigger",
+            "facet": "state_presentations",
+            "id": "fact.action.hover-decoration",
+            "negative": true,
+            "property": "text_decoration",
+            "rule_id": "AX-101",
+            "slot": "control",
+            "state": "hover",
+            "subject": "button",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          }
+        ],
+        "id": "usage.action-hover",
+        "locator": "ui-source-graph.yaml#/usages/usage.action-hover",
+        "scene": "board",
+        "slot": "control",
+        "source_span_sha256": "sha256:9d438b07d59c15332168fb9068660a94de47ec40d22e27af99350947c91a870f",
+        "state": "hover"
+      },
+      {
+        "component": "app-sidebar",
+        "context": null,
+        "definition_id": "component.app-sidebar",
+        "facts": [
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.app-sidebar.width",
+            "negative": false,
+            "property": "size",
+            "rule_id": "LAYOUT-001",
+            "slot": "nav-group",
+            "state": "default",
+            "subject": "app-sidebar",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "256px"
+              },
+              "value": "size.sidebar-default"
+            }
+          }
+        ],
+        "id": "usage.app-sidebar-width",
+        "locator": "ui-source-graph.yaml#/usages/usage.app-sidebar-width",
+        "scene": "shell",
+        "slot": "nav-group",
+        "source_span_sha256": "sha256:3bb9eea99fe13edb945c6016e04a0f6a30475cf250a0b2803c00e1df11e245de",
+        "state": "default"
+      },
+      {
+        "component": "page-header",
+        "context": null,
+        "definition_id": "scene.board",
+        "facts": [
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.board.arrangement",
+            "negative": false,
+            "property": "arrangement",
+            "rule_id": "LAYOUT-102",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "board",
+            "value": {
+              "kind": "semantic",
+              "value": "vertical"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.board.page-scroll",
+            "negative": false,
+            "property": "scroll_block",
+            "rule_id": "LAYOUT-102",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "board",
+            "value": {
+              "kind": "semantic",
+              "value": "block"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.board.page-header-height",
+            "negative": false,
+            "property": "size",
+            "rule_id": "LAYOUT-106",
+            "slot": "page-header",
+            "state": "default",
+            "subject": "page-header",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "3rem"
+              },
+              "value": "space.header-height"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.board.page-toolbar-height",
+            "negative": false,
+            "property": "size",
+            "rule_id": "LAYOUT-106",
+            "slot": "page-toolbar",
+            "state": "default",
+            "subject": "page-header",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "3rem"
+              },
+              "value": "space.header-height"
+            }
+          },
+          {
+            "context": "navigation-link",
+            "facet": "state_presentations",
+            "id": "fact.board.nav-default-underline",
+            "negative": true,
+            "property": "text_decoration",
+            "rule_id": "QUALITY-103",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "board",
+            "value": {
+              "kind": "semantic",
+              "value": "underline"
+            }
+          }
+        ],
+        "id": "usage.board",
+        "locator": "ui-source-graph.yaml#/usages/usage.board",
+        "scene": "board",
+        "slot": "page-header",
+        "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+        "state": "default"
+      },
+      {
+        "component": null,
+        "context": null,
+        "definition_id": "scene.board",
+        "facts": [
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.board.non-wrap",
+            "negative": true,
+            "property": "wrap",
+            "rule_id": "LAYOUT-002",
+            "slot": "columns",
+            "state": "default",
+            "subject": "board",
+            "value": {
+              "kind": "semantic",
+              "value": "non-wrap"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.board.non-shrink",
+            "negative": true,
+            "property": "shrink",
+            "rule_id": "LAYOUT-002",
+            "slot": "columns",
+            "state": "default",
+            "subject": "board",
+            "value": {
+              "kind": "semantic",
+              "value": "non-shrink"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.board.inline-scroll",
+            "negative": false,
+            "property": "scroll_inline",
+            "rule_id": "LAYOUT-002",
+            "slot": "columns",
+            "state": "default",
+            "subject": "board",
+            "value": {
+              "kind": "semantic",
+              "value": "inline"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.board.column-width",
+            "negative": false,
+            "property": "size",
+            "rule_id": "LAYOUT-002",
+            "slot": "columns",
+            "state": "default",
+            "subject": "data-table",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "280px"
+              },
+              "value": "size.board-column"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.board.column-gap",
+            "negative": false,
+            "property": "gap",
+            "rule_id": "LAYOUT-002",
+            "slot": "columns",
+            "state": "default",
+            "subject": "data-table",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "16px"
+              },
+              "value": "space.4"
+            }
+          }
+        ],
+        "id": "usage.board-columns",
+        "locator": "ui-source-graph.yaml#/usages/usage.board-columns",
+        "scene": "board",
+        "slot": "columns",
+        "source_span_sha256": "sha256:6f17d96cdcd6ab552882fc5cf75e93eaa68782faa2a5689788706e973ee86fbe",
+        "state": "default"
+      },
+      {
+        "component": "button",
+        "context": "action-trigger",
+        "definition_id": "component.button",
+        "facts": [
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.button.radius",
+            "negative": false,
+            "property": "radius",
+            "rule_id": "QUALITY-101",
+            "slot": "control",
+            "state": "default",
+            "subject": "button",
+            "value": {
+              "kind": "token-ref",
+              "value": "radius.lg"
+            }
+          }
+        ],
+        "id": "usage.button-geometry",
+        "locator": "ui-source-graph.yaml#/usages/usage.button-geometry",
+        "scene": "board",
+        "slot": "control",
+        "source_span_sha256": "sha256:f4212c5c182db1b28545eb177a4bff4d0845eceed00a1187b457ef2675cc104f",
+        "state": "default"
+      },
+      {
+        "component": "chat-fab",
+        "context": null,
+        "definition_id": "component.chat-fab",
+        "facts": [
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.chat-fab.inset-block-end",
+            "negative": false,
+            "property": "inset_block_end",
+            "rule_id": "LAYOUT-104",
+            "slot": "chat-fab",
+            "state": "default",
+            "subject": "chat-fab",
+            "value": {
+              "kind": "token-ref",
+              "value": "space.chat-launcher-inset"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.chat-fab.inset-inline-end",
+            "negative": false,
+            "property": "inset_inline_end",
+            "rule_id": "LAYOUT-104",
+            "slot": "chat-fab",
+            "state": "default",
+            "subject": "chat-fab",
+            "value": {
+              "kind": "token-ref",
+              "value": "space.chat-launcher-inset"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.chat-fab.size",
+            "negative": false,
+            "property": "size",
+            "rule_id": "LAYOUT-104",
+            "slot": "chat-fab",
+            "state": "default",
+            "subject": "chat-fab",
+            "value": {
+              "kind": "token-ref",
+              "value": "space.chat-launcher-size"
+            }
+          }
+        ],
+        "id": "usage.chat-fab-geometry",
+        "locator": "ui-source-graph.yaml#/usages/usage.chat-fab-geometry",
+        "scene": "shell",
+        "slot": "chat-fab",
+        "source_span_sha256": "sha256:93be83ae9adf5f85a001c4b24f02a1c41e800a6ed8ee5278ed89ce8479564947",
+        "state": "default"
+      },
+      {
+        "component": null,
+        "context": null,
+        "definition_id": "scene.master-detail",
+        "facts": [
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.master.context-panel",
+            "negative": false,
+            "property": "overlay_scope",
+            "rule_id": "LAYOUT-003",
+            "slot": "context-panel",
+            "state": "default",
+            "subject": "master-detail",
+            "value": {
+              "kind": "semantic",
+              "value": "region"
+            }
+          }
+        ],
+        "id": "usage.detail-context-panel",
+        "locator": "ui-source-graph.yaml#/usages/usage.detail-context-panel",
+        "scene": "master-detail",
+        "slot": "context-panel",
+        "source_span_sha256": "sha256:4c4f3661d66b0cc88005377a79992d4e85a9f659333065dbfc41ac080c071a62",
+        "state": "default"
+      },
+      {
+        "component": null,
+        "context": null,
+        "definition_id": "scene.master-detail",
+        "facts": [
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.detail.block-scroll",
+            "negative": false,
+            "property": "scroll_block",
+            "rule_id": "LAYOUT-003",
+            "slot": "detail-pane",
+            "state": "default",
+            "subject": "master-detail",
+            "value": {
+              "kind": "semantic",
+              "value": "block"
+            }
+          }
+        ],
+        "id": "usage.detail-scroll",
+        "locator": "ui-source-graph.yaml#/usages/usage.detail-scroll",
+        "scene": "master-detail",
+        "slot": "detail-pane",
+        "source_span_sha256": "sha256:81ec7d606bfbd74f15077d01c5d66900b16657af490c99f4ca27b9fdf8156a80",
+        "state": "default"
+      },
+      {
+        "component": "dialog",
+        "context": null,
+        "definition_id": "component.dialog",
+        "facts": [
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.dialog.padding-block-start",
+            "negative": false,
+            "property": "padding_block_start",
+            "rule_id": "QUALITY-001",
+            "slot": "content",
+            "state": "default",
+            "subject": "dialog",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "1rem"
+              },
+              "value": "space.4"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.dialog.padding-inline-end",
+            "negative": false,
+            "property": "padding_inline_end",
+            "rule_id": "QUALITY-001",
+            "slot": "content",
+            "state": "default",
+            "subject": "dialog",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "1rem"
+              },
+              "value": "space.4"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.dialog.padding-block-end",
+            "negative": false,
+            "property": "padding_block_end",
+            "rule_id": "QUALITY-001",
+            "slot": "content",
+            "state": "default",
+            "subject": "dialog",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "1rem"
+              },
+              "value": "space.4"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.dialog.padding-inline-start",
+            "negative": false,
+            "property": "padding_inline_start",
+            "rule_id": "QUALITY-001",
+            "slot": "content",
+            "state": "default",
+            "subject": "dialog",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "1rem"
+              },
+              "value": "space.4"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.dialog.radius",
+            "negative": false,
+            "property": "radius",
+            "rule_id": "QUALITY-001",
+            "slot": "content",
+            "state": "default",
+            "subject": "dialog",
+            "value": {
+              "kind": "token-ref",
+              "value": "radius.xl"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.dialog.shadow",
+            "negative": false,
+            "property": "shadow",
+            "rule_id": "QUALITY-001",
+            "slot": "content",
+            "state": "default",
+            "subject": "dialog",
+            "value": {
+              "kind": "token-ref",
+              "value": "shadow.floating"
+            }
+          }
+        ],
+        "id": "usage.dialog-content",
+        "locator": "ui-source-graph.yaml#/usages/usage.dialog-content",
+        "scene": "dialog",
+        "slot": "content",
+        "source_span_sha256": "sha256:8b84941babe4ab20d3cbfeb7fd916af0daa7f772d906de1cfe5994decf595236",
+        "state": "default"
+      },
+      {
+        "component": null,
+        "context": null,
+        "definition_id": "scene.dialog",
+        "facts": [
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.dialog.overlay-scope",
+            "negative": false,
+            "property": "overlay_scope",
+            "rule_id": "LAYOUT-005",
+            "slot": "overlay",
+            "state": "open",
+            "subject": "dialog",
+            "value": {
+              "kind": "semantic",
+              "value": "viewport"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.dialog.overlay-anchor",
+            "negative": false,
+            "property": "overlay_anchor",
+            "rule_id": "LAYOUT-005",
+            "slot": "overlay",
+            "state": "open",
+            "subject": "dialog",
+            "value": {
+              "kind": "semantic",
+              "value": "viewport"
+            }
+          }
+        ],
+        "id": "usage.dialog-scene",
+        "locator": "ui-source-graph.yaml#/usages/usage.dialog-scene",
+        "scene": "dialog",
+        "slot": "overlay",
+        "source_span_sha256": "sha256:d7462af1eef0f029ae773653aef069d6e623c0bf87e1b88bedf889da5a1f44dc",
+        "state": "open"
+      },
+      {
+        "component": "input",
+        "context": "action-trigger",
+        "definition_id": "component.input",
+        "facts": [
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.input.radius",
+            "negative": false,
+            "property": "radius",
+            "rule_id": "QUALITY-101",
+            "slot": "field",
+            "state": "default",
+            "subject": "input",
+            "value": {
+              "kind": "token-ref",
+              "value": "radius.lg"
+            }
+          },
+          {
+            "context": "action-trigger",
+            "facet": "state_presentations",
+            "id": "fact.input.focus-border",
+            "negative": false,
+            "property": "border",
+            "rule_id": "QUALITY-104",
+            "slot": "field",
+            "state": "focus-visible",
+            "subject": "input",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.ring"
+            }
+          }
+        ],
+        "id": "usage.input-geometry",
+        "locator": "ui-source-graph.yaml#/usages/usage.input-geometry",
+        "scene": "settings",
+        "slot": "field",
+        "source_span_sha256": "sha256:8199927961ff4a3cee28f892555d4b1d8d7d56b5cc20646a0b68f240de5900fc",
+        "state": "default"
+      },
+      {
+        "component": null,
+        "context": null,
+        "definition_id": "scene.master-detail",
+        "facts": [
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.master-detail.arrangement",
+            "negative": false,
+            "property": "arrangement",
+            "rule_id": "LAYOUT-003",
+            "slot": null,
+            "state": "default",
+            "subject": "master-detail",
+            "value": {
+              "kind": "semantic",
+              "value": "horizontal"
+            }
+          }
+        ],
+        "id": "usage.master-detail-layout",
+        "locator": "ui-source-graph.yaml#/usages/usage.master-detail-layout",
+        "scene": "master-detail",
+        "slot": null,
+        "source_span_sha256": "sha256:6115b8d4a3bef79cf6536171abccdf36a4c37c2ea7d778e9635755646b4bc4be",
+        "state": "default"
+      },
+      {
+        "component": null,
+        "context": null,
+        "definition_id": "scene.master-detail",
+        "facts": [
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.master.block-scroll",
+            "negative": false,
+            "property": "scroll_block",
+            "rule_id": "LAYOUT-003",
+            "slot": "master-pane",
+            "state": "default",
+            "subject": "master-detail",
+            "value": {
+              "kind": "semantic",
+              "value": "block"
+            }
+          }
+        ],
+        "id": "usage.master-scroll",
+        "locator": "ui-source-graph.yaml#/usages/usage.master-scroll",
+        "scene": "master-detail",
+        "slot": "master-pane",
+        "source_span_sha256": "sha256:72424801dd9d089df44a93646d7ce6a2bed072de5232a576a1a68e4fe6cd84b7",
+        "state": "default"
+      },
+      {
+        "component": "app-sidebar",
+        "context": "navigation-link",
+        "definition_id": "component.app-sidebar",
+        "facts": [
+          {
+            "context": "navigation-link",
+            "facet": "state_presentations",
+            "id": "fact.nav-link.active-bg",
+            "negative": false,
+            "property": "background",
+            "rule_id": "QUALITY-103",
+            "slot": "item",
+            "state": "active",
+            "subject": "app-sidebar",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.sidebar-accent"
+            }
+          },
+          {
+            "context": "navigation-link",
+            "facet": "state_presentations",
+            "id": "fact.nav-link.active-decoration",
+            "negative": true,
+            "property": "text_decoration",
+            "rule_id": "QUALITY-103",
+            "slot": "item",
+            "state": "active",
+            "subject": "app-sidebar",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          }
+        ],
+        "id": "usage.nav-link-active",
+        "locator": "ui-source-graph.yaml#/usages/usage.nav-link-active",
+        "scene": "shell",
+        "slot": "item",
+        "source_span_sha256": "sha256:dd922f70f717cd8338c84532ebca1ea63e3f3f4f9de2028d42ce96e8219ececb",
+        "state": "active"
+      },
+      {
+        "component": "app-sidebar",
+        "context": "navigation-link",
+        "definition_id": "component.app-sidebar",
+        "facts": [
+          {
+            "context": "navigation-link",
+            "facet": "state_presentations",
+            "id": "fact.nav-link.hover-bg",
+            "negative": false,
+            "property": "background",
+            "rule_id": "QUALITY-103",
+            "slot": "item",
+            "state": "hover",
+            "subject": "app-sidebar",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.sidebar-accent"
+            }
+          },
+          {
+            "context": "navigation-link",
+            "facet": "state_presentations",
+            "id": "fact.nav-link.hover-decoration",
+            "negative": true,
+            "property": "text_decoration",
+            "rule_id": "QUALITY-103",
+            "slot": "item",
+            "state": "hover",
+            "subject": "app-sidebar",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          }
+        ],
+        "id": "usage.nav-link-hover",
+        "locator": "ui-source-graph.yaml#/usages/usage.nav-link-hover",
+        "scene": "shell",
+        "slot": "item",
+        "source_span_sha256": "sha256:774437acfa9a6210503c6c1ff7150364fcbc7c650956b3aa898e9fca60593fc9",
+        "state": "hover"
+      },
+      {
+        "component": null,
+        "context": "overlay-surface",
+        "definition_id": "scene.dialog",
+        "facts": [
+          {
+            "context": "overlay-surface",
+            "facet": "state_presentations",
+            "id": "fact.overlay-open.visibility",
+            "negative": false,
+            "property": "visibility",
+            "rule_id": "QUALITY-102",
+            "slot": "overlay",
+            "state": "open",
+            "subject": "dialog",
+            "value": {
+              "kind": "semantic",
+              "value": "visible"
+            }
+          },
+          {
+            "context": "overlay-surface",
+            "facet": "state_presentations",
+            "id": "fact.overlay-open.decoration",
+            "negative": true,
+            "property": "text_decoration",
+            "rule_id": "QUALITY-102",
+            "slot": "overlay",
+            "state": "open",
+            "subject": "dialog",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          }
+        ],
+        "id": "usage.overlay-open",
+        "locator": "ui-source-graph.yaml#/usages/usage.overlay-open",
+        "scene": "dialog",
+        "slot": "overlay",
+        "source_span_sha256": "sha256:7ed66d9188d5c591dbad8ec72473c0cd38b6aaef86780ea20723aae5b33ca266",
+        "state": "open"
+      },
+      {
+        "component": "settings-nav",
+        "context": "navigation-link",
+        "definition_id": "component.settings-nav",
+        "facts": [
+          {
+            "context": "navigation-link",
+            "facet": "state_presentations",
+            "id": "fact.settings-nav.focus-border",
+            "negative": false,
+            "property": "border",
+            "rule_id": "QUALITY-104",
+            "slot": "item",
+            "state": "focus-visible",
+            "subject": "settings-nav",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.ring"
+            }
+          }
+        ],
+        "id": "usage.settings-nav-focus",
+        "locator": "ui-source-graph.yaml#/usages/usage.settings-nav-focus",
+        "scene": "settings",
+        "slot": "item",
+        "source_span_sha256": "sha256:b742f60ba94e09bfe9efe0339086c3b0706aa11aa700f4980a5d77f998f91567",
+        "state": "focus-visible"
+      },
+      {
+        "component": "settings-nav",
+        "context": "navigation-link",
+        "definition_id": "scene.settings",
+        "facts": [
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.settings.root-no-scroll",
+            "negative": true,
+            "property": "root_scroll",
+            "rule_id": "LAYOUT-102",
+            "slot": null,
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.settings.nav-placement",
+            "negative": false,
+            "property": "arrangement",
+            "rule_id": "LAYOUT-102",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "semantic",
+              "value": "vertical"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.settings.nav-scroll",
+            "negative": false,
+            "property": "scroll_block",
+            "rule_id": "LAYOUT-102",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "semantic",
+              "value": "region"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.settings.content-scroll",
+            "negative": false,
+            "property": "scroll_block",
+            "rule_id": "LAYOUT-102",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "semantic",
+              "value": "region"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.settings.nav-stretch",
+            "negative": false,
+            "property": "container_presentation",
+            "rule_id": "LAYOUT-102",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "semantic",
+              "value": "fill"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.settings.nav-anatomy",
+            "negative": false,
+            "property": "anatomy",
+            "rule_id": "LAYOUT-102",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "semantic",
+              "value": "icon-label"
+            }
+          },
+          {
+            "context": "navigation-link",
+            "facet": "state_presentations",
+            "id": "fact.settings.nav-hover",
+            "negative": false,
+            "property": "background",
+            "rule_id": "QUALITY-103",
+            "slot": "section-nav",
+            "state": "hover",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.surface-hover"
+            }
+          },
+          {
+            "context": "navigation-link",
+            "facet": "state_presentations",
+            "id": "fact.settings.nav-selected",
+            "negative": false,
+            "property": "background",
+            "rule_id": "QUALITY-103",
+            "slot": "section-nav",
+            "state": "selected",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.surface-selected"
+            }
+          }
+        ],
+        "id": "usage.settings-section-nav",
+        "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+        "scene": "settings",
+        "slot": "section-nav",
+        "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+        "state": "default"
+      },
+      {
+        "component": null,
+        "context": null,
+        "definition_id": "scene.shell",
+        "facts": [
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.root-scroll-none",
+            "negative": true,
+            "property": "root_scroll",
+            "rule_id": "LAYOUT-001",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.arrangement",
+            "negative": false,
+            "property": "arrangement",
+            "rule_id": "LAYOUT-001",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "horizontal"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.variant",
+            "negative": false,
+            "property": "shell_variant",
+            "rule_id": "LAYOUT-001",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "inset"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.switcher",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "workspace-switcher",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "workspace-switcher"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.switcher",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "workspace-switcher",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "1"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.search",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "search",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "search"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.search",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "search",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "2"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.compose",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "compose",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "compose"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.compose",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "compose",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "3"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.nav-group",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "nav-group",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "nav-group"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.nav-group",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "nav-group",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "4"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.pin-list",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "pin-list",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "pin-list"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.pin-list",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "pin-list",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "5"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.rail",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "rail",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "rail"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.rail",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "rail",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "6"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.header-trigger",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "header-trigger",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "header-trigger"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.header-trigger",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "header-trigger",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "7"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.anchor.header-trigger",
+            "negative": false,
+            "property": "anchor_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "header-trigger",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "header-trigger"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.page-header",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "page-header",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "page-header"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.page-header",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "page-header",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "8"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.page-toolbar",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "page-toolbar",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "page-toolbar"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.page-toolbar",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "page-toolbar",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "9"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.page-canvas",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "page-canvas"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.page-canvas",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "10"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.footer",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "footer-utility",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "footer-utility"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.footer",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "footer-utility",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "11"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.chat-fab",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "chat-fab",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "chat-fab"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.chat-fab",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-001",
+            "slot": "chat-fab",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "12"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.anchor.chat-fab",
+            "negative": false,
+            "property": "anchor_role",
+            "rule_id": "LAYOUT-001",
+            "slot": "chat-fab",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "chat-fab"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-padding-block-start",
+            "negative": false,
+            "property": "padding_block_start",
+            "rule_id": "LAYOUT-107",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "value": "space.2"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-padding-inline-end",
+            "negative": false,
+            "property": "padding_inline_end",
+            "rule_id": "LAYOUT-107",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "value": "space.2"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-padding-block-end",
+            "negative": false,
+            "property": "padding_block_end",
+            "rule_id": "LAYOUT-107",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "value": "space.2"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-padding-inline-start",
+            "negative": true,
+            "property": "padding_inline_start",
+            "rule_id": "LAYOUT-107",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "zero"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-radius",
+            "negative": false,
+            "property": "radius",
+            "rule_id": "LAYOUT-107",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "value": "radius.xl"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-border",
+            "negative": false,
+            "property": "border",
+            "rule_id": "LAYOUT-107",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.surface-border"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-shadow",
+            "negative": false,
+            "property": "shadow",
+            "rule_id": "LAYOUT-107",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "value": "shadow.surface"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-background",
+            "negative": false,
+            "property": "background",
+            "rule_id": "LAYOUT-107",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.page-canvas"
+            }
+          }
+        ],
+        "id": "usage.shell",
+        "locator": "ui-source-graph.yaml#/usages/usage.shell",
+        "scene": "shell",
+        "slot": "page-canvas",
+        "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+        "state": "default"
+      }
+    ]
+  },
+  "closure_digest": "sha256:1324a8d7390d0ce916492f9fcdd93d582408f8d2f5560ee1a92ef4f416c064fd",
+  "facts": [
+    {
+      "context": "action-trigger",
+      "facet": "state_presentations",
+      "id": "fact.action.focus-border",
+      "locator": "ui-source-graph.yaml#/usages/usage.action-focus",
+      "negative": false,
+      "owner_id": "usage.action-focus",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "AX-101",
+      "slot": "control",
+      "source_span_sha256": "sha256:c2ef7cafaacb93949eee0341eb9f2d9df1c482004349636fa264dc86e56200ba",
+      "state": "focus-visible",
+      "status": "observed",
+      "subject": "button",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.ring-focus"
+      }
+    },
+    {
+      "context": "action-trigger",
+      "facet": "state_presentations",
+      "id": "fact.action.hover-bg",
+      "locator": "ui-source-graph.yaml#/usages/usage.action-hover",
+      "negative": false,
+      "owner_id": "usage.action-hover",
+      "owner_kind": "usage",
+      "property": "background",
+      "rule_id": "AX-101",
+      "slot": "control",
+      "source_span_sha256": "sha256:9d438b07d59c15332168fb9068660a94de47ec40d22e27af99350947c91a870f",
+      "state": "hover",
+      "status": "observed",
+      "subject": "button",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.primary-hover"
+      }
+    },
+    {
+      "context": "action-trigger",
+      "facet": "state_presentations",
+      "id": "fact.action.hover-decoration",
+      "locator": "ui-source-graph.yaml#/usages/usage.action-hover",
+      "negative": true,
+      "owner_id": "usage.action-hover",
+      "owner_kind": "usage",
+      "property": "text_decoration",
+      "rule_id": "AX-101",
+      "slot": "control",
+      "source_span_sha256": "sha256:9d438b07d59c15332168fb9068660a94de47ec40d22e27af99350947c91a870f",
+      "state": "hover",
+      "status": "observed",
+      "subject": "button",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.app-sidebar.width",
+      "locator": "ui-source-graph.yaml#/usages/usage.app-sidebar-width",
+      "negative": false,
+      "owner_id": "usage.app-sidebar-width",
+      "owner_kind": "usage",
+      "property": "size",
+      "rule_id": "LAYOUT-001",
+      "slot": "nav-group",
+      "source_span_sha256": "sha256:3bb9eea99fe13edb945c6016e04a0f6a30475cf250a0b2803c00e1df11e245de",
+      "state": "default",
+      "status": "observed",
+      "subject": "app-sidebar",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "256px"
+        },
+        "value": "size.sidebar-default"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.board.arrangement",
+      "locator": "ui-source-graph.yaml#/usages/usage.board",
+      "negative": false,
+      "owner_id": "usage.board",
+      "owner_kind": "usage",
+      "property": "arrangement",
+      "rule_id": "LAYOUT-102",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "state": "default",
+      "status": "observed",
+      "subject": "board",
+      "value": {
+        "kind": "semantic",
+        "value": "vertical"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.board.column-gap",
+      "locator": "ui-source-graph.yaml#/usages/usage.board-columns",
+      "negative": false,
+      "owner_id": "usage.board-columns",
+      "owner_kind": "usage",
+      "property": "gap",
+      "rule_id": "LAYOUT-002",
+      "slot": "columns",
+      "source_span_sha256": "sha256:6f17d96cdcd6ab552882fc5cf75e93eaa68782faa2a5689788706e973ee86fbe",
+      "state": "default",
+      "status": "observed",
+      "subject": "data-table",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "16px"
+        },
+        "value": "space.4"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.board.column-width",
+      "locator": "ui-source-graph.yaml#/usages/usage.board-columns",
+      "negative": false,
+      "owner_id": "usage.board-columns",
+      "owner_kind": "usage",
+      "property": "size",
+      "rule_id": "LAYOUT-002",
+      "slot": "columns",
+      "source_span_sha256": "sha256:6f17d96cdcd6ab552882fc5cf75e93eaa68782faa2a5689788706e973ee86fbe",
+      "state": "default",
+      "status": "observed",
+      "subject": "data-table",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "280px"
+        },
+        "value": "size.board-column"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.board.inline-scroll",
+      "locator": "ui-source-graph.yaml#/usages/usage.board-columns",
+      "negative": false,
+      "owner_id": "usage.board-columns",
+      "owner_kind": "usage",
+      "property": "scroll_inline",
+      "rule_id": "LAYOUT-002",
+      "slot": "columns",
+      "source_span_sha256": "sha256:6f17d96cdcd6ab552882fc5cf75e93eaa68782faa2a5689788706e973ee86fbe",
+      "state": "default",
+      "status": "observed",
+      "subject": "board",
+      "value": {
+        "kind": "semantic",
+        "value": "inline"
+      }
+    },
+    {
+      "context": "navigation-link",
+      "facet": "state_presentations",
+      "id": "fact.board.nav-default-underline",
+      "locator": "ui-source-graph.yaml#/usages/usage.board",
+      "negative": true,
+      "owner_id": "usage.board",
+      "owner_kind": "usage",
+      "property": "text_decoration",
+      "rule_id": "QUALITY-103",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "state": "default",
+      "status": "observed",
+      "subject": "board",
+      "value": {
+        "kind": "semantic",
+        "value": "underline"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.board.non-shrink",
+      "locator": "ui-source-graph.yaml#/usages/usage.board-columns",
+      "negative": true,
+      "owner_id": "usage.board-columns",
+      "owner_kind": "usage",
+      "property": "shrink",
+      "rule_id": "LAYOUT-002",
+      "slot": "columns",
+      "source_span_sha256": "sha256:6f17d96cdcd6ab552882fc5cf75e93eaa68782faa2a5689788706e973ee86fbe",
+      "state": "default",
+      "status": "observed",
+      "subject": "board",
+      "value": {
+        "kind": "semantic",
+        "value": "non-shrink"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.board.non-wrap",
+      "locator": "ui-source-graph.yaml#/usages/usage.board-columns",
+      "negative": true,
+      "owner_id": "usage.board-columns",
+      "owner_kind": "usage",
+      "property": "wrap",
+      "rule_id": "LAYOUT-002",
+      "slot": "columns",
+      "source_span_sha256": "sha256:6f17d96cdcd6ab552882fc5cf75e93eaa68782faa2a5689788706e973ee86fbe",
+      "state": "default",
+      "status": "observed",
+      "subject": "board",
+      "value": {
+        "kind": "semantic",
+        "value": "non-wrap"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.board.page-header-height",
+      "locator": "ui-source-graph.yaml#/usages/usage.board",
+      "negative": false,
+      "owner_id": "usage.board",
+      "owner_kind": "usage",
+      "property": "size",
+      "rule_id": "LAYOUT-106",
+      "slot": "page-header",
+      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "state": "default",
+      "status": "observed",
+      "subject": "page-header",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "3rem"
+        },
+        "value": "space.header-height"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.board.page-scroll",
+      "locator": "ui-source-graph.yaml#/usages/usage.board",
+      "negative": false,
+      "owner_id": "usage.board",
+      "owner_kind": "usage",
+      "property": "scroll_block",
+      "rule_id": "LAYOUT-102",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "state": "default",
+      "status": "observed",
+      "subject": "board",
+      "value": {
+        "kind": "semantic",
+        "value": "block"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.board.page-toolbar-height",
+      "locator": "ui-source-graph.yaml#/usages/usage.board",
+      "negative": false,
+      "owner_id": "usage.board",
+      "owner_kind": "usage",
+      "property": "size",
+      "rule_id": "LAYOUT-106",
+      "slot": "page-toolbar",
+      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "state": "default",
+      "status": "observed",
+      "subject": "page-header",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "3rem"
+        },
+        "value": "space.header-height"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.button.radius",
+      "locator": "ui-source-graph.yaml#/usages/usage.button-geometry",
+      "negative": false,
+      "owner_id": "usage.button-geometry",
+      "owner_kind": "usage",
+      "property": "radius",
+      "rule_id": "QUALITY-101",
+      "slot": "control",
+      "source_span_sha256": "sha256:f4212c5c182db1b28545eb177a4bff4d0845eceed00a1187b457ef2675cc104f",
+      "state": "default",
+      "status": "observed",
+      "subject": "button",
+      "value": {
+        "kind": "token-ref",
+        "value": "radius.lg"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.chat-fab.inset-block-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.chat-fab-geometry",
+      "negative": false,
+      "owner_id": "usage.chat-fab-geometry",
+      "owner_kind": "usage",
+      "property": "inset_block_end",
+      "rule_id": "LAYOUT-104",
+      "slot": "chat-fab",
+      "source_span_sha256": "sha256:93be83ae9adf5f85a001c4b24f02a1c41e800a6ed8ee5278ed89ce8479564947",
+      "state": "default",
+      "status": "observed",
+      "subject": "chat-fab",
+      "value": {
+        "kind": "token-ref",
+        "value": "space.chat-launcher-inset"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.chat-fab.inset-inline-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.chat-fab-geometry",
+      "negative": false,
+      "owner_id": "usage.chat-fab-geometry",
+      "owner_kind": "usage",
+      "property": "inset_inline_end",
+      "rule_id": "LAYOUT-104",
+      "slot": "chat-fab",
+      "source_span_sha256": "sha256:93be83ae9adf5f85a001c4b24f02a1c41e800a6ed8ee5278ed89ce8479564947",
+      "state": "default",
+      "status": "observed",
+      "subject": "chat-fab",
+      "value": {
+        "kind": "token-ref",
+        "value": "space.chat-launcher-inset"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.chat-fab.size",
+      "locator": "ui-source-graph.yaml#/usages/usage.chat-fab-geometry",
+      "negative": false,
+      "owner_id": "usage.chat-fab-geometry",
+      "owner_kind": "usage",
+      "property": "size",
+      "rule_id": "LAYOUT-104",
+      "slot": "chat-fab",
+      "source_span_sha256": "sha256:93be83ae9adf5f85a001c4b24f02a1c41e800a6ed8ee5278ed89ce8479564947",
+      "state": "default",
+      "status": "observed",
+      "subject": "chat-fab",
+      "value": {
+        "kind": "token-ref",
+        "value": "space.chat-launcher-size"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.detail.block-scroll",
+      "locator": "ui-source-graph.yaml#/usages/usage.detail-scroll",
+      "negative": false,
+      "owner_id": "usage.detail-scroll",
+      "owner_kind": "usage",
+      "property": "scroll_block",
+      "rule_id": "LAYOUT-003",
+      "slot": "detail-pane",
+      "source_span_sha256": "sha256:81ec7d606bfbd74f15077d01c5d66900b16657af490c99f4ca27b9fdf8156a80",
+      "state": "default",
+      "status": "observed",
+      "subject": "master-detail",
+      "value": {
+        "kind": "semantic",
+        "value": "block"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.dialog.overlay-anchor",
+      "locator": "ui-source-graph.yaml#/usages/usage.dialog-scene",
+      "negative": false,
+      "owner_id": "usage.dialog-scene",
+      "owner_kind": "usage",
+      "property": "overlay_anchor",
+      "rule_id": "LAYOUT-005",
+      "slot": "overlay",
+      "source_span_sha256": "sha256:d7462af1eef0f029ae773653aef069d6e623c0bf87e1b88bedf889da5a1f44dc",
+      "state": "open",
+      "status": "observed",
+      "subject": "dialog",
+      "value": {
+        "kind": "semantic",
+        "value": "viewport"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.dialog.overlay-scope",
+      "locator": "ui-source-graph.yaml#/usages/usage.dialog-scene",
+      "negative": false,
+      "owner_id": "usage.dialog-scene",
+      "owner_kind": "usage",
+      "property": "overlay_scope",
+      "rule_id": "LAYOUT-005",
+      "slot": "overlay",
+      "source_span_sha256": "sha256:d7462af1eef0f029ae773653aef069d6e623c0bf87e1b88bedf889da5a1f44dc",
+      "state": "open",
+      "status": "observed",
+      "subject": "dialog",
+      "value": {
+        "kind": "semantic",
+        "value": "viewport"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.dialog.padding-block-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.dialog-content",
+      "negative": false,
+      "owner_id": "usage.dialog-content",
+      "owner_kind": "usage",
+      "property": "padding_block_end",
+      "rule_id": "QUALITY-001",
+      "slot": "content",
+      "source_span_sha256": "sha256:8b84941babe4ab20d3cbfeb7fd916af0daa7f772d906de1cfe5994decf595236",
+      "state": "default",
+      "status": "observed",
+      "subject": "dialog",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "1rem"
+        },
+        "value": "space.4"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.dialog.padding-block-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.dialog-content",
+      "negative": false,
+      "owner_id": "usage.dialog-content",
+      "owner_kind": "usage",
+      "property": "padding_block_start",
+      "rule_id": "QUALITY-001",
+      "slot": "content",
+      "source_span_sha256": "sha256:8b84941babe4ab20d3cbfeb7fd916af0daa7f772d906de1cfe5994decf595236",
+      "state": "default",
+      "status": "observed",
+      "subject": "dialog",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "1rem"
+        },
+        "value": "space.4"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.dialog.padding-inline-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.dialog-content",
+      "negative": false,
+      "owner_id": "usage.dialog-content",
+      "owner_kind": "usage",
+      "property": "padding_inline_end",
+      "rule_id": "QUALITY-001",
+      "slot": "content",
+      "source_span_sha256": "sha256:8b84941babe4ab20d3cbfeb7fd916af0daa7f772d906de1cfe5994decf595236",
+      "state": "default",
+      "status": "observed",
+      "subject": "dialog",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "1rem"
+        },
+        "value": "space.4"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.dialog.padding-inline-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.dialog-content",
+      "negative": false,
+      "owner_id": "usage.dialog-content",
+      "owner_kind": "usage",
+      "property": "padding_inline_start",
+      "rule_id": "QUALITY-001",
+      "slot": "content",
+      "source_span_sha256": "sha256:8b84941babe4ab20d3cbfeb7fd916af0daa7f772d906de1cfe5994decf595236",
+      "state": "default",
+      "status": "observed",
+      "subject": "dialog",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "1rem"
+        },
+        "value": "space.4"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.dialog.radius",
+      "locator": "ui-source-graph.yaml#/usages/usage.dialog-content",
+      "negative": false,
+      "owner_id": "usage.dialog-content",
+      "owner_kind": "usage",
+      "property": "radius",
+      "rule_id": "QUALITY-001",
+      "slot": "content",
+      "source_span_sha256": "sha256:8b84941babe4ab20d3cbfeb7fd916af0daa7f772d906de1cfe5994decf595236",
+      "state": "default",
+      "status": "observed",
+      "subject": "dialog",
+      "value": {
+        "kind": "token-ref",
+        "value": "radius.xl"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.dialog.shadow",
+      "locator": "ui-source-graph.yaml#/usages/usage.dialog-content",
+      "negative": false,
+      "owner_id": "usage.dialog-content",
+      "owner_kind": "usage",
+      "property": "shadow",
+      "rule_id": "QUALITY-001",
+      "slot": "content",
+      "source_span_sha256": "sha256:8b84941babe4ab20d3cbfeb7fd916af0daa7f772d906de1cfe5994decf595236",
+      "state": "default",
+      "status": "observed",
+      "subject": "dialog",
+      "value": {
+        "kind": "token-ref",
+        "value": "shadow.floating"
+      }
+    },
+    {
+      "context": "action-trigger",
+      "facet": "state_presentations",
+      "id": "fact.input.focus-border",
+      "locator": "ui-source-graph.yaml#/usages/usage.input-geometry",
+      "negative": false,
+      "owner_id": "usage.input-geometry",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "QUALITY-104",
+      "slot": "field",
+      "source_span_sha256": "sha256:8199927961ff4a3cee28f892555d4b1d8d7d56b5cc20646a0b68f240de5900fc",
+      "state": "focus-visible",
+      "status": "observed",
+      "subject": "input",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.ring"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.input.radius",
+      "locator": "ui-source-graph.yaml#/usages/usage.input-geometry",
+      "negative": false,
+      "owner_id": "usage.input-geometry",
+      "owner_kind": "usage",
+      "property": "radius",
+      "rule_id": "QUALITY-101",
+      "slot": "field",
+      "source_span_sha256": "sha256:8199927961ff4a3cee28f892555d4b1d8d7d56b5cc20646a0b68f240de5900fc",
+      "state": "default",
+      "status": "observed",
+      "subject": "input",
+      "value": {
+        "kind": "token-ref",
+        "value": "radius.lg"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.master-detail.arrangement",
+      "locator": "ui-source-graph.yaml#/usages/usage.master-detail-layout",
+      "negative": false,
+      "owner_id": "usage.master-detail-layout",
+      "owner_kind": "usage",
+      "property": "arrangement",
+      "rule_id": "LAYOUT-003",
+      "slot": null,
+      "source_span_sha256": "sha256:6115b8d4a3bef79cf6536171abccdf36a4c37c2ea7d778e9635755646b4bc4be",
+      "state": "default",
+      "status": "observed",
+      "subject": "master-detail",
+      "value": {
+        "kind": "semantic",
+        "value": "horizontal"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.master.block-scroll",
+      "locator": "ui-source-graph.yaml#/usages/usage.master-scroll",
+      "negative": false,
+      "owner_id": "usage.master-scroll",
+      "owner_kind": "usage",
+      "property": "scroll_block",
+      "rule_id": "LAYOUT-003",
+      "slot": "master-pane",
+      "source_span_sha256": "sha256:72424801dd9d089df44a93646d7ce6a2bed072de5232a576a1a68e4fe6cd84b7",
+      "state": "default",
+      "status": "observed",
+      "subject": "master-detail",
+      "value": {
+        "kind": "semantic",
+        "value": "block"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.master.context-panel",
+      "locator": "ui-source-graph.yaml#/usages/usage.detail-context-panel",
+      "negative": false,
+      "owner_id": "usage.detail-context-panel",
+      "owner_kind": "usage",
+      "property": "overlay_scope",
+      "rule_id": "LAYOUT-003",
+      "slot": "context-panel",
+      "source_span_sha256": "sha256:4c4f3661d66b0cc88005377a79992d4e85a9f659333065dbfc41ac080c071a62",
+      "state": "default",
+      "status": "observed",
+      "subject": "master-detail",
+      "value": {
+        "kind": "semantic",
+        "value": "region"
+      }
+    },
+    {
+      "context": "navigation-link",
+      "facet": "state_presentations",
+      "id": "fact.nav-link.active-bg",
+      "locator": "ui-source-graph.yaml#/usages/usage.nav-link-active",
+      "negative": false,
+      "owner_id": "usage.nav-link-active",
+      "owner_kind": "usage",
+      "property": "background",
+      "rule_id": "QUALITY-103",
+      "slot": "item",
+      "source_span_sha256": "sha256:dd922f70f717cd8338c84532ebca1ea63e3f3f4f9de2028d42ce96e8219ececb",
+      "state": "active",
+      "status": "observed",
+      "subject": "app-sidebar",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.sidebar-accent"
+      }
+    },
+    {
+      "context": "navigation-link",
+      "facet": "state_presentations",
+      "id": "fact.nav-link.active-decoration",
+      "locator": "ui-source-graph.yaml#/usages/usage.nav-link-active",
+      "negative": true,
+      "owner_id": "usage.nav-link-active",
+      "owner_kind": "usage",
+      "property": "text_decoration",
+      "rule_id": "QUALITY-103",
+      "slot": "item",
+      "source_span_sha256": "sha256:dd922f70f717cd8338c84532ebca1ea63e3f3f4f9de2028d42ce96e8219ececb",
+      "state": "active",
+      "status": "observed",
+      "subject": "app-sidebar",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": "navigation-link",
+      "facet": "state_presentations",
+      "id": "fact.nav-link.hover-bg",
+      "locator": "ui-source-graph.yaml#/usages/usage.nav-link-hover",
+      "negative": false,
+      "owner_id": "usage.nav-link-hover",
+      "owner_kind": "usage",
+      "property": "background",
+      "rule_id": "QUALITY-103",
+      "slot": "item",
+      "source_span_sha256": "sha256:774437acfa9a6210503c6c1ff7150364fcbc7c650956b3aa898e9fca60593fc9",
+      "state": "hover",
+      "status": "observed",
+      "subject": "app-sidebar",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.sidebar-accent"
+      }
+    },
+    {
+      "context": "navigation-link",
+      "facet": "state_presentations",
+      "id": "fact.nav-link.hover-decoration",
+      "locator": "ui-source-graph.yaml#/usages/usage.nav-link-hover",
+      "negative": true,
+      "owner_id": "usage.nav-link-hover",
+      "owner_kind": "usage",
+      "property": "text_decoration",
+      "rule_id": "QUALITY-103",
+      "slot": "item",
+      "source_span_sha256": "sha256:774437acfa9a6210503c6c1ff7150364fcbc7c650956b3aa898e9fca60593fc9",
+      "state": "hover",
+      "status": "observed",
+      "subject": "app-sidebar",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": "overlay-surface",
+      "facet": "state_presentations",
+      "id": "fact.overlay-open.decoration",
+      "locator": "ui-source-graph.yaml#/usages/usage.overlay-open",
+      "negative": true,
+      "owner_id": "usage.overlay-open",
+      "owner_kind": "usage",
+      "property": "text_decoration",
+      "rule_id": "QUALITY-102",
+      "slot": "overlay",
+      "source_span_sha256": "sha256:7ed66d9188d5c591dbad8ec72473c0cd38b6aaef86780ea20723aae5b33ca266",
+      "state": "open",
+      "status": "observed",
+      "subject": "dialog",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": "overlay-surface",
+      "facet": "state_presentations",
+      "id": "fact.overlay-open.visibility",
+      "locator": "ui-source-graph.yaml#/usages/usage.overlay-open",
+      "negative": false,
+      "owner_id": "usage.overlay-open",
+      "owner_kind": "usage",
+      "property": "visibility",
+      "rule_id": "QUALITY-102",
+      "slot": "overlay",
+      "source_span_sha256": "sha256:7ed66d9188d5c591dbad8ec72473c0cd38b6aaef86780ea20723aae5b33ca266",
+      "state": "open",
+      "status": "observed",
+      "subject": "dialog",
+      "value": {
+        "kind": "semantic",
+        "value": "visible"
+      }
+    },
+    {
+      "context": "navigation-link",
+      "facet": "state_presentations",
+      "id": "fact.settings-nav.focus-border",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-nav-focus",
+      "negative": false,
+      "owner_id": "usage.settings-nav-focus",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "QUALITY-104",
+      "slot": "item",
+      "source_span_sha256": "sha256:b742f60ba94e09bfe9efe0339086c3b0706aa11aa700f4980a5d77f998f91567",
+      "state": "focus-visible",
+      "status": "observed",
+      "subject": "settings-nav",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.ring"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.settings.content-scroll",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "scroll_block",
+      "rule_id": "LAYOUT-102",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "semantic",
+        "value": "region"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.settings.nav-anatomy",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "anatomy",
+      "rule_id": "LAYOUT-102",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "semantic",
+        "value": "icon-label"
+      }
+    },
+    {
+      "context": "navigation-link",
+      "facet": "state_presentations",
+      "id": "fact.settings.nav-hover",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "background",
+      "rule_id": "QUALITY-103",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "state": "hover",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.surface-hover"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.settings.nav-placement",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "arrangement",
+      "rule_id": "LAYOUT-102",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "semantic",
+        "value": "vertical"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.settings.nav-scroll",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "scroll_block",
+      "rule_id": "LAYOUT-102",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "semantic",
+        "value": "region"
+      }
+    },
+    {
+      "context": "navigation-link",
+      "facet": "state_presentations",
+      "id": "fact.settings.nav-selected",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "background",
+      "rule_id": "QUALITY-103",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "state": "selected",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.surface-selected"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.settings.nav-stretch",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "container_presentation",
+      "rule_id": "LAYOUT-102",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "semantic",
+        "value": "fill"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.settings.root-no-scroll",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": true,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "root_scroll",
+      "rule_id": "LAYOUT-102",
+      "slot": null,
+      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.anchor.chat-fab",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "anchor_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "chat-fab",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "chat-fab"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.anchor.header-trigger",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "anchor_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "header-trigger",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "header-trigger"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.arrangement",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "arrangement",
+      "rule_id": "LAYOUT-001",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "horizontal"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-background",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "background",
+      "rule_id": "LAYOUT-107",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.page-canvas"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-107",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.surface-border"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-padding-block-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "padding_block_end",
+      "rule_id": "LAYOUT-107",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "value": "space.2"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-padding-block-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "padding_block_start",
+      "rule_id": "LAYOUT-107",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "value": "space.2"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-padding-inline-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "padding_inline_end",
+      "rule_id": "LAYOUT-107",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "value": "space.2"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-padding-inline-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "padding_inline_start",
+      "rule_id": "LAYOUT-107",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "zero"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-radius",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "radius",
+      "rule_id": "LAYOUT-107",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "value": "radius.xl"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-shadow",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "shadow",
+      "rule_id": "LAYOUT-107",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "value": "shadow.surface"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.chat-fab",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "chat-fab",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "12"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.compose",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "compose",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "3"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.footer",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "footer-utility",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "11"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.header-trigger",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "header-trigger",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "7"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.nav-group",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "nav-group",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "4"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.page-canvas",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "10"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.page-header",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "page-header",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "8"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.page-toolbar",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "page-toolbar",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "9"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.pin-list",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "pin-list",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "5"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.rail",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "rail",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "6"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.search",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "search",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "2"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.switcher",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-001",
+      "slot": "workspace-switcher",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "1"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.root-scroll-none",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "root_scroll",
+      "rule_id": "LAYOUT-001",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.chat-fab",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "chat-fab",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "chat-fab"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.compose",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "compose",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "compose"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.footer",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "footer-utility",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "footer-utility"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.header-trigger",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "header-trigger",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "header-trigger"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.nav-group",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "nav-group",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "nav-group"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.page-canvas",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "page-canvas"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.page-header",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "page-header",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "page-header"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.page-toolbar",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "page-toolbar",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "page-toolbar"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.pin-list",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "pin-list",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "pin-list"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.rail",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "rail",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "rail"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.search",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "search",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "search"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.switcher",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-001",
+      "slot": "workspace-switcher",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "workspace-switcher"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.variant",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "shell_variant",
+      "rule_id": "LAYOUT-001",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "inset"
+      }
+    }
+  ],
+  "request": {
+    "conformance": "structural",
+    "decisions": {
+      "definition_ids": [],
+      "entry_id": "entry.shell",
+      "theme_id": "theme.core"
+    },
+    "graph_path": "ui-source-graph.yaml",
+    "limits": {
+      "max_definitions": 100,
+      "max_facts": 200,
+      "max_graph_bytes": 200000,
+      "max_imports": 100,
+      "max_usages": 100
+    },
+    "platform": "web",
+    "scope": {
+      "components": [
+        "app-sidebar",
+        "button",
+        "chat-fab",
+        "command-palette",
+        "data-table",
+        "dialog",
+        "input",
+        "page-header",
+        "settings-nav"
+      ],
+      "contexts": [
+        "action-trigger",
+        "navigation-link",
+        "overlay-surface"
+      ],
+      "scenes": [
+        "board",
+        "dialog",
+        "master-detail",
+        "settings",
+        "shell"
+      ]
+    },
+    "source_id": "source-multica-session",
+    "source_revision": "2df765a3c8f39789c9fb76316378bcffc20d22d9"
+  },
+  "source": {
+    "graph_digest": "sha256:141f2d9c0464ec1e89900e01e31998a42e3d6397bd3cf07201da4727df2879b4",
+    "revision": "2df765a3c8f39789c9fb76316378bcffc20d22d9"
+  },
+  "status": "captured",
+  "style_only_reason": null,
+  "summary": {
+    "definitions": 19,
+    "dynamic": 0,
+    "exclusions": 2,
+    "exports": 16,
+    "facts": 84,
+    "imports": 18,
+    "negative_facts": 10,
+    "usages": 20
+  },
+  "unresolved": []
+}

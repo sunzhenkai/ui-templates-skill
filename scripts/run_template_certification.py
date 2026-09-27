@@ -1,0 +1,595 @@
+#!/usr/bin/env python3
+"""Template Certification Gate：source-blind 干净重生 + Pattern Equivalence 验收。
+
+本 runner 属于模板治理链路，不属于 Apply。它接受固定 Visual Oracle revision、
+candidate package、固定 prompts digest 与显式 clean output root，执行 source-blind
+前置检查，并把认证报告与 certification inventory 对照 candidate Component Family。
+失败差异归类为 `package | apply-skill | certification-prompt`。
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from validate_design_system import (  # noqa: E402
+    ORACLE_EVIDENCE_CODES,
+    validate_certification,
+    validate_expectations,
+    validate_inventory,
+)
+
+SOURCE_BLIND_INPUT_TOKEN = re.compile(
+    r"meta\.sources|source[-_]compare|visual[- ]oracle", re.I,
+)
+OWNERSHIP_BY_CODE = {
+    "CERT_ORACLE_EVIDENCE_PLACEHOLDER": "certification-prompt",
+    "CERT_ORACLE_MEASUREMENT_INVALID": "certification-prompt",
+    "CERT_ASSERTION_UNANCHORED": "certification-prompt",
+    "CERT_ASSERTION_COVERAGE_INCOMPLETE": "certification-prompt",
+    "CERT_ACTIVE_INSTANCE_REQUIRED": "binding",
+    "CERT_ACTIVE_INSTANCE_IDENTITY_MISMATCH": "binding",
+    "CERT_PACKAGE_FEEDBACK_OPEN": "package",
+    "CERT_RECORD_MISSING": "package",
+    "CERT_RECORD_NOT_IN_INVENTORY": "package",
+    "CERT_OVER_FRAGMENTED": "package",
+    "CERT_PACKAGE_DIGEST_MISMATCH": "package",
+    "CERT_PACKAGE_IDENTITY_MISMATCH": "package",
+    "FAMILY_EVIDENCE_MISSING": "package",
+    "REFERENCE_DANGLING": "package",
+    "CERT_BUILD_STALE": "certification-prompt",
+    "CERT_ORACLE_STALE": "certification-prompt",
+    "CERT_ASSERTION_NOT_MEASURABLE": "certification-prompt",
+    "CERT_STATUS_CONTRADICTED": "certification-prompt",
+    "SOURCE_BLIND_VIOLATION": "apply-skill",
+    "INVENTORY_INVALID": "certification-prompt",
+    "MANIFEST_MISSING": "package",
+}
+DEFAULT_OWNERSHIP = "package"
+
+
+def prompts_digest_value(prompts: Path) -> str:
+    """Digest a fixed prompts file or the sorted file tree of a prompts directory."""
+    if prompts.is_file():
+        return hashlib.sha256(prompts.read_bytes()).hexdigest()
+    if not prompts.is_dir():
+        raise SystemExit(f"PROMPTS_MISSING: {prompts}")
+    accumulator = hashlib.sha256()
+    for path in sorted(item for item in prompts.rglob("*") if item.is_file()):
+        accumulator.update(path.relative_to(prompts).as_posix().encode("utf-8"))
+        accumulator.update(b"\0")
+        accumulator.update(path.read_bytes())
+        accumulator.update(b"\0")
+    return accumulator.hexdigest()
+
+
+def ensure_clean_output_root(output_root: Path, *, allow_existing: bool) -> None:
+    """Require a fresh, explicit clean output root; no prior generated output."""
+    if output_root.exists():
+        if not output_root.is_dir():
+            raise SystemExit(f"OUTPUT_ROOT_INVALID: {output_root} is not a directory")
+        has_content = any(output_root.iterdir())
+        if has_content and not allow_existing:
+            raise SystemExit(
+                f"OUTPUT_ROOT_NOT_CLEAN: {output_root} is not empty; "
+                "reuse of patched prior output is forbidden. "
+                "Use a fresh clean output root and a fresh build identity."
+            )
+
+
+def write_gate_identity(
+    output_root: Path,
+    *,
+    oracle_revision: str,
+    package: dict[str, Any],
+    active_instance: dict[str, Any],
+    prompts_digest: dict[str, str],
+    build_identity: str,
+    apply_mode: str,
+    output_root_relative: str,
+) -> Path:
+    # Report identity must stay portable and satisfy the report path shape.
+    # `/tmp/build` is recorded as `tmp/build`; repo-relative roots are unchanged.
+    output_root_relative = output_root_relative.lstrip("/")
+    certification_dir = output_root / ".certification"
+    certification_dir.mkdir(parents=True, exist_ok=True)
+    identity = {
+        "schema": "template-certification-gate-identity/v1",
+        "oracle": {"kind": "git-revision", "revision": oracle_revision},
+        "package": package,
+        "active_instance": active_instance,
+        "prompts_digest": prompts_digest,
+        "build": {
+            "identity": build_identity,
+            "output_root": output_root_relative,
+            "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        },
+        "apply_mode": apply_mode,
+        "source_blind": {
+            "apply_receives_oracle_paths": False,
+            "prior_generated_output_reused": False,
+        },
+    }
+    path = certification_dir / "gate-identity.json"
+    path.write_text(
+        json.dumps(identity, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return path
+
+
+def scan_source_blind_violations(output_root: Path, oracle_revision: str) -> list[dict[str, str]]:
+    """The clean build must not receive oracle paths or prior generated output hints."""
+    violations: list[dict[str, str]] = []
+    if not output_root.is_dir():
+        return violations
+    revision_token = re.compile(re.escape(oracle_revision), re.I)
+    for path in sorted(output_root.rglob("*")):
+        if ".certification" in path.relative_to(output_root).parts:
+            continue
+        if not path.is_file() or path.suffix.lower() not in {".md", ".yaml", ".yml", ".json", ".txt"}:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            continue
+        for token in (SOURCE_BLIND_INPUT_TOKEN, revision_token):
+            match = token.search(text)
+            if match:
+                violations.append({
+                    "code": "SOURCE_BLIND_VIOLATION",
+                    "path": path.relative_to(output_root).as_posix(),
+                    "message": f"clean build references oracle input: {match.group(0)}",
+                })
+                break
+    return violations
+
+
+def classify(report: dict[str, Any]) -> list[dict[str, str]]:
+    classified: list[dict[str, str]] = []
+    for error in report.get("errors", []):
+        classified.append({
+            "code": error["code"],
+            "path": error["path"],
+            "ownership": OWNERSHIP_BY_CODE.get(error["code"], DEFAULT_OWNERSHIP),
+            "message": error["message"],
+        })
+    return classified
+
+
+def validate_coverage_matrix(path: Path, report_path: Path) -> list[dict[str, str]]:
+    """Require a source-derived scenario matrix before accepting a certification."""
+    try:
+        matrix = yaml.safe_load(path.read_text(encoding="utf-8"))
+        certification = yaml.safe_load(report_path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as exc:
+        return [{"code": "CERT_COVERAGE_MATRIX_INVALID", "path": str(path), "message": str(exc)}]
+    if not isinstance(matrix, dict) or matrix.get("schema") != "design-system-certification-coverage-matrix/v1":
+        return [{"code": "CERT_COVERAGE_MATRIX_INVALID", "path": str(path), "message": "unsupported coverage matrix"}]
+    if matrix.get("status") != "ready":
+        return [{
+            "code": "CERT_COVERAGE_MATRIX_PENDING",
+            "path": str(path),
+            "message": "coverage matrix is pending oracle capture and cannot certify high fidelity",
+        }]
+    required = matrix.get("records")
+    if not isinstance(required, list) or not required:
+        return [{"code": "CERT_COVERAGE_MATRIX_INVALID", "path": str(path), "message": "matrix requires records"}]
+    actual = {
+        (record.get("pattern"), record.get("route"), record.get("state"), record.get("theme"), record.get("viewport"))
+        for record in certification.get("records", [])
+        if isinstance(record, dict) and record.get("verdict") == "passed"
+    }
+    missing = [
+        entry for entry in required
+        if not isinstance(entry, dict)
+        or (entry.get("pattern"), entry.get("route"), entry.get("state"), entry.get("theme"), entry.get("viewport")) not in actual
+    ]
+    if missing:
+        return [{
+            "code": "CERT_COVERAGE_MATRIX_INCOMPLETE",
+            "path": str(path),
+            "message": f"{len(missing)} required pattern scenario(s) have no passed record",
+        }]
+    return []
+
+
+def run_validator(package: Path, *, require_family: bool) -> tuple[int, dict[str, Any]]:
+    command = [
+        sys.executable, str(ROOT / "scripts/validate_design_system.py"),
+        "validate", str(package), "--kind", "package",
+    ]
+    if require_family:
+        command.append("--require-component-family")
+        command.append("--require-visual-role-closure")
+    process = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
+    try:
+        payload = json.loads(process.stdout)
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"VALIDATOR_INVALID_JSON: {exc}\n{process.stderr}") from exc
+    return process.returncode, payload
+
+
+def active_instance_identity(active_instance: Path, package: dict[str, Any]) -> dict[str, Any]:
+    """Require certification to consume a frozen Design-owned Active Instance."""
+    command = [
+        sys.executable, str(ROOT / "scripts/validate_design_system.py"),
+        "validate", str(active_instance), "--kind", "active",
+    ]
+    process = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
+    try:
+        report = json.loads(process.stdout)
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"ACTIVE_INSTANCE_VALIDATOR_INVALID_JSON: {exc}\n{process.stderr}") from exc
+    if process.returncode != 0:
+        raise SystemExit(
+            "CERT_ACTIVE_INSTANCE_REQUIRED: certification requires a valid frozen Active Instance\n"
+            + json.dumps(report, ensure_ascii=False)
+        )
+    manifest_path = active_instance / "design-system.yaml"
+    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("id") != package["id"] or manifest.get("version") != package["version"]:
+        raise SystemExit("CERT_ACTIVE_INSTANCE_IDENTITY_MISMATCH: frozen Active Instance differs from candidate")
+    digests = report.get("digests", {})
+    required = ("contract", "binding")
+    if any(not isinstance(digests.get(name, {}).get("recorded"), dict) for name in required):
+        raise SystemExit("CERT_ACTIVE_INSTANCE_REQUIRED: active validation did not produce all required digests")
+    binding = yaml.safe_load((active_instance / "binding.yaml").read_text(encoding="utf-8"))
+    projections = binding.get("projections") if isinstance(binding, dict) else None
+    if not isinstance(projections, list) or not projections:
+        raise SystemExit("CERT_ACTIVE_INSTANCE_REQUIRED: frozen Active Instance has no Token Projection")
+    projection_digest = hashlib.sha256(
+        json.dumps(projections, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    return {
+        "status": "frozen",
+        "contract_digest": digests["contract"]["recorded"],
+        "binding_digest": digests["binding"]["recorded"],
+        "projection_digest": {"algorithm": "sha256-canonical-json-v1", "value": projection_digest},
+    }
+
+
+def cmd_prepare(args: argparse.Namespace) -> int:
+    package = args.package.resolve()
+    manifest_path = package / "design-system.yaml"
+    if not manifest_path.is_file():
+        raise SystemExit(f"MANIFEST_MISSING: {manifest_path}")
+    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    exit_code, report = run_validator(package, require_family=True)
+    if exit_code != 0:
+        print(json.dumps({"prepared": False, "package_validation": report}, ensure_ascii=False, indent=2))
+        return 1
+
+    output_root = args.output_root.resolve()
+    ensure_clean_output_root(output_root, allow_existing=args.allow_existing)
+    output_root.mkdir(parents=True, exist_ok=True)
+    digest_input = dict(manifest)
+    digest_input.pop("contract_digest", None)
+
+    def canonical_digest(value: dict[str, Any]) -> str:
+        return hashlib.sha256(
+            json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8"),
+        ).hexdigest()
+
+    package_block = {
+        "id": manifest["id"],
+        "version": manifest["version"],
+        "digest": {"algorithm": "sha256-canonical-json-v1", "value": canonical_digest(digest_input)},
+    }
+    active_block = active_instance_identity(args.active_instance.resolve(), package_block)
+    prompts_value = prompts_digest_value(args.prompts.resolve())
+    identity_path = write_gate_identity(
+        output_root,
+        oracle_revision=args.oracle_revision,
+        package=package_block,
+        active_instance=active_block,
+        prompts_digest={"algorithm": "sha256-tree-v1", "value": prompts_value},
+        build_identity=args.build_identity,
+        apply_mode=args.apply_mode,
+        output_root_relative=str(args.output_root),
+    )
+    print(json.dumps({
+        "prepared": True,
+        "output_root": output_root.as_posix(),
+        "gate_identity": identity_path.relative_to(output_root).as_posix(),
+        "package": package_block,
+        "active_instance": active_block,
+        "prompts_digest": {"algorithm": "sha256-tree-v1", "value": prompts_value},
+        "oracle_revision": args.oracle_revision,
+        "build_identity": args.build_identity,
+    }, ensure_ascii=False, indent=2))
+    return 0
+
+
+def validate_phase8_scenario_coverage(
+    artifact_path: Path,
+    *,
+    active_instance: Path,
+    expectations_path: Path,
+) -> dict[str, Any]:
+    """Require the Apply Phase 8 artifact to cover every derived scenario."""
+    import yaml as _yaml
+
+    from template_apply_state.fidelity import derive_scenario_ids
+
+    try:
+        profile = _yaml.safe_load((active_instance / "fidelity.yaml").read_text(encoding="utf-8"))
+        layout = _yaml.safe_load((active_instance / "core/layout.yaml").read_text(encoding="utf-8"))
+        primitives = _yaml.safe_load((active_instance / "core/primitives.yaml").read_text(encoding="utf-8"))
+        expectations = _yaml.safe_load(expectations_path.read_text(encoding="utf-8"))
+        artifact = _yaml.safe_load(artifact_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return {
+            "valid": False,
+            "errors": [{"code": "CERT_PHASE8_SCENARIO_INPUT_INVALID", "path": str(artifact_path), "message": str(exc)}],
+        }
+    expected = set(derive_scenario_ids(profile, layout, expectations, primitives))
+    covered: set[str] = set()
+    records = artifact.get("records") if isinstance(artifact, dict) and isinstance(artifact.get("records"), list) else []
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        if record.get("status") not in {"passed", "waived"}:
+            continue
+        covered.update(item for item in record.get("scenario_ids") or [] if isinstance(item, str))
+    missing = sorted(expected - covered)
+    errors: list[dict[str, str]] = []
+    if missing:
+        errors.append({
+            "code": "CERT_APPLY_CHECKPOINT_SCENARIO_COVERAGE_MISSING",
+            "path": str(artifact_path),
+            "message": f"Phase 8 is missing {len(missing)} derived scenario(s); expected {len(expected)}, covered {len(expected & covered)}",
+            "expected_count": str(len(expected)),
+            "covered_count": str(len(expected & covered)),
+            "missing_count": str(len(missing)),
+            "missing_sample": json.dumps(missing[:20]),
+        })
+    return {"valid": not errors, "errors": errors, "expected_count": len(expected), "covered_count": len(expected & covered), "missing_count": len(missing)}
+
+
+def validate_phase8_artifact(artifact_path: Path, checkpoint: dict[str, Any]) -> dict[str, Any]:
+    """Validate schema, identities, evidence and record status for Phase 8."""
+    from template_apply_state.state import validate_verification
+
+    try:
+        data = yaml.safe_load(artifact_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return {"valid": False, "errors": [{"code": "CERT_APPLY_CHECKPOINT_PHASE8_INVALID", "path": str(artifact_path), "message": str(exc)}]}
+    findings = validate_verification(
+        data,
+        path=str(artifact_path),
+        apply_root=artifact_path.parent,
+        expected_kind="phase-8-verification",
+        template_digest=checkpoint.get("template", {}).get("digest"),
+        source_identity=checkpoint.get("source_identity"),
+        build_identity=checkpoint.get("build_identity"),
+    )
+    return {
+        "valid": not findings,
+        "errors": [finding.to_dict() for finding in findings],
+        "record_count": len(data.get("records", [])) if isinstance(data, dict) else 0,
+    }
+
+
+def validate_apply_checkpoint_binding(
+    path: Path,
+    report_path: Path,
+    *,
+    active_instance: Path | None = None,
+    expectations_path: Path | None = None,
+) -> dict[str, Any]:
+    """Bind a certification build to the ordinary Apply session that produced it."""
+    import yaml as _yaml
+
+    try:
+        report = _yaml.safe_load(report_path.read_text(encoding="utf-8"))
+        checkpoint = _yaml.safe_load(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return {"valid": False, "errors": [{"code": "CERT_APPLY_CHECKPOINT_UNREADABLE", "message": str(exc)}]}
+    if not isinstance(report, dict) or not isinstance(checkpoint, dict):
+        return {"valid": False, "errors": [{"code": "CERT_APPLY_CHECKPOINT_INVALID", "message": "report and checkpoint must be mappings"}]}
+    gate = report.get("gate") if isinstance(report.get("gate"), dict) else {}
+    package = gate.get("package") if isinstance(gate.get("package"), dict) else {}
+    active = gate.get("active_instance") if isinstance(gate.get("active_instance"), dict) else {}
+    errors: list[dict[str, str]] = []
+
+    def error(code: str, message: str) -> None:
+        errors.append({"code": code, "path": str(path), "message": message})
+
+    if checkpoint.get("schema") != "design-system-apply-checkpoint/v1":
+        error("CERT_APPLY_CHECKPOINT_INVALID", "unsupported checkpoint schema")
+    if checkpoint.get("mode") != gate.get("apply_mode"):
+        error("CERT_APPLY_CHECKPOINT_MODE_MISMATCH", "checkpoint mode differs from gate.apply_mode")
+    contract = checkpoint.get("contract") if isinstance(checkpoint.get("contract"), dict) else {}
+    if contract.get("id") != package.get("id") or contract.get("version") != package.get("version") or contract.get("digest") != package.get("digest"):
+        error("CERT_APPLY_CHECKPOINT_CONTRACT_MISMATCH", "checkpoint contract identity differs from the certification package")
+    if checkpoint.get("binding_digest") != active.get("binding_digest"):
+        error("CERT_APPLY_CHECKPOINT_BINDING_MISMATCH", "checkpoint binding digest differs from the certified Active Instance")
+    if checkpoint.get("build_identity") != (gate.get("build") or {}).get("identity"):
+        error("CERT_APPLY_CHECKPOINT_BUILD_MISMATCH", "checkpoint build identity differs from the certification build")
+
+    phases = checkpoint.get("phases") if isinstance(checkpoint.get("phases"), list) else []
+    phase8 = next((item for item in phases if isinstance(item, dict) and item.get("id") == 8), None)
+    if not isinstance(phase8, dict) or phase8.get("status") != "complete":
+        error("CERT_APPLY_CHECKPOINT_PHASE8_INCOMPLETE", "ordinary Apply checkpoint does not close Phase 8")
+        return {"valid": not errors, "errors": errors}
+    artifacts = phase8.get("artifacts") if isinstance(phase8.get("artifacts"), list) else []
+    artifact_record = next((
+        item for item in artifacts
+        if isinstance(item, dict) and isinstance(item.get("path"), str)
+        and Path(item["path"]).name == "08-verification.json"
+    ), None)
+    if artifact_record is None:
+        error("CERT_APPLY_CHECKPOINT_PHASE8_ARTIFACT_MISSING", "Phase 8 does not declare 08-verification.json")
+        return {"valid": False, "errors": errors}
+    artifact_path = path.parent / artifact_record["path"]
+    if not artifact_path.is_file():
+        error("CERT_APPLY_CHECKPOINT_PHASE8_ARTIFACT_MISSING", f"missing Phase 8 artifact: {artifact_record['path']}")
+        return {"valid": False, "errors": errors}
+    artifact_validation = validate_phase8_artifact(artifact_path, checkpoint)
+    errors.extend(artifact_validation.get("errors", []))
+    from validate_design_system import canonical_digest
+    actual = canonical_digest(_yaml.safe_load(artifact_path.read_text(encoding="utf-8")))
+    if artifact_record.get("digest", {}).get("value") != actual:
+        error("CERT_APPLY_CHECKPOINT_PHASE8_DRIFT", "Phase 8 artifact digest differs from checkpoint")
+    coverage: dict[str, Any] = {"valid": True, "errors": []}
+    if active_instance is not None and expectations_path is not None:
+        coverage = validate_phase8_scenario_coverage(
+            artifact_path,
+            active_instance=active_instance,
+            expectations_path=expectations_path,
+        )
+        errors.extend(coverage.get("errors", []))
+    return {
+        "valid": not errors,
+        "errors": errors,
+        "phase8_artifact": {
+            "valid": artifact_validation.get("valid", False),
+            "record_count": artifact_validation.get("record_count", 0),
+        },
+        "scenario_coverage": {
+            "expected_count": coverage.get("expected_count"),
+            "covered_count": coverage.get("covered_count"),
+            "missing_count": coverage.get("missing_count"),
+        },
+    }
+
+
+def cmd_verify(args: argparse.Namespace) -> int:
+    report_path = args.report.resolve()
+    payload = validate_certification(
+        report_path,
+        inventory=args.inventory.resolve() if args.inventory else None,
+        package_root=args.package_root.resolve() if args.package_root else None,
+        evidence_root=args.evidence_root.resolve() if args.evidence_root else None,
+    )
+    violations: list[dict[str, str]] = []
+    if args.output_root is not None and args.oracle_revision:
+        violations = scan_source_blind_violations(args.output_root.resolve(), args.oracle_revision)
+        payload["errors"].extend(violations)
+        if violations:
+            payload["valid"] = False
+    if args.coverage_matrix is not None:
+        coverage_violations = validate_coverage_matrix(args.coverage_matrix.resolve(), report_path)
+        payload["errors"].extend(coverage_violations)
+        if coverage_violations:
+            payload["valid"] = False
+    if args.apply_checkpoint is None:
+        checkpoint_error = {"code": "CERT_APPLY_CHECKPOINT_REQUIRED", "path": str(report_path), "message": "ordinary Apply checkpoint is required for high-fidelity certification"}
+        payload["errors"].append(checkpoint_error)
+        payload["valid"] = False
+        payload["apply_checkpoint"] = {"valid": False, "errors": [checkpoint_error]}
+    checkpoint_path = args.apply_checkpoint.resolve() if args.apply_checkpoint else report_path
+    active_instance = args.active_instance.resolve() if args.active_instance else (
+        args.package_root.resolve() / "active-instance" if args.package_root else None
+    )
+    expectations_path = args.expectations.resolve() if args.expectations else None
+    checkpoint_payload = validate_apply_checkpoint_binding(
+        checkpoint_path,
+        report_path,
+        active_instance=active_instance,
+        expectations_path=expectations_path,
+    ) if args.apply_checkpoint else payload["apply_checkpoint"]
+    payload["apply_checkpoint"] = {
+        "path": checkpoint_path.as_posix(),
+        **checkpoint_payload,
+    }
+    payload["errors"].extend(checkpoint_payload.get("errors", []))
+    if not checkpoint_payload.get("valid"):
+        payload["valid"] = False
+    if args.expectations is not None:
+        expectations_payload = validate_expectations(
+            args.expectations.resolve(),
+            package_root=args.package_root.resolve() if args.package_root else None,
+            certification_report=report_path,
+        )
+        payload["expectations"] = expectations_payload
+        expectation_errors = expectations_payload.get("errors", [])
+        payload["errors"].extend(expectation_errors)
+        if expectation_errors:
+            payload["valid"] = False
+    ownership = classify(payload)
+    accepted = payload["valid"]
+    error_codes = {error.get("code") for error in payload.get("errors", [])}
+    if accepted:
+        outcome = "certification-accepted"
+    elif error_codes and error_codes <= set(ORACLE_EVIDENCE_CODES):
+        # Every blocking finding is about absent or placeholder oracle evidence: the gate can
+        # only speak to self-consistency, never to Visual Equivalence.
+        outcome = "self-consistency"
+    else:
+        outcome = "failed"
+    print(json.dumps({
+        "accepted": accepted,
+        "outcome": outcome,
+        "result": payload,
+        "failures": ownership,
+        "note": (
+            "accepted candidates still await explicit user promotion; "
+            "a self-consistency outcome proves internal agreement only and must not be promoted; "
+            "failed ownership must be written back to package, apply-skill or certification-prompt, "
+            "followed by clean regeneration."
+        ),
+    }, ensure_ascii=False, indent=2))
+    return 0 if accepted else 1
+
+
+def cmd_validate_inventory(args: argparse.Namespace) -> int:
+    report = validate_inventory(args.document.resolve())
+    print(json.dumps(report.to_dict(), ensure_ascii=False, sort_keys=True, indent=2))
+    return 0 if not report.errors else 1
+
+
+def parser() -> argparse.ArgumentParser:
+    result = argparse.ArgumentParser(description=__doc__)
+    sub = result.add_subparsers(dest="command", required=True)
+
+    prepare = sub.add_parser("prepare", help="source-blind 干净重生前置：gate identity 与 clean output root")
+    prepare.add_argument("--oracle-revision", required=True, help="固定 Visual Oracle git revision")
+    prepare.add_argument("--package", type=Path, required=True, help="candidate package 目录")
+    prepare.add_argument("--active-instance", type=Path, required=True, help="已冻结且与 candidate 一致的 Active Instance")
+    prepare.add_argument("--prompts", type=Path, required=True, help="固定 prompts 文件或目录")
+    prepare.add_argument("--output-root", type=Path, required=True, help="显式 clean output root")
+    prepare.add_argument("--build-identity", required=True, help="fresh build identity；不得复用旧值")
+    prepare.add_argument("--apply-mode", choices=("bootstrap", "increment"), default="bootstrap")
+    prepare.add_argument("--allow-existing", action="store_true", help="允许已存在但为空的 output root")
+
+    verify = sub.add_parser("verify", help="校验 certification report + inventory 并输出 ownership 分类")
+    verify.add_argument("--report", type=Path, required=True)
+    verify.add_argument("--inventory", type=Path)
+    verify.add_argument("--package-root", type=Path)
+    verify.add_argument("--evidence-root", type=Path)
+    verify.add_argument("--output-root", type=Path, help="clean build 输出根；提供时执行 source-blind 扫描")
+    verify.add_argument("--oracle-revision", help="与 gate identity 比对用的 oracle revision")
+    verify.add_argument("--coverage-matrix", type=Path, help="source-derived Pattern scenario coverage matrix")
+    verify.add_argument("--expectations", type=Path, help="oracle-anchored measured expectation set consumed source-blind by Apply")
+    verify.add_argument("--apply-checkpoint", type=Path, help="ordinary Apply checkpoint that owns Phase 8 evidence")
+    verify.add_argument("--active-instance", type=Path, help="frozen Active Instance root; defaults to <package-root>/active-instance")
+
+    inventory = sub.add_parser("validate-inventory", help="校验 certification inventory")
+    inventory.add_argument("document", type=Path)
+    return result
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parser().parse_args(argv)
+    if args.command == "prepare":
+        return cmd_prepare(args)
+    if args.command == "verify":
+        return cmd_verify(args)
+    return cmd_validate_inventory(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

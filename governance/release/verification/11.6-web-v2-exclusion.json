@@ -1,0 +1,40 @@
+{
+  "baseline": {
+    "head_commit": "c7849c55f17703b277e66cecfba303f3db93414f",
+    "head_tree": "debc3e5e9f8f08bb87c0a62e17ab83e4a4f85f12",
+    "recorded_at": "2026-09-03T23:06:15+08:00"
+  },
+  "commands_executed": false,
+  "content_read": false,
+  "final": {
+    "head_commit": "c7849c55f17703b277e66cecfba303f3db93414f",
+    "head_tree": "debc3e5e9f8f08bb87c0a62e17ab83e4a4f85f12",
+    "index_status": "clean",
+    "untracked_status": "clean",
+    "worktree_status": "clean"
+  },
+  "guard_evidence": "11.6-scope-guard.txt",
+  "modified": false,
+  "path": "example/workbench-shell/web-v2",
+  "sample_commands_executed": false,
+  "schema_version": 1,
+  "static_gate_proof": {
+    ".github/workflows/governance.yml": {
+      "package_or_browser_test_commands": false,
+      "paths_ignored": true,
+      "runs_web_v2_tests": false
+    },
+    "Makefile": {
+      "runs_web_v2_tests": false,
+      "web_v2_references": 0
+    },
+    "scripts/run_governance_validation.py": {
+      "declares_exclusion": true,
+      "only_web_v2_command": "git metadata scope guard",
+      "package_or_browser_test_commands": false,
+      "runs_web_v2_tests": false
+    }
+  },
+  "status": "passed",
+  "task": "11.6"
+}

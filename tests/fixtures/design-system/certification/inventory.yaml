@@ -1,0 +1,15 @@
+schema: design-system-certification-inventory/v1
+oracle:
+  revision: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  locator: oracle/workbench
+patterns:
+- id: pattern/list-page
+  page_type: page-type/detail
+  source_facts:
+  - packages/views/list.tsx#pattern.list-page
+  expected_member_primitives: 1
+- id: pattern/toolbar
+  page_type: page-type/detail
+  source_facts:
+  - packages/views/toolbar.tsx#pattern.toolbar
+  expected_member_primitives: 1

@@ -1,0 +1,640 @@
+{
+  "schema_version": 2,
+  "kind": "phase-8-verification",
+  "template_digest": {
+    "algorithm": "sha256-canonical-json-v1",
+    "value": "63dc64bd98f9227e983a7b6c4d81fd1846882611fbaae89d06f919bdaed3dc05"
+  },
+  "source_identity": "contract-gallery:source-blind",
+  "build_identity": "workbench-shell-contracts-20260927-02",
+  "browser_identity": "Chromium 141.0.7390.54",
+  "records": [
+    {
+      "id": "45a5d581-62b0-51df-a914-225e512644e5",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "oklch(0.21 0.006 285.885)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(0.21 0.006 285.885)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:default"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "f8bbe217-e6de-57f0-830f-ac14099b190d",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "oklch(1 0 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(1 0 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:outline"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "27854de0-f1ad-5d78-b33d-260c18eac3eb",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "oklch(0.55 0.16 255)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(0.55 0.16 255)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:brand"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "3bee41bc-045d-55a6-87a8-ebdc63f6145d",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "oklch(0.967 0.001 286.375)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(0.967 0.001 286.375)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:secondary"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "71d9e941-d906-5f21-be09-02998bb1e404",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:ghost"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "cf91222e-88f5-5c7a-ac01-38375fd47ef0",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "oklab(0.577 0.217662 0.112464 / 0.1)",
+        "color": "oklch(0.577 0.245 27.325)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklab(0.577 0.217662 0.112464 / 0.1)",
+        "color": "oklch(0.577 0.245 27.325)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:destructive"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "85f61625-9ece-5bec-b0e5-756059226f71",
+      "rule_id": "QUALITY-104",
+      "status": "passed",
+      "expected": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.21 0.006 285.885)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.21 0.006 285.885)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:variant:primitive/button:link"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "d2cd5cc1-44ee-53c4-a724-8bc847b40f81",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/app-sidebar:icon:0"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "58368ffa-ad5c-5fd6-99d5-ba2280067fb7",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/app-sidebar:label:1"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "a289c3f6-7501-59f8-80cd-312a1df05986",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "actual": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/app-sidebar:badge:2"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "218df3a4-0fc4-5766-be39-8d0ade067574",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "actual": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/app-sidebar:shortcut:3"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "f762502e-459a-5038-8bb4-7d8ad8b57b04",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "actual": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/app-sidebar:trailing:4"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "c0ce60eb-9b27-5817-a16f-6d9eba66e9e7",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/button:icon:0"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "b552cddc-b8ff-5abc-9fbf-94aa84b520fd",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/button:label:1"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "ca72d184-e7d1-5696-9ef5-9768afb4ec6f",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "trailing",
+        "order": 2,
+        "visible": true
+      },
+      "actual": {
+        "slot": "trailing",
+        "order": 2,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/button:trailing:2"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "2b5d28bc-1181-5b76-a8fa-896668160ebc",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/chat-fab:icon:0"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "e3915484-4672-5765-b411-98edf651b78b",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/nav-item:icon:0"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "088a92f4-da9b-5e32-9c75-8f58e9ec473e",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/nav-item:label:1"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "6bd39447-be7d-519b-b769-9f1032b7608a",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "actual": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/nav-item:badge:2"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "d8b1061d-f57b-5b28-a13f-05e6b144e02e",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "actual": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/nav-item:shortcut:3"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "d3928ff1-888a-5825-aa68-0e8096b2539a",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "actual": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/nav-item:trailing:4"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "95c5a35c-c31c-5556-8747-82a8c64942b8",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/settings-nav:icon:0"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    },
+    {
+      "id": "1bce1267-88b9-5f12-97ee-d7def590d153",
+      "rule_id": "LAYOUT-103",
+      "status": "passed",
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "route": "/dev/design-system",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/settings-nav:label:1"
+      ],
+      "evidence_refs": [
+        "evidence/contract-gallery.json",
+        "evidence/contract-gallery.png"
+      ]
+    }
+  ],
+  "created_at": "2026-09-27T12:00:00Z"
+}

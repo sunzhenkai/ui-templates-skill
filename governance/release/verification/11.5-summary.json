@@ -1,0 +1,34 @@
+{
+  "active_release": {
+    "evidence": "11.5-active-release.json",
+    "findings": 0,
+    "pending_overlays": 5,
+    "status": "passed"
+  },
+  "immutable_history": {
+    "git_index_and_worktree_unchanged": true,
+    "patterns": [
+      "openspec/changes/archive/**",
+      "skills/**/patches/**",
+      "skills/**/experience/**"
+    ],
+    "policy": "readability-only-no-semantic-rewrite",
+    "readable_files": 29,
+    "readable_files_by_domain": {
+      "openspec_archive": 12,
+      "skill_experience": 8,
+      "skill_patches": 9
+    },
+    "separately_classified": true,
+    "status_evidence": "11.5-immutable-git-status.txt",
+    "unreadable_files": 0
+  },
+  "mirror": {
+    "evidence": "11.5-mirror-check.json",
+    "findings": 0
+  },
+  "schema_version": 1,
+  "scope_check": "11.5-scope-check.txt",
+  "status": "passed",
+  "task": "11.5"
+}

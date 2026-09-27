@@ -1,0 +1,26 @@
+schema: design-system-meta/v1
+name: page-system-fixture
+version: 1.0.0
+description: page-system fixture
+sources:
+- id: source-001
+  type: doc
+  ref: fixture://design-system
+  revision: fixture-v1
+  captured_at: '2026-09-08T00:00:00Z'
+captured_at: '2026-09-08'
+platforms:
+- web
+confidence:
+  overall: medium
+coverage:
+  components:
+    declared: []
+    observed: []
+    defaulted: []
+    unsupported: []
+  states:
+    declared: []
+    observed: []
+    defaulted: []
+    unsupported: []

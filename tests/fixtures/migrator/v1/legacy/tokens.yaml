@@ -1,0 +1,18 @@
+schema: 1
+themes:
+  light:
+    background: {value: "#ffffff", origin: source}
+    foreground: {value: "#000000", origin: source}
+typography:
+  scale:
+    body: {size: 14, lineHeight: 20, origin: source}
+spacing:
+  base: 4
+  allowed: {value: [4, 8, 16], origin: source}
+radius:
+  card: 8
+motion:
+  combo:
+    offset: {value: 4, unit: px}
+    duration: {value: 200, unit: ms}
+    origin: source

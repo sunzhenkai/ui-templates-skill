@@ -1,0 +1,3 @@
+display_name: ui-template-design
+short_description: 在消费项目建立并冻结可执行前端 Design System
+default_prompt: 帮我在这个项目里建立并冻结一套前端设计系统（语义 token、Primitive、Pattern、Page Type、Gallery）

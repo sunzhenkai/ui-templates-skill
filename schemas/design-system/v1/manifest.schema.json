@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/manifest.schema.json",
+  "title": "Design System Contract manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "version",
+    "status",
+    "capability",
+    "layers"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system/v1"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "version": {
+      "$ref": "common.schema.json#/$defs/semver"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "frozen",
+        "retired"
+      ]
+    },
+    "capability": {
+      "enum": [
+        "tokens-only",
+        "ui-kit",
+        "page-system"
+      ]
+    },
+    "layers": {
+      "type": "object",
+      "required": [
+        "tokens",
+        "rules",
+        "evidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "tokens": {
+          "$ref": "common.schema.json#/$defs/path"
+        },
+        "primitives": {
+          "$ref": "common.schema.json#/$defs/path"
+        },
+        "patterns": {
+          "$ref": "common.schema.json#/$defs/path"
+        },
+        "page-types": {
+          "$ref": "common.schema.json#/$defs/path"
+        },
+        "layout": {
+          "$ref": "common.schema.json#/$defs/path"
+        },
+        "rules": {
+          "$ref": "common.schema.json#/$defs/path"
+        },
+        "evidence": {
+          "$ref": "common.schema.json#/$defs/path"
+        }
+      }
+    },
+    "layer_digests": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tokens": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "primitives": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "patterns": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "page-types": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "layout": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "rules": {
+          "$ref": "common.schema.json#/$defs/digest"
+        },
+        "evidence": {
+          "$ref": "common.schema.json#/$defs/digest"
+        }
+      }
+    },
+    "contract_digest": {
+      "$ref": "common.schema.json#/$defs/digest",
+      "description": "sha256-canonical-json-v1 over canonical manifest JSON after removing contract_digest."
+    },
+    "created_at": {
+      "$ref": "common.schema.json#/$defs/date"
+    },
+    "updated_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    }
+  },
+  "description": "Manifest for design-system/v1. contract_digest excludes only the contract_digest member and covers all other canonical manifest members, including layer file references and layer digests. Layer digests use canonical parsed JSON."
+}

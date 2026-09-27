@@ -1,0 +1,1 @@
+{"error": "MANIFEST_SKILLS_INVALID: dual public skills required", "status": "failed"}

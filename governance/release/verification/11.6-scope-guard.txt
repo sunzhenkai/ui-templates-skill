@@ -1,0 +1,2 @@
+治理 scope 无意外交叠；web-v2 排除项已声明。
+web-v2 guard 通过：HEAD tree 与记录基线一致，工作区无改动。

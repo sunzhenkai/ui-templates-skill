@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/evidence.schema.json",
+  "title": "Design System evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "items"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-evidence/v1"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "target",
+          "origin"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^evidence-[0-9a-zA-Z-]{3,80}$"
+          },
+          "kind": {
+            "enum": [
+              "token",
+              "component",
+              "layout",
+              "rule",
+              "asset",
+              "default",
+              "basis"
+            ]
+          },
+          "target": {
+            "type": "string"
+          },
+          "scope": {
+            "enum": [
+              "surface",
+              "product"
+            ],
+            "description": "Claim scope. Defaults to `surface` when omitted; `product` requires recurrence_refs covering >=2 distinct sampled surfaces (enforced by the unified validator: RECURRENCE_UNSUPPORTED)."
+          },
+          "recurrence_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Evidence ids that independently reproduce this claim on distinct sampled surfaces; required for scope: product (enforced by the unified validator)."
+          },
+          "surface": {
+            "type": "string",
+            "description": "Optional sampled surface identity (page/scene/viewport). When omitted the validator derives it from locator."
+          },
+          "origin": {
+            "$ref": "common.schema.json#/$defs/origin"
+          },
+          "source_id": {
+            "type": "string",
+            "description": "Source identity that MUST resolve to an entry in meta.sources[]; enforced by the unified validator."
+          },
+          "source_revision": {
+            "type": "string",
+            "description": "Captured revision that MUST equal the revision declared by the referenced meta.sources[] entry; enforced by the unified validator (EVIDENCE_REVISION_UNDECLARED)."
+          },
+          "locator": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "basis": {
+            "type": "string"
+          },
+          "decision_id": {
+            "type": "string"
+          },
+          "confidence": {
+            "$ref": "common.schema.json#/$defs/confidence"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "superseded"
+            ]
+          },
+          "supersedes": {
+            "type": "string"
+          },
+          "captured_at": {
+            "$ref": "common.schema.json#/$defs/timestamp"
+          }
+        }
+      }
+    }
+  }
+}

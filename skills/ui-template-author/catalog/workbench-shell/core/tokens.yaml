@@ -1,0 +1,152 @@
+schema: design-system-tokens/v1
+tokens:
+  color:
+    app-shell:
+      value: oklch(0.964435 0.001327 286.375)
+      origin: source
+      description: Light app-shell frame token.
+    page-canvas:
+      value: oklch(0.988087 0 0)
+      origin: source
+      description: Light page canvas token from packages/ui/styles/tokens.css.
+    primary-hover:
+      value: color-mix(in oklab, oklch(0.21 0.006 285.885) 80%, transparent)
+      origin: computed
+      description: Default button hover is primary at 80 percent alpha.
+    ring:
+      value: oklch(0.705 0.015 286.067)
+      origin: source
+      description: Light focus border token.
+    ring-focus:
+      value: oklch(0.705 0.015 286.067 / 0.5)
+      origin: computed
+      description: Focus ring is the ring token at 50 percent alpha.
+    sidebar-accent:
+      value: oklch(0.935 0.003 286.375)
+      origin: source
+      description: Navigation hover/active surface token.
+    surface-border:
+      value: oklch(0.92 0.004 286.32)
+      origin: source
+      description: Surface border token.
+    surface-hover:
+      value: oklch(0.967 0.001 286.375)
+      origin: source
+      description: Surface hover token.
+    surface-selected:
+      value: oklch(0.95 0.002 286.375)
+      origin: source
+      description: Surface selected token.
+    surface:
+      value: oklch(1 0 0)
+      origin: source
+      description: Card/dialog surface token (--surface).
+    divider:
+      value: oklch(0.945 0.003 286.32)
+      origin: source
+      description: Separator/divider token (--border separator paint).
+    text-primary:
+      value: oklch(0.141 0.005 285.823)
+      origin: source
+      description: Primary text token (--foreground).
+    text-secondary:
+      value: oklch(0.505 0.016 285.938)
+      origin: source
+      description: Secondary text token (--muted-foreground).
+    text-muted:
+      value: oklch(0.606 0.016 285.938)
+      origin: source
+      description: Muted text token (--faint-foreground).
+    text-disabled:
+      value: oklch(0.606 0.016 285.938)
+      origin: source
+      description: Disabled text token (--faint-foreground, disabled states add opacity).
+    text-on-primary:
+      value: oklch(0.985 0 0)
+      origin: source
+      description: Text on primary fill (--primary-foreground).
+    link:
+      value: oklch(0.55 0.16 255)
+      origin: source
+      description: Interactive/link accent token (--brand).
+    primary:
+      value: oklch(0.21 0.006 285.885)
+      origin: source
+      description: Primary action fill token (--primary).
+    status-success:
+      value: oklch(0.55 0.16 145)
+      origin: source
+      description: Success status token (--success).
+    status-warning:
+      value: oklch(0.75 0.16 85)
+      origin: source
+      description: Warning status token (--warning).
+    status-danger:
+      value: oklch(0.577 0.245 27.325)
+      origin: source
+      description: Danger status token (--destructive).
+  radius:
+    lg:
+      value: 0.625
+      unit: rem
+      origin: source
+      description: Default control radius.
+    xl:
+      value: 0.875
+      unit: rem
+      origin: computed
+      description: Inset content-card radius, radius * 1.4.
+  shadow:
+    floating:
+      value: 0 16px 40px rgb(15 23 42 / 0.14), 0 3px 10px rgb(15 23 42 / 0.08)
+      origin: source
+      description: Floating overlay shadow.
+    surface:
+      value: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 1px rgb(15 23 42 / 0.03)
+      origin: source
+      description: Bounded surface shadow.
+  size:
+    section-nav-default:
+      value: 15
+      unit: rem
+      origin: source
+      description: Settings section navigation width (md:w-60).
+    sidebar-default:
+      value: 256
+      unit: px
+      origin: source
+      description: Default desktop sidebar width.
+  space:
+    '2':
+      value: 0.5
+      unit: rem
+      origin: computed
+      description: Tailwind spacing step 2.
+    chat-launcher-inset:
+      value: 0.5
+      unit: rem
+      origin: source
+      description: Chat launcher inset.
+    chat-launcher-size:
+      value: 2.5
+      unit: rem
+      origin: source
+      description: Chat launcher size.
+    header-height:
+      value: 3
+      unit: rem
+      origin: source
+      description: Shared page header and toolbar height.
+  typography:
+    heading:
+      value: 18px
+      origin: source
+      description: --text-title 18px / line-height 28px.
+    body:
+      value: 14px
+      origin: source
+      description: --text-body 14px / line-height 20px.
+    secondary:
+      value: 12px
+      origin: source
+      description: --text-caption 12px / line-height 16px.

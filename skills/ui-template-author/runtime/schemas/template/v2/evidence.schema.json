@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/template/v2/evidence.schema.json",
+  "title": "UI template evidence v2",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "entries"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "entries": {"type": "array", "items": {"$ref": "#/$defs/entry"}}
+  },
+  "$defs": {
+    "entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "path", "origin", "status", "confidence", "captured_at"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^evidence-[a-z0-9-]+$"},
+        "kind": {"enum": ["token", "default", "asset"]},
+        "path": {"type": "string", "minLength": 1},
+        "origin": {"$ref": "common.schema.json#/$defs/origin"},
+        "method": {"type": "string", "minLength": 1},
+        "source_id": {"type": "string", "pattern": "^source-[0-9]{3}$"},
+        "source_revision": {"type": "string", "minLength": 1},
+        "locator": {"type": "string", "minLength": 1},
+        "artifact": {"type": "string", "minLength": 1},
+        "basis": {"type": "string", "minLength": 1},
+        "decision_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9-]+$"},
+        "status": {"enum": ["active", "superseded"]},
+        "supersedes": {
+          "type": "string",
+          "pattern": "^evidence-[a-z0-9-]+$",
+          "description": "仅用于 superseded 记录，向前指向取代该记录的唯一 active evidence ID。"
+        },
+        "confidence": {"$ref": "common.schema.json#/$defs/confidence"},
+        "captured_at": {"$ref": "common.schema.json#/$defs/timestamp"},
+        "license": {"type": "string", "minLength": 1},
+        "redistribution": {"enum": ["allowed", "prohibited", "not-applicable"]},
+        "redaction": {"enum": ["none", "applied", "required", "not-applicable"]}
+      },
+      "allOf": [
+        {"if": {"properties": {"origin": {"const": "default"}}, "required": ["origin"]}, "then": {"anyOf": [{"required": ["basis"]}, {"required": ["decision_id"]}]}},
+        {"if": {"properties": {"origin": {"enum": ["source", "computed", "estimated"]}}, "required": ["origin"]}, "then": {"required": ["source_id", "source_revision", "locator", "method"]}},
+        {"if": {"properties": {"kind": {"const": "asset"}}, "required": ["kind"]}, "then": {"required": ["license", "redistribution", "redaction"]}},
+        {"if": {"properties": {"status": {"const": "active"}}, "required": ["status"]}, "then": {"not": {"required": ["supersedes"]}}},
+        {"if": {"properties": {"status": {"const": "superseded"}}, "required": ["status"]}, "then": {"required": ["supersedes"]}}
+      ]
+    }
+  }
+}

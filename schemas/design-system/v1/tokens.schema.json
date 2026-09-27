@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/tokens.schema.json",
+  "title": "Design System tokens v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "tokens"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-tokens/v1"
+    },
+    "tokens": {
+      "$ref": "#/$defs/group"
+    }
+  },
+  "$defs": {
+    "tokenRecord": {
+      "type": [
+        "object"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "origin"
+      ],
+      "properties": {
+        "value": {},
+        "origin": {
+          "$ref": "common.schema.json#/$defs/origin"
+        },
+        "unit": {
+          "enum": [
+            "px",
+            "rem",
+            "em",
+            "%",
+            "ms",
+            "s",
+            "deg",
+            "ratio",
+            "unitless"
+          ]
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "then": {
+            "required": [
+              "unit"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "value": {
+                "type": "array",
+                "contains": {
+                  "type": "number"
+                }
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "then": {
+            "required": [
+              "unit"
+            ]
+          }
+        }
+      ]
+    },
+    "group": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/tokenRecord"
+          },
+          {
+            "$ref": "#/$defs/group"
+          }
+        ]
+      }
+    }
+  }
+}

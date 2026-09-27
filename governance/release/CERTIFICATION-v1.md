@@ -1,0 +1,87 @@
+# Template Certification Gate v1
+
+官方 Template Package 的 publish、version upgrade 或 catalog replacement 必须附带通过的 Template Certification Gate 结果。gate 未通过或证据缺失时，生产 `templates/INDEX.md` 与 `skills/ui-template-author/catalog/` 保持原状。
+
+## Gate 输入（全部固定）
+
+| 输入 | 约束 |
+| --- | --- |
+| Visual Oracle | 固定 git revision；出处只留在 `meta.sources[]` 与 AGENTS 出处段 |
+| Candidate package | `governance/candidates/<name>/`；digest 为 canonical contract digest |
+| Frozen Active Instance | 由 Design 从同一 candidate 领养并冻结；contract、binding、projection digest 均须写入 gate |
+| 固定 prompts | prompts 文件或目录 tree digest；不写入 package |
+| Output root | 显式声明；必须干净（不存在或为空），禁止复用已修补的上一轮生成物 |
+| Build identity | 每次重生取 fresh 值；`latest` 无效 |
+
+## 执行流程
+
+```bash
+# 1. 前置：source-blind gate identity + clean output root
+python3 scripts/run_template_certification.py prepare \
+  --oracle-revision <fixed-revision> \
+  --package governance/candidates/<name> \
+  --active-instance <frozen-active-instance-root> \
+  --prompts governance/candidates/<name>/prompts \
+  --output-root <explicit-clean-root> \
+  --build-identity <fresh-build-id>
+
+# 2. 通过普通 Apply（bootstrap | increment）消费上述冻结 Active Instance 并在 output root 干净生成；
+#    Apply 不接收原版 checkout、meta.sources[] 路径或历史生成物。
+
+# 3. 生成 certification inventory（oracle 侧 source facts，replayable provenance）
+python3 scripts/run_template_certification.py validate-inventory \
+  governance/candidates/<name>/certification/inventory.yaml
+
+# 4. 验收：Pattern Equivalence Records + inventory 对照 + source-blind 扫描
+python3 scripts/run_template_certification.py verify \
+  --report governance/candidates/<name>/certification/report.yaml \
+  --inventory governance/candidates/<name>/certification/inventory.yaml \
+  --coverage-matrix governance/candidates/<name>/certification/coverage-matrix.yaml \
+  --expectations governance/candidates/<name>/measured-expectations.yaml \
+  --apply-checkpoint governance/candidates/<name>/apply/checkpoint.yaml \
+  --package-root governance/candidates/<name> \
+  --output-root <explicit-clean-root> \
+  --oracle-revision <fixed-revision>
+```
+
+## 失败回写边界
+
+- `package`：Pattern/token/evidence 契约缺口 → 更新 candidate 后重新认证。
+- `binding`：Frozen Active Instance 缺失、未冻结或与 candidate identity 失配 → 修复 binding/Active Instance 后重新认证。
+- `apply-skill`：普通 Apply checkpoint 缺失、Phase 8 未闭合、构建身份失配、Phase 8 artifact drift 或派生 scenario 覆盖不足 → 修复 Apply 会话后重新认证。Phase 8 artifact 必须覆盖 Active Instance fidelity/layout、measured expectations 和 Primitive variant/anatomy contracts 派生的全部 scenario。
+- `apply-skill`：阶段、取证或 source-blind 执行不稳 → 修 Apply skill 后重新认证。
+- `certification-prompt`：build/oracle 身份失配或 assertion 设计不足 → 修固定 prompts 后重新认证。
+
+禁止通过修改上一轮生成物并复用旧 identity 来闭合失败；output root 不干净或 identity 复用时 gate 拒绝。
+`ownership: package` 的 feedback 必须全部处于终态；任何 proposed/open package feedback 均阻断认证。每个 passed Pattern Record 必须覆盖结构/层级、间距/密度、排版、色彩/表面和边框/分隔线，且每一条通过 assertion 引用同 record 内的 oracle measurement。
+
+## Promotion request（release check）
+
+`governance/candidates/<name>/promotion-request.yaml` 声明 `target: production-catalog`、`oracle_revision` 与 `prompts_digest` 后，`check_active_release.py` 会要求同目录 `certification/report.yaml` 为 accepted 且绑定当前 candidate digest、同一 oracle revision 与 prompts digest；candidate、prompts 或 oracle 任一变化都会使报告过期并阻止 promotion。生产 catalog 切换本身仍需用户单独确认，不随 gate 自动执行。
+
+## Oracle 采集（oracle capture harness）
+
+oracle 侧证据 SHALL 由 `scripts/oracle_capture.py` 从固定部署声明采集，不得手工写入或粘贴占位内容。采集前置检查：
+
+```bash
+python3 scripts/oracle_capture.py capture \
+  --descriptor <oracle-deployment.yaml> \
+  --output-root <output-root> \
+  --build-identity <fresh-build-id> \
+  --checkout <pinned-checkout>
+```
+
+`oracle-deployment.yaml`（`schema: oracle-deployment/v1`）声明：
+
+- `oracle.kind: git-revision` 与完整 40 位 `oracle.revision`；
+- `deployment.serve`、`deployment.ready_url`，可选 `deployment.install`、`deployment.cwd`、`deployment.env`、`ready_timeout_seconds`；
+- `capture.routes[]`、`capture.viewports[]`、`capture.themes[]`，可选 `capture.measurements[]`（`id`、`route`、`viewport`、`theme`、`selector`、`property`、`dimension`、`unit`、`tolerance`）。
+
+前置检查与产出约束：
+
+- checkout 的 `git rev-parse HEAD` MUST 等于声明的 revision，否则 `ORACLE_REVISION_MISMATCH`；
+- 采集 MUST 产出真实 PNG（校验 magic bytes）与结构化测量；写入 `<output-root>/evidence/oracle-*.png` 和 `<output-root>/oracle-evidence.json`；
+- 声明了 `capture.measurements[]` 时，任一 selector 未命中即 `ORACLE_MEASUREMENT_MISSING`，不得静默跳过；
+- oracle 不可部署或采集失败时 gate MUST 输出 `self-consistency` 并阻断 promotion（`CERT_SELF_CONSISTENCY_ONLY`），SHALL NOT 以占位文本替代。
+
+浏览器依赖：治理环境需 `python -m playwright install chromium`；缺少浏览器时 `tests/test_oracle_capture.py` 显式 skip，oracle 采集本身不可执行。

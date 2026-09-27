@@ -1,0 +1,110 @@
+schema: design-system-rules/v1
+items:
+- id: rule/LAYOUT-101
+  statement: 'The shell uses an inset canvas: the sidebar remains in the shell frame
+    and the page canvas is a bounded surface.'
+  severity: must
+  token_refs:
+  - token/color.page-canvas
+  - token/radius.xl
+  status: active
+- id: rule/LAYOUT-102
+  statement: The shell root does not scroll; the page canvas owns block scrolling,
+    and settings owns independent navigation and content scroll regions.
+  severity: must
+  token_refs:
+  - token/space.2
+  status: active
+- id: rule/LAYOUT-103
+  statement: 'Chrome slots render in the declared order: workspace switcher, search,
+    compose, nav group, pin list, rail, header trigger, page header, page toolbar,
+    page canvas, footer utility, then chat launcher.'
+  severity: must
+  token_refs:
+  - token/size.sidebar-default
+  status: active
+- id: rule/LAYOUT-104
+  statement: The chat launcher is a viewport overlay anchored to the bottom-right
+    inset and uses the declared launcher geometry.
+  severity: must
+  token_refs:
+  - token/space.chat-launcher-size
+  - token/space.chat-launcher-inset
+  status: active
+- id: rule/LAYOUT-105
+  statement: Master-detail keeps master and detail panes side by side with independent
+    block scroll domains; dialogs overlay the viewport and expose an open surface.
+  severity: must
+  token_refs: []
+  status: active
+- id: rule/LAYOUT-106
+  statement: Page headers and page toolbars use the shared header height so chrome
+    bands align across routes.
+  severity: must
+  token_refs:
+  - token/space.header-height
+  status: active
+- id: rule/LAYOUT-107
+  statement: The inset page canvas carries padding, radius, border, shadow, and page-canvas
+    background; settings section navigation is a vertical icon-label rail with its
+    own width and border.
+  severity: must
+  token_refs:
+  - token/space.2
+  - token/radius.xl
+  - token/color.surface-border
+  - token/shadow.surface
+  - token/color.page-canvas
+  - token/size.section-nav-default
+  status: active
+- id: rule/RESP-101
+  statement: At the compact viewport the navigation group becomes an overlay sheet
+    rather than a permanent in-flow column.
+  severity: must
+  token_refs: []
+  status: active
+- id: rule/QUALITY-101
+  statement: Control and navigation geometry follows the declared token values; do
+    not substitute ad-hoc dimensions.
+  severity: must
+  token_refs:
+  - token/radius.lg
+  - token/size.sidebar-default
+  status: active
+- id: rule/QUALITY-102
+  statement: Overlay surfaces use the floating shadow token, while bounded page surfaces
+    use the surface shadow token.
+  severity: must
+  token_refs:
+  - token/shadow.floating
+  - token/shadow.surface
+  status: active
+- id: rule/QUALITY-103
+  statement: Navigation links use sidebar accent for hover and active states; settings
+    links use surface hover and surface selected states, and links do not underline.
+  severity: must
+  token_refs:
+  - token/color.sidebar-accent
+  - token/color.surface-hover
+  - token/color.surface-selected
+  status: active
+- id: rule/QUALITY-104
+  statement: Interactive controls use the ring token for focus border and a 50 percent
+    ring-alpha shadow for focus-visible treatment.
+  severity: must
+  token_refs:
+  - token/color.ring
+  - token/color.ring-focus
+  status: active
+- id: rule/AX-101
+  statement: Table actions use primary-hover on hover and the focus ring on focus-visible.
+  severity: must
+  token_refs:
+  - token/color.primary-hover
+  - token/color.ring-focus
+  status: active
+- id: rule/AX-104
+  statement: An open dialog is visible and overlays the viewport.
+  severity: must
+  token_refs: []
+  status: active

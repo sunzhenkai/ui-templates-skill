@@ -1,0 +1,185 @@
+# 功能与目标：模板闭环
+
+本文是本仓库**现行**功能闭环与目标的人类可读权威。机器契约仍按 `AGENTS.md` 的事实源分层：schema → `spec-format.md` → active OpenSpec → validator。本文与它们冲突时必须先修复漂移，不得任选其一继续。
+
+`docs/functional-loop-review.md`（2026-09-03）已 superseded，不得再指导实现；该文件已于 2026-09-07 从仓库移除。
+
+## 1. 原始目标
+
+1. **Skill 功能闭环**：创建、分层抽取、应用模板可独立完成，且互相移交。
+2. **模板管理闭环**：创建、更新、浏览、退役、删除有门禁，INDEX 是唯一目录。
+3. **项目规约**：迭代不得靠改生成物、读原版源码或绕过 gate 来“过关”。
+4. **更新协议**：从首个真实模板归纳出可复用的分层更新与重生对照，而不是一次性修页面。现行文档只写原版 / session source，不把某个上游产品写成协议主语。
+
+## 2. 产品边界
+
+公开产品有三个 skill。模板产品仍必须配套安装 Author 与 Apply；Design 可单独安装，不要求模板：
+
+| Skill | 职责 | 不职责 |
+| --- | --- | --- |
+| `ui-template-author` | 创建 / 抽取 / 更新 / 浏览 / 退役 / 删除 `design-system/v1` Template Package；拥有 package 格式契约 | 不实现消费项目页面；不生成 project binding |
+| `ui-template-apply` | 只消费 digest 一致 Active Instance，按 `bootstrap | increment` 与 Phase 0–9 实现页面 | 不创建、迁移、索引 package；不改 core contract；不读原版源码 |
+| `ui-template-design` | 创建 / 领养 / 重构 / 迭代并冻结 Active Instance 与 Project Binding | 不发布 Template Package；不实现全站业务页；不要求 Author/Apply |
+
+`ui-template-manager` 只是本仓库路由薄封装，不进入公开 bundle。`docs/ui-template-design.md` 是规划草案，不是发布能力证据。
+
+Template Package 是自包含 portable core：`design-system.yaml`、`meta.yaml` 与七层 `core/`，可含技术栈无关 `apply/`。Project Binding 只在消费项目 Active Instance 中。禁止 `binding.yaml`、`implementation/`、stack adapter、工程目录、依赖、API/mock/data、状态库、runnable starter。schema v2 template 与 design-freeze v1 是 migration-only source。
+
+## 3. 稳态总环
+
+```text
+原版 @ 固定 revision（仅 session source 或视觉 oracle）
+        │ Author：按层/组件抽取
+        ▼
+published Template Package
+        │ Design/Apply：领养为 Active Instance + Project Binding
+        │ MUST NOT 读原版源码 / 历史生成物
+        ▼
+干净生成物（一次性消费项目）
+        │ 可选：对照可部署原版，分类 Δ
+        ▼
+只改 skill 或模板或 prompts
+        │ 丢弃旧生成物，重生
+        ▼
+两次干净重生稳定，才算闭环完成
+```
+
+不变量：
+
+1. **生成物不是修复面。** 视觉差回写 Authoring、Apply 或模板。
+2. **Apply 零原版依赖。** 实现时禁止打开原版 checkout、历史 `web/`、`web-v*`。
+3. **原版只出现在两个窗口：** Author 的 session source；保真对照的临时部署。
+4. **重生才是完成证明。** 改完模板/skill 之后必须用新产物再验收。
+5. **分层抽取。** chrome → tokens → scene → 原子组件 → 复合组件，禁止抽样冒充完整。
+6. **Package 自包含。** Active Instance 只消费 portable core、Stable Entity ID 和显式 Project Binding；不即兴补语义。
+7. **历史生成物不是参考。** 对照物只有当前模板、当前 skill、本会话原版部署。
+8. **现行文档不点名上游产品。** 出处只留在 `meta.sources[]` 与 `AGENTS.md` 出处段；对齐与更新协议只写原版 / session source。
+
+## 4. Skill 功能闭环
+
+### 4.1 创建 / 抽取（Authoring）
+
+强制顺序不变：Intake → Generate → Validate → Eval → Index → Report。任一 gate 失败不得改生产 `templates/INDEX.md`，不得宣称完成。
+
+L0–L6 只是变更集合标签。Intake 必须冻结**本次改哪些路径/组件**；未声明文件保持原字节，不得标 observed。
+
+`update-from-source` 必须声明变更集合。无 session source 只做 portable / feedback 更新，不得伪造 source-direct sidecar。
+
+### 4.2 应用（Apply）
+
+Apply 只有一种 source-blind 实现心智，Apply Mode 只有 `bootstrap | increment`；不存在 source oracle 对照模式。
+
+- 输入：digest 一致、已冻结的 Active Design System + 用户需求；高保真路径必须先经 Design 领养、binding 与 freeze。`bootstrap` 可从 published package adopt-only 建立 Active Instance，但这是明确降级路径，不能宣称高保真。
+- Intake：高保真任务缺 Active Instance 时停止并移交 Design；普通 bootstrap 可从 published package adopt-only 建立 Active Instance，increment 缺 Active Instance 停止。
+- greenfield：判定只看本次前端输出根。仓库已初始化但输出根仍是新应用时仍要先确认闭集技术架构；未确认不得写应用源码/依赖/工程配置。兄弟应用或功能规格不得自动确认。existing 只在该输出根已有栈时记录 observed stack。
+- 禁止：原版 checkout、`meta.sources[]` 实现路径、source oracle 身份、`.ui-template-apply/source-compare.yaml` 与历史生成物；runtime 校验发现即 `SOURCE_BLIND_VIOLATION` fail closed。
+- Pattern-bound composition：included route 必须映射到已声明 Page Type，引用的 Pattern/Primitive 必须可解析；缺少可复用控件时停止该层实现并生成 package feedback。
+- 完成：Phase 8/9 对**模板 expected** 通过。
+- 收尾：Phase 9 通过且无 proposed feedback 才 closed；提示可删 `.ui-template-apply/`，未领养则本仓不应有 `templates/`，但绝不自动删除。
+- 用户要求“对齐原版视觉”时：仍只读模板实现，并把对照需求移交 Template Certification Gate（见 4.4）。
+
+### 4.3 移交
+
+- “做成模板 / 更新模板 / 退役模板” → Authoring。
+- “用模板做页面” → Apply。
+- 项目库缺同名行但 Author catalog 已有官方模板 → Apply 只读 catalog pin；需要写模板、落库 feedback、retire/delete 或用户明确「接到本仓」时，Authoring 才显式领养到项目库。
+- 项目库与 catalog 都没有目标 published 模板 → 先 Author 声明变更集合过 gate，再 Apply。
+- schema 不支持、origin 未知、项目 `retired`、validation 失败 → Apply 停止。catalog 不得救回 retired 行。
+
+### 4.4 Template Certification Gate 与 Derived Component Family
+
+- Component Family 不新增第八层，也不维护手工清单；validator 沿 `page-types → patterns → primitives` 的 Stable Entity ID 引用与 evidence 推导闭集，悬空、重复、缺证据或 capability 不足 fail closed。
+- 官方 package publish/upgrade 前必须通过 Template Certification Gate：固定 Visual Oracle revision、candidate package、冻结 Active Instance 与固定 prompts，先 source-blind 干净 Apply，再按 Pattern 产生 Pattern Equivalence Records。
+- 高保真验收采用 Visual Equivalence（结构/层级、间距/密度、排版、色彩/表面、边框/分隔线 assertions），不是整页像素克隆；每个通过 Pattern 必须覆盖全部维度组、逐条锚定 oracle measurement，截图-only 或主观“一致”不能通过。structural fidelity、source replay、measured expectations、certification passed 缺一不可。
+- `ownership: package` 的 feedback 未处置时高保真认证 fail closed；不得以 binding 或生成物补丁掩盖 package 缺口。
+- 失败差异只能归类 `package | binding | apply-skill | certification-prompt` 回写，然后丢弃旧生成物、fresh build identity 干净重生；修补上一轮生成物永远无效。
+- gate 命令与 promotion request 规则见 `governance/release/CERTIFICATION-v1.md`；candidate 停留在 `governance/candidates/`，生产 catalog 切换需用户单独确认。
+
+## 5. 模板管理闭环
+
+生命周期：
+
+```text
+draft（候选目录，不是 INDEX 状态，未进 INDEX）
+  → published（INDEX 状态 published，Apply 可消费）
+      → published'（同名更新，template_version 递增）
+      → retired（INDEX 状态 retired，Apply 新 Intake 失败）
+          → deleted（移除 INDEX 行与 templates/<name>/）
+```
+
+| 动词 | 门禁 |
+| --- | --- |
+| `create` | 冻结变更集合；Generate→Validate→Eval 后才能 Index 为 published |
+| `adopt` / `seed <name>` | 写模板前或用户明确接入时，从 catalog 领养到项目库；已有行/目录不覆盖 |
+| `update-from-source` | 需要 session source；声明路径/组件集合；未声明文件不重写 |
+| `update-from-feedback` | 幂等处置；项目专属 rejected |
+| `update-portable` | 无 session source；不得伪造 observed sidecar |
+| `list` / `show` | 读 INDEX：name / description / source.type / captured_at / status |
+| `validate` | portable 与 replay 分离 |
+| `retire` | INDEX 标 retired；目录保留；Apply 拒绝新消费 |
+| `delete` | 仅 draft 或已 retired；同时移除 INDEX 行与目录 |
+
+规则 ID 删除后永不复用。重名必须询问更新还是另建。`split` 不是本版本交付。
+
+INDEX 表头固定为：名称、风格描述、来源类型、采集日期、状态。状态闭集：`published` | `retired`。前四列必须与 `meta.yaml` 一致。
+
+## 6. 对齐原版的更新协议
+
+要求（对任意“对齐原版”任务都成立）：
+
+- 必须通过更新 Authoring / Apply / 模板来修差异，**MUST NOT** 特例化修复生成 web。
+- 必须从 skill 与模板的生成稳定性出发。
+- 最终确认必须基于**修改后的 skill + 模板重新生成**的页面。
+- **MUST NOT** 参考历史 web 版本。
+- Apply **MUST NOT** 依赖原版源文件。
+- 可部署临时原版只作视觉对照。
+
+执行顺序（即 Template Certification Gate 的失败回写循环，见 4.4）：
+
+1. 冻结对照物：原版 revision、prompts、candidate package。
+2. 失败差异按 `package | binding | apply-skill | certification-prompt` 归类，禁止先改生成物。
+3. 只改归属面：壳/token/组件/evidence → candidate package 或 Author skill；阶段/取证/source-blind 不稳 → Apply skill；固定 prompts 或 assertion 设计不足 → certification-prompt。
+4. 有 session source 才允许抬升 observed / 写 fidelity；capture 必答事实矩阵（inset 内容卡片几何、page_mode 必答问题）沉默即 fail closed，exclusions 是唯一合法的「显式不知道」。
+5. 干净 output root + fresh build identity 重新 source-blind Apply，重跑完整 gate；两次干净重生稳定才算闭环。
+
+`openspec/specs/workbench-shell-implementation/` 是**该模板实例附录**，不是产品级契约。第二个模板不得继承其 A–E / Shell 假设。
+
+## 7. 项目规约（四条不变量）
+
+**I1 生成物不是修复面。** 保真修复只回写 skill / 模板 / prompts。`example/**/web*` 与历史 `web-v*` 是治理排除项，不得当发布证据。
+
+**I2 Apply 零原版、零历史 web。** 实现不得打开原版 checkout、`meta.sources[]` 路径或已有生成物。对照物只有当前模板、当前 skill、本会话可部署原版。
+
+**I3 库宿主 INDEX、消费仓 pin。** 状态只有 `published | retired`。库宿主（本仓或已领养项目）的 INDEX 是唯一可写目录；消费仓可只用 catalog pin 完成 Apply，不因此创建 `templates/`。项目 `retired` 优先于 catalog。draft 是未进 INDEX 的候选目录，不是第三状态。
+
+**I4 未声明的变更保持原字节。** 从源更新必须给出路径/组件集合；未纳入文件不得重写。部分失败则整次不 Index。`confidence.components: high` 不得与大批 defaulted 并存。
+
+## 8. 目录约定
+
+```text
+skills/                    生产 skill 正文
+skills/ui-template-author/catalog/  只读官方 published 副本
+skills/ui-template-design/ 独立 Design System skill
+schemas/                   机器契约（含 design-freeze/v1）
+templates/INDEX.md         本仓可写唯一目录（含 status）
+templates/<name>/          published 或 retired 模板
+scripts/ tests/ governance 门禁
+openspec/specs/            通用产品契约
+example/<name>/prompts/    可入库的消费需求
+example/<name>/web*/       生成物，治理排除
+```
+
+根目录杂项（`node_modules/`、截图、`.kiro/`）不是产品权威。
+
+## 9. 验收
+
+闭环成立当且仅当：
+
+1. Authoring 能按变更集合创建/更新，失败不改生产 INDEX。
+2. Apply 能只靠 published 模板完成 Phase 0–9；resolve 支持 catalog pin，且项目 retired 拒绝。
+3. retire / delete 有机器校验与 skill 手续。
+4. 保真差异只能回写 skill/模板/prompts，且至少重生一次。
+5. `example/**/web*` 不决定治理通过。
+6. 相关 contract eval 与模板 validator 通过。
+
+无 session source 时已发布 repo 来源模板保持 `legacy-baseline`。这是 portable 可用性状态，不是高保真成功；高保真认证必须等待可部署 oracle 后完成，不能以 self-consistency、style-only 或 fidelity-unverified 替代。

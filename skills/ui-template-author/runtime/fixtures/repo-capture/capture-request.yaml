@@ -1,0 +1,22 @@
+schema_version: 1
+capture_profile: repo-literal-graph-v1
+source_id: source-fixture-repo
+source_revision: "0000000000000000000000000000000000000000"
+graph_path: ui-source-graph.yaml
+platform: web
+conformance: structural
+style_only_reason: null
+scope:
+  scenes: [shell, board, master-detail, dialog]
+  components: [dialog, link]
+  contexts: [navigation-link, entity-row-link, button-link, inline-prose-link]
+decisions:
+  theme_id: theme.core
+  entry_id: entry.shell
+  definition_ids: []
+limits:
+  max_graph_bytes: 200000
+  max_definitions: 100
+  max_imports: 100
+  max_usages: 100
+  max_facts: 200

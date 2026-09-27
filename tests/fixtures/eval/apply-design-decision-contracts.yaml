@@ -1,0 +1,26 @@
+schema_version: 1
+cases:
+  apply-style-consistency-contract:
+    assertions:
+      - type: file_contains
+        path: skills/ui-template-apply/references/apply-workflow.md
+        all: ["design_rules[]", "LOCAL-STYLE-###", "同一 semantic role", "typography、color、spacing、radius、border、shadow", "不得写入模板"]
+      - type: file_contains
+        path: skills/ui-template-apply/references/quality-gates.md
+        all: ["Design semantics & consistency", "LOCAL-STYLE-###", "风格漂移", "current-build"]
+  apply-information-semantics-contract:
+    assertions:
+      - type: file_contains
+        path: skills/ui-template-apply/references/apply-workflow.md
+        all: ["semantic_decision", "候选语义元素", "最终 primitive", "信息角色", "按用户任务选择语义 primitive"]
+      - type: file_contains
+        path: skills/ui-template-apply/references/quality-gates.md
+        all: ["LOCAL-INFORMATION-###", "Accessibility tree", "语义正确的 primitive", "装饰性信息展示"]
+  apply-placement-review-contract:
+    assertions:
+      - type: file_contains
+        path: skills/ui-template-apply/references/apply-workflow.md
+        all: ["placement_plan", "页面单一职责", "主要信息", "主要动作", "阅读/焦点顺序", "响应式降级位置"]
+      - type: file_contains
+        path: skills/ui-template-apply/references/quality-gates.md
+        all: ["LOCAL-PLACEMENT-###", "主要动作层级错误", "current-build"]

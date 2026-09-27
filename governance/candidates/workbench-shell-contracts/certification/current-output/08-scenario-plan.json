@@ -1,0 +1,944 @@
+{
+  "schema": "phase8-scenario-plan/v1",
+  "build_identity": "workbench-shell-contracts-20260927-23",
+  "expected_count": 187,
+  "covered_count": 187,
+  "invalid_covered_count": 0,
+  "scenarios": [
+    {
+      "scenario_id": "phase8:anatomy:primitive/app-sidebar:badge:2",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/app-sidebar:icon:0",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/app-sidebar:label:1",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/app-sidebar:shortcut:3",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/app-sidebar:trailing:4",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/button:icon:0",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/button:label:1",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/button:trailing:2",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/chat-fab:icon:0",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/nav-item:badge:2",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/nav-item:icon:0",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/nav-item:label:1",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/nav-item:shortcut:3",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/nav-item:trailing:4",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/settings-nav:icon:0",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anatomy:primitive/settings-nav:label:1",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anchor:chat-fab\u2192region.shell.chat-fab",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:anchor:header-trigger\u2192region.shell.header-trigger",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-app-shell-border",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-app-shell-spacing",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-app-shell-structure",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-app-shell-surface",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-app-shell-typography",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-master-detail-border",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-master-detail-color",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-master-detail-spacing",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-master-detail-structure",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-master-detail-typography",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-overlay-dialog-border",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-overlay-dialog-spacing",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-overlay-dialog-structure",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-overlay-dialog-surface",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-overlay-dialog-typography",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-settings-section-nav-border",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-settings-section-nav-spacing",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-settings-section-nav-structure",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-settings-section-nav-surface",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-settings-section-nav-typography",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-workspace-board-border",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-workspace-board-color",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-workspace-board-spacing",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-workspace-board-structure",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:expectation:expectation-workspace-board-typography",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry-negative:shell:page-canvas:padding_inline_start:zero",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:button:control:radius:token-ref:radius.lg",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:chat-fab:chat-fab:inset_block_end:token-ref:space.chat-launcher-inset",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:chat-fab:chat-fab:inset_inline_end:token-ref:space.chat-launcher-inset",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:chat-fab:chat-fab:size:token-ref:space.chat-launcher-size",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:input:field:radius:token-ref:radius.lg",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:page-header:page-header:size:token-ref:space.header-height",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:page-toolbar:page-toolbar:size:token-ref:space.header-height",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:shell:nav-group:size:token-ref:size.sidebar-default",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:shell:page-canvas:border:token-ref:color.surface-border",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:shell:page-canvas:padding_block_end:token-ref:space.2",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:shell:page-canvas:padding_block_start:token-ref:space.2",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:shell:page-canvas:padding_inline_end:token-ref:space.2",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:shell:page-canvas:padding_inline_start:semantic:zero",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:shell:page-canvas:radius:token-ref:radius.xl",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:geometry:shell:page-canvas:shadow:token-ref:shadow.surface",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:layout-negative:scene.settings:root_scroll:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:layout-negative:scene.shell:root_scroll:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:overlay:scene.chat-fab:overlay.chat-fab:viewport:region.chat-fab.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:overlay:scene.dialog:overlay.dialog:viewport:region.dialog.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:overlay:scene.master-detail:overlay.master-detail:region:region.master-detail.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:pattern-presence:route/board:pattern/workspace-board",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:pattern-presence:route/dialog:pattern/overlay-dialog",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:pattern-presence:route/master-detail:pattern/master-detail",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:pattern-presence:route/settings:pattern/settings-section-nav",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:pattern-presence:route/shell:pattern/app-shell",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/board:region.board.page-canvas:in:region.board.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/board:region.board.page-header:in:region.board.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/board:region.board.page-toolbar:in:region.board.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/dialog:region.dialog.overlay:in:region.dialog.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/master-detail:region.detail.context-panel:in:region.detail.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/master-detail:region.detail.detail-pane:in:region.detail.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/master-detail:region.detail.master-pane:in:region.detail.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/settings:region.settings.page-canvas:in:region.settings.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/settings:region.settings.section-nav:in:region.settings.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.chat-fab:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.compose:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.footer-utility:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.header-trigger:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.nav-group:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.page-canvas:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.page-header:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.page-toolbar:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.pin-list:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.rail:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.search:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-containment:route/shell:region.shell.workspace-switcher:in:region.shell.root",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/board:geometry.board.page-header.size:token/space.header-height",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/board:geometry.board.page-toolbar.size:token/space.header-height",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/dialog:geometry.dialog.overlay.shadow:token/shadow.floating",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/master-detail:geometry.detail.page-header.size:token/space.header-height",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/settings:geometry.settings.section-nav.border:token/color.surface-border",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/settings:geometry.settings.section-nav.width:token/size.section-nav-default",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-bottom:token/space.2",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-end:token/space.2",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-start:token/space.2",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.canvas.radius:token/radius.xl",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.chat-fab.size:token/space.chat-launcher-size",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.nav-group.width:token/size.sidebar-default",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll-domain:route/board:block:region.board.page-canvas",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll-domain:route/master-detail:block:region.detail.detail-pane",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll-domain:route/master-detail:block:region.detail.master-pane",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll-domain:route/settings:block:region.settings.page-canvas",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll-domain:route/settings:block:region.settings.section-nav",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll-domain:route/shell:block:region.shell.page-canvas",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll:scene.board:scroll.board.page-canvas:block:region.board.page-canvas",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll:scene.detail-pane:scroll.detail-pane.detail-pane:block:region.detail-pane.detail-pane",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll:scene.master-detail:scroll.master-detail.master-pane:block:region.master-detail.master-pane",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll:scene.settings:scroll.settings.page-canvas:block:region.settings.page-canvas",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll:scene.settings:scroll.settings.section-nav:block:region.settings.section-nav",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:scroll:scene.shell:scroll.shell.page-canvas:block:region.shell.page-canvas",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:shell_variant:scene.shell:inset",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:chat-fab:12",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:compose:3",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:footer-utility:11",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:header-trigger:7",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:nav-group:4",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:page-canvas:10",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:page-header:8",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:page-toolbar:9",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:pin-list:5",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:rail:6",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:search:2",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:slot:workspace-switcher:1",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:action-trigger:navigation-link:focus-visible:item",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:action-trigger:navigation-link:focus-visible:item:border:token-ref:color.ring-focus",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:action-trigger:navigation-link:focus-visible:item:negative:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:action-trigger:navigation-link:focus-visible:item:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:action-trigger:navigation-link:focus-visible:item:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:action-trigger:navigation-link:hover:item",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:action-trigger:navigation-link:hover:item:background:token-ref:color.primary-hover",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:action-trigger:navigation-link:hover:item:negative:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:action-trigger:navigation-link:hover:item:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:action-trigger:navigation-link:hover:item:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:button:navigation-link:focus-visible:control",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:button:navigation-link:focus-visible:control:border:token-ref:color.ring",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:button:navigation-link:focus-visible:control:negative:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:button:navigation-link:focus-visible:control:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:button:navigation-link:focus-visible:control:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:dialog:navigation-link:open:item",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:dialog:navigation-link:open:item:negative:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:dialog:navigation-link:open:item:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:dialog:navigation-link:open:item:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:input:navigation-link:focus-visible:field",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:input:navigation-link:focus-visible:field:border:token-ref:color.ring",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:input:navigation-link:focus-visible:field:negative:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:input:navigation-link:focus-visible:field:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:input:navigation-link:focus-visible:field:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:active:item",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:active:item:background:token-ref:color.sidebar-accent",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:active:item:negative:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:active:item:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:active:item:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:default:item",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:default:item:negative:text_decoration:underline",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:default:item:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:default:item:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:hover:item",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:hover:item:background:token-ref:color.sidebar-accent",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:hover:item:negative:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:hover:item:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:nav-link:navigation-link:hover:item:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:overlay-surface:navigation-link:open:item",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:overlay-surface:navigation-link:open:item:negative:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:overlay-surface:navigation-link:open:item:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:overlay-surface:navigation-link:open:item:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings-nav:navigation-link:focus-visible:item",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings-nav:navigation-link:focus-visible:item:border:token-ref:color.ring",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings-nav:navigation-link:focus-visible:item:negative:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings-nav:navigation-link:focus-visible:item:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings-nav:navigation-link:focus-visible:item:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav:background:token-ref:color.surface-hover",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav:background:token-ref:color.surface-selected",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav:negative:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav:text_decoration:none",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav:visibility:visible",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:variant:primitive/button:brand",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:variant:primitive/button:default",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:variant:primitive/button:destructive",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:variant:primitive/button:ghost",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:variant:primitive/button:link",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:variant:primitive/button:outline",
+      "covered": true,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "phase8:variant:primitive/button:secondary",
+      "covered": true,
+      "status": "passed"
+    }
+  ]
+}

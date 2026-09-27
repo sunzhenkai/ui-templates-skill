@@ -1,0 +1,22 @@
+schema: design-system-page-types/v1
+items:
+  - id: page-type/workbench
+    name: Workbench shell
+    patterns: [pattern/workbench-shell]
+    rule_refs: [rule/LAYOUT-001, rule/LAYOUT-107, rule/LAYOUT-104]
+  - id: page-type/board
+    name: Board
+    patterns: [pattern/board-columns]
+    rule_refs: [rule/LAYOUT-002, rule/LAYOUT-106]
+  - id: page-type/settings
+    name: Settings
+    patterns: [pattern/settings-navigation]
+    rule_refs: [rule/LAYOUT-102]
+  - id: page-type/master-detail
+    name: Master detail
+    patterns: [pattern/master-detail]
+    rule_refs: [rule/LAYOUT-003]
+  - id: page-type/dialog
+    name: Dialog
+    patterns: [pattern/dialog-overlay]
+    rule_refs: [rule/LAYOUT-005, rule/QUALITY-001]

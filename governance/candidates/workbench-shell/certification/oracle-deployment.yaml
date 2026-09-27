@@ -1,0 +1,280 @@
+schema: oracle-deployment/v1
+oracle:
+  kind: git-revision
+  revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+deployment:
+  cwd: .
+  serve: python3 .oracle-harness/serve_oracle.py
+  ready_url: http://127.0.0.1:3100
+  ready_timeout_seconds: 600
+capture:
+  settle_ms: 6000
+  full_page: true
+  routes:
+  - id: app-shell
+    path: /seed/app-shell
+  - id: workspace-board
+    path: /seed/workspace-board
+  - id: settings-section-nav
+    path: /seed/settings-section-nav
+  - id: master-detail
+    path: /seed/master-detail
+  - id: overlay-dialog
+    path: /seed/overlay-dialog
+  viewports:
+  - id: desktop
+    width: 1440
+    height: 900
+  themes:
+  - light
+  measurements:
+  - id: oracle-app-shell-surface
+    route: app-shell
+    viewport: desktop
+    theme: light
+    selector: '[data-slot="sidebar-wrapper"]'
+    property: backgroundColor
+    dimension: surface
+    unit: css-color
+    tolerance: exact
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-workspace-board-header-height
+    route: workspace-board
+    viewport: desktop
+    theme: light
+    selector: header
+    property: height
+    dimension: spacing
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-settings-nav-width
+    route: settings-section-nav
+    viewport: desktop
+    theme: light
+    selector: aside
+    property: width
+    dimension: spacing
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-master-detail-pane-split
+    route: master-detail
+    viewport: desktop
+    theme: light
+    selector: main
+    property: width
+    dimension: structure
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-overlay-dialog-shape
+    route: overlay-dialog
+    viewport: desktop
+    theme: light
+    selector: '[role="dialog"]'
+    property: borderRadius
+    dimension: surface
+    unit: css-length
+    tolerance: exact
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-app-shell-content-width
+    route: app-shell
+    viewport: desktop
+    theme: light
+    selector: header
+    property: width
+    dimension: structure
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-app-shell-header-height
+    route: app-shell
+    viewport: desktop
+    theme: light
+    selector: header
+    property: height
+    dimension: spacing
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-app-shell-title-size
+    route: app-shell
+    viewport: desktop
+    theme: light
+    selector: h1
+    property: fontSize
+    dimension: typography
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-app-shell-header-border
+    route: app-shell
+    viewport: desktop
+    theme: light
+    selector: header
+    property: borderBottomWidth
+    dimension: border
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-workspace-board-content-width
+    route: workspace-board
+    viewport: desktop
+    theme: light
+    selector: header
+    property: width
+    dimension: structure
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-workspace-board-title-size
+    route: workspace-board
+    viewport: desktop
+    theme: light
+    selector: h1
+    property: fontSize
+    dimension: typography
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-workspace-board-title-color
+    route: workspace-board
+    viewport: desktop
+    theme: light
+    selector: h1
+    property: color
+    dimension: color
+    unit: css-color
+    tolerance: exact
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-workspace-board-header-border
+    route: workspace-board
+    viewport: desktop
+    theme: light
+    selector: header
+    property: borderBottomWidth
+    dimension: border
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-settings-nav-structure-width
+    route: settings-section-nav
+    viewport: desktop
+    theme: light
+    selector: aside
+    property: width
+    dimension: structure
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-settings-title-size
+    route: settings-section-nav
+    viewport: desktop
+    theme: light
+    selector: h1
+    property: fontSize
+    dimension: typography
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-settings-card-surface
+    route: settings-section-nav
+    viewport: desktop
+    theme: light
+    selector: '[data-slot="card"]'
+    property: backgroundColor
+    dimension: surface
+    unit: css-color
+    tolerance: exact
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-settings-nav-border
+    route: settings-section-nav
+    viewport: desktop
+    theme: light
+    selector: aside
+    property: borderRightWidth
+    dimension: border
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-master-detail-header-height
+    route: master-detail
+    viewport: desktop
+    theme: light
+    selector: header
+    property: height
+    dimension: spacing
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-master-detail-activity-size
+    route: master-detail
+    viewport: desktop
+    theme: light
+    selector: h2
+    property: fontSize
+    dimension: typography
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-master-detail-text-color
+    route: master-detail
+    viewport: desktop
+    theme: light
+    selector: '[data-slot="resizable-panel"]'
+    property: color
+    dimension: color
+    unit: css-color
+    tolerance: exact
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-master-detail-header-border
+    route: master-detail
+    viewport: desktop
+    theme: light
+    selector: header
+    property: borderBottomWidth
+    dimension: border
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-overlay-dialog-width
+    route: overlay-dialog
+    viewport: desktop
+    theme: light
+    selector: '[data-slot="dialog-content"]'
+    property: width
+    dimension: structure
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-overlay-dialog-height
+    route: overlay-dialog
+    viewport: desktop
+    theme: light
+    selector: '[data-slot="dialog-content"]'
+    property: height
+    dimension: spacing
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-overlay-dialog-text-size
+    route: overlay-dialog
+    viewport: desktop
+    theme: light
+    selector: '[data-slot="dialog-content"]'
+    property: fontSize
+    dimension: typography
+    unit: px
+    tolerance: <=2px
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  - id: oracle-overlay-dialog-borderless
+    route: overlay-dialog
+    viewport: desktop
+    theme: light
+    selector: '[data-slot="dialog-content"]'
+    property: borderBottomWidth
+    dimension: border
+    unit: px
+    tolerance: exact
+    oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386

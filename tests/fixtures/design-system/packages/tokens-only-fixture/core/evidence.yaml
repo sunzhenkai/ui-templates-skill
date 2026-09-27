@@ -1,0 +1,22 @@
+schema: design-system-evidence/v1
+items:
+- id: evidence-001
+  kind: token
+  target: token/color.primary
+  origin: source
+  source_id: source-001
+  source_revision: fixture-v1
+  locator: colors.primary
+  method: fixture extraction
+  confidence: high
+  status: active
+- id: evidence-002
+  kind: token
+  target: token/space.md
+  origin: source
+  source_id: source-001
+  source_revision: fixture-v1
+  locator: space.md
+  method: fixture extraction
+  confidence: high
+  status: active

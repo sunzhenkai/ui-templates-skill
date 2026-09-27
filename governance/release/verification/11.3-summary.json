@@ -1,0 +1,25 @@
+{
+  "assertion": "every theme checked > 0; failed = 0; skipped = 0",
+  "human_log": "11.3-workbench-validation-human.txt",
+  "json_evidence": "11.3-workbench-validation.json",
+  "schema_version": 1,
+  "status": "passed",
+  "task": "11.3",
+  "template": "workbench-shell",
+  "template_schema_version": 2,
+  "template_version": "2.0.0",
+  "themes": {
+    "workbench-shell/dark": {
+      "checked": 17,
+      "failed": 0,
+      "skipped": 0,
+      "waived": 0
+    },
+    "workbench-shell/light": {
+      "checked": 17,
+      "failed": 0,
+      "skipped": 0,
+      "waived": 0
+    }
+  }
+}

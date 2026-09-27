@@ -1,0 +1,48 @@
+schema_version: 1
+bundle_version: 3.0.1
+public_skills:
+  ui-template-author: 3.0.1
+  ui-template-apply: 3.0.1
+  ui-template-design: 3.0.1
+contract_family:
+  minimum: design-system/v1
+  maximum: design-system/v1
+  current: design-system/v1
+legacy_sources:
+  template-v2: migration-only
+  design-freeze-v1: migration-only
+fidelity_schema:
+  minimum: 1
+  maximum: 1
+compatibility:
+- bundle: 3.x
+  ui-template-author: 3.x
+  ui-template-apply: 3.x
+  ui-template-design: 3.x
+  contract_family: design-system/v1
+  legacy_sources: migration-only
+  status: supported
+- bundle: 2.x
+  template_schema: 2
+  status: unsupported-explicit-migration-required
+breaking_boundaries:
+- design-system-contract
+- portable-core-project-binding
+- active-instance-only-apply
+- vendor-allowlist
+- schema-v2-migration-only
+- design-freeze-v1-migration-only
+- apply-source-blind-certification-gate
+- page-system-placement-closure
+notes:
+- Author+Apply remain paired; Design remains independently installable and upgradeable.
+- Published official workbench-shell must migrate only after separate user promotion
+  confirmation.
+- 'BREAKING: Apply no longer offers a source-compare/Mode B oracle flow; sessions
+  that previously relied on it must route alignment requests through the Template
+  Certification Gate (fixed oracle revision + candidate package + fixed prompts, clean
+  regeneration and Pattern Equivalence Records). Existing checkpoints without oracle
+  references stay valid.'
+- 'New page-system Generate-from-source requires closed structural placement
+  evidence or an explicit capability downgrade; existing legacy-baseline packages
+  remain consumable with structural verification unavailable.'

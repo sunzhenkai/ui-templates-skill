@@ -1,0 +1,91 @@
+{
+  "active_files_read": 36,
+  "domains": {
+    "active_release": 241,
+    "exclusions": 143,
+    "immutable_history": 12
+  },
+  "exclusions": [
+    {
+      "content_read": false,
+      "pattern": "example/workbench-shell/web-v2/**",
+      "traversed": false
+    },
+    {
+      "content_read": false,
+      "pattern": "docs/**",
+      "traversed": false
+    },
+    {
+      "content_read": false,
+      "pattern": "example/workbench-shell/web-v3/**",
+      "traversed": false
+    },
+    {
+      "content_read": false,
+      "pattern": "semantic-review/**",
+      "traversed": false
+    }
+  ],
+  "findings": [],
+  "immutable_history": {
+    "policy": "readability-only-no-semantic-rewrite",
+    "readable_files": 12,
+    "unreadable_files": []
+  },
+  "pending_overlays": [
+    {
+      "base": null,
+      "capability": "skill-lifecycle-governance",
+      "changes": {
+        "ADDED": 9,
+        "MODIFIED": 0,
+        "REMOVED": 0
+      },
+      "overlay": "openspec/changes/harden-template-lifecycle/specs/skill-lifecycle-governance/spec.md"
+    },
+    {
+      "base": null,
+      "capability": "template-contract-validation",
+      "changes": {
+        "ADDED": 8,
+        "MODIFIED": 0,
+        "REMOVED": 0
+      },
+      "overlay": "openspec/changes/harden-template-lifecycle/specs/template-contract-validation/spec.md"
+    },
+    {
+      "base": "openspec/specs/ui-template-apply-workflow/spec.md",
+      "capability": "ui-template-apply-workflow",
+      "changes": {
+        "ADDED": 1,
+        "MODIFIED": 5,
+        "REMOVED": 0
+      },
+      "overlay": "openspec/changes/harden-template-lifecycle/specs/ui-template-apply-workflow/spec.md"
+    },
+    {
+      "base": "openspec/specs/ui-template-workflow/spec.md",
+      "capability": "ui-template-workflow",
+      "changes": {
+        "ADDED": 2,
+        "MODIFIED": 2,
+        "REMOVED": 1
+      },
+      "overlay": "openspec/changes/harden-template-lifecycle/specs/ui-template-workflow/spec.md"
+    },
+    {
+      "base": "openspec/specs/workbench-shell-implementation/spec.md",
+      "capability": "workbench-shell-implementation",
+      "changes": {
+        "ADDED": 1,
+        "MODIFIED": 6,
+        "REMOVED": 3
+      },
+      "overlay": "openspec/changes/harden-template-lifecycle/specs/workbench-shell-implementation/spec.md"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "governance/scope.yaml",
+  "status": "passed"
+}

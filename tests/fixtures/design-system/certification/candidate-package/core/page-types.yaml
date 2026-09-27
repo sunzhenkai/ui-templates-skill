@@ -1,0 +1,13 @@
+schema: design-system-page-types/v1
+items:
+- id: page-type/detail
+  name: Detail
+  patterns:
+  - pattern/list-page
+  - pattern/toolbar
+  data_states:
+  - loading
+  - success
+  - error
+  rule_refs:
+  - rule/NN-001

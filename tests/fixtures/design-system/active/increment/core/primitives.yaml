@@ -1,0 +1,20 @@
+schema: design-system-primitives/v1
+items:
+- id: primitive/button
+  name: Button
+  variants:
+  - primary
+  - ghost
+  sizes:
+  - sm
+  - md
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/color.primary
+  - token/space.md
+  rule_refs:
+  - rule/NN-001
