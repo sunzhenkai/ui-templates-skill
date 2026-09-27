@@ -1,0 +1,91 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Dependencies
+node_modules/
+
+# Build / dist
+dist/
+dist-ssr/
+build/
+
+# Test artifacts
+test-results/
+playwright-report/
+blob-report/
+coverage/
+trace.zip
+
+# Browser debug captures (Playwright MCP / local screenshots)
+# also keeps archived OpenSpec evidence PNGs out of git: immutable_history is classified by
+# readability, so a tracked binary under openspec/changes/archive/** fails the gate
+page-*.png
+*screenshot*.png
+
+# Governance command output (still passed via REPORT_DIR / --json-out)
+governance-reports/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.tox/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# Misc
+*.local
+.vite/
+.tsbuildinfo
+*.tsbuildinfo
+.kiro
+
+# Agent host local state
+.qoder/
+.pi/
+
+/*.png
+
+.ui-template-apply
+
+# ui-template-design skill local state (freeze/checkpoint, consumer-side)
+.ui-template-design/
+
+# Generated example webs (ui-template-test e2e artifacts; governance-excluded, never committed)
+example/*/web/
+example/*/web-v*/
+
+# Transient candidate workspaces. Keep only governance/candidates/<template-name>/ for promotion.
+governance/candidates/.work/
+governance/candidates/*-clean/
+governance/candidates/*-reimport/
+governance/candidates/*-reimport-*/

@@ -1,0 +1,100 @@
+{
+  "accepted_non_goals": [
+    "example/workbench-shell/web-v2/**",
+    "example/workbench-shell/web-v3/**",
+    "docs/**",
+    "semantic-review/**",
+    "immutable history semantic rewrites",
+    "publish",
+    "tag",
+    "archive change",
+    "sample promotion"
+  ],
+  "apply_state": "all_done",
+  "change": "harden-template-lifecycle",
+  "final_gates": {
+    "active_release": "passed",
+    "evidence": [
+      "final-gates.txt",
+      "final-openspec-apply.json",
+      "final-active-release.json",
+      "final-mirror-check.json"
+    ],
+    "git_diff_check": "passed",
+    "openspec_all_strict": "passed",
+    "openspec_change_strict": "passed",
+    "production_mirror": "passed",
+    "scope_guard": "passed"
+  },
+  "preserved_preexisting_exclusions": {
+    "cached_docs_markdown_hard_breaks": "not_a_requested_gate_and_not_modified",
+    "gitignore_worktree_state": "pre_existing_modified_before_apply_not_used_as_change_evidence",
+    "untracked_wip": [
+      "docs/",
+      "example/workbench-shell/web-v3/",
+      "semantic-review/"
+    ]
+  },
+  "progress": {
+    "complete": 76,
+    "remaining": 0,
+    "total": 76
+  },
+  "release_links": {
+    "changelog": "../CHANGELOG.md",
+    "compatibility": "../compatibility.yaml",
+    "migration": "../MIGRATION-v1-to-v2.md",
+    "rollback": "../ROLLBACK.md"
+  },
+  "revision": "c7849c55f17703b277e66cecfba303f3db93414f",
+  "schema_version": 1,
+  "status": "passed",
+  "tasks": {
+    "11.1": {
+      "evidence": "11.1-summary.json",
+      "status": "passed",
+      "tests": 84
+    },
+    "11.2": {
+      "evidence": "11.2-summary.json",
+      "openspec_strict_passed": 4,
+      "status": "passed"
+    },
+    "11.3": {
+      "evidence": "11.3-summary.json",
+      "pairs_checked": 34,
+      "status": "passed",
+      "themes_checked": 2
+    },
+    "11.4": {
+      "artifact_sha256": "d1a8da0a716cc406b85b585fafc3206c9bd0bdb90b1cc05c7b358b068a711d7a",
+      "evidence": "11.4-summary.json",
+      "status": "passed"
+    },
+    "11.5": {
+      "active_release_findings": 0,
+      "evidence": "11.5-summary.json",
+      "mirror_findings": 0,
+      "status": "passed"
+    },
+    "11.6": {
+      "commands_executed": false,
+      "content_read": false,
+      "evidence": "11.6-web-v2-exclusion.json",
+      "modified": false,
+      "status": "passed"
+    },
+    "11.7": {
+      "evidence": "../IMPLEMENTATION-VERIFICATION.md",
+      "status": "passed"
+    }
+  },
+  "versions": {
+    "bundle": "2.0.0",
+    "openspec": "1.8.0",
+    "python": "3.13.12",
+    "template_schema": 2,
+    "ui-template": "2.0.0",
+    "ui-template-apply": "2.0.0"
+  }
+}

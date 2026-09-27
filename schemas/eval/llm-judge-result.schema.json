@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/eval/llm-judge-result.schema.json",
+  "title": "Authorized local LLM judge result adapter v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "revision", "runtime_fingerprint", "authorization", "results"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "revision": {"type": "string", "minLength": 1},
+    "runtime_fingerprint": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["external_data_authorized", "scope"],
+      "properties": {
+        "external_data_authorized": {"const": true},
+        "scope": {"const": "fixed-eval-fixtures-only"}
+      }
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "rationale"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+          "status": {"enum": ["passed", "failed"]},
+          "rationale": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

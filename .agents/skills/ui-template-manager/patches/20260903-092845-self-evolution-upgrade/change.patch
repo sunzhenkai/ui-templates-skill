@@ -1,0 +1,301 @@
+diff --git a/.agents/skills/ui-template-manager/SKILL.md b/.agents/skills/ui-template-manager/SKILL.md
+index 5e18cdc..2f2e0c2 100644
+--- a/.agents/skills/ui-template-manager/SKILL.md
++++ b/.agents/skills/ui-template-manager/SKILL.md
+@@ -29,3 +29,91 @@ description: 管理本仓库(ui-templates-skill)templates/ 目录下的 UI 设
+ ## 复用已有模板
+ 
+ 用户说"用某个模板做页面"时:阅读 `templates/<name>/spec.md`(及其拆分子文件),把 token 与规则作为设计约束交给实现方。本 skill 不负责页面实现。
++
++---
++
++## Self-evolution
++
++本 Skill 具备经验积累、评估与持续进化能力。目录（均相对本 Skill 根目录）：
++
++```text
++.agents/skills/ui-template-manager/
++├── SKILL.md
++├── examples/      # 经过验证的优秀执行案例
++├── evals/         # 可验证成功标准
++└── experience/    # 真实失败 / 成功 / 规律
++```
++
++不要为了自进化而破坏上文已规定的目标、流程、工具用法、输出与约束。
++
++### Examples
++
++执行复杂任务前：
++
++1. 检查 `examples/`
++2. 找到与当前任务相关的成功案例
++3. 优先复用已经验证的方法
++
++没有相关案例时按上文正常执行，不要编造案例。
++
++### Evaluation
++
++任务完成前：
++
++1. 检查相关 `evals/`
++2. 验证关键输出
++3. 检查是否违反 Skill 约束
++4. 尽可能运行相关 Eval Cases（见 `evals/cases.yaml`）
++
++优先确定性 Eval；无法确定性判断时再用 LLM Judge。Eval 失败则先修输出，不要带着失败交卷。
++
++### Experience
++
++任务完成后，出现以下情况才写入 `experience/`：
++
++- 失败
++- 用户纠正
++- 明显成功
++- 新的有效执行方法
++- 可复用的经验
++
++不要记录 trivial information。不要伪造条目。密钥、内部 URL、凭据不得写入。
++
++单次失败 → `experience/failures/`。重复出现的规律 → `experience/patterns/`（至少两次同类证据）。
++
++### Evolution
++
++只有当 Experience 暴露出**可复用、稳定的问题或模式**时，才考虑修改本 Skill。
++
++遵循：
++
++```text
++Experience
++    ↓
++Repeated Pattern
++    ↓
++Improvement Proposal
++    ↓
++Eval
++    ↓
++Pass
++    ↓
++Update Skill
++```
++
++禁止：
++
++```text
++Single Failure
++    ↓
++Directly modify SKILL.md
++```
++
++进入 Skill 正文的 Experience 必须同时满足：可复用于多个类似任务、有足够证据、能明确改善结果、不破坏已有能力、可通过 Eval 验证。一次性特殊情况只留 Experience，不改 Skill。
++
++实际更新生产 `SKILL.md` 时：
++
++1. 不要直接覆盖原文；记录 version / change / reason / evidence / evaluation。有 Git 则优先靠 Git diff 留历史。
++2. 若改动来自**真实执行经验**：优先委托 `skill-evolver`（`evolutions/` → 验证 → 晋升），不要本 Skill 自己改生产稿。
++3. 若只是结构/规则的显式修订且环境有 `skill-upgrader`：走其 `update` 模式（`.agents/skills/ui-template-manager/patches/`），仍须先提案再应用。
++4. 未展示 Proposal 并获得用户确认前，不改生产 Skill。
+diff --git a/.agents/skills/ui-template-manager/evals/README.md b/.agents/skills/ui-template-manager/evals/README.md
+new file mode 100644
+index 0000000..0d09642
+--- /dev/null
++++ b/.agents/skills/ui-template-manager/evals/README.md
+@@ -0,0 +1,12 @@
++# Evals
++
++本 Skill 的可验证成功标准。任务完成前对照 `cases.yaml` 检查关键输出与约束。
++
++## 怎么跑
++
++1. 选出与当前任务相关的 cases（`kind` + 描述匹配）
++2. `judge: deterministic`：按 `expect.must` / `expect.must_not` 逐条核对，只报 pass/fail
++3. `judge: llm`：仅当无法确定性判断时使用；给出简短判定与依据，不编分数
++4. 任一条失败 → 先修输出再交卷，不要带着 fail 声称完成
++
++新增 case 必须能从 Skill 原文或真实回归事故找到依据。禁止虚构。
+diff --git a/.agents/skills/ui-template-manager/evals/cases.yaml b/.agents/skills/ui-template-manager/evals/cases.yaml
+new file mode 100644
+index 0000000..90638fa
+--- /dev/null
++++ b/.agents/skills/ui-template-manager/evals/cases.yaml
+@@ -0,0 +1,102 @@
++version: 1
++skill: ui-template-manager
++cases:
++  - id: read-generic-source-and-update-index
++    kind: basic
++    judge: deterministic
++    description: 管理模板时先读通用 skill 源码，并把模板落到约定目录与索引。
++    given: 在本仓库创建、导入或更新一个 UI 设计规范模板。
++    expect:
++      must:
++        - 执行前已读取 skills/ui-template/SKILL.md 及其引用的 references
++        - 模板位于 templates/<name>/ 目录
++        - templates/INDEX.md 包含对应的索引行且与实际模板一致
++      must_not:
++        - 跳过 templates/INDEX.md 更新
++        - 把模板主体放到 templates/ 约定之外
++
++  - id: docs-language-convention
++    kind: basic
++    judge: deterministic
++    description: 新写模板文档与注释使用简体中文，技术内容保留原文。
++    given: 生成或修改模板的 spec.md、platforms 或 implementation 文档。
++    expect:
++      must:
++        - 说明文字与注释为简体中文
++        - 色值、字体名、CSS 属性、路径等技术内容保留原文
++      must_not:
++        - 将技术标识符逐词硬翻
++
++  - id: spec-is-single-design-entry
++    kind: core
++    judge: deterministic
++    description: spec.md 是设计规则唯一入口，拆分文档只承担各自职责。
++    given: 新建或更新大型/复杂模板。
++    expect:
++      must:
++        - templates/<name>/spec.md 存在并作为共享核心与入口
++        - 平台差异写入 platforms/ 子规格（如存在）
++        - implementation/ 只写实施顺序、映射和验收
++      must_not:
++        - 让 implementation 文档定义与 spec.md 冲突的第二套设计规则
++
++  - id: template-reuse-boundary
++    kind: core
++    judge: deterministic
++    description: 复用模板时传递设计约束，不越界实现页面。
++    given: 用户要求用某个已有模板做页面。
++    expect:
++      must:
++        - 阅读 templates/<name>/spec.md 及其拆分子文件
++        - 将 token 与规则作为设计约束交给实现方
++      must_not:
++        - 声称本 skill 直接负责页面实现
++
++  - id: generic-flow-change-goes-to-source
++    kind: failure
++    judge: deterministic
++    description: 改通用流程或格式时必须改单一源码，而不是只改 manager。
++    given: 需要修改通用工作流、spec 格式或质量门禁。
++    expect:
++      must:
++        - 修改 skills/ui-template/ 下的对应文件
++      must_not:
++        - 只修改 .agents/skills/ui-template-manager/SKILL.md 来改变通用流程
++
++  - id: template-safety
++    kind: failure
++    judge: deterministic
++    description: 模板与 skill 文件保持自包含且不包含敏感内容。
++    given: 写入任何模板或 skill 文件。
++    expect:
++      must:
++        - 内容自包含、可随仓库分发
++      must_not:
++        - 包含密钥或特定环境路径
++        - 写入不希望被 AI 助手逐字执行的指令
++
++  - id: experience-recording-boundary
++    kind: boundary
++    judge: deterministic
++    description: Experience 只记录真实且有复用价值的事件，单次失败不改 Skill。
++    given: 任务完成时出现失败、用户纠正、明显成功或新的有效方法。
++    expect:
++      must:
++        - 按类型写入 experience/failures/、experience/successes/ 或 experience/patterns/
++        - patterns/ 仅在至少两次同类证据后建立
++      must_not:
++        - 伪造示例或经验条目
++        - 因单次失败直接修改 SKILL.md
++
++  - id: self-evolution-structure-preserved
++    kind: regression
++    judge: deterministic
++    description: 自进化结构存在且不破坏 manager 薄封装定位。
++    given: 检查升级后的 .agents/skills/ui-template-manager/。
++    expect:
++      must:
++        - examples/、evals/、experience/ 目录存在
++        - SKILL.md 保留 name: ui-template-manager 的 frontmatter
++        - SKILL.md 含 Self-evolution 段落
++      must_not:
++        - 删除或绕过既有仓库约定与安全门禁
+diff --git a/.agents/skills/ui-template-manager/examples/README.md b/.agents/skills/ui-template-manager/examples/README.md
+new file mode 100644
+index 0000000..a2f4eaf
+--- /dev/null
++++ b/.agents/skills/ui-template-manager/examples/README.md
+@@ -0,0 +1,25 @@
++# Examples
++
++经过验证的优秀执行案例。执行复杂任务前先读这里，优先复用已验证方法。
++
++## 何时写入
++
++- 用户明确认可，或一次完成且明显优于以往
++- 路径可复用，不是一次性特例
++- 不含密钥、内部 URL、机器专属路径
++
++没有真实成功案例时保持本目录为空，只保留本 README。禁止编造。
++
++## 案例文件
++
++每个案例一个 markdown：`examples/<YYYYMMDD>-<slug>.md`
++
++必填：
++
++- Date
++- Skill
++- Task
++- Approach
++- Result
++- Why it was good
++- Reusable lessons
+diff --git a/.agents/skills/ui-template-manager/experience/README.md b/.agents/skills/ui-template-manager/experience/README.md
+new file mode 100644
+index 0000000..4433378
+--- /dev/null
++++ b/.agents/skills/ui-template-manager/experience/README.md
+@@ -0,0 +1,33 @@
++# Experience
++
++真实执行中的失败、成功与可复用规律。不要记录 trivial information。
++
++```text
++failures/  → 失败案例
++successes/ → 成功案例
++patterns/  → 从多个案例中提炼出的可复用规律
++```
++
++## 何时写入
++
++- 失败、用户纠正、明显成功
++- 新的有效执行方法
++- 可复用的经验
++
++## 何时不写入
++
++- 一次性环境问题（网络闪断、用户打错字）
++- 与 Skill 无关的闲聊
++- 尚未发生的「预期失败」
++
++## 条目格式
++
++`experience/<bucket>/<YYYYMMDD>-<slug>.md`
++
++必填：Date / Kind（failure | success | pattern）/ Skill / Context / What happened / Lesson。
++
++一次性特例在 Lesson 写明 `Experience only`，不要建议改 Skill。
++
++`patterns/` 至少要有 **两次以上** 同类 evidence 才建立。单次失败只进 `failures/`。
++
++空的 `failures/` `successes/` `patterns/` 各放一个 `.gitkeep`。
+diff --git a/.agents/skills/ui-template-manager/experience/failures/.gitkeep b/.agents/skills/ui-template-manager/experience/failures/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+diff --git a/.agents/skills/ui-template-manager/experience/patterns/.gitkeep b/.agents/skills/ui-template-manager/experience/patterns/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+diff --git a/.agents/skills/ui-template-manager/experience/successes/.gitkeep b/.agents/skills/ui-template-manager/experience/successes/.gitkeep
+new file mode 100644
+index 0000000..e69de29

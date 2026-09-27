@@ -1,0 +1,28 @@
+schema: design-system/v1
+id: ui-kit-fixture
+version: 1.0.0
+status: frozen
+capability: ui-kit
+layers:
+  tokens: core/tokens.yaml
+  rules: core/rules.yaml
+  evidence: core/evidence.yaml
+  primitives: core/primitives.yaml
+layer_digests:
+  tokens:
+    algorithm: sha256-canonical-json-v1
+    value: 250e08668ca320705604e3697fd462c00a704927199dee3771a86c1edcd5eb7b
+  rules:
+    algorithm: sha256-canonical-json-v1
+    value: f0c6ede91b7792b5c4a58f22ad6fd1c17c59502276c0c0480a266b29c876d7fe
+  evidence:
+    algorithm: sha256-canonical-json-v1
+    value: 0d0a2c86fdd0601f267459a9aec58b57276f571db720a6583f0d66aa5c2cb7dc
+  primitives:
+    algorithm: sha256-canonical-json-v1
+    value: 102a789227d7c7a92b62c31026c87418e908d735aaa4825b4edfef7a94c6beaf
+created_at: '2026-09-08'
+updated_at: '2026-09-08T00:00:00Z'
+contract_digest:
+  algorithm: sha256-canonical-json-v1
+  value: b6aa7caf1db94321fb4280bad914d40154ae4c74c16dc88f3eeb141737118918

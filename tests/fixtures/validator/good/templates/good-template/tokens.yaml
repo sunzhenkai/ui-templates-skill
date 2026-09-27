@@ -1,0 +1,24 @@
+schema_version: 2
+themes:
+  light:
+    background: {value: "#ffffff", origin: source}
+    foreground: {value: "#000000", origin: source}
+    muted-foreground: {value: "oklch(0.30 0 0)", origin: source}
+    ring: {value: "#000000", origin: source}
+  dark:
+    background: {value: "#000000", origin: source}
+    foreground: {value: "#ffffff", origin: source}
+    muted-foreground: {value: "oklch(0.80 0 0)", origin: source}
+    ring: {value: "#ffffff", origin: source}
+spacing:
+  base: {value: 4, unit: px, origin: source}
+  allowed: {value: [4, 8, 16], unit: px, origin: source}
+precision:
+  percent: {value: 50, unit: "%", origin: source}
+  angle: {value: 45, unit: deg, origin: source}
+  ratio: {value: 1.25, unit: ratio, origin: source}
+  compound:
+    value:
+      size: {value: 14, unit: px}
+      duration: {value: 2, unit: s}
+    origin: source

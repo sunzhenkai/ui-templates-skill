@@ -1,0 +1,11 @@
+diff --git a/.agents/skills/ui-template-manager/SKILL.md b/.agents/skills/ui-template-manager/SKILL.md
+--- a/.agents/skills/ui-template-manager/SKILL.md
++++ b/.agents/skills/ui-template-manager/SKILL.md
+@@ -1,6 +1,6 @@
+ ---
+ name: ui-template-manager
+-description: 管理本仓库(ui-templates-skill)templates/ 目录下的 UI 设计规范模板:创建、导入、更新与索引维护。当在本仓库中把某个网站、仓库、图片的风格"做成模板"、或浏览/复用/更新已有模板时使用;提取流程遵循通用 skill 源码 skills/ui-template/。
++description: 管理本仓库(ui-templates-skill)templates/ 目录下的 UI 设计规范模板:创建、导入、更新与索引维护。当在本仓库中把某个网站、仓库、图片或设计文档的风格"做成模板"、或浏览/复用/更新已有模板时使用;提取流程遵循通用 skill 源码 skills/ui-template/。
+ ---
+ 
+ # ui-template-manager — 本仓库模板管理

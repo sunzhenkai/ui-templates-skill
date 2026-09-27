@@ -1,0 +1,255 @@
+{
+  "build_identity": "workbench-shell-contracts-20260927-16",
+  "removed_invalid_scenario_ids": [
+    "phase8:geometry-negative:shell:page-canvas:padding_inline_start:semantic:zero",
+    "phase8:placement-containment:route/board:region.board.root:in:region.board.root",
+    "phase8:placement-containment:route/master-detail:region.master-detail.context-panel:in:region.master-detail.root",
+    "phase8:placement-containment:route/master-detail:region.master-detail.detail-pane:in:region.master-detail.root",
+    "phase8:placement-containment:route/master-detail:region.master-detail.master-pane:in:region.master-detail.root",
+    "phase8:placement-containment:route/master-detail:region.master-detail.root:in:region.master-detail.root",
+    "phase8:placement-containment:route/settings:region.settings.root:in:region.settings.root",
+    "phase8:scroll-domain:route/master-detail:block:region.master-detail.context-panel",
+    "phase8:scroll-domain:route/master-detail:block:region.master-detail.detail-pane",
+    "phase8:scroll-domain:route/master-detail:block:region.master-detail.master-pane",
+    "phase8:scroll:scene.detail-pane:scroll.detail-pane.detail-pane:block:region.master-detail.detail-pane"
+  ],
+  "captured": [
+    {
+      "id": "aef490c1-6c8e-52b5-b8d9-fc43929a82cb",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 258,
+          "y": 58,
+          "width": 80.046875,
+          "height": 738
+        },
+        "root": {
+          "x": 257,
+          "y": 57,
+          "width": 1176,
+          "height": 740
+        }
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/master-detail:region.detail.master-pane:in:region.detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/normalized-structural-phase8.json",
+        "evidence/normalized-structural-phase8.png"
+      ]
+    },
+    {
+      "id": "795edadc-4794-5464-a1e9-a352b03d7a20",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/master-detail:block:region.detail.master-pane"
+      ],
+      "evidence_refs": [
+        "evidence/normalized-structural-phase8.json",
+        "evidence/normalized-structural-phase8.png"
+      ]
+    },
+    {
+      "id": "b22c0fc9-b154-5490-8798-e07333b3fcec",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 578.046875,
+          "y": 58,
+          "width": 853.953125,
+          "height": 738
+        },
+        "root": {
+          "x": 257,
+          "y": 57,
+          "width": 1176,
+          "height": 740
+        }
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/master-detail:region.detail.detail-pane:in:region.detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/normalized-structural-phase8.json",
+        "evidence/normalized-structural-phase8.png"
+      ]
+    },
+    {
+      "id": "ba0b6632-bc05-5ba1-926f-9e46ca2353dd",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/master-detail:block:region.detail.detail-pane"
+      ],
+      "evidence_refs": [
+        "evidence/normalized-structural-phase8.json",
+        "evidence/normalized-structural-phase8.png"
+      ]
+    },
+    {
+      "id": "ceff295d-4a56-5cb4-ad40-16f0603f42d2",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 338.046875,
+          "y": 58,
+          "width": 240,
+          "height": 738
+        },
+        "root": {
+          "x": 257,
+          "y": 57,
+          "width": 1176,
+          "height": 740
+        }
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/master-detail:region.detail.context-panel:in:region.detail.root"
+      ],
+      "evidence_refs": [
+        "evidence/normalized-structural-phase8.json",
+        "evidence/normalized-structural-phase8.png"
+      ]
+    },
+    {
+      "id": "98c32021-1a4a-5066-b5c0-f440ee4c9277",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto"
+      },
+      "route": "route/master-detail",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/master-detail:block:region.detail.context-panel"
+      ],
+      "evidence_refs": [
+        "evidence/normalized-structural-phase8.json",
+        "evidence/normalized-structural-phase8.png"
+      ]
+    },
+    {
+      "id": "046fa8dd-ce69-5af3-9157-b67fde74c68a",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "contained": true
+      },
+      "actual": {
+        "contained": true,
+        "box": {
+          "x": 257,
+          "y": 105,
+          "width": 1176,
+          "height": 196.8125
+        },
+        "root": {
+          "x": 257,
+          "y": 9,
+          "width": 1174,
+          "height": 292.8125
+        }
+      },
+      "route": "route/board",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:placement-containment:route/board:region.board.page-canvas:in:region.board.root"
+      ],
+      "evidence_refs": [
+        "evidence/normalized-structural-phase8.json",
+        "evidence/normalized-structural-phase8.png"
+      ]
+    },
+    {
+      "id": "10519108-46c5-59eb-a181-16bfc9680b97",
+      "rule_id": "LAYOUT-102",
+      "status": "passed",
+      "expected": {
+        "overflow": [
+          "auto",
+          "scroll"
+        ]
+      },
+      "actual": {
+        "overflow": "auto",
+        "paddingLeft": "0px"
+      },
+      "route": "route/shell",
+      "viewport": "desktop",
+      "theme": "light",
+      "state": "ready",
+      "scenario_ids": [
+        "phase8:scroll-domain:route/shell:block:region.shell.page-canvas"
+      ],
+      "evidence_refs": [
+        "evidence/normalized-structural-phase8.json",
+        "evidence/normalized-structural-phase8.png"
+      ]
+    }
+  ]
+}

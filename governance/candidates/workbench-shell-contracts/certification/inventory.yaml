@@ -1,0 +1,30 @@
+schema: design-system-certification-inventory/v1
+oracle:
+  revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  locator: session-pinned upstream revision
+patterns:
+- id: pattern/app-shell
+  page_type: page-type/app-shell
+  source_facts:
+  - packages/views/layout/dashboard-layout.tsx#scene.shell
+  expected_member_primitives: 5
+- id: pattern/workspace-board
+  page_type: page-type/board
+  source_facts:
+  - packages/views/issues/components/issues-header.tsx#scene.page-header
+  expected_member_primitives: 4
+- id: pattern/settings-section-nav
+  page_type: page-type/settings
+  source_facts:
+  - packages/views/settings/components/settings-page.tsx#scene.settings
+  expected_member_primitives: 2
+- id: pattern/master-detail
+  page_type: page-type/master-detail
+  source_facts:
+  - packages/views/issues/components/issue-detail.tsx#scene.master-detail
+  expected_member_primitives: 2
+- id: pattern/overlay-dialog
+  page_type: page-type/dialog
+  source_facts:
+  - packages/views/modals/quick-create-issue.tsx#scene.dialog
+  expected_member_primitives: 3

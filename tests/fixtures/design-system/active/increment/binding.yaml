@@ -1,0 +1,32 @@
+schema: design-system-binding/v1
+contract_id: active-increment
+contract_version: 1.0.0
+output_root: app
+stack:
+  language: typescript
+  ui_framework: react
+  bundler: vite
+  routing: react-router
+  styling: tailwind
+  component_system: shadcn
+  package_manager: pnpm
+primitive_paths:
+  primitive/button: app/ui/button.tsx
+projections:
+- name: css-variables
+  target: theme.yaml
+  mechanism: css-variables
+  mappings:
+  - token: token/color.primary
+    native_key: :root.--color-primary
+  - token: token/color.surface
+    native_key: :root.--color-surface
+  - token: token/space.md
+    native_key: :root.--space-md
+  digest:
+    algorithm: sha256-canonical-json-v1
+    value: a0fd68dec628b677dc4fa25de66e64f36202aaedaf9a6fb69e96462f125d0335
+updated_at: '2026-09-08T00:00:00Z'
+binding_digest:
+  algorithm: sha256-canonical-json-v1
+  value: 78ae25e6485c5d36ca4dc1eb2d9ddd3d19fb60676703f6812b04d976e80cb728

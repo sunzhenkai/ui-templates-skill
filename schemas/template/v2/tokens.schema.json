@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/template/v2/tokens.schema.json",
+  "title": "UI template tokens v2",
+  "type": "object",
+  "minProperties": 2,
+  "required": ["schema_version", "themes"],
+  "properties": {"schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"}},
+  "patternProperties": {"^(?!schema_version$)[A-Za-z0-9_-]+$": {"$ref": "#/$defs/tokenGroup"}},
+  "additionalProperties": false,
+  "$defs": {
+    "unit": {"enum": ["px", "rem", "em", "%", "ms", "s", "deg", "ratio", "unitless"]},
+    "primitive": {"type": ["string", "number", "boolean"]},
+    "primitiveArray": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/primitive"}
+    },
+    "compoundNumeric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": {"type": "number"},
+        "unit": {"$ref": "#/$defs/unit"}
+      }
+    },
+    "compoundArray": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value"],
+      "properties": {
+        "value": {"$ref": "#/$defs/primitiveArray"},
+        "unit": {"$ref": "#/$defs/unit"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"value": {"contains": {"type": "number"}}}, "required": ["value"]},
+          "then": {"required": ["unit"]}
+        }
+      ]
+    },
+    "compoundMap": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {"pattern": "^[A-Za-z0-9_-]+$"},
+      "additionalProperties": {"$ref": "#/$defs/compoundMember"}
+    },
+    "compoundMember": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "boolean"},
+        {"$ref": "#/$defs/compoundNumeric"},
+        {"$ref": "#/$defs/compoundArray"},
+        {"$ref": "#/$defs/compoundMap"}
+      ]
+    },
+    "tokenRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "origin"],
+      "properties": {
+        "value": {
+          "oneOf": [
+            {"type": "string", "minLength": 1},
+            {"type": "number"},
+            {"type": "boolean"},
+            {"$ref": "#/$defs/primitiveArray"},
+            {"$ref": "#/$defs/compoundMap"}
+          ]
+        },
+        "origin": {"$ref": "common.schema.json#/$defs/origin"},
+        "unit": {"$ref": "#/$defs/unit"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"value": {"type": "number"}}, "required": ["value"]},
+          "then": {"required": ["unit"]}
+        },
+        {
+          "if": {"properties": {"value": {"type": "array", "contains": {"type": "number"}}}, "required": ["value"]},
+          "then": {"required": ["unit"]}
+        }
+      ]
+    },
+    "tokenGroup": {
+      "oneOf": [
+        {"$ref": "#/$defs/tokenRecord"},
+        {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {"pattern": "^[A-Za-z0-9_-]+$"},
+          "additionalProperties": {"$ref": "#/$defs/tokenGroup"},
+          "not": {"required": ["value"]}
+        }
+      ]
+    }
+  }
+}

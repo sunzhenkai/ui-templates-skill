@@ -1,0 +1,151 @@
+schema: design-system-vendor/v1
+vendors:
+- name: frontend-design
+  source: anthropics/skills
+  path: frontend-design
+  revision: snapshot-2026-08-28
+  license: Apache-2.0
+  files:
+  - path: LICENSE.txt
+    digest:
+      algorithm: sha256-file-v1
+      value: 0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594
+  - path: SKILL.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 1608ea77fbb6fc30d13a97d12cfa8ebf31358d40f0dd97beed24829d6b3f45dd
+  allowed_triggers:
+  - visual-direction
+- name: shadcn
+  source: shadcn/ui
+  path: shadcn
+  revision: 683a5a9b370acdb7785a0529434e6a3b8c7e0441
+  license: MIT
+  files:
+  - path: LICENSE.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 1564074e13439397221ffd522e2e504d56561994a23d371aa5e3ad43e4f5423f
+  - path: SKILL.md
+    digest:
+      algorithm: sha256-file-v1
+      value: deba6c5152d9835892fa7dffeb1fedbb689ddac7e59e14e57ec5eaf9463309e4
+  - path: cli.md
+    digest:
+      algorithm: sha256-file-v1
+      value: a381e35bf36fe7bb851952c13707e01e82434fd7a4a4e53f6df26c6370838904
+  - path: customization.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 84c1d47168c4b8adb5840e4af30a4e373ae3377c1110478c8974f398dd63f5ba
+  - path: registry.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 4f239be36bd2b58e17047db1ca80ab7da00e15a8b73242e5e4d50d113c4caa05
+  - path: rules/base-vs-radix.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 2b2deb47d004285220c1fc6b38bb2edc2d0ccbcdafd031b0b189d5d8ed0d1ba8
+  - path: rules/chat.md
+    digest:
+      algorithm: sha256-file-v1
+      value: fcbc4eb29a3998fa3e24e9f7f1cbb2b9f33e98cb5b66a153eeccdb74e78f9612
+  - path: rules/composition.md
+    digest:
+      algorithm: sha256-file-v1
+      value: f282df828d83a91132a846ddb62eea149a7c7c94822e9ca88cfddf85af01aa41
+  - path: rules/forms.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 29593e14381e34626f8e0e9c15c59f3394b92a0623af6a6ec94585400123853c
+  - path: rules/icons.md
+    digest:
+      algorithm: sha256-file-v1
+      value: d4a58266648872d9ee07d0c2368843a1cb88b8253b7f528dd7bda9d68b6c2535
+  - path: rules/styling.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 47bd2c3b6216b96af0ab169063a83dfef7f80c58536cf69445a6f4d22753326c
+  allowed_triggers:
+  - component-system:shadcn
+- name: tailwind-css-patterns
+  source: giuseppe-trisciuoglio/developer-kit
+  path: tailwind-css-patterns
+  revision: 50f0b945bd81ee1dac377f609871e63b732347fa
+  license: MIT
+  files:
+  - path: LICENSE
+    digest:
+      algorithm: sha256-file-v1
+      value: e8ee42589783854f830e3b39201070af18f8a7c3edf71a437ef0e1d051c02960
+  - path: SKILL.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 63984406824ef934b457d34db25a5892b5375a82e31845159e6e97179c5acf4c
+  - path: references/accessibility.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 8dfd355daaebbd0e4b4e5d14bb4d075b544574109ac5728e40bce85c367e3484
+  - path: references/animations.md
+    digest:
+      algorithm: sha256-file-v1
+      value: f8536e0b5bd06ff61b3bc27381c28d6573dc798229d896270bec4bb60a4efdd8
+  - path: references/component-patterns.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 399bf0deb97654ce6c1a82a664ba073f4bd047e96bc1a81558553b45a4f3f266
+  - path: references/configuration.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 078e9a22304220c8d9eef8d2976f101fd3126b242cc68107373dfe0745a30cfb
+  - path: references/layout-patterns.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 7603d205c67299882bfd45b6da489683d7317af9b5460d9c5dc3c1345d586209
+  - path: references/performance.md
+    digest:
+      algorithm: sha256-file-v1
+      value: c654b77217211855faa525b2a8ad30d3f756a92ac9e6aeb0206555e83a703c20
+  - path: references/reference.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 318614d8f96720a7805338ecf4954b15a280662a99915b96582c0fd45e771103
+  - path: references/responsive-design.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 9a14a771383126750706fe5781da18622e44337feaee6756915e06cd1282b230
+  allowed_triggers:
+  - style-engine:tailwind
+- name: tailwind-design-system
+  source: wshobson/agents
+  path: tailwind-design-system
+  revision: 38e19c20d2b154510b0e624a2e3e186b19b5c527
+  license: MIT
+  files:
+  - path: LICENSE
+    digest:
+      algorithm: sha256-file-v1
+      value: f89abb55d9f073f38f1703e4518f0613c788c6174be7f13b8dfe48a1c076c746
+  - path: SKILL.md
+    digest:
+      algorithm: sha256-file-v1
+      value: b6577edb7b7f71a6954f68b80c7eea1748ccdf31862759f864bce558fb2bcf83
+  - path: references/advanced-patterns.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 40a4a9fa931f4bc95213870ea1fe7c32ce50aacf3531af07954b660c4f51e1a2
+  - path: references/details.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 22e5e4500edc1f11c32871d6aad013b10e34724f29d486f080faea46a95bd6e7
+  - path: references/references/advanced-patterns.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 44473bce5ad2b488c14dba4321015876bd6b36b2f55c7e83a6928c9020174117
+  - path: references/references-advanced-patterns-bridge.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 44473bce5ad2b488c14dba4321015876bd6b36b2f55c7e83a6928c9020174117
+  allowed_triggers:
+  - style-engine:tailwind
+  - token-projection:tailwind-v4

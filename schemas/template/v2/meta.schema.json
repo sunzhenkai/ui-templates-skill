@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/template/v2/meta.schema.json",
+  "title": "UI template metadata v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "template_version", "name", "description", "sources", "captured_at", "tokens", "evidence", "platforms", "confidence", "coverage"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "template_version": {"$ref": "common.schema.json#/$defs/semver"},
+    "name": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "description": {"type": "string", "minLength": 1},
+    "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+    "captured_at": {"$ref": "common.schema.json#/$defs/date"},
+    "tokens": {"const": "tokens.yaml"},
+    "evidence": {"const": "evidence.yaml"},
+    "platforms": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["web", "mobile", "desktop"]}},
+    "tags": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "confidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["overall", "layout", "visual", "components"],
+      "properties": {
+        "overall": {"$ref": "common.schema.json#/$defs/confidence"},
+        "layout": {"$ref": "common.schema.json#/$defs/confidence"},
+        "visual": {"$ref": "common.schema.json#/$defs/confidence"},
+        "components": {"$ref": "common.schema.json#/$defs/confidence"}
+      }
+    },
+    "coverage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["platforms", "viewports", "themes", "page_modes", "components", "states"],
+      "properties": {
+        "platforms": {"$ref": "#/$defs/coverageDimension"},
+        "viewports": {"$ref": "#/$defs/coverageDimension"},
+        "themes": {"$ref": "#/$defs/coverageDimension"},
+        "page_modes": {"$ref": "#/$defs/coverageDimension"},
+        "components": {"$ref": "#/$defs/coverageDimension"},
+        "states": {"$ref": "#/$defs/coverageDimension"}
+      }
+    },
+    "waivers": {"type": "array", "items": {"$ref": "#/$defs/waiver"}}
+  },
+  "$defs": {
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "ref", "revision", "captured_at"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^source-[0-9]{3}$"},
+        "type": {"$ref": "common.schema.json#/$defs/sourceType"},
+        "ref": {"type": "string", "minLength": 1},
+        "revision": {"type": "string", "minLength": 1},
+        "captured_at": {"$ref": "common.schema.json#/$defs/timestamp"}
+      }
+    },
+    "coverageDimension": {
+      "type": "object", "additionalProperties": false,
+      "required": ["declared", "observed", "defaulted", "unsupported"],
+      "properties": {
+        "declared": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "observed": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "defaulted": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "unsupported": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "waiver": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rule_id", "pair", "reason", "expires_at_template_version"],
+      "properties": {
+        "rule_id": {"$ref": "common.schema.json#/$defs/ruleId"},
+        "pair": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1},
+        "expires_at_template_version": {"$ref": "common.schema.json#/$defs/semver"}
+      }
+    }
+  }
+}

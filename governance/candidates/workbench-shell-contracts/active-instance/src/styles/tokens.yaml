@@ -1,0 +1,15 @@
+tokens:
+  color-primary: oklch(0.21 0.006 285.885)
+  color-primary-hover: color-mix(in oklab, oklch(0.21 0.006 285.885) 80%, transparent)
+  color-surface: oklch(1 0 0)
+  color-surface-border: oklch(0.92 0.004 286.32)
+  color-surface-hover: oklch(0.967 0.001 286.375)
+  color-secondary: oklch(0.967 0.001 286.375)
+  color-secondary-hover: color-mix(in oklab, oklch(0.967 0.001 286.375) 80%, transparent)
+  color-link: oklch(0.55 0.16 255)
+  color-brand-hover: color-mix(in oklab, oklch(0.55 0.16 255) 90%, transparent)
+  color-brand-foreground: oklch(0.985 0 0)
+  color-status-danger: oklch(0.577 0.245 27.325)
+  color-destructive-hover: color-mix(in oklab, oklch(0.577 0.245 27.325) 20%, transparent)
+  radius-lg: 0.625
+  size-control-default: 32

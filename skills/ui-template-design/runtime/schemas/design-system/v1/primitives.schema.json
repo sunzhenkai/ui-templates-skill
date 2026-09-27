@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/primitives.schema.json",
+  "title": "Design System primitives v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "items"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-primitives/v1"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "states"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/entityId"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sizes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "states": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "token_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rule_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/entityId"
+            }
+          },
+          "anatomy": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "slot",
+                "order"
+              ],
+              "properties": {
+                "slot": {
+                  "enum": [
+                    "icon",
+                    "label",
+                    "badge",
+                    "shortcut",
+                    "trailing"
+                  ]
+                },
+                "order": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 32
+                }
+              }
+            }
+          },
+          "variant_contracts": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "presentation",
+                "radius"
+              ],
+              "properties": {
+                "presentation": {
+                  "enum": [
+                    "filled",
+                    "outline",
+                    "ghost",
+                    "plain"
+                  ]
+                },
+                "radius": {
+                  "type": "string",
+                  "pattern": "^token/[A-Za-z0-9_.-]+$"
+                },
+                "control_height": {
+                  "type": "string",
+                  "pattern": "^token/[A-Za-z0-9_.-]+$"
+                },
+                "hover": {
+                  "type": "string",
+                  "pattern": "^token/[A-Za-z0-9_.-]+$"
+                },
+                "active": {
+                  "type": "string",
+                  "pattern": "^token/[A-Za-z0-9_.-]+$"
+                },
+                "focus_ref": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "context_bindings": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "selected"
+              ],
+              "properties": {
+                "selected": {
+                  "type": "string",
+                  "pattern": "^token/[A-Za-z0-9_.-]+$"
+                },
+                "hover": {
+                  "type": "string",
+                  "pattern": "^token/[A-Za-z0-9_.-]+$"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

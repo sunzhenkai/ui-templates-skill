@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/design-system/v1/migration.schema.json",
+  "title": "Design System migration receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "source",
+    "target",
+    "status",
+    "changes",
+    "unresolved",
+    "errors",
+    "completed_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": "design-system-migration/v1"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "identity",
+        "digest"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "template-v2",
+            "design-freeze-v1"
+          ]
+        },
+        "identity": {
+          "type": "string"
+        },
+        "digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "identity",
+        "digest"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "package",
+            "active-instance"
+          ]
+        },
+        "identity": {
+          "type": "string"
+        },
+        "digest": {
+          "$ref": "common.schema.json#/$defs/digest"
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "failed"
+      ]
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "layer",
+          "action"
+        ],
+        "properties": {
+          "layer": {
+            "type": "string"
+          },
+          "action": {
+            "enum": [
+              "mapped",
+              "transformed",
+              "defaulted",
+              "dropped"
+            ]
+          },
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "completed_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    }
+  }
+}

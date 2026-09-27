@@ -1,0 +1,566 @@
+diff --git a/skills/ui-template/SKILL.md b/skills/ui-template/SKILL.md
+--- a/skills/ui-template/SKILL.md
++++ b/skills/ui-template/SKILL.md
+@@ -22,7 +22,7 @@
+ 
+ ### Template Apply
+ 
+-- 用户明确要求“用 `workbench-shell` 做页面”“按这个模板实现 UI”“基于该模板搭后台”。
++- 用户明确要求“用某个已有模板做页面”“按这个模板实现 UI”“基于该模板搭后台”。
+ - 用户已经选定本 skill 维护的模板,并希望得到可运行项目中的页面实现。
+ - 用户要求把模板规则落成组件、页面、路由状态、响应式行为和验收报告。
+ 
+@@ -34,7 +34,9 @@
+ - **Apply 的产物是可验证实现,不是一次性 demo**:每个阶段都有可检查产物;完成前必须有真实浏览器验证和 design review。
+ - **注明来源与置信度**:图片反推值标注 `(估算)`;来自代码或 computed style 的值标明出处。
+ - **模板自包含**:引用外部来源只保留 URL/路径和采集时间,不依赖来源持续可用。
+-- **规范优先于实施说明**:模板的 `spec.md` 是设计规则唯一入口;`implementation/` playbook 只解释顺序、映射和验收,冲突时以 `spec.md` 为准。
++- **规范优先于实施说明**:模板的 `spec.md` 是设计规则唯一入口;`apply/` 只解释顺序与验收,冲突时以 `spec.md` 为准。
++- **Token 确定且可机读**:每个模板必须提供 `tokens.yaml` 作为精确值唯一载体;来源未体现的字段回填模板默认值并标注 `origin: default`,禁止留空交给消费方即兴发挥。
++- **模板只承载设计规则**:目录契约、API/data 分层、状态库选型和具体技术栈 adapter 属于消费项目实施决策,不进入模板;模板内实施文档只写顺序、规则引用与验收方式。
+ - **路由状态必须有语义**:跨页面目的地使用真实 `<a href>`;当前项使用 `aria-current="page"`;可恢复状态进入 URL。
+ - **真实浏览器是完成门禁**:不接受只看代码就宣称完成;必须检查渲染、console、可访问性树、computed style、交互状态和多视口表现。
+ 
+@@ -49,7 +51,7 @@
+ 
+ ### 1. 确定来源类型与模板名
+ 
+-- 来源三选一:`web`(运行中的站点)、`repo`(代码仓库)、`image`(图片/截图)。
++- 来源四选一:`web`(运行中的站点)、`repo`(代码仓库)、`image`(图片/截图)、`doc`(设计文档/规范文档)。
+ - 与用户确认模板名(英文小写连字符,如 `linear-dark`),作为 `templates/<name>/` 目录名。
+ - 若 `templates/<name>/` 已存在,询问是**更新**还是**另建**。
+ 
+@@ -60,19 +62,31 @@
+ - `web` → [references/source-web.md](references/source-web.md)
+ - `repo` → [references/source-repo.md](references/source-repo.md)
+ - `image` → [references/source-image.md](references/source-image.md)
++- `doc` → [references/source-doc.md](references/source-doc.md)
+ 
+-规范文档骨架、`meta.yaml` 字段和 optional `implementation/` 约定见 [references/spec-format.md](references/spec-format.md)。
++规范文档骨架、`tokens.yaml` 与 `meta.yaml` 字段、optional `apply/` 约定见 [references/spec-format.md](references/spec-format.md)。
+ 
+-### 3. 生成模板
++### 3. 归一与决策(Normalize & Decide)
++
++提取完成后、生成模板前,必须先消除自由裁量空间:
++
++- **归档**:视觉不可区分的近义色合并为一个 token;间距归到统一基数(常见 4px);字号收敛为不超过 10 档;圆角按用途分档。
++- **缺口回填**:颜色、字体族、状态色等关键字段不允许留白;来源未体现时生成模板默认值,在 `tokens.yaml` 标注 `origin: default`,并在决策记录中说明理由。
++- **状态补全**:每个交互组件补齐 hover、focus-visible、disabled、selected;来源未体现时使用模板默认设计,不留给消费方即兴发挥。
++- **对比度预检**:按主题逐对计算角色组合的 WCAG 对比度,不达标在导入阶段修正并记录;不允许把已知失败组合带入 Apply。
++- **覆盖度记录**:在 `meta.yaml` 的 `coverage` 中区分 observed 与 defaulted,明确视口、主题、组件、状态各采集到什么程度。
++
++### 4. 生成模板
+ 
+ 基础结构:
+ 
+ ```text
+ templates/<name>/
+-├── spec.md            # 设计规则唯一入口
+-├── meta.yaml          # 模板元数据
++├── spec.md            # 设计规则唯一入口(开篇列 Non-negotiables)
++├── tokens.yaml        # 精确值唯一载体(必备)
++├── meta.yaml          # 模板元数据(含 coverage)
+ ├── assets/            # 截图、色板等佐证材料(可选)
+-└── implementation/    # 可选:消费端落地 playbook 与 stack adapter
++└── apply/             # 可选:仅实施顺序与验收引用
+ ```
+ 
+ 写作要求:
+@@ -80,13 +94,15 @@
+ - 全部使用简体中文;色值、字体名、CSS 属性、路径和组件名保留原文。
+ - 每个估算值标注 `(估算)`,精确值注明出处(如“来自 `:root` CSS 变量”)。
+ - 配色必须给出角色语义(背景/前景/主色/强调/边框/成功/警告等),不能只列色卡。
+-- 有佐证截图时放入 `assets/` 并在 `spec.md` 中引用。
+-- `implementation/` 不复制 `spec.md` 规则,只写实施顺序、stack 映射、组件 inventory 和质量验收。
++- `spec.md` 开篇的 `Non-negotiables` 一节列出不超过 20 条可独立检查的 MUST 规则;其余规则标注 SHOULD(偏离须记录理由)或 MAY。
++- `spec.md` 是设计规则唯一入口;`tokens.yaml` 是颜色、字号、间距、圆角、阴影等精确值的机器可读唯一载体,`spec.md` 引用并解释,不维护第二份数值清单。
++- 有佐证截图时放入 `assets/` 并在 `spec.md` 中引用;web 来源必须提供至少一张参考截图,确实无法获得时在 `coverage` 标注 `visual_reference: false`,且 `confidence` 上限为 `medium`。
++- `apply/` 不复制 `spec.md` 规则,只写实施顺序、规则引用和质量验收;目录契约、API/data 分层、状态库选型、stack adapter 与具体业务域名不得进入模板。
+ 
+-### 4. 更新索引与收尾
++### 5. 更新索引与收尾
+ 
+ - 更新 `templates/INDEX.md`(不存在则创建),追加一行 `| <name> | <一句话风格描述> | <来源类型> | <采集日期> |`。
+-- 向用户汇报模板路径、关键 token 摘要、哪些是估算值,以及是否包含 implementation playbook。
++- 向用户汇报模板路径、关键 token 摘要、默认值与估算值说明、coverage 与决策记录,以及索引更新。
+ 
+ ## Workflow B — Template Apply
+ 
+@@ -95,15 +111,18 @@
+ 1. [references/apply-workflow.md](references/apply-workflow.md) — 阶段、产物和 gate。
+ 2. [references/toolchain.md](references/toolchain.md) — 默认工具与缺失回退。
+ 3. [references/quality-gates.md](references/quality-gates.md) — 可访问性、路由、响应式和浏览器验收。
+-4. `templates/<name>/spec.md` — 设计规则唯一入口。
+-5. `templates/<name>/meta.yaml`、`platforms/*.md`、`implementation/*`(如存在)。
++4. `templates/<name>/spec.md` — 设计规则唯一入口,优先读取 `Non-negotiables`。
++5. `templates/<name>/tokens.yaml` — 精确值唯一载体。
++6. `templates/<name>/meta.yaml`、`platforms/*.md`、`apply/*`(如存在)。
++
++必读范围为 `spec.md` 的 Non-negotiables、`tokens.yaml` 与所选平台文档;`apply/` 文档按所处阶段加载,不要求一次性通读全部拆分文件。
+ 
+ ### 阶段总览
+ 
+ | 阶段 | 必须先完成 | 核心产物 |
+ | --- | --- | --- |
+ | 0. Intake | — | 模板名、页面范围、平台、技术栈、约束 |
+-| 1. Art direction & tokens | Intake | 风格承诺、配色角色、字体阶梯、密度、主题、边框/阴影策略 |
++| 1. Art direction & tokens | Intake | 风格承诺、从 `tokens.yaml` 冻结的 token 映射、密度、主题、边框/阴影策略 |
+ | 2. IA/layout/routes | Art direction | route inventory、页面模式、shell 形态、断点矩阵、URL 状态 |
+ | 3. Code structure | IA/layout | 目录契约、命名、状态/数据/测试边界 |
+ | 4. Component inventory | Code structure | primitives、variants、states、a11y、source |
+@@ -122,12 +141,12 @@
+ - icon-only 控件必须有非空 accessible name;交互控件不得嵌套。
+ - 状态不能只靠颜色表达;焦点必须可见;弹层必须管理焦点和返回。
+ - `100svh` 根容器不滚动,滚动只发生在内容列、列表、详情或看板列内部。
+-- 控制台无未处理错误;computed style 必须匹配模板 token。
+-- review 后评估哪些发现需要回写模板、stack adapter 或通用 skill。
++- 控制台无未处理错误;computed style 必须匹配模板 token,expected 值以 `tokens.yaml` 为来源。
++- review 后评估哪些发现需要回写模板或通用 skill;消费项目的工程结构问题留在当前项目,不回写模板。
+ 
+ ## 汇报要求
+ 
+-- Authoring:汇报模板路径、关键 token、估算值和索引更新。
++- Authoring:汇报模板路径、关键 token、默认值与估算值、coverage、决策记录和索引更新。
+ - Apply:汇报已实现页面、未实现范围、目录结构、组件来源、浏览器验证证据、review 结论和模板反馈建议。
+ - 任何工具不可用时,说明所采用的回退方案;任何模板规则冲突时,说明以 `spec.md` 为准的处理结果。
+ 
+diff --git a/skills/ui-template/references/spec-format.md b/skills/ui-template/references/spec-format.md
+--- a/skills/ui-template/references/spec-format.md
++++ b/skills/ui-template/references/spec-format.md
+@@ -1,6 +1,6 @@
+-# 设计规范文档格式(spec.md、meta.yaml 与 implementation/)
++# 设计规范文档格式(spec.md、tokens.yaml、meta.yaml 与 apply/)
+ 
+-本文档定义 `templates/<name>/spec.md` 的章节骨架、`meta.yaml` 的字段和 optional `implementation/` playbook 约定。写规范时按此结构组织;来源缺某项信息时,写"来源未体现"或给出标注 `(估算)` 的值,不要留空章节。
++本文档定义 `templates/<name>/spec.md` 的章节骨架、`tokens.yaml` 与 `meta.yaml` 的字段,以及 optional `apply/` 约定。写规范时按此结构组织;来源未体现的字段必须在 `tokens.yaml` 回填默认值,`spec.md` 说明缺口与默认值依据,不要留空章节。
+ 
+ ## spec.md 骨架
+ 
+@@ -13,6 +13,10 @@
+ - 采集日期:<YYYY-MM-DD>
+ - 佐证截图:assets/<文件名>(如有)
+ 
++## 0. 不可协商规则(Non-negotiables)
++
++不超过 20 条、每条可独立检查的 MUST 规则;消费方无论使用什么技术栈都必须满足。其余正文规则标注 SHOULD(偏离须记录理由)或 MAY。
++
+ ## 1. 整体风格
+ 
+ - 风格关键词:3~6 个(如:深色、极简、几何、高密度)
+@@ -51,7 +55,7 @@
+ 
+ ## 5. 组件风格要点
+ 
+-按来源中实际出现的组件描述,每条一句话讲清"长什么样",例如:
++按来源中实际出现的组件写成紧凑契约,每个组件至少覆盖 semantic element、variants、sizes、states、geometry、a11y;交互组件必须包含 hover、focus-visible、disabled、selected。来源未体现的状态按归一与决策阶段回填默认值。示例:
+ 
+ - 按钮:实心主色、圆角 6px、hover 加深
+ - 卡片:容器背景 + 1px 边框,无阴影
+@@ -80,53 +84,96 @@
+ name: <模板名,与目录名一致>
+ description: <一句话风格描述,与 spec.md 开头一致>
+ source:
+-  type: web | repo | image
+-  ref: <URL / 仓库路径或地址 / 图片文件名>
++  type: web | repo | image | doc
++  ref: <URL / 仓库路径或地址 / 图片或文档文件名>
+ captured_at: <YYYY-MM-DD>
++tokens: tokens.yaml
+ tags: [<风格关键词,如 dark, minimal, dashboard>]
+-confidence: high | medium | low   # repo/web 精确提取为 high;image 反推一般为 medium/low
++confidence: high | medium | low   # 取最弱维度;doc 来源建议在 spec.md 分别说明 layout 与 visual 置信度
+ platforms: [web, mobile]   # 可选:模板覆盖多平台外壳时列出,各平台差异细节放 platforms/<platform>.md
+-implementation:             # 可选:只有模板包含消费端落地 playbook 时填写
+-  playbook: implementation/playbook.md
+-  stacks:
+-    - <stack-adapter-name>  # 如 react-vite-tailwind-shadcn;stack adapter 放 implementation/ 下
++coverage:
++  visual_reference: true | false
++  viewports: [desktop]
++  themes: [light]
++  components:
++    observed: [<来源实际体现的组件>]
++    defaulted: [<回填默认契约的组件>]
++  states:
++    observed: [default, hover]
++    defaulted: [focus-visible, disabled, selected]
+ ```
+ 
+ `confidence` 是模板复用时的重要参考:`low` 意味着消费者应把 spec.md 当风格方向而非精确数值。
+ 
+-## optional implementation playbook
++## tokens.yaml(必备)
++
++`tokens.yaml` 是颜色、字号、间距、圆角、阴影等精确值的机器可读唯一载体;`spec.md` 负责解释规则与用途,不维护第二份数值清单。最小结构:
++
++```yaml
++schema: 1
++themes:
++  light:
++    background: { value: "#ffffff", origin: source }
++    foreground: { value: "#0f172a", origin: default }
++  dark:
++    background: { value: "#0b1220", origin: default }
++    foreground: { value: "#e5e7eb", origin: default }
++typography:
++  family:
++    body: { value: "Inter, system-ui, sans-serif", origin: default }
++  scale:
++    body: { size: 14, lineHeight: 20, origin: source }
++spacing:
++  base: 4
++  allowed: [4, 8, 12, 16, 24, 32]
++radius:
++  control: 10
++  card: 8
++```
+ 
+-当模板足够复杂、需要约定消费顺序、组件映射、代码目录或默认技术栈时,可以增加:
++硬性要求:
++
++- `origin` 必填,取值 `source | computed | estimated | default`;`default` 表示模板回填的默认值,不得伪装成来源派生。
++- 配色、字体族、字号阶梯、间距、圆角、阴影不允许空值或区间值;来源未体现时回填默认值并记录决策。
++- 支持双主题时,`themes.light` 与 `themes.dark` 的角色键必须一致。
++- 间距使用 `allowed` 白名单;组件几何(高度、内边距)优先引用该白名单。
++
++## optional apply/ 实施指南
++
++当模板足够复杂、需要约定消费顺序与验收方式时,可以增加 `apply/`;它只承载实施顺序与验收引用,不承载设计规则或工程结构:
+ 
+ ```text
+ templates/<name>/
+-└── implementation/
+-    ├── playbook.md                        # 必有:实施总入口与阶段 gate
+-    ├── routes-and-layouts.md              # 推荐用于 layout-heavy 模板
+-    ├── components.md                      # 推荐用于组件密集模板
+-    ├── code-structure.md                  # 推荐用于目标项目落地模板
+-    ├── stack-<framework>.md               # 可选:技术栈 adapter
+-    └── quality.md                         # 推荐:模板专属验收矩阵
++├── components.md    # 可选:设计层组件契约(semantic/variants/sizes/states/geometry/a11y,无栈映射)
++└── apply/
++    ├── playbook.md  # 必有:实施阶段顺序与 gate,逐条引用 spec 规则
++    └── quality.md   # 推荐:验收矩阵,只写“检查哪条规则、如何取证”,不复制数值
+ ```
+ 
++归属判断:
++
++- 页面模式、布局矩阵、断点表、URL 契约属于设计规则,写入 `spec.md` 或其拆分子文件,不放 `apply/`。
++- 组件契约是设计层内容,放模板根目录 `components.md`;不得包含 `source: <组件库>` 之类栈映射。
++- 以下内容**禁止**进入模板:目录契约(如 `src/` 结构)、API/mock/data 分层、状态库选型、stack adapter(如 `stack-<framework>.md`)、依赖清单、具体消费项目的业务域名。它们在 Apply Phase 3 由目标项目现场决策。
++
+ 职责边界:
+ 
+ - `spec.md` 是设计规则唯一入口,定义“结果必须长什么样、如何交互”。
+-- `implementation/playbook.md` 定义“按什么顺序做、每步交付什么、如何验收”。
+-- stack adapter 定义某个技术栈下的目录、组件来源和工程检查;不得改变通用设计规则。
++- `tokens.yaml` 是精确值唯一载体;`spec.md` 引用并解释,不维护第二份数值清单。
++- `apply/playbook.md` 只定义“按什么顺序做、每步引用哪条规则、如何验收”。
+ 
+ 写作要求:
+ 
+-- implementation 文档必须引用 `spec.md` 的规则,不复制色值、字号、间距或布局细节。
+-- implementation 文档使用简体中文;路径、组件名、命令、CSS 属性和框架术语保留原文。
++- apply 文档必须引用 `spec.md` 的规则,不复制色值、字号、间距或布局细节。
++- apply 文档使用简体中文;路径、组件名、命令、CSS 属性和框架术语保留原文。
+ - 不把 runnable starter、依赖清单或完整业务代码放入模板;模板仍以可共享规范为主。
+-- 若某个规则既需要出现在 `spec.md` 又影响实施验收,在 `spec.md` 定义规则,在 implementation 文档中只写“检查该规则”的方式。
++- 若某个规则既需要出现在 `spec.md` 又影响实施验收,在 `spec.md` 定义规则,在 apply 文档中只写“检查该规则”的方式。
+ 
+ 冲突处理:
+ 
+-1. `spec.md` 与 `implementation/` 冲突时,以 `spec.md` 为准。
+-2. stack adapter 与通用 implementation playbook 冲突时,若只是技术栈差异,以 stack adapter 为准;若影响通用设计结果,必须先修正 `spec.md` 或通用 playbook。
+-3. 更新模板时,先判断发现属于通用规则、模板实施顺序、stack adapter 还是业务实现,再写入对应文件。
++1. `spec.md` 与 `apply/` 冲突时,以 `spec.md` 为准。
++2. `spec.md`/`tokens.yaml` 与任何历史消费项目的工程结构冲突时,以模板为准;工程结构在目标项目重新决策。
++3. 更新模板时,先判断发现属于设计规则、验收方式还是当前业务实现;最后一种不回写模板。
+ 
+ ## 大型规范的拆分
+ 
+diff --git a/skills/ui-template/references/source-web.md b/skills/ui-template/references/source-web.md
+--- a/skills/ui-template/references/source-web.md
++++ b/skills/ui-template/references/source-web.md
+@@ -7,7 +7,8 @@
+ 1. **打开页面并截图**
+    - 使用可用的浏览器工具(如 Playwright MCP、browser-use)导航到目标 URL。
+    - 截取首屏整页截图(及关键区域截图),保存到 `templates/<name>/assets/`。
+-   - 若有明显的深色/浅色切换、登录后页面,用户提到则一并采集;否则只处理用户给的页面。
++   - 至少采集首页与一个代表性内页;只处理用户给的页面时,在 `meta.yaml` coverage 中记录未覆盖页面。
++   - 若有明显的深色/浅色切换,两套都采集并成对记录;只采到一套时在 coverage 标注。
+ 
+ 2. **提取 CSS 变量与设计 token**
+    - 在页面执行 JS,读取 `:root` / `html` 上的自定义属性:
+@@ -28,8 +29,12 @@
+      `color`、`background-color`、`font-family`、`font-size`、`font-weight`、`line-height`、`padding`、`border`、`border-radius`、`box-shadow`。
+    - 按钮注意区分 primary / secondary;有条件可看 hover 态。
+ 
+-4. **归纳,而非罗列**
+-   - 把采样到的字号归纳成阶梯,间距归纳成体系(常见为 4px 或 8px 基数)。
++4. **采集交互状态**
++   - 对主按钮、链接、输入框、导航项强制采集 hover 与 focus-visible(可用伪类强制或状态注入);有条件补 disabled、selected。
++   - 状态值写入 `tokens.yaml`,origin 标注 `computed`。
++
++5. **归纳,而非罗列**
++   - 把采样到的字号归纳成阶梯,间距归纳成体系(常见为 4px 或 8px 基数);视觉不可区分的近义色合并为一个 token,结果写入 `tokens.yaml`。
+    - 出现频次最高的背景色/文字色才是"页面背景/主文字",别被个别组件带偏。
+ 
+ ## 注意事项
+diff --git a/skills/ui-template/references/source-repo.md b/skills/ui-template/references/source-repo.md
+--- a/skills/ui-template/references/source-repo.md
++++ b/skills/ui-template/references/source-repo.md
+@@ -4,6 +4,9 @@
+ 
+ ## 步骤
+ 
++0. **确认来源形态**
++   - 来源必须是含可提取代码/token 的仓库;若实际是 Markdown/PDF 设计文档,改走 `source-doc.md`,不要按 repo 流程空转后把缺口留白。
++
+ 1. **定位 token 来源**(按优先级)
+    - `tailwind.config.*`:`theme.colors`、`fontFamily`、`fontSize`、`spacing`、`borderRadius`、`boxShadow`。
+    - CSS 变量:`:root`、`[data-theme]` 下的自定义属性(全局 CSS、`variables.css`、`theme.css` 等)。
+@@ -11,7 +14,7 @@
+    - 组件库的变体定义:如 `button.tsx` 里的 variant 样式、`cva` 配置。
+ 
+ 2. **通读 token,直接转写为规范**
+-   - 色板、字号阶梯、间距体系、圆角、阴影通常能在这里拿全,属于精确值。
++   - 色板、字号阶梯、间距体系、圆角、阴影通常能在这里拿全,属于精确值,写入 `tokens.yaml` 时 origin 标注 `source`。
+    - 明暗双主题都定义了的话,两个都记录,在 spec.md 注明是双主题。
+ 
+ 3. **读代表性组件,归纳"用法规则"**
+diff --git a/skills/ui-template/references/apply-workflow.md b/skills/ui-template/references/apply-workflow.md
+--- a/skills/ui-template/references/apply-workflow.md
++++ b/skills/ui-template/references/apply-workflow.md
+@@ -1,6 +1,6 @@
+ # Template Apply 工作流
+ 
+-本文定义“使用已有 UI 模板实现真实页面”的阶段顺序、产物、工具配合、完成门禁、中断恢复和反馈闭环。执行时必须同时读取模板的 `spec.md`;若模板带有 `implementation/`,也必须读取其 playbook 与对应 stack adapter。
++本文定义“使用已有 UI 模板实现真实页面”的阶段顺序、产物、工具配合、完成门禁、中断恢复和反馈闭环。执行时必须同时读取模板的 `spec.md`(优先 Non-negotiables)与 `tokens.yaml`;若模板带有 `apply/`,读取其 playbook,并按阶段加载其余拆分文档。
+ 
+ ## 0. Intake:模板选择与范围确认
+ 
+@@ -15,9 +15,9 @@
+ ### 必做检查
+ 
+ 1. 选择一个已存在的模板;没有合适模板时先创建或扩展模板,不要即兴生成一套新 shell。
+-2. 读取模板 `meta.yaml` 和 `spec.md`;存在 `implementation/` 时读取 `implementation/playbook.md`。
++2. 读取模板 `meta.yaml`、`spec.md` 的 Non-negotiables 和 `tokens.yaml`;存在 `platforms/` 或 `apply/` 时读取所选平台文档与 `apply/playbook.md`。
+ 3. 若模板支持多个平台,确认本次采用哪个平台路径。
+-4. 若目标栈与默认 adapter 不同,先声明需要建立新的 stack adapter。
++4. 技术栈约束记录进 Implementation Brief;模板不提供 stack adapter,目录与工程边界在 Phase 3 针对本项目决策。
+ 5. 将用户范围转成 route inventory 的初稿;没有具体路由时,至少列出页面模式和页面数量。
+ 6. 记录不可协商规则:整页滚动策略、chrome 高度、密度、双主题、响应式断点、可访问性。
+ 
+@@ -65,6 +65,7 @@
+ | 边界 | 固定 1px 分割线、hover 底、selected 底、focus ring |
+ | 动效 | 定义时长、缓动、允许移动的属性;路由切换避免大转场 |
+ | 阴影 | 明确文档流无阴影;阴影只用于 menu、dialog、popover、drawer、toast |
++| Token freeze | 项目 token 逐项映射自 `tokens.yaml`;新增值在 Implementation Brief 标注 `new-token` 并说明理由,默认拒绝;禁止从 prose 重新演绎数值 |
+ 
+ ### 工具
+ 
+@@ -96,6 +97,7 @@
+ - 所有主要视觉角色都有 token 或模板规则。
+ - 明暗主题策略确定;若支持双主题,两套主题下的角色一致。
+ - 用户可见的核心状态(hover、focus、selected、disabled、error)有视觉定义。
++- token 映射表逐项覆盖 `tokens.yaml`,无未解释的新增值。
+ 
+ ## 2. IA, layout & routes
+ 
+@@ -146,7 +148,7 @@
+ 
+ - Route inventory。
+ - 技术栈和现有目录。
+-- 模板 `implementation/code-structure.md`(如存在)。
++- 本项目现有目录与工程约定(模板不提供 code structure)。
+ - 既有 lint、test、router、state 和 API 约定。
+ 
+ ### 必做决策
+@@ -163,6 +165,8 @@
+ | Styling | 全局样式、token layer、utility、CSS 变量和样式合并工具 |
+ | Testing | 单元、组件、route flow 和 browser 验证的文件/目录 |
+ 
++以上均为当前消费项目的现场决策;不得把任何历史消费项目的目录结构、API 分层或栈选型当作模板规则复用。
++
+ ### Gate
+ 
+ - 每个计划新增文件都能根据用途找到唯一主目录。
+@@ -177,7 +181,7 @@
+ 
+ - Design direction。
+ - Route inventory。
+-- 模板组件规则和 `implementation/components.md`(如存在)。
++- 模板组件契约 `components.md` 和 `spec.md` 组件规则(如存在)。
+ - 目标组件库(如 shadcn)。
+ 
+ ### 每个组件条目必须包含
+@@ -347,9 +351,10 @@
+ | 问题类型 | 回写位置 |
+ | --- | --- |
+ | 任意消费者都会遇到的布局/视觉规则缺口 | 模板 `spec.md` 或平台文档 |
+-| 某模板的实施顺序、组件清单、目录契约缺口 | 模板 `implementation/` |
+-| React/Tailwind/shadcn/浏览器工具专属问题 | 模板 stack adapter 或通用 `toolchain.md` |
++| 某模板的实施顺序或验收方式缺口 | 模板 `apply/` |
++| React/Tailwind/shadcn/浏览器工具专属问题 | 通用 `toolchain.md` 或目标项目文档 |
+ | 所有模板 apply 都需要的质量检查缺口 | `skills/ui-template/references/quality-gates.md` |
++| 消费项目的目录结构、API/mock、栈适配问题 | 当前项目文档,不回写模板 |
+ | 只与当前业务相关 | 当前项目文档或 issue,不污染模板 |
+ 
+ ### Final gate
+diff --git a/skills/ui-template/references/toolchain.md b/skills/ui-template/references/toolchain.md
+--- a/skills/ui-template/references/toolchain.md
++++ b/skills/ui-template/references/toolchain.md
+@@ -9,7 +9,7 @@
+                      ↓
+ Taste              frontend-design
+                      ↓
+-Design tokens      template spec + selected tokens
++Design tokens      template spec + tokens.yaml
+                      ↓
+ Components         shadcn / shadcn MCP
+                      ↓
+diff --git a/skills/ui-template/evals/cases.yaml b/skills/ui-template/evals/cases.yaml
+--- a/skills/ui-template/evals/cases.yaml
++++ b/skills/ui-template/evals/cases.yaml
+@@ -12,6 +12,7 @@
+         - 执行前已读取 references/toolchain.md
+         - 执行前已读取 references/quality-gates.md
+         - 执行前已读取 templates/<name>/spec.md
++        - 执行前已读取 templates/<name>/tokens.yaml
+       must_not:
+         - 未读上述文件即开始实现页面
+   - id: authoring-updates-index
+@@ -22,7 +23,7 @@
+     expect:
+       must:
+         - templates/INDEX.md 包含新模板行（名称/风格描述/来源类型/采集日期）
+-        - 汇报包含模板路径、关键 token 摘要、估算值说明
++        - 汇报包含模板路径、关键 token 摘要、默认值（origin: default）、估算值与 coverage 说明
+       must_not: []
+   - id: no-apply-without-template
+     kind: failure
+@@ -78,17 +79,17 @@
+         - 询问用户是更新现有模板还是另建新模板
+       must_not:
+         - 未经确认直接覆盖已有模板内容
+-  - id: spec-wins-over-implementation
++  - id: spec-wins-over-apply
+     kind: boundary
+     judge: deterministic
+-    description: spec.md 与 implementation/ 冲突时以 spec.md 为准。
+-    given: 模板 implementation/ 说明与 spec.md 规则冲突
++    description: spec.md 与 apply/ 或工程约定冲突时以 spec.md 为准。
++    given: 模板 apply/ 说明或目标项目工程约定与 spec.md 规则冲突
+     expect:
+       must:
+         - 按 spec.md 规则执行
+         - 向用户说明冲突与裁决依据
+       must_not:
+-        - 按 implementation/ 覆盖 spec.md 规则
++        - 按目标项目工程结构覆盖 spec.md 设计规则
+   - id: routing-semantics-enforced
+     kind: core
+     judge: deterministic
+@@ -111,3 +112,70 @@
+         - 判定不适用本 skill 并说明原因
+       must_not:
+         - 强行套用模板工作流
++
++  - id: tokens-yaml-required-and-complete
++    kind: core
++    judge: deterministic
++    description: 每个模板必备 tokens.yaml 且关键维度无空值。
++    given: 创建或更新任意 UI 模板。
++    expect:
++      must:
++        - templates/<name>/tokens.yaml 存在
++        - 颜色、字体族、字号阶梯、间距、圆角、阴影的 token 均有具体值与 origin
++        - 双主题存在时 light 与 dark 的角色键一致
++      must_not:
++        - 关键字段留空或只写区间
++        - 把来源未体现写成"消费方自选"的最终状态
++
++  - id: authoring-normalizes-and-fills-defaults
++    kind: core
++    judge: deterministic
++    description: Authoring 在提取后必须执行归一与决策,消除自由裁量。
++    given: 完成来源提取并准备生成模板。
++    expect:
++      must:
++        - 近义色合并、间距归基数、字号收敛为不超过 10 档
++        - 缺口字段回填默认值并在决策记录说明理由
++        - 交互组件补齐 hover、focus-visible、disabled、selected
++        - meta.yaml coverage 区分 observed 与 defaulted
++      must_not:
++        - 跳过归一与决策直接生成模板
++        - 把 WCAG 不达标组合带入 Apply
++
++  - id: no-engineering-structure-in-template
++    kind: core
++    judge: deterministic
++    description: 模板不承载消费项目的工程结构。
++    given: 创建或更新模板的 apply/ 或 components.md。
++    expect:
++      must:
++        - apply/ 只写实施顺序、阶段 gate 与验收引用
++        - components.md 只写设计契约,不含组件库来源映射
++      must_not:
++        - 放置目录契约、API/mock/data 分层、状态库选型或 stack adapter
++        - 把具体消费项目的业务域名写入模板
++
++  - id: doc-source-routed-correctly
++    kind: failure
++    judge: deterministic
++    description: 纯设计文档不得按 repo 来源空转。
++    given: 用户提供的来源是 Markdown/PDF 设计文档而非代码仓库。
++    expect:
++      must:
++        - 按 references/source-doc.md 提取
++        - 视觉缺口回填 origin: default 并拆分 layout/visual 置信度
++      must_not:
++        - 登记为 repo 来源后留下大量"来源未体现"缺口
++
++  - id: apply-token-freeze
++    kind: core
++    judge: deterministic
++    description: Apply 的项目 token 必须冻结映射自 tokens.yaml。
++    given: Template Apply Phase 1 产出 Design Direction。
++    expect:
++      must:
++        - token map 逐项覆盖 tokens.yaml
++        - 新增值在 Implementation Brief 标注 new-token 并说明理由
++      must_not:
++        - 从 prose 重新演绎数值
++        - 引入未解释的 arbitrary color、字号、间距或圆角
+diff --git a/skills/ui-template/references/source-doc.md b/skills/ui-template/references/source-doc.md
+new file mode 100644
+--- /dev/null
++++ b/skills/ui-template/references/source-doc.md
+@@ -0,0 +1,27 @@
++# 来源:设计文档(doc)
++
++从 Markdown、PDF 等设计/规范文档提取模板。核心思路:**布局与交互规则按文档精确转写;视觉 token 的缺口显式回填默认值,不得伪装成来源派生。**
++
++## 步骤
++
++1. **通读并分类内容**
++   - 布局、chrome、断点、交互、组件规则:精确转写,置信度高。
++   - 颜色、字体、阴影等视觉值:文档给了才记录(origin: `source`);没给就是缺口,不是"待消费方自选"。
++
++2. **索取视觉参考**
++   - 尽量向用户要参考截图或原产品 URL;拿到后按 `source-image.md` / `source-web.md` 补采。
++   - 拿不到时在 `meta.yaml` coverage 标注 `visual_reference: false`,并回填一套完整的模板默认值(origin: `default`)。
++
++3. **回填默认值并记录决策**
++   - 缺口字段在 `tokens.yaml` 给出默认值,决策记录说明选择理由(通常依据模板风格关键词与密度推导)。
++   - 禁止留空,禁止把"来源未体现(消费方自选)"作为最终状态。
++
++4. **置信度拆分**
++   - `spec.md` 中分别说明 layout 与 visual 的置信度;`meta.yaml` 的 `confidence` 取最弱维度。
++   - 无视觉参考时整体 `confidence` 上限为 `medium`。
++
++## 注意事项
++
++- 文档中的规则互相矛盾时,以更具体/更新的规则为准,并记录矛盾点。
++- 不把文档中的业务实体、项目名、目录结构带入模板;泛化后再写入。
++- 文档描述的状态不完整时,交互组件仍必须补齐 hover、focus-visible、disabled、selected。

@@ -1,0 +1,320 @@
+{
+  "schema": "current-evidence/v1",
+  "base_url": "http://127.0.0.1:41733",
+  "build_identity": "workbench-shell-contracts-20260927-23",
+  "captured_at": "2026-09-27T00:00:00Z",
+  "measurements": [
+    {
+      "id": "current-app-shell-surface",
+      "method": "playwright-computed-style",
+      "property": "backgroundColor",
+      "dimension": "surface",
+      "unit": "css-color",
+      "value": "oklch(0.964435 0.001327 286.375)",
+      "tolerance": "exact",
+      "selector": "[data-slot=\"sidebar-wrapper\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-app-shell-content-width",
+      "method": "playwright-computed-style",
+      "property": "width",
+      "dimension": "structure",
+      "unit": "px",
+      "value": "1176px",
+      "tolerance": "<=2px",
+      "selector": "[data-slot=\"page-header\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-app-shell-header-height",
+      "method": "playwright-computed-style",
+      "property": "height",
+      "dimension": "spacing",
+      "unit": "px",
+      "value": "48px",
+      "tolerance": "<=2px",
+      "selector": "[data-slot=\"page-header\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-app-shell-title-size",
+      "method": "playwright-computed-style",
+      "property": "fontSize",
+      "dimension": "typography",
+      "unit": "px",
+      "value": "14px",
+      "tolerance": "<=2px",
+      "selector": ".header h1",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-app-shell-header-border",
+      "method": "playwright-computed-style",
+      "property": "borderBottomWidth",
+      "dimension": "border",
+      "unit": "px",
+      "value": "1px",
+      "tolerance": "<=2px",
+      "selector": "[data-slot=\"page-header\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-workspace-board-header-height",
+      "method": "playwright-computed-style",
+      "property": "height",
+      "dimension": "spacing",
+      "unit": "px",
+      "value": "48px",
+      "tolerance": "<=2px",
+      "selector": "[data-slot=\"page-header\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-workspace-board-content-width",
+      "method": "playwright-computed-style",
+      "property": "width",
+      "dimension": "structure",
+      "unit": "px",
+      "value": "1176px",
+      "tolerance": "<=2px",
+      "selector": "[data-slot=\"page-header\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-workspace-board-title-size",
+      "method": "playwright-computed-style",
+      "property": "fontSize",
+      "dimension": "typography",
+      "unit": "px",
+      "value": "14px",
+      "tolerance": "<=2px",
+      "selector": "h1",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-workspace-board-title-color",
+      "method": "playwright-computed-style",
+      "property": "color",
+      "dimension": "color",
+      "unit": "css-color",
+      "value": "oklch(0.141 0.005 285.823)",
+      "tolerance": "exact",
+      "selector": "h1",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-workspace-board-header-border",
+      "method": "playwright-computed-style",
+      "property": "borderBottomWidth",
+      "dimension": "border",
+      "unit": "px",
+      "value": "1px",
+      "tolerance": "<=2px",
+      "selector": "[data-slot=\"page-header\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-settings-nav-width",
+      "method": "playwright-computed-style",
+      "property": "width",
+      "dimension": "structure",
+      "unit": "px",
+      "value": "240px",
+      "tolerance": "<=2px",
+      "selector": ".section-nav",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-settings-nav-structure",
+      "method": "playwright-computed-style",
+      "property": "width",
+      "dimension": "spacing",
+      "unit": "px",
+      "value": "240px",
+      "tolerance": "<=2px",
+      "selector": ".section-nav",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-settings-title-size",
+      "method": "playwright-computed-style",
+      "property": "fontSize",
+      "dimension": "typography",
+      "unit": "px",
+      "value": "18px",
+      "tolerance": "<=2px",
+      "selector": ".section-nav h1",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-settings-card-surface",
+      "method": "playwright-computed-style",
+      "property": "backgroundColor",
+      "dimension": "surface",
+      "unit": "css-color",
+      "value": "oklch(1 0 0)",
+      "tolerance": "exact",
+      "selector": ".card",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-settings-nav-border",
+      "method": "playwright-computed-style",
+      "property": "borderRightWidth",
+      "dimension": "border",
+      "unit": "px",
+      "value": "1px",
+      "tolerance": "<=2px",
+      "selector": ".section-nav",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-master-detail-pane-split",
+      "method": "playwright-computed-style",
+      "property": "width",
+      "dimension": "structure",
+      "unit": "px",
+      "value": "1176px",
+      "tolerance": "<=2px",
+      "selector": ".layout",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-master-detail-header-height",
+      "method": "playwright-computed-style",
+      "property": "height",
+      "dimension": "spacing",
+      "unit": "px",
+      "value": "48px",
+      "tolerance": "<=2px",
+      "selector": "[data-slot=\"page-header\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-master-detail-activity-size",
+      "method": "playwright-computed-style",
+      "property": "fontSize",
+      "dimension": "typography",
+      "unit": "px",
+      "value": "16px",
+      "tolerance": "<=2px",
+      "selector": ".detail-title",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-master-detail-text-color",
+      "method": "playwright-computed-style",
+      "property": "color",
+      "dimension": "color",
+      "unit": "css-color",
+      "value": "oklch(0.141 0.005 285.823)",
+      "tolerance": "exact",
+      "selector": "[data-slot=\"resizable-panel\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-master-detail-header-border",
+      "method": "playwright-computed-style",
+      "property": "borderBottomWidth",
+      "dimension": "border",
+      "unit": "px",
+      "value": "1px",
+      "tolerance": "<=2px",
+      "selector": "[data-slot=\"page-header\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-overlay-dialog-shape",
+      "method": "playwright-computed-style",
+      "property": "borderRadius",
+      "dimension": "surface",
+      "unit": "css-length",
+      "value": "14px",
+      "tolerance": "exact",
+      "selector": "[role=\"dialog\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-overlay-dialog-width",
+      "method": "playwright-computed-style",
+      "property": "width",
+      "dimension": "structure",
+      "unit": "px",
+      "value": "576px",
+      "tolerance": "<=2px",
+      "selector": "[role=\"dialog\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-overlay-dialog-height",
+      "method": "playwright-computed-style",
+      "property": "height",
+      "dimension": "spacing",
+      "unit": "px",
+      "value": "303px",
+      "tolerance": "<=2px",
+      "selector": "[role=\"dialog\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-overlay-dialog-text-size",
+      "method": "playwright-computed-style",
+      "property": "fontSize",
+      "dimension": "typography",
+      "unit": "px",
+      "value": "14px",
+      "tolerance": "<=2px",
+      "selector": "[role=\"dialog\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    },
+    {
+      "id": "current-overlay-dialog-borderless",
+      "method": "playwright-computed-style",
+      "property": "borderBottomWidth",
+      "dimension": "border",
+      "unit": "px",
+      "value": "0px",
+      "tolerance": "<=2px",
+      "selector": "[role=\"dialog\"]",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "evidence/current-app-shell-desktop-light.png",
+      "route": "app-shell",
+      "sha256": "cdb4dfd77c269511dd1cf5b00241d9acc86026b805bffa172f71ae6a50e06217",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/current-workspace-board-desktop-light.png",
+      "route": "workspace-board",
+      "sha256": "cdb4dfd77c269511dd1cf5b00241d9acc86026b805bffa172f71ae6a50e06217",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/current-settings-section-nav-desktop-light.png",
+      "route": "settings-section-nav",
+      "sha256": "9eb178740e949cb26d8e4a52e3907ee03b57ad1508822e584b823158ce795f75",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/current-master-detail-desktop-light.png",
+      "route": "master-detail",
+      "sha256": "c9a2840e2ff1b6e74f5389bc1e771fe9a7f9f15f02af2e355393ff945acff5f3",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/current-overlay-dialog-desktop-light.png",
+      "route": "overlay-dialog",
+      "sha256": "5c9fdbcc01d4577124a8285f304feb8a17967197a5dead5dbdc712c3f80b49b1",
+      "theme": "light",
+      "viewport": "desktop"
+    }
+  ]
+}

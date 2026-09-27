@@ -1,0 +1,14 @@
+schema: design-system-tokens/v1
+tokens:
+  color:
+    primary:
+      value: '#2563eb'
+      origin: source
+    surface:
+      value: '#ffffff'
+      origin: source
+  space:
+    md:
+      value: 16
+      unit: px
+      origin: source

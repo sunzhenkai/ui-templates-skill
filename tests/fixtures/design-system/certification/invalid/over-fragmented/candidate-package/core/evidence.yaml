@@ -1,0 +1,72 @@
+schema: design-system-evidence/v1
+items:
+- id: evidence-001
+  kind: token
+  target: token/color.primary
+  origin: source
+  source_id: source-001
+  source_revision: fixture-v1
+  locator: colors.primary
+  method: fixture extraction
+  confidence: high
+  status: active
+- id: evidence-002
+  kind: token
+  target: token/space.md
+  origin: source
+  source_id: source-001
+  source_revision: fixture-v1
+  locator: space.md
+  method: fixture extraction
+  confidence: high
+  status: active
+- id: evidence-page-detail
+  kind: component
+  target: page-type/detail
+  origin: source
+  source_id: source-001
+  source_revision: fixture-v1
+  locator: detail/page
+  method: fixture extraction
+  confidence: high
+  status: active
+- id: evidence-pattern-list-page
+  kind: component
+  target: pattern/list-page
+  origin: source
+  source_id: source-001
+  source_revision: fixture-v1
+  locator: list-page/pattern
+  method: fixture extraction
+  confidence: high
+  status: active
+- id: evidence-primitive-button
+  kind: component
+  target: primitive/button
+  origin: source
+  source_id: source-001
+  source_revision: fixture-v1
+  locator: button/primitive
+  method: fixture extraction
+  confidence: high
+  status: active
+- id: evidence-pattern-toolbar
+  kind: component
+  target: pattern/toolbar
+  origin: source
+  source_id: source-001
+  source_revision: fixture-v1
+  locator: toolbar/pattern
+  method: fixture extraction
+  confidence: high
+  status: active
+- id: evidence-primitive-panel
+  kind: component
+  target: primitive/panel
+  origin: source
+  source_id: source-001
+  source_revision: fixture-v1
+  locator: panel/primitive
+  method: fixture extraction
+  confidence: high
+  status: active

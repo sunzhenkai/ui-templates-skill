@@ -1,0 +1,45 @@
+schema: design-system-primitives/v1
+items:
+  - id: primitive/app-sidebar
+    name: App sidebar
+    states: [default, hover, active, focus-visible]
+    token_refs: [token/color.sidebar-accent, token/color.ring, token/size.sidebar-default]
+    rule_refs: [rule/LAYOUT-001, rule/QUALITY-103, rule/QUALITY-104]
+  - id: primitive/button
+    name: Button
+    states: [default, hover, focus-visible]
+    token_refs: [token/color.primary-hover, token/color.ring-focus, token/radius.lg]
+    rule_refs: [rule/QUALITY-101, rule/AX-101]
+  - id: primitive/input
+    name: Input
+    states: [default, focus-visible]
+    token_refs: [token/color.ring, token/radius.lg]
+    rule_refs: [rule/QUALITY-101, rule/QUALITY-104]
+  - id: primitive/dialog
+    name: Dialog
+    states: [default, open]
+    token_refs: [token/space.4, token/radius.xl, token/shadow.floating]
+    rule_refs: [rule/LAYOUT-005, rule/QUALITY-001]
+  - id: primitive/chat-fab
+    name: Chat launcher
+    states: [default]
+    token_refs: [token/space.chat-launcher-size, token/space.chat-launcher-inset]
+    rule_refs: [rule/LAYOUT-104]
+  - id: primitive/command-palette
+    name: Command palette
+    states: [default]
+  - id: primitive/data-table
+    name: Board column
+    states: [default]
+    token_refs: [token/size.board-column, token/space.4]
+    rule_refs: [rule/LAYOUT-002]
+  - id: primitive/page-header
+    name: Page header
+    states: [default]
+    token_refs: [token/space.header-height]
+    rule_refs: [rule/LAYOUT-106]
+  - id: primitive/settings-nav
+    name: Settings navigation
+    states: [default, hover, focus-visible, active]
+    token_refs: [token/color.surface-hover, token/color.surface-selected, token/color.ring]
+    rule_refs: [rule/LAYOUT-102, rule/QUALITY-103, rule/QUALITY-104]

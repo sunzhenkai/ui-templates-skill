@@ -1,0 +1,80 @@
+schema: design-system-fidelity-certification/v1
+gate:
+  package:
+    id: page-system-fixture
+    version: 1.0.0
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: 3589a7f7b5b2e1f9a80f0ffdaee66c1e0655487be499a8ec66339eca75065763
+  oracle:
+    kind: git-revision
+    revision: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    locator: oracle/workbench
+  prompts_digest:
+    algorithm: sha256-file-v1
+    value: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+  build:
+    identity: certification-build-001
+    output_root: output/root
+    generated_at: '2026-09-09T00:00:00Z'
+  apply_mode: bootstrap
+status: passed
+records:
+- id: cert-list-page
+  pattern: pattern/list-page
+  package_digest:
+    algorithm: sha256-canonical-json-v1
+    value: 3589a7f7b5b2e1f9a80f0ffdaee66c1e0655487be499a8ec66339eca75065763
+  build_identity: certification-build-000
+  oracle_revision: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  route: page-type/detail
+  composition:
+  - pattern/toolbar
+  - primitive/button
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: spacing
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+  - dimension: color
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: evidence/current-dashboard.png
+    oracle_screenshot: evidence/oracle-dashboard.png
+- id: cert-toolbar
+  pattern: pattern/toolbar
+  package_digest:
+    algorithm: sha256-canonical-json-v1
+    value: 3589a7f7b5b2e1f9a80f0ffdaee66c1e0655487be499a8ec66339eca75065763
+  build_identity: certification-build-001
+  oracle_revision: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  route: page-type/detail
+  composition:
+  - pattern/toolbar
+  - primitive/button
+  state: ready
+  theme: light
+  viewport: desktop
+  verdict: passed
+  assertions:
+  - dimension: structure
+    result: passed
+    method: dom-geometry
+  - dimension: spacing
+    result: passed
+    method: computed-style
+    tolerance: <=2px
+  - dimension: color
+    result: passed
+    method: computed-style
+  evidence:
+    current_screenshot: evidence/current-list.png
+    oracle_screenshot: evidence/oracle-list.png

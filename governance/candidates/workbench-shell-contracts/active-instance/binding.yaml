@@ -1,0 +1,53 @@
+schema: design-system-binding/v1
+contract_id: workbench-shell
+contract_version: 3.1.0
+output_root: /tmp/workbench-contracts-web
+stack:
+  language: typescript
+  ui_framework: react
+  styling: tailwind
+  component_system: shadcn
+  bundler: vite
+  routing: react-router
+  package_manager: pnpm
+primitive_paths: {}
+projections:
+- name: css-variables
+  target: src/styles/tokens.yaml
+  mechanism: css-variables
+  mappings:
+  - token: token/color.primary
+    native_key: :root.--color-primary
+  - token: token/color.primary-hover
+    native_key: :root.--color-primary-hover
+  - token: token/color.surface
+    native_key: :root.--color-surface
+  - token: token/color.surface-border
+    native_key: :root.--color-surface-border
+  - token: token/color.surface-hover
+    native_key: :root.--color-surface-hover
+  - token: token/color.secondary
+    native_key: :root.--color-secondary
+  - token: token/color.secondary-hover
+    native_key: :root.--color-secondary-hover
+  - token: token/color.link
+    native_key: :root.--color-link
+  - token: token/color.brand-hover
+    native_key: :root.--color-brand-hover
+  - token: token/color.brand-foreground
+    native_key: :root.--color-brand-foreground
+  - token: token/color.status-danger
+    native_key: :root.--color-status-danger
+  - token: token/color.destructive-hover
+    native_key: :root.--color-destructive-hover
+  - token: token/radius.lg
+    native_key: :root.--radius-lg
+  - token: token/size.control-default
+    native_key: :root.--size-control-default
+  digest:
+    algorithm: sha256-canonical-json-v1
+    value: 24474d23c277cdb5104a928d76aab6bf203c647ed6162823fc9b0570dfb967ff
+updated_at: '2026-09-08T00:00:00Z'
+binding_digest:
+  algorithm: sha256-canonical-json-v1
+  value: 1436d5883740291dc2021f8bae88f7c0a5518de51ac266df5c164f61c7a30391

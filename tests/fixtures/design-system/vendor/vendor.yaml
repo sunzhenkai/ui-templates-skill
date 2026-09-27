@@ -1,0 +1,18 @@
+schema: design-system-vendor/v1
+vendors:
+- name: shadcn
+  source: fixture://shadcn
+  path: shadcn
+  revision: fixed-revision-v1
+  license: MIT
+  files:
+  - path: LICENSE
+    digest:
+      algorithm: sha256-file-v1
+      value: 267f7a2e19dfa9df99af774520985a0e521925293ea5b7e767ab06969d06bf91
+  - path: SKILL.md
+    digest:
+      algorithm: sha256-file-v1
+      value: 034a496e7df9430c4968f375cfbdf2a8c4809d50ec34f2c7b88fe4e2487656c3
+  allowed_triggers:
+  - component-system:shadcn

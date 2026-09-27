@@ -1,0 +1,63 @@
+{
+  "bundle_version": "2.0.0",
+  "corrupt_checksum": {
+    "error_code": "ARTIFACT_CHECKSUM_MISMATCH",
+    "existing_unchanged": true,
+    "rejected": true
+  },
+  "corrupt_manifest": {
+    "error_prefix": "MANIFEST_",
+    "existing_unchanged": true,
+    "rejected": true
+  },
+  "empty_install": {
+    "dual_skills": [
+      "ui-template",
+      "ui-template-apply"
+    ],
+    "status": "passed"
+  },
+  "installed_tree_digest_before_failures": {
+    "ui-template": "3fd3a3e498bbd61e63a342f4e5e6b22c0231a738c62992aa11fbc52121ea5804",
+    "ui-template-apply": "f5d96f0a60d57bcbd106b28fcb9e4850cf947ccf9e9aaeb8c9f9c50f884f6652"
+  },
+  "portable_eval": {
+    "counts": {
+      "declared": 17,
+      "executed": 17,
+      "llm": 2,
+      "parsed": 17,
+      "script": 15
+    },
+    "evidence": "11.4-portable-eval.json",
+    "status": "passed"
+  },
+  "portable_validator": {
+    "evidence": "11.4-portable-validator.json",
+    "exit_code": 0,
+    "status": "passed"
+  },
+  "reproducibility": {
+    "artifact_bytes_equal": true,
+    "artifact_sha256": "d1a8da0a716cc406b85b585fafc3206c9bd0bdb90b1cc05c7b358b068a711d7a",
+    "files": 50,
+    "output_directories": 2,
+    "sidecar_bytes_equal": true
+  },
+  "schema_version": 1,
+  "second_skill_failure": {
+    "error": "INJECTED_INSTALL_FAILURE",
+    "injected_after": "ui-template-apply",
+    "rolled_back": true
+  },
+  "status": "passed",
+  "task": "11.4",
+  "trigger_resources": {
+    "payload_files": 44,
+    "public_skills": [
+      "ui-template",
+      "ui-template-apply"
+    ],
+    "status": "passed"
+  }
+}

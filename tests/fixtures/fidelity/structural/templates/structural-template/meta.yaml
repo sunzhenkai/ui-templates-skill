@@ -1,0 +1,23 @@
+schema_version: 2
+template_version: 1.0.0
+name: structural-template
+description: 结构保真测试模板
+sources:
+  - id: source-001
+    type: repo
+    ref: fixture://repo-capture
+    revision: 60b90074a44184a8a7d2d79d740fd9e0f0dd9859
+    captured_at: "2026-01-01T00:00:00Z"
+captured_at: "2026-01-01"
+tokens: tokens.yaml
+evidence: evidence.yaml
+platforms: [web]
+tags: [test, structural]
+confidence: {overall: medium, layout: high, visual: medium, components: high}
+coverage:
+  platforms: {declared: [web], observed: [web], defaulted: [], unsupported: []}
+  viewports: {declared: [desktop], observed: [desktop], defaulted: [], unsupported: []}
+  themes: {declared: [light, dark], observed: [light, dark], defaulted: [], unsupported: []}
+  page_modes: {declared: [A], observed: [A], defaulted: [], unsupported: []}
+  components: {declared: [button, dialog, link], observed: [button, dialog, link], defaulted: [], unsupported: []}
+  states: {declared: [default, hover, focus-visible], observed: [default, hover, focus-visible], defaulted: [], unsupported: []}

@@ -1,0 +1,9 @@
+scope:
+  included:
+    - route/shell
+    - route/board
+    - route/master-detail
+    - route/settings
+    - route/dialog
+  deferred: []
+  excluded: []

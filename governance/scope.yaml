@@ -1,0 +1,61 @@
+schema_version: 1
+active_release:
+  - README.md
+  - AGENTS.md
+  - CLAUDE.md
+  - Makefile
+  - .github/workflows/governance.yml
+  - governance/**
+  - schemas/**
+  - scripts/**
+  - tests/**
+  - openspec/config.yaml
+  - openspec/specs/**
+  - skills/ui-template-author/SKILL.md
+  - skills/ui-template-author/references/**
+  - skills/ui-template-author/evals/**
+  - skills/ui-template-author/runtime/**
+  - skills/ui-template-author/catalog/**
+  - skills/ui-template-apply/SKILL.md
+  - skills/ui-template-apply/references/**
+  - skills/ui-template-apply/evals/**
+  - skills/ui-template-design/SKILL.md
+  - skills/ui-template-design/references/**
+  - skills/ui-template-design/evals/**
+  - skills/ui-template-design/runtime/**
+  - templates/**
+immutable_history:
+  - openspec/changes/archive/**
+  - skills/**/patches/**
+  - skills/**/experience/**
+exclusions:
+  - example/workbench-shell/web/**
+  - example/workbench-shell/web-v1/**
+  - example/workbench-shell/web-v2/**
+  - docs/**
+  - example/workbench-shell/web-v3/**
+  - semantic-review/**
+checks:
+  documents:
+    - README.md
+    - AGENTS.md
+    - CLAUDE.md
+    - governance/FUNCTIONAL-LOOP.md
+    - governance/release/**
+    - skills/ui-template-author/SKILL.md
+    - skills/ui-template-author/references/**
+    - skills/ui-template-author/evals/**
+    - skills/ui-template-apply/SKILL.md
+    - skills/ui-template-apply/references/**
+    - skills/ui-template-apply/evals/**
+    - skills/ui-template-design/SKILL.md
+    - skills/ui-template-design/references/**
+    - skills/ui-template-design/evals/**
+    - templates/INDEX.md
+  production_skills:
+    - skills/ui-template-author
+    - skills/ui-template-apply
+    - skills/ui-template-design
+  openspec:
+    base: openspec/specs
+    overlay: ""

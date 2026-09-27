@@ -1,0 +1,4 @@
+[workbench-shell] schema=2 version=2.0.0
+  contrast workbench-shell/dark: checked=17 failed=0 skipped=0 waived=0
+  contrast workbench-shell/light: checked=17 failed=0 skipped=0 waived=0
+PASSED: 1 template(s), 0 error(s), 0 warning(s)

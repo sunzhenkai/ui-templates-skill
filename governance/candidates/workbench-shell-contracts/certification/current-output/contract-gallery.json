@@ -1,0 +1,754 @@
+{
+  "build_identity": "workbench-shell-contracts-20260927-02",
+  "browser_identity": "Chromium 141.0.7390.54",
+  "entries": {
+    "phase8:variant:primitive/button:default": {
+      "selector": "[data-variant-scene=\"default\"] [data-variant=\"default\"]",
+      "expected": {
+        "backgroundColor": "oklch(0.21 0.006 285.885)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(0.21 0.006 285.885)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "45a5d581-62b0-51df-a914-225e512644e5"
+    },
+    "phase8:variant:primitive/button:outline": {
+      "selector": "[data-variant-scene=\"outline\"] [data-variant=\"outline\"]",
+      "expected": {
+        "backgroundColor": "oklch(1 0 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(1 0 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "f8bbe217-e6de-57f0-830f-ac14099b190d"
+    },
+    "phase8:variant:primitive/button:brand": {
+      "selector": "[data-variant-scene=\"brand\"] [data-variant=\"brand\"]",
+      "expected": {
+        "backgroundColor": "oklch(0.55 0.16 255)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(0.55 0.16 255)",
+        "color": "oklch(0.985 0 0)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "27854de0-f1ad-5d78-b33d-260c18eac3eb"
+    },
+    "phase8:variant:primitive/button:secondary": {
+      "selector": "[data-variant-scene=\"secondary\"] [data-variant=\"secondary\"]",
+      "expected": {
+        "backgroundColor": "oklch(0.967 0.001 286.375)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklch(0.967 0.001 286.375)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "oklch(0.92 0.004 286.32)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "3bee41bc-045d-55a6-87a8-ebdc63f6145d"
+    },
+    "phase8:variant:primitive/button:ghost": {
+      "selector": "[data-variant-scene=\"ghost\"] [data-variant=\"ghost\"]",
+      "expected": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.141 0.005 285.823)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "71d9e941-d906-5f21-be09-02998bb1e404"
+    },
+    "phase8:variant:primitive/button:destructive": {
+      "selector": "[data-variant-scene=\"destructive\"] [data-variant=\"destructive\"]",
+      "expected": {
+        "backgroundColor": "oklab(0.577 0.217662 0.112464 / 0.1)",
+        "color": "oklch(0.577 0.245 27.325)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "oklab(0.577 0.217662 0.112464 / 0.1)",
+        "color": "oklch(0.577 0.245 27.325)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "cf91222e-88f5-5c7a-ac01-38375fd47ef0"
+    },
+    "phase8:variant:primitive/button:link": {
+      "selector": "[data-variant-scene=\"link\"] [data-variant=\"link\"]",
+      "expected": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.21 0.006 285.885)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "actual": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "oklch(0.21 0.006 285.885)",
+        "borderColor": "rgba(0, 0, 0, 0)",
+        "height": "32px",
+        "borderRadius": "10px"
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "85f61625-9ece-5bec-b0e5-756059226f71"
+    },
+    "phase8:anatomy:primitive/app-sidebar:icon:0": {
+      "selector": "[data-primitive-scene=\"app-sidebar\"] [data-primitive=\"app-sidebar\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "badge",
+          "order": 2,
+          "visible": true
+        },
+        {
+          "slot": "shortcut",
+          "order": 3,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 4,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "d2cd5cc1-44ee-53c4-a724-8bc847b40f81"
+    },
+    "phase8:anatomy:primitive/app-sidebar:label:1": {
+      "selector": "[data-primitive-scene=\"app-sidebar\"] [data-primitive=\"app-sidebar\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "badge",
+          "order": 2,
+          "visible": true
+        },
+        {
+          "slot": "shortcut",
+          "order": 3,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 4,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "58368ffa-ad5c-5fd6-99d5-ba2280067fb7"
+    },
+    "phase8:anatomy:primitive/app-sidebar:badge:2": {
+      "selector": "[data-primitive-scene=\"app-sidebar\"] [data-primitive=\"app-sidebar\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "badge",
+          "order": 2,
+          "visible": true
+        },
+        {
+          "slot": "shortcut",
+          "order": 3,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 4,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "actual": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "a289c3f6-7501-59f8-80cd-312a1df05986"
+    },
+    "phase8:anatomy:primitive/app-sidebar:shortcut:3": {
+      "selector": "[data-primitive-scene=\"app-sidebar\"] [data-primitive=\"app-sidebar\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "badge",
+          "order": 2,
+          "visible": true
+        },
+        {
+          "slot": "shortcut",
+          "order": 3,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 4,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "actual": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "218df3a4-0fc4-5766-be39-8d0ade067574"
+    },
+    "phase8:anatomy:primitive/app-sidebar:trailing:4": {
+      "selector": "[data-primitive-scene=\"app-sidebar\"] [data-primitive=\"app-sidebar\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "badge",
+          "order": 2,
+          "visible": true
+        },
+        {
+          "slot": "shortcut",
+          "order": 3,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 4,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "actual": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "f762502e-459a-5038-8bb4-7d8ad8b57b04"
+    },
+    "phase8:anatomy:primitive/button:icon:0": {
+      "selector": "[data-variant-scene=\"default\"] [data-variant=\"default\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 2,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "c0ce60eb-9b27-5817-a16f-6d9eba66e9e7"
+    },
+    "phase8:anatomy:primitive/button:label:1": {
+      "selector": "[data-variant-scene=\"default\"] [data-variant=\"default\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 2,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "b552cddc-b8ff-5abc-9fbf-94aa84b520fd"
+    },
+    "phase8:anatomy:primitive/button:trailing:2": {
+      "selector": "[data-variant-scene=\"default\"] [data-variant=\"default\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 2,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "trailing",
+        "order": 2,
+        "visible": true
+      },
+      "actual": {
+        "slot": "trailing",
+        "order": 2,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "ca72d184-e7d1-5696-9ef5-9768afb4ec6f"
+    },
+    "phase8:anatomy:primitive/chat-fab:icon:0": {
+      "selector": "[data-primitive-scene=\"chat-fab\"] [data-primitive=\"chat-fab\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "2b5d28bc-1181-5b76-a8fa-896668160ebc"
+    },
+    "phase8:anatomy:primitive/nav-item:icon:0": {
+      "selector": "[data-primitive-scene=\"nav-item\"] [data-primitive=\"nav-item\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "badge",
+          "order": 2,
+          "visible": true
+        },
+        {
+          "slot": "shortcut",
+          "order": 3,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 4,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "e3915484-4672-5765-b411-98edf651b78b"
+    },
+    "phase8:anatomy:primitive/nav-item:label:1": {
+      "selector": "[data-primitive-scene=\"nav-item\"] [data-primitive=\"nav-item\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "badge",
+          "order": 2,
+          "visible": true
+        },
+        {
+          "slot": "shortcut",
+          "order": 3,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 4,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "088a92f4-da9b-5e32-9c75-8f58e9ec473e"
+    },
+    "phase8:anatomy:primitive/nav-item:badge:2": {
+      "selector": "[data-primitive-scene=\"nav-item\"] [data-primitive=\"nav-item\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "badge",
+          "order": 2,
+          "visible": true
+        },
+        {
+          "slot": "shortcut",
+          "order": 3,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 4,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "actual": {
+        "slot": "badge",
+        "order": 2,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "6bd39447-be7d-519b-b769-9f1032b7608a"
+    },
+    "phase8:anatomy:primitive/nav-item:shortcut:3": {
+      "selector": "[data-primitive-scene=\"nav-item\"] [data-primitive=\"nav-item\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "badge",
+          "order": 2,
+          "visible": true
+        },
+        {
+          "slot": "shortcut",
+          "order": 3,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 4,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "actual": {
+        "slot": "shortcut",
+        "order": 3,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "d8b1061d-f57b-5b28-a13f-05e6b144e02e"
+    },
+    "phase8:anatomy:primitive/nav-item:trailing:4": {
+      "selector": "[data-primitive-scene=\"nav-item\"] [data-primitive=\"nav-item\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        },
+        {
+          "slot": "badge",
+          "order": 2,
+          "visible": true
+        },
+        {
+          "slot": "shortcut",
+          "order": 3,
+          "visible": true
+        },
+        {
+          "slot": "trailing",
+          "order": 4,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "actual": {
+        "slot": "trailing",
+        "order": 4,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "d3928ff1-888a-5825-aa68-0e8096b2539a"
+    },
+    "phase8:anatomy:primitive/settings-nav:icon:0": {
+      "selector": "[data-primitive-scene=\"settings-nav\"] [data-primitive=\"settings-nav\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "actual": {
+        "slot": "icon",
+        "order": 0,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "95c5a35c-c31c-5556-8747-82a8c64942b8"
+    },
+    "phase8:anatomy:primitive/settings-nav:label:1": {
+      "selector": "[data-primitive-scene=\"settings-nav\"] [data-primitive=\"settings-nav\"]",
+      "children": [
+        {
+          "slot": "icon",
+          "order": 0,
+          "visible": true
+        },
+        {
+          "slot": "label",
+          "order": 1,
+          "visible": true
+        }
+      ],
+      "expected": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "actual": {
+        "slot": "label",
+        "order": 1,
+        "visible": true
+      },
+      "passed": true,
+      "screenshot": "evidence/contract-gallery.png",
+      "phase8_record_id": "1bce1267-88b9-5f12-97ee-d7def590d153"
+    }
+  }
+}

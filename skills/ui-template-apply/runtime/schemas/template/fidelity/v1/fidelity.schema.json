@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-templates-skill.local/schemas/template/fidelity/v1/fidelity.schema.json",
+  "title": "UI template structural fidelity profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "conformance", "platforms", "scope", "layout_scenes", "component_geometry", "state_presentations", "unresolved"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "profile": {"const": "repo-structural-v1"},
+    "conformance": {"enum": ["structural", "style-only"]},
+    "platforms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["web"]}
+    },
+    "style_only_reason": {"type": ["string", "null"], "minLength": 1},
+    "scope": {"$ref": "#/$defs/scope"},
+    "layout_scenes": {"type": "array", "items": {"$ref": "#/$defs/layoutScene"}},
+    "component_geometry": {"type": "array", "items": {"$ref": "#/$defs/componentGeometry"}},
+    "state_presentations": {"type": "array", "items": {"$ref": "#/$defs/statePresentation"}},
+    "unresolved": {"type": "array", "items": {"$ref": "#/$defs/unresolved"}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"conformance": {"const": "style-only"}}, "required": ["conformance"]},
+      "then": {
+        "required": ["style_only_reason"],
+        "properties": {
+          "style_only_reason": {"type": "string", "minLength": 1},
+          "layout_scenes": {"type": "array", "maxItems": 0},
+          "component_geometry": {"type": "array", "maxItems": 0},
+          "state_presentations": {"type": "array", "maxItems": 0}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"conformance": {"const": "structural"}}, "required": ["conformance"]},
+      "then": {
+        "properties": {"style_only_reason": {"type": "null"}}
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]*$"},
+    "ruleId": {"type": "string", "pattern": "^(NN|TOKEN|LAYOUT|ROUTE|AX|RESP|QUALITY)-[0-9]{3}$"},
+    "tokenPath": {"type": "string", "pattern": "^[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)+$"},
+    "status": {"enum": ["observed", "defaulted", "unresolved"]},
+    "confidence": {"enum": ["high", "medium", "low"]},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenes", "components", "contexts"],
+      "properties": {
+        "scenes": {"type": "array", "items": {"$ref": "#/$defs/stableId"}, "uniqueItems": true},
+        "components": {"type": "array", "items": {"$ref": "#/$defs/stableId"}, "uniqueItems": true},
+        "contexts": {"type": "array", "items": {"$ref": "#/$defs/linkContext"}, "uniqueItems": true}
+      }
+    },
+    "linkContext": {"enum": ["navigation-link", "entity-row-link", "button-link", "inline-prose-link"]},
+    "semanticValue": {
+      "enum": [
+        "none", "zero", "auto", "intrinsic", "fill", "wrap", "non-wrap", "shrink", "non-shrink",
+        "underline", "visible", "hidden", "viewport", "region", "inline", "block",
+        "horizontal", "vertical", "overlay", "inset", "flush",
+        "workspace-switcher", "search", "compose", "nav-group", "pin-list", "rail",
+        "header-trigger", "footer-utility", "chat-fab", "page-header", "page-toolbar", "page-canvas",
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+        "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32"
+      ]
+    },
+    "valueRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"enum": ["token-ref", "semantic"]},
+        "value": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"kind": {"const": "token-ref"}}, "required": ["kind"]},
+          "then": {"properties": {"value": {"$ref": "#/$defs/tokenPath"}}}
+        },
+        {
+          "if": {"properties": {"kind": {"const": "semantic"}}, "required": ["kind"]},
+          "then": {"properties": {"value": {"$ref": "#/$defs/semanticValue"}}}
+        }
+      ]
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?!/).+(?<!/)$"},
+        "symbol": {"type": ["string", "null"], "minLength": 1},
+        "selector": {"type": ["string", "null"], "minLength": 1},
+        "pointer": {"type": ["string", "null"], "minLength": 1},
+        "line": {"type": ["integer", "null"], "minimum": 1}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "source_revision", "locator", "method", "source_span_sha256", "captured_at", "confidence"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/stableId"},
+        "source_revision": {"type": "string", "minLength": 1},
+        "locator": {"$ref": "#/$defs/locator"},
+        "method": {"enum": ["source-graph", "computed-style", "document", "decision"]},
+        "source_span_sha256": {"$ref": "#/$defs/digest"},
+        "captured_at": {"$ref": "#/$defs/timestamp"},
+        "confidence": {"$ref": "#/$defs/confidence"}
+      }
+    },
+    "negativeFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["property", "value"],
+      "properties": {
+        "property": {"type": "string", "minLength": 1},
+        "value": {"$ref": "#/$defs/semanticValue"}
+      }
+    },
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "role": {"$ref": "#/$defs/stableId"},
+        "description": {"type": "string"}
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "from", "to"],
+      "properties": {
+        "type": {"enum": ["contains", "owns", "horizontal", "vertical", "overlay"]},
+        "from": {"$ref": "#/$defs/stableId"},
+        "to": {"$ref": "#/$defs/stableId"},
+        "order": {"type": "integer", "minimum": 0, "maximum": 32}
+      }
+    },
+    "slotRole": {
+      "enum": [
+        "workspace-switcher", "search", "compose", "nav-group", "pin-list", "rail",
+        "header-trigger", "footer-utility", "chat-fab", "page-header", "page-toolbar", "page-canvas"
+      ]
+    },
+    "shellSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "region", "order"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "role": {"$ref": "#/$defs/slotRole"},
+        "region": {"$ref": "#/$defs/stableId"},
+        "order": {"type": "integer", "minimum": 0, "maximum": 32}
+      }
+    },
+    "chromeAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "region"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "role": {"enum": ["header-trigger", "chat-fab"]},
+        "region": {"$ref": "#/$defs/stableId"}
+      }
+    },
+    "scrollDomain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "axis", "owner"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "axis": {"enum": ["inline", "block"]},
+        "owner": {"$ref": "#/$defs/stableId"},
+        "nested_in": {
+          "anyOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/stableId"}
+          ]
+        }
+      }
+    },
+    "overlay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "scope", "anchor", "region"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "scope": {"enum": ["viewport", "region"]},
+        "anchor": {"$ref": "#/$defs/stableId"},
+        "region": {"$ref": "#/$defs/stableId"}
+      }
+    },
+    "responsiveMode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "viewport"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "viewport": {"$ref": "#/$defs/stableId"}
+      }
+    },
+    "layoutScene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "rule_id", "status", "scene", "regions", "relations", "arrangement", "fill", "wrap", "shrink", "scroll_domains", "overlays", "responsive_modes", "negative_facts"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "scene": {"$ref": "#/$defs/stableId"},
+        "rule_id": {"$ref": "#/$defs/ruleId"},
+        "status": {"$ref": "#/$defs/status"},
+        "description": {"type": "string"},
+        "regions": {"type": "array", "items": {"$ref": "#/$defs/region"}},
+        "relations": {"type": "array", "items": {"$ref": "#/$defs/relation"}},
+        "arrangement": {"enum": ["horizontal", "vertical", "overlay"]},
+        "fill": {"enum": ["fill", "intrinsic"]},
+        "wrap": {"enum": ["wrap", "non-wrap"]},
+        "shrink": {"enum": ["shrink", "non-shrink"]},
+        "scroll_domains": {"type": "array", "items": {"$ref": "#/$defs/scrollDomain"}},
+        "overlays": {"type": "array", "items": {"$ref": "#/$defs/overlay"}},
+        "responsive_modes": {"type": "array", "items": {"$ref": "#/$defs/responsiveMode"}},
+        "negative_facts": {"type": "array", "items": {"$ref": "#/$defs/negativeFact"}},
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "scene_kind": {"enum": ["shell", "board", "master-detail", "dialog", "other"]},
+        "shell_variant": {"enum": ["inset", "flush"]},
+        "slots": {"type": "array", "items": {"$ref": "#/$defs/shellSlot"}},
+        "chrome_anchors": {"type": "array", "items": {"$ref": "#/$defs/chromeAnchor"}}
+      }
+    },
+    "geometryProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "padding_block_start": {"$ref": "#/$defs/valueRef"},
+        "padding_inline_end": {"$ref": "#/$defs/valueRef"},
+        "padding_block_end": {"$ref": "#/$defs/valueRef"},
+        "padding_inline_start": {"$ref": "#/$defs/valueRef"},
+        "gap": {"$ref": "#/$defs/valueRef"},
+        "inset_block_start": {"$ref": "#/$defs/valueRef"},
+        "inset_inline_end": {"$ref": "#/$defs/valueRef"},
+        "inset_block_end": {"$ref": "#/$defs/valueRef"},
+        "inset_inline_start": {"$ref": "#/$defs/valueRef"},
+        "size": {"$ref": "#/$defs/valueRef"},
+        "radius": {"$ref": "#/$defs/valueRef"},
+        "surface": {"$ref": "#/$defs/valueRef"},
+        "border": {"$ref": "#/$defs/valueRef"},
+        "shadow": {"$ref": "#/$defs/valueRef"}
+      }
+    },
+    "componentGeometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "component", "slot", "rule_id", "status", "properties"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "component": {"$ref": "#/$defs/stableId"},
+        "slot": {"$ref": "#/$defs/stableId"},
+        "rule_id": {"$ref": "#/$defs/ruleId"},
+        "status": {"$ref": "#/$defs/status"},
+        "description": {"type": "string"},
+        "properties": {"$ref": "#/$defs/geometryProperties"},
+        "negative_facts": {"type": "array", "items": {"$ref": "#/$defs/negativeFact"}},
+        "provenance": {"$ref": "#/$defs/provenance"}
+      }
+    },
+    "statePresentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "subject_role", "context", "state", "surface", "rule_id", "status", "text_decoration", "visibility"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "subject_role": {"$ref": "#/$defs/stableId"},
+        "context": {"$ref": "#/$defs/linkContext"},
+        "state": {"enum": ["default", "hover", "focus-visible", "active", "disabled", "open"]},
+        "surface": {"$ref": "#/$defs/stableId"},
+        "rule_id": {"$ref": "#/$defs/ruleId"},
+        "status": {"$ref": "#/$defs/status"},
+        "description": {"type": "string"},
+        "background": {"anyOf": [{"$ref": "#/$defs/valueRef"}, {"type": "null"}]},
+        "text": {"anyOf": [{"$ref": "#/$defs/valueRef"}, {"type": "null"}]},
+        "border": {"anyOf": [{"$ref": "#/$defs/valueRef"}, {"type": "null"}]},
+        "text_decoration": {"enum": ["none", "underline"]},
+        "visibility": {"enum": ["visible", "hidden"]},
+        "container_presentation": {"enum": ["none", "filled", "outline"]},
+        "negative_facts": {"type": "array", "items": {"$ref": "#/$defs/negativeFact"}},
+        "provenance": {"$ref": "#/$defs/provenance"}
+      }
+    },
+    "unresolved": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "identity"],
+      "properties": {
+        "code": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "identity": {"type": "array", "items": {"type": ["string", "null"]}},
+        "locators": {"type": "array", "items": {"$ref": "#/$defs/locator"}},
+        "details": {"type": "object"}
+      }
+    }
+  }
+}

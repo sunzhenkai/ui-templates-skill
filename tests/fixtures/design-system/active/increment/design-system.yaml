@@ -1,0 +1,40 @@
+schema: design-system/v1
+id: active-increment
+version: 1.0.0
+status: frozen
+capability: page-system
+layers:
+  tokens: core/tokens.yaml
+  rules: core/rules.yaml
+  evidence: core/evidence.yaml
+  primitives: core/primitives.yaml
+  patterns: core/patterns.yaml
+  page-types: core/page-types.yaml
+  layout: core/layout.yaml
+layer_digests:
+  tokens:
+    algorithm: sha256-canonical-json-v1
+    value: 250e08668ca320705604e3697fd462c00a704927199dee3771a86c1edcd5eb7b
+  rules:
+    algorithm: sha256-canonical-json-v1
+    value: f0c6ede91b7792b5c4a58f22ad6fd1c17c59502276c0c0480a266b29c876d7fe
+  evidence:
+    algorithm: sha256-canonical-json-v1
+    value: 0d0a2c86fdd0601f267459a9aec58b57276f571db720a6583f0d66aa5c2cb7dc
+  primitives:
+    algorithm: sha256-canonical-json-v1
+    value: 102a789227d7c7a92b62c31026c87418e908d735aaa4825b4edfef7a94c6beaf
+  patterns:
+    algorithm: sha256-canonical-json-v1
+    value: 4364e5744e35bd5422b2f6fd648fbac0144f39ede6945e87576015cc13193eb5
+  page-types:
+    algorithm: sha256-canonical-json-v1
+    value: 5f830c13b2e1825a1fe8de1b82a30fe59376efe4918bcf6ae4797a85a0ddb9a2
+  layout:
+    algorithm: sha256-canonical-json-v1
+    value: 92c82467d67d0cbfe0be09a2a27f42fe95707d5c1b0affffef4497cbcca1ffe3
+created_at: '2026-09-08'
+updated_at: '2026-09-08T00:00:00Z'
+contract_digest:
+  algorithm: sha256-canonical-json-v1
+  value: c5c2252eebf8226fd126d2ed997c9f93f3eb86f9923bbd5985dff1b9c8d2a2bc

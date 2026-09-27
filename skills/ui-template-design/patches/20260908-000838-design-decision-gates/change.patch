@@ -1,0 +1,358 @@
+diff --git a/skills/ui-template-design/SKILL.md b/skills/ui-template-design/SKILL.md
+index aa5d81e6..9e56e33a 100644
+--- a/skills/ui-template-design/SKILL.md
++++ b/skills/ui-template-design/SKILL.md
+@@ -11,6 +11,8 @@ description: 在消费项目建立并冻结可执行前端 Design System（语
+ 
+ 先按可观察信号判定任务类，写入 `00-intake.md`，再只加载 [task-classes.md](references/task-classes.md) 中该类必读文件。禁止凭「优化一下 UI」猜测。判定顺序、必读/禁止预加载表只以 `task-classes.md` 为准。
+ 
++所有影响 freeze 本体的选择都执行 [decision-gates.md](references/decision-gates.md)：先给出至少 2 个合法候选与影响，等待用户选择或明确授权；框架默认和 Agent 偏好都不是确认。
++
+ 移交红线：「做成模板 / 提取风格 / 导入模板」→ 停止，移交 `ui-template-author`；「用模板实现页面 / 按模板做 UI」→ 停止，移交 `ui-template-apply`。未安装 Apply 时说明 freeze 完成后可再装，不得假装已实现业务页。
+ 
+ ## 不变量
+@@ -28,8 +30,8 @@ description: 在消费项目建立并冻结可执行前端 Design System（语
+ 
+ 阶段不可跳过。完成看产物与证据，不看「已经写了页面」。状态在项目根 `.ui-template-design/`。
+ 
+-0. Intake → `00-intake.md`：任务类 `bootstrap | refactor | iterate`、站点 `greenfield | existing`、输出根、变更集合。digest 不匹配则停止。`iterate` 不重开完整 0–9。
+-1. Stack → `00-architecture.yaml`：闭集层确认或 observed stack。未确认不得写应用源码。
++0. Intake → `00-intake.md`：任务类 `bootstrap | refactor | iterate`、站点 `greenfield | existing`、输出根、变更集合、decision gates 账本。digest 不匹配则停止。`iterate` 不重开完整 0–9。
++1. Stack → `00-architecture.yaml`：greenfield 逐层列出候选并由用户选择；existing 确认保持或另行拆分迁移。未确认不得写应用源码。
+ 2. UX Model & Inventory → `01-ux-model.md`、`01-inventory.yaml`。`refactor` 必做；`iterate` 禁止全量 inventory。
+ 3. Token Freeze → `02-tokens-freeze.yaml`；existing 含 `02-legacy-mapping.yaml`。精确值只在设计系统 token 文件。
+ 4. Primitives → `03-primitives.yaml`。状态表闭合，只消费 token。
+@@ -54,7 +56,7 @@ python3 skills/ui-template-design/runtime/check_design_freeze.py compute-digest
+ 
+ ## 完成定义
+ 
+-可以声明完成，当且仅当：UX Model 无 unresolved；token 已确认且唯一；Primitive 状态闭合；声明的 Pattern 含 Data-State/断点/运动/禁止组合；可执行规则已写入且本次扫描通过；Gallery 可运行且有 current-build 截图；视觉 loop 通过或 3 轮后升级人类；`freeze.yaml` 为 `frozen` 且 digest 一致。`iterate` 另须：变更集合已声明、只动点名层、未声明路径保持原字节、扫描通过、freeze digest 已刷新。不得称为完成：只有 Markdown、只有 shadcn 初始化、只改了一个业务页、截图身份过期。全站未迁完不是失败。未装 Author/Apply、未用模板不是失败。
++可以声明完成，当且仅当：decision gates 均已选择或获得明确授权；UX Model 无 unresolved；token 已确认且唯一；Primitive 状态闭合；声明的 Pattern 含 Data-State/断点/运动/禁止组合；可执行规则已写入且本次扫描通过；Gallery 可运行且有 current-build 截图；视觉 loop 通过或 3 轮后升级人类；`freeze.yaml` 为 `frozen` 且 digest 一致。`iterate` 另须：变更集合已声明、只动点名层、未声明路径保持原字节、扫描通过、freeze digest 已刷新。不得称为完成：只有 Markdown、只有 shadcn 初始化、只改了一个业务页、截图身份过期。全站未迁完不是失败。未装 Author/Apply、未用模板不是失败。
+ 
+ ## 汇报
+ 
+diff --git a/skills/ui-template-design/evals/cases.yaml b/skills/ui-template-design/evals/cases.yaml
+index dd3523de..d7891b9d 100644
+--- a/skills/ui-template-design/evals/cases.yaml
++++ b/skills/ui-template-design/evals/cases.yaml
+@@ -1,6 +1,6 @@
+ schema_version: 1
+ skill: ui-template-design
+-revision: add-ui-template-design-skill-eval-v1
++revision: expand-design-decision-gates-eval-v1
+ cases:
+   - id: design-standalone-complete
+     skill: ui-template-design
+@@ -8,7 +8,7 @@ cases:
+     description: 只装 Design、无 Author/Apply/模板时仍可完成 freeze gate。
+     given: 消费项目仅安装 ui-template-design，用户要求建立前端设计系统且未提供模板
+     fixture: skills/ui-template-design/evals/contracts.yaml#design-standalone-complete
+-    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
++    fixture_sha256: 58d6a797be144b6f8258671749187ca7beb47c6df783b9e022557b7f331d7f70
+     judge: script
+     expect:
+       must:
+@@ -17,14 +17,14 @@ cases:
+         - SKILL 声明缺少模板或另外两个 skill 不是失败
+       must_not:
+         - 因缺少 Author、Apply、catalog 或 templates/ 停止
+-    revision: add-ui-template-design-skill-eval-v1
++    revision: expand-design-decision-gates-eval-v1
+   - id: design-primitives-not-complete
+     skill: ui-template-design
+     category: validation-gate
+     description: 仅有 Primitive、没有 Pattern 不得 freeze 完成。
+     given: freeze 声明 primitives 为真而 patterns 为假
+     fixture: skills/ui-template-design/evals/contracts.yaml#design-primitives-not-complete
+-    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
++    fixture_sha256: 58d6a797be144b6f8258671749187ca7beb47c6df783b9e022557b7f331d7f70
+     judge: script
+     expect:
+       must:
+@@ -32,14 +32,14 @@ cases:
+         - SKILL 写明仅有 Primitive 不算完成
+       must_not:
+         - 停在组件库初始化即宣称完成
+-    revision: add-ui-template-design-skill-eval-v1
++    revision: expand-design-decision-gates-eval-v1
+   - id: design-raw-token-fail
+     skill: ui-template-design
+     category: schema
+     description: raw palette 扫描失败；无模板时写 INDEX 失败；越界 output_root 失败。
+     given: 输出根含 text-gray-500，或 freeze.touched_paths 含 templates/INDEX.md，或 output_root 含 ..
+     fixture: skills/ui-template-design/evals/contracts.yaml#design-raw-token-fail
+-    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
++    fixture_sha256: 58d6a797be144b6f8258671749187ca7beb47c6df783b9e022557b7f331d7f70
+     judge: script
+     expect:
+       must:
+@@ -48,14 +48,14 @@ cases:
+         - 非法 output_root 被 schema 拒绝
+       must_not:
+         - 扫描失败仍 freeze
+-    revision: add-ui-template-design-skill-eval-v1
++    revision: expand-design-decision-gates-eval-v1
+   - id: design-no-freeze-apply-optional
+     skill: ui-template-design
+     category: routing
+     description: Apply 无 freeze 时保持现行工作流；Design 完成不要求 Apply Phase 8。
+     given: 消费项目没有 design freeze，或 Design 会话只冻结体制
+     fixture: skills/ui-template-design/evals/contracts.yaml#design-no-freeze-apply-optional
+-    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
++    fixture_sha256: 58d6a797be144b6f8258671749187ca7beb47c6df783b9e022557b7f331d7f70
+     judge: script
+     expect:
+       must:
+@@ -63,14 +63,14 @@ cases:
+         - Design 不要求 Apply Phase 8
+       must_not:
+         - 把缺少 Design 当成 Apply 失败
+-    revision: add-ui-template-design-skill-eval-v1
++    revision: expand-design-decision-gates-eval-v1
+   - id: design-handoff-author
+     skill: ui-template-design
+     category: routing
+     description: 做成模板的请求移交 Author；Author 把设计系统请求移交 Design。
+     given: 用户要求抽取并发布 schema v2 模板，或要求建立项目 Design System 且不要做成模板
+     fixture: skills/ui-template-design/evals/contracts.yaml#design-handoff-author
+-    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
++    fixture_sha256: 58d6a797be144b6f8258671749187ca7beb47c6df783b9e022557b7f331d7f70
+     judge: script
+     expect:
+       must:
+@@ -78,14 +78,14 @@ cases:
+         - Author 识别设计系统请求并移交 Design
+       must_not:
+         - Design Index 模板
+-    revision: add-ui-template-design-skill-eval-v1
++    revision: expand-design-decision-gates-eval-v1
+   - id: design-handoff-apply
+     skill: ui-template-design
+     category: routing
+     description: 按模板实现页面移交 Apply，且不得假装已实现业务页。
+     given: 用户要求用已有 published 模板实现产品页面
+     fixture: skills/ui-template-design/evals/contracts.yaml#design-handoff-apply
+-    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
++    fixture_sha256: 58d6a797be144b6f8258671749187ca7beb47c6df783b9e022557b7f331d7f70
+     judge: script
+     expect:
+       must:
+@@ -93,14 +93,14 @@ cases:
+         - 未实现业务页时不得假装完成页面
+       must_not:
+         - 在 Design 流程里画业务 CRUD 页
+-    revision: add-ui-template-design-skill-eval-v1
++    revision: expand-design-decision-gates-eval-v1
+   - id: design-task-classes
+     skill: ui-template-design
+     category: routing
+     description: 用可观察信号判定 bootstrap/refactor/iterate；digest 不匹配或范围未声明则停止。
+     given: freeze 为 frozen 且 digest 匹配，或无 freeze 时输出根空/已有代码，或用户只说优化 UI 未给范围
+     fixture: skills/ui-template-design/evals/contracts.yaml#design-task-classes
+-    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
++    fixture_sha256: 58d6a797be144b6f8258671749187ca7beb47c6df783b9e022557b7f331d7f70
+     judge: script
+     expect:
+       must:
+@@ -109,16 +109,32 @@ cases:
+         - iterate 不得加载完整 inventory
+       must_not:
+         - 凭用户口吻猜测任务类
+-    revision: add-ui-template-design-skill-eval-v1
++    revision: expand-design-decision-gates-eval-v1
++  - id: design-decision-gates
++    skill: ui-template-design
++    category: validation-gate
++    description: 影响 freeze 本体的决策必须展示候选、影响与授权来源。
++    given: 用户请求建立或重构 Design System，但未声明栈方向、视觉方向、范围或验证矩阵
++    fixture: skills/ui-template-design/evals/contracts.yaml#design-decision-gates
++    fixture_sha256: 58d6a797be144b6f8258671749187ca7beb47c6df783b9e022557b7f331d7f70
++    judge: script
++    revision: expand-design-decision-gates-eval-v1
++    expect:
++      must:
++        - SKILL 指向 decision gates
++        - 每个 blocking 决策至少有两个候选并说明影响
++        - 用户授权可替代选择且必须记录 authority
++      must_not:
++        - 把框架默认或 Agent 偏好当作用户确认
+   - id: design-scanner-gate-extended
+     skill: ui-template-design
+     category: validation-gate
+     description: 扫描器覆盖 raw spacing/motion；gate 校验 digest 一致性与 Gallery 存在。
+     given: 输出根含 p-[17px] 或 transition-all；freeze digest 不匹配或 gallery=true 但无 07-gallery.yaml
+     fixture: skills/ui-template-design/evals/contracts.yaml#design-scanner-gate-extended
+-    fixture_sha256: be594adf1ef89dd819e0a79be3dc1fc6731095ef52e5b2bc11702a2bea537d4f
++    fixture_sha256: 58d6a797be144b6f8258671749187ca7beb47c6df783b9e022557b7f331d7f70
+     judge: script
+-    revision: add-ui-template-design-skill-eval-v1
++    revision: expand-design-decision-gates-eval-v1
+     expect:
+       must:
+         - raw spacing 扫描失败
+diff --git a/skills/ui-template-design/evals/contracts.yaml b/skills/ui-template-design/evals/contracts.yaml
+index a282270d..770b6fc9 100644
+--- a/skills/ui-template-design/evals/contracts.yaml
++++ b/skills/ui-template-design/evals/contracts.yaml
+@@ -166,3 +166,31 @@ cases:
+           - 04-patterns.yaml
+           - 07-gallery.yaml
+           - compute-digest
++  design-decision-gates:
++    assertions:
++      - type: file_contains
++        path: skills/ui-template-design/SKILL.md
++        all:
++          - decision-gates.md
++          - 至少 2 个合法候选
++          - 明确授权
++          - Agent 偏好都不是确认
++      - type: file_contains
++        path: skills/ui-template-design/references/decision-gates.md
++        all:
++          - 用户选择权是 freeze 前置条件
++          - 不得把第一个可行方案
++          - authority
++          - 不得静默决定
++          - Freeze
++      - type: file_contains
++        path: skills/ui-template-design/references/task-classes.md
++        all:
++          - decision-gates.md
++          - 歧义时让用户在候选中选择
++      - type: file_contains
++        path: skills/ui-template-design/references/artifact-templates.md
++        all:
++          - decision_gates
++          - "authority: user"
++          - consequence
+diff --git a/skills/ui-template-design/references/artifact-templates.md b/skills/ui-template-design/references/artifact-templates.md
+index 3984dc51..87125709 100644
+--- a/skills/ui-template-design/references/artifact-templates.md
++++ b/skills/ui-template-design/references/artifact-templates.md
+@@ -2,6 +2,24 @@
+ 
+ 核心产物的最小 YAML shape。只保证字段可解析、gate 可验证；不预设视觉内容。按需读取，不预加载全文。
+ 
++## 00-intake.md
++
++```yaml
++task_class: refactor
++site: existing
++output_root: .
++change_set:
++  layers: [token, pattern]
++  paths: ["src/styles/**", "src/components/patterns/**"]
++decision_gates:
++  - gate: scope
++    question: "只修列表空态，还是提升为共享 EmptyState Pattern？"
++    options: ["local-fix", "shared-pattern"]
++    selected: shared-pattern
++    authority: user
++    consequence: "多一个 Pattern 与 Gallery 状态，但业务页不再各自补空态"
++```
++
+ ## 02-tokens-freeze.yaml
+ 
+ ```yaml
+diff --git a/skills/ui-template-design/references/decision-gates.md b/skills/ui-template-design/references/decision-gates.md
+new file mode 100644
+index 00000000..f71c7617
+--- /dev/null
++++ b/skills/ui-template-design/references/decision-gates.md
+@@ -0,0 +1,40 @@
++# Decision gates
++
++用户选择权是 freeze 前置条件。凡是会进入 token、Primitive、Pattern、规则、Gallery、验证或 freeze 本体的决策，都必须先给出可见候选并等待用户选择或明确授权；不得把第一个可行方案、框架默认、依赖默认或 Agent 偏好当成已确认。
++
++## 提问方式
++
++- 把同类缺失信息聚合成一轮聚焦提问；每轮最多 3 个 blocking question。
++- 每个问题至少给 2 个合法候选；只有唯一合法结果时可只确认该结果。候选必须说明适用场景与代价，必要时给出推荐及理由。
++- 始终允许用户给出候选之外的答案；列表不是闭集，除非该层本身是 schema、runtime 或 Page Type 闭集。
++- 用户可明确说「由你决定」。此时先声明拟用默认、影响面和可回退方式，把 `authority` 记为 `delegated`；不得事后静默补授权。
++- 已记录的 selected / delegated 决策不重复询问；新事实使旧决策失效时才重开对应 gate。
++
++`00-intake.md` 建立决策账本，后续产物只引用或细化它：
++
++```yaml
++decision_gates:
++  - gate: tokens
++    question: "视觉方向沿用 existing 还是走低对比中性系统？"
++    options: ["existing-voice", "neutral-system"]
++    selected: existing-voice
++    authority: user
++    consequence: "保留品牌暖色；新增色阶仍需用户确认"
++```
++
++## 必经 gate
++
++| Gate | 必须让用户选择 | 不得静默决定 |
++| --- | --- | --- |
++| Intake | 任务类歧义、输出根、变更范围、existing 的“冻结业务 / 允许交互变化”边界 | 用口吻猜任务类或扩大路径 |
++| Architecture | greenfield 每个闭集技术层的候选；existing 是否保持 observed stack | 预设语言、框架、样式或包管理器 |
++| UX & Inventory | 输入源、优先用户/旅程、纳入路由或组件；refactor 可选全量或代表性 inventory | 把代表性抽样说成全站事实 |
++| Tokens | 视觉方向、精确值来源、theme/density/motion 覆盖 | 先写品牌色再当作既定方向 |
++| Primitives | 领养组件库、项目内实现或 hybrid；纳入控件与无障碍基线 | 只因库流行就安装 |
++| Patterns | Page Type 归属、纳入 Pattern、断点与 Data-State 覆盖 | 为歧义路由挑选类型 |
++| Rules | 可加载规则位置、是否写等价 Cursor 片段、扫描严格度 | 替换根 `AGENTS.md` |
++| Gallery | dev-only 面、viewport/theme 矩阵、是否建立 Golden Page | 用固定 `/dev/design-system` 当唯一合法形态 |
++| Verification | 浏览器/设备方式、截图 diff 阈值、失败后请求人类还是暂停 | 放宽 3 轮上限或放宽过期证据 |
++| Freeze | 汇总关键选择、剩余未迁页、未解决问题和下一步 | 把未回答的 gate 解释为同意 |
++
++每个 gate 的结果写入对应 Intake/阶段产物；用户拒绝、修改或悬置任一 blocking 选项时，阶段停在对应层，不得继续生成下层。
+diff --git a/skills/ui-template-design/references/existing-refactor.md b/skills/ui-template-design/references/existing-refactor.md
+index d857b31a..74445bf9 100644
+--- a/skills/ui-template-design/references/existing-refactor.md
++++ b/skills/ui-template-design/references/existing-refactor.md
+@@ -18,3 +18,7 @@
+ 8. 按页迁移可另开任务；本 skill 可将「体制 + Gallery」标完成
+ 
+ 不要一次性重写整个前端。无 mapping 表不得开始逐页改 class。
++
++## Existing gates
++
++Intake 让用户选择重构范围：仅视觉壳、含组件收敛、含 Pattern 提升等；并列出每项会触达的路径类型。Architecture gate 先确认「保持 observed stack」，再允许把换栈拆成独立任务；不得把必要依赖升级混入视觉重构。Inventory gate 声明全量或代表性抽样，并说明代表性抽样不能外推为全站事实。
+diff --git a/skills/ui-template-design/references/greenfield.md b/skills/ui-template-design/references/greenfield.md
+index 79efa593..d9a04b33 100644
+--- a/skills/ui-template-design/references/greenfield.md
++++ b/skills/ui-template-design/references/greenfield.md
+@@ -5,3 +5,7 @@
+ 闭集层：language、UI framework、bundler、routing、styling、client/server state、data access、unit/browser verification、package manager、repo shape。未确认前不得写应用源码或依赖清单，不得把任何栈写成 skill 默认。兄弟应用、功能规格里的技术提及只是候选。
+ 
+ 确认后再：UX Model → Token Freeze（用户确认）→ Primitives → Patterns + Page Types → 规则块 → Gallery → 可选证明切片 → Visual loop → Freeze。
++
++## Architecture gate
++
++对闭集中每一层给出至少 2 个与项目目标相容的候选；唯一合法结果才可只做确认。每个候选说明长期代价、生态/维护影响和与 UX 方向的匹配度。用户可授权 Agent 选默认，但默认必须先展示影响并记入 decision gates；不得用 skill 偏好替代选型。
+diff --git a/skills/ui-template-design/references/iterate.md b/skills/ui-template-design/references/iterate.md
+index 19f1a44d..a275c443 100644
+--- a/skills/ui-template-design/references/iterate.md
++++ b/skills/ui-template-design/references/iterate.md
+@@ -17,3 +17,7 @@
+ - 默默覆盖根 `AGENTS.md`。
+ - 为过线在单个业务页写魔法数。
+ - 把 iterate 当成新项目初始化。
++
++## Scope gate
++
++把可改层与候选路径列成选项，同时声明不触碰集合。用户只给症状时，先提供「最小局部修复」「回写对应层」「扩展范围」的代价对比；确认前不得从症状跳到整层重写。
+diff --git a/skills/ui-template-design/references/task-classes.md b/skills/ui-template-design/references/task-classes.md
+index 2bf4f230..92a9ee4f 100644
+--- a/skills/ui-template-design/references/task-classes.md
++++ b/skills/ui-template-design/references/task-classes.md
+@@ -13,7 +13,7 @@ Intake 用可观察信号判定 `bootstrap | refactor | iterate`，写入 `00-in
+ 
+ ## 必读 / 禁止预加载
+ 
+-三类都必须读：`layers.md`、`executable-rules.md`、`adapters.md`。扫描与禁止 raw token 不因任务类豁免。
++三类都必须读：`decision-gates.md`、`layers.md`、`executable-rules.md`、`adapters.md`。扫描与禁止 raw token 不因任务类豁免。
+ 
+ | 任务类 | 再读 | 禁止预加载 |
+ | --- | --- | --- |
+@@ -27,4 +27,4 @@ Intake 用可观察信号判定 `bootstrap | refactor | iterate`，写入 `00-in
+ 
+ ## 变更集合
+ 
+-`refactor` 与 `iterate` 必须在 Intake 声明路径/层集合。未声明路径保持原字节。一次只允许动 Token、Primitive、Pattern、规则或 Gallery 中用户点名的层。
++`refactor` 与 `iterate` 必须在 Intake 声明路径/层集合；歧义时让用户在候选中选择。未声明路径保持原字节。一次只允许动 Token、Primitive、Pattern、规则或 Gallery 中用户点名的层。

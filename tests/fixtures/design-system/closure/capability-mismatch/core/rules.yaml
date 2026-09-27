@@ -1,0 +1,10 @@
+schema: design-system-rules/v1
+items:
+- id: rule/NN-001
+  statement: Use semantic tokens only.
+  severity: must
+  token_refs:
+  - token/color.primary
+  - token/color.surface
+  - token/space.md
+  status: active

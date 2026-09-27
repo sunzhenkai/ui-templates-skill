@@ -1,0 +1,315 @@
+schema_version: 1
+graph_type: ui-template-literal-source-graph
+platform: web
+closure_complete: true
+canonical_candidates:
+  themes: [theme.core]
+  entries: [entry.shell]
+definitions:
+  - {id: theme.core, kind: theme, name: core, locator: "ui-source-graph.yaml#/definitions/theme.core", exports: [theme], facts: []}
+  - {id: entry.shell, kind: entry, name: shell-entry, locator: "ui-source-graph.yaml#/definitions/entry.shell", exports: [shell], facts: []}
+  - {id: scene.shell, kind: scene, name: shell, locator: "ui-source-graph.yaml#/definitions/scene.shell", exports: [shell-scene], facts: []}
+  - {id: scene.board, kind: scene, name: board, locator: "ui-source-graph.yaml#/definitions/scene.board", exports: [board-scene], facts: []}
+  - {id: scene.settings, kind: scene, name: settings, locator: "ui-source-graph.yaml#/definitions/scene.settings", exports: [settings-scene], facts: []}
+  - {id: scene.master-detail, kind: scene, name: master-detail, locator: "ui-source-graph.yaml#/definitions/scene.master-detail", exports: [master-detail-scene], facts: []}
+  - {id: scene.dialog, kind: scene, name: dialog, locator: "ui-source-graph.yaml#/definitions/scene.dialog", exports: [dialog-scene], facts: []}
+  - {id: component.app-sidebar, kind: component, name: app-sidebar, locator: "ui-source-graph.yaml#/definitions/component.app-sidebar", exports: [app-sidebar], facts: []}
+  - {id: component.button, kind: component, name: button, locator: "ui-source-graph.yaml#/definitions/component.button", exports: [button], facts: []}
+  - {id: component.chat-fab, kind: component, name: chat-fab, locator: "ui-source-graph.yaml#/definitions/component.chat-fab", exports: [chat-fab], facts: []}
+  - {id: component.command-palette, kind: component, name: command-palette, locator: "ui-source-graph.yaml#/definitions/component.command-palette", exports: [command-palette], facts: []}
+  - {id: component.data-table, kind: component, name: data-table, locator: "ui-source-graph.yaml#/definitions/component.data-table", exports: [data-table], facts: []}
+  - {id: component.dialog, kind: component, name: dialog, locator: "ui-source-graph.yaml#/definitions/component.dialog", exports: [dialog], facts: []}
+  - {id: component.input, kind: component, name: input, locator: "ui-source-graph.yaml#/definitions/component.input", exports: [input], facts: []}
+  - {id: component.page-header, kind: component, name: page-header, locator: "ui-source-graph.yaml#/definitions/component.page-header", exports: [page-header], facts: []}
+  - {id: component.settings-nav, kind: component, name: settings-nav, locator: "ui-source-graph.yaml#/definitions/component.settings-nav", exports: [settings-nav], facts: []}
+  - {id: context.action-trigger, kind: context, name: action-trigger, locator: "ui-source-graph.yaml#/definitions/context.action-trigger", exports: [], facts: []}
+  - {id: context.navigation-link, kind: context, name: navigation-link, locator: "ui-source-graph.yaml#/definitions/context.navigation-link", exports: [], facts: []}
+  - {id: context.overlay-surface, kind: context, name: overlay-surface, locator: "ui-source-graph.yaml#/definitions/context.overlay-surface", exports: [], facts: []}
+imports:
+  - {id: import.theme, from_definition: entry.shell, to_definition: theme.core, locator: "ui-source-graph.yaml#/imports/import.theme"}
+  - {id: import.shell, from_definition: entry.shell, to_definition: scene.shell, locator: "ui-source-graph.yaml#/imports/import.shell"}
+  - {id: import.board, from_definition: entry.shell, to_definition: scene.board, locator: "ui-source-graph.yaml#/imports/import.board"}
+  - {id: import.settings, from_definition: entry.shell, to_definition: scene.settings, locator: "ui-source-graph.yaml#/imports/import.settings"}
+  - {id: import.master-detail, from_definition: entry.shell, to_definition: scene.master-detail, locator: "ui-source-graph.yaml#/imports/import.master-detail"}
+  - {id: import.dialog-scene, from_definition: entry.shell, to_definition: scene.dialog, locator: "ui-source-graph.yaml#/imports/import.dialog-scene"}
+  - {id: import.dialog, from_definition: entry.shell, to_definition: component.dialog, locator: "ui-source-graph.yaml#/imports/import.dialog"}
+  - {id: import.app-sidebar, from_definition: entry.shell, to_definition: component.app-sidebar, locator: "ui-source-graph.yaml#/imports/import.app-sidebar"}
+  - {id: import.button, from_definition: entry.shell, to_definition: component.button, locator: "ui-source-graph.yaml#/imports/import.button"}
+  - {id: import.chat-fab, from_definition: entry.shell, to_definition: component.chat-fab, locator: "ui-source-graph.yaml#/imports/import.chat-fab"}
+  - {id: import.command-palette, from_definition: entry.shell, to_definition: component.command-palette, locator: "ui-source-graph.yaml#/imports/import.command-palette"}
+  - {id: import.data-table, from_definition: entry.shell, to_definition: component.data-table, locator: "ui-source-graph.yaml#/imports/import.data-table"}
+  - {id: import.input, from_definition: entry.shell, to_definition: component.input, locator: "ui-source-graph.yaml#/imports/import.input"}
+  - {id: import.page-header, from_definition: entry.shell, to_definition: component.page-header, locator: "ui-source-graph.yaml#/imports/import.page-header"}
+  - {id: import.settings-nav, from_definition: entry.shell, to_definition: component.settings-nav, locator: "ui-source-graph.yaml#/imports/import.settings-nav"}
+  - {id: import.action-context, from_definition: entry.shell, to_definition: context.action-trigger, locator: "ui-source-graph.yaml#/imports/import.action-context"}
+  - {id: import.nav-context, from_definition: entry.shell, to_definition: context.navigation-link, locator: "ui-source-graph.yaml#/imports/import.nav-context"}
+  - {id: import.overlay-context, from_definition: entry.shell, to_definition: context.overlay-surface, locator: "ui-source-graph.yaml#/imports/import.overlay-context"}
+usages:
+  - id: usage.shell
+    definition_id: scene.shell
+    scene: shell
+    component: null
+    context: null
+    slot: page-canvas
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.shell"
+    facts:
+      - {id: fact.shell.root-scroll-none, facet: layout_scenes, subject: shell, context: null, slot: page-canvas, state: default, property: root_scroll, value: {kind: semantic, value: none}, negative: true, rule_id: LAYOUT-001}
+      - {id: fact.shell.arrangement, facet: layout_scenes, subject: shell, context: null, slot: page-canvas, state: default, property: arrangement, value: {kind: semantic, value: horizontal}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.variant, facet: layout_scenes, subject: shell, context: null, slot: page-canvas, state: default, property: shell_variant, value: {kind: semantic, value: inset}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.switcher, facet: layout_scenes, subject: shell, context: null, slot: workspace-switcher, state: default, property: slot_role, value: {kind: semantic, value: workspace-switcher}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.switcher, facet: layout_scenes, subject: shell, context: null, slot: workspace-switcher, state: default, property: slot_order, value: {kind: semantic, value: "1"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.search, facet: layout_scenes, subject: shell, context: null, slot: search, state: default, property: slot_role, value: {kind: semantic, value: search}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.search, facet: layout_scenes, subject: shell, context: null, slot: search, state: default, property: slot_order, value: {kind: semantic, value: "2"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.compose, facet: layout_scenes, subject: shell, context: null, slot: compose, state: default, property: slot_role, value: {kind: semantic, value: compose}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.compose, facet: layout_scenes, subject: shell, context: null, slot: compose, state: default, property: slot_order, value: {kind: semantic, value: "3"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.nav-group, facet: layout_scenes, subject: shell, context: null, slot: nav-group, state: default, property: slot_role, value: {kind: semantic, value: nav-group}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.nav-group, facet: layout_scenes, subject: shell, context: null, slot: nav-group, state: default, property: slot_order, value: {kind: semantic, value: "4"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.pin-list, facet: layout_scenes, subject: shell, context: null, slot: pin-list, state: default, property: slot_role, value: {kind: semantic, value: pin-list}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.pin-list, facet: layout_scenes, subject: shell, context: null, slot: pin-list, state: default, property: slot_order, value: {kind: semantic, value: "5"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.rail, facet: layout_scenes, subject: shell, context: null, slot: rail, state: default, property: slot_role, value: {kind: semantic, value: rail}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.rail, facet: layout_scenes, subject: shell, context: null, slot: rail, state: default, property: slot_order, value: {kind: semantic, value: "6"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.header-trigger, facet: layout_scenes, subject: shell, context: null, slot: header-trigger, state: default, property: slot_role, value: {kind: semantic, value: header-trigger}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.header-trigger, facet: layout_scenes, subject: shell, context: null, slot: header-trigger, state: default, property: slot_order, value: {kind: semantic, value: "7"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.anchor.header-trigger, facet: layout_scenes, subject: shell, context: null, slot: header-trigger, state: default, property: anchor_role, value: {kind: semantic, value: header-trigger}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.page-header, facet: layout_scenes, subject: shell, context: null, slot: page-header, state: default, property: slot_role, value: {kind: semantic, value: page-header}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.page-header, facet: layout_scenes, subject: shell, context: null, slot: page-header, state: default, property: slot_order, value: {kind: semantic, value: "8"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.page-toolbar, facet: layout_scenes, subject: shell, context: null, slot: page-toolbar, state: default, property: slot_role, value: {kind: semantic, value: page-toolbar}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.page-toolbar, facet: layout_scenes, subject: shell, context: null, slot: page-toolbar, state: default, property: slot_order, value: {kind: semantic, value: "9"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.page-canvas, facet: layout_scenes, subject: shell, context: null, slot: page-canvas, state: default, property: slot_role, value: {kind: semantic, value: page-canvas}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.page-canvas, facet: layout_scenes, subject: shell, context: null, slot: page-canvas, state: default, property: slot_order, value: {kind: semantic, value: "10"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.footer, facet: layout_scenes, subject: shell, context: null, slot: footer-utility, state: default, property: slot_role, value: {kind: semantic, value: footer-utility}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.footer, facet: layout_scenes, subject: shell, context: null, slot: footer-utility, state: default, property: slot_order, value: {kind: semantic, value: "11"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.slot.chat-fab, facet: layout_scenes, subject: shell, context: null, slot: chat-fab, state: default, property: slot_role, value: {kind: semantic, value: chat-fab}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.order.chat-fab, facet: layout_scenes, subject: shell, context: null, slot: chat-fab, state: default, property: slot_order, value: {kind: semantic, value: "12"}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.anchor.chat-fab, facet: layout_scenes, subject: shell, context: null, slot: chat-fab, state: default, property: anchor_role, value: {kind: semantic, value: chat-fab}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.canvas-padding-block-start, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_block_start, value: {kind: token-ref, value: space.2}, negative: false, rule_id: LAYOUT-107}
+      - {id: fact.shell.canvas-padding-inline-end, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_inline_end, value: {kind: token-ref, value: space.2}, negative: false, rule_id: LAYOUT-107}
+      - {id: fact.shell.canvas-padding-block-end, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_block_end, value: {kind: token-ref, value: space.2}, negative: false, rule_id: LAYOUT-107}
+      - {id: fact.shell.canvas-padding-inline-start, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_inline_start, value: {kind: semantic, value: zero}, negative: true, rule_id: LAYOUT-107}
+      - {id: fact.shell.canvas-radius, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: radius, value: {kind: token-ref, value: radius.xl}, negative: false, rule_id: LAYOUT-107}
+      - {id: fact.shell.canvas-border, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: border, value: {kind: token-ref, value: color.surface-border}, negative: false, rule_id: LAYOUT-107}
+      - {id: fact.shell.canvas-shadow, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: shadow, value: {kind: token-ref, value: shadow.surface}, negative: false, rule_id: LAYOUT-107}
+      - {id: fact.shell.canvas-background, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: background, value: {kind: token-ref, value: color.page-canvas}, negative: false, rule_id: LAYOUT-107}
+  - id: usage.board
+    definition_id: scene.board
+    scene: board
+    component: page-header
+    context: null
+    slot: page-header
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.board"
+    facts:
+      - {id: fact.board.arrangement, facet: layout_scenes, subject: board, context: null, slot: page-canvas, state: default, property: arrangement, value: {kind: semantic, value: vertical}, negative: false, rule_id: LAYOUT-102}
+      - {id: fact.board.page-scroll, facet: layout_scenes, subject: board, context: null, slot: page-canvas, state: default, property: scroll_block, value: {kind: semantic, value: block}, negative: false, rule_id: LAYOUT-102}
+      - {id: fact.board.page-header-height, facet: component_geometry, subject: page-header, context: null, slot: page-header, state: default, property: size, value: {kind: token-ref, value: space.header-height, observed: {kind: css-length, value: "3rem"}}, negative: false, rule_id: LAYOUT-106}
+      - {id: fact.board.page-toolbar-height, facet: component_geometry, subject: page-header, context: null, slot: page-toolbar, state: default, property: size, value: {kind: token-ref, value: space.header-height, observed: {kind: css-length, value: "3rem"}}, negative: false, rule_id: LAYOUT-106}
+      - {id: fact.board.nav-default-underline, facet: state_presentations, subject: board, context: navigation-link, slot: section-nav, state: default, property: text_decoration, value: {kind: semantic, value: underline}, negative: true, rule_id: QUALITY-103}
+  - id: usage.board-columns
+    definition_id: scene.board
+    scene: board
+    component: null
+    context: null
+    slot: columns
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.board-columns"
+    facts:
+      - {id: fact.board.non-wrap, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: wrap, value: {kind: semantic, value: non-wrap}, negative: true, rule_id: LAYOUT-002}
+      - {id: fact.board.non-shrink, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: shrink, value: {kind: semantic, value: non-shrink}, negative: true, rule_id: LAYOUT-002}
+      - {id: fact.board.inline-scroll, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: scroll_inline, value: {kind: semantic, value: inline}, negative: false, rule_id: LAYOUT-002}
+      - {id: fact.board.column-width, facet: component_geometry, subject: data-table, context: null, slot: columns, state: default, property: size, value: {kind: token-ref, value: size.board-column, observed: {kind: css-length, value: "280px"}}, negative: false, rule_id: LAYOUT-002}
+      - {id: fact.board.column-gap, facet: component_geometry, subject: data-table, context: null, slot: columns, state: default, property: gap, value: {kind: token-ref, value: space.4, observed: {kind: css-length, value: "16px"}}, negative: false, rule_id: LAYOUT-002}
+  - id: usage.settings-section-nav
+    definition_id: scene.settings
+    scene: settings
+    component: settings-nav
+    context: navigation-link
+    slot: section-nav
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.settings-section-nav"
+    facts:
+      - {id: fact.settings.root-no-scroll, facet: layout_scenes, subject: settings, context: null, slot: null, state: default, property: root_scroll, value: {kind: semantic, value: none}, negative: true, rule_id: LAYOUT-102}
+      - {id: fact.settings.nav-placement, facet: layout_scenes, subject: settings, context: null, slot: section-nav, state: default, property: arrangement, value: {kind: semantic, value: vertical}, negative: false, rule_id: LAYOUT-102}
+      - {id: fact.settings.nav-scroll, facet: layout_scenes, subject: settings, context: null, slot: section-nav, state: default, property: scroll_block, value: {kind: semantic, value: region}, negative: false, rule_id: LAYOUT-102}
+      - {id: fact.settings.content-scroll, facet: layout_scenes, subject: settings, context: null, slot: page-canvas, state: default, property: scroll_block, value: {kind: semantic, value: region}, negative: false, rule_id: LAYOUT-102}
+      - {id: fact.settings.nav-stretch, facet: layout_scenes, subject: settings, context: null, slot: section-nav, state: default, property: container_presentation, value: {kind: semantic, value: fill}, negative: false, rule_id: LAYOUT-102}
+      - {id: fact.settings.nav-anatomy, facet: layout_scenes, subject: settings, context: null, slot: section-nav, state: default, property: anatomy, value: {kind: semantic, value: icon-label}, negative: false, rule_id: LAYOUT-102}
+      - {id: fact.settings.nav-hover, facet: state_presentations, subject: settings, context: navigation-link, slot: section-nav, state: hover, property: background, value: {kind: token-ref, value: color.surface-hover}, negative: false, rule_id: QUALITY-103}
+      - {id: fact.settings.nav-selected, facet: state_presentations, subject: settings, context: navigation-link, slot: section-nav, state: selected, property: background, value: {kind: token-ref, value: color.surface-selected}, negative: false, rule_id: QUALITY-103}
+  - id: usage.master-detail-layout
+    definition_id: scene.master-detail
+    scene: master-detail
+    component: null
+    context: null
+    slot: null
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.master-detail-layout"
+    facts:
+      - {id: fact.master-detail.arrangement, facet: layout_scenes, subject: master-detail, context: null, slot: null, state: default, property: arrangement, value: {kind: semantic, value: horizontal}, negative: false, rule_id: LAYOUT-003}
+  - id: usage.master-scroll
+    definition_id: scene.master-detail
+    scene: master-detail
+    component: null
+    context: null
+    slot: master-pane
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.master-scroll"
+    facts:
+      - {id: fact.master.block-scroll, facet: layout_scenes, subject: master-detail, context: null, slot: master-pane, state: default, property: scroll_block, value: {kind: semantic, value: block}, negative: false, rule_id: LAYOUT-003}
+  - id: usage.detail-scroll
+    definition_id: scene.master-detail
+    scene: master-detail
+    component: null
+    context: null
+    slot: detail-pane
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.detail-scroll"
+    facts:
+      - {id: fact.detail.block-scroll, facet: layout_scenes, subject: master-detail, context: null, slot: detail-pane, state: default, property: scroll_block, value: {kind: semantic, value: block}, negative: false, rule_id: LAYOUT-003}
+  - id: usage.detail-context-panel
+    definition_id: scene.master-detail
+    scene: master-detail
+    component: null
+    context: null
+    slot: context-panel
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.detail-context-panel"
+    facts:
+      - {id: fact.master.context-panel, facet: layout_scenes, subject: master-detail, context: null, slot: context-panel, state: default, property: overlay_scope, value: {kind: semantic, value: region}, negative: false, rule_id: LAYOUT-003}
+  - id: usage.dialog-scene
+    definition_id: scene.dialog
+    scene: dialog
+    component: null
+    context: null
+    slot: overlay
+    state: open
+    locator: "ui-source-graph.yaml#/usages/usage.dialog-scene"
+    facts:
+      - {id: fact.dialog.overlay-scope, facet: layout_scenes, subject: dialog, context: null, slot: overlay, state: open, property: overlay_scope, value: {kind: semantic, value: viewport}, negative: false, rule_id: LAYOUT-005}
+      - {id: fact.dialog.overlay-anchor, facet: layout_scenes, subject: dialog, context: null, slot: overlay, state: open, property: overlay_anchor, value: {kind: semantic, value: viewport}, negative: false, rule_id: LAYOUT-005}
+  - id: usage.dialog-content
+    definition_id: component.dialog
+    scene: dialog
+    component: dialog
+    context: null
+    slot: content
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.dialog-content"
+    facts:
+      - {id: fact.dialog.padding-block-start, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: padding_block_start, value: {kind: token-ref, value: space.4, observed: {kind: css-length, value: "1rem"}}, negative: false, rule_id: QUALITY-001}
+      - {id: fact.dialog.padding-inline-end, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: padding_inline_end, value: {kind: token-ref, value: space.4, observed: {kind: css-length, value: "1rem"}}, negative: false, rule_id: QUALITY-001}
+      - {id: fact.dialog.padding-block-end, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: padding_block_end, value: {kind: token-ref, value: space.4, observed: {kind: css-length, value: "1rem"}}, negative: false, rule_id: QUALITY-001}
+      - {id: fact.dialog.padding-inline-start, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: padding_inline_start, value: {kind: token-ref, value: space.4, observed: {kind: css-length, value: "1rem"}}, negative: false, rule_id: QUALITY-001}
+      - {id: fact.dialog.radius, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: radius, value: {kind: token-ref, value: radius.xl}, negative: false, rule_id: QUALITY-001}
+      - {id: fact.dialog.shadow, facet: component_geometry, subject: dialog, context: null, slot: content, state: default, property: shadow, value: {kind: token-ref, value: shadow.floating}, negative: false, rule_id: QUALITY-001}
+  - id: usage.app-sidebar-width
+    definition_id: component.app-sidebar
+    scene: shell
+    component: app-sidebar
+    context: null
+    slot: nav-group
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.app-sidebar-width"
+    facts:
+      - {id: fact.app-sidebar.width, facet: component_geometry, subject: app-sidebar, context: null, slot: nav-group, state: default, property: size, value: {kind: token-ref, value: size.sidebar-default, observed: {kind: css-length, value: "256px"}}, negative: false, rule_id: LAYOUT-001}
+  - id: usage.chat-fab-geometry
+    definition_id: component.chat-fab
+    scene: shell
+    component: chat-fab
+    context: null
+    slot: chat-fab
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.chat-fab-geometry"
+    facts:
+      - {id: fact.chat-fab.inset-block-end, facet: component_geometry, subject: chat-fab, context: null, slot: chat-fab, state: default, property: inset_block_end, value: {kind: token-ref, value: space.chat-launcher-inset}, negative: false, rule_id: LAYOUT-104}
+      - {id: fact.chat-fab.inset-inline-end, facet: component_geometry, subject: chat-fab, context: null, slot: chat-fab, state: default, property: inset_inline_end, value: {kind: token-ref, value: space.chat-launcher-inset}, negative: false, rule_id: LAYOUT-104}
+      - {id: fact.chat-fab.size, facet: component_geometry, subject: chat-fab, context: null, slot: chat-fab, state: default, property: size, value: {kind: token-ref, value: space.chat-launcher-size}, negative: false, rule_id: LAYOUT-104}
+  - id: usage.button-geometry
+    definition_id: component.button
+    scene: board
+    component: button
+    context: action-trigger
+    slot: control
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.button-geometry"
+    facts:
+      - {id: fact.button.radius, facet: component_geometry, subject: button, context: null, slot: control, state: default, property: radius, value: {kind: token-ref, value: radius.lg}, negative: false, rule_id: QUALITY-101}
+  - id: usage.input-geometry
+    definition_id: component.input
+    scene: settings
+    component: input
+    context: action-trigger
+    slot: field
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.input-geometry"
+    facts:
+      - {id: fact.input.radius, facet: component_geometry, subject: input, context: null, slot: field, state: default, property: radius, value: {kind: token-ref, value: radius.lg}, negative: false, rule_id: QUALITY-101}
+      - {id: fact.input.focus-border, facet: state_presentations, subject: input, context: action-trigger, slot: field, state: focus-visible, property: border, value: {kind: token-ref, value: color.ring}, negative: false, rule_id: QUALITY-104}
+  - id: usage.settings-nav-focus
+    definition_id: component.settings-nav
+    scene: settings
+    component: settings-nav
+    context: navigation-link
+    slot: item
+    state: focus-visible
+    locator: "ui-source-graph.yaml#/usages/usage.settings-nav-focus"
+    facts:
+      - {id: fact.settings-nav.focus-border, facet: state_presentations, subject: settings-nav, context: navigation-link, slot: item, state: focus-visible, property: border, value: {kind: token-ref, value: color.ring}, negative: false, rule_id: QUALITY-104}
+  - id: usage.nav-link-active
+    definition_id: component.app-sidebar
+    scene: shell
+    component: app-sidebar
+    context: navigation-link
+    slot: item
+    state: active
+    locator: "ui-source-graph.yaml#/usages/usage.nav-link-active"
+    facts:
+      - {id: fact.nav-link.active-bg, facet: state_presentations, subject: app-sidebar, context: navigation-link, slot: item, state: active, property: background, value: {kind: token-ref, value: color.sidebar-accent}, negative: false, rule_id: QUALITY-103}
+      - {id: fact.nav-link.active-decoration, facet: state_presentations, subject: app-sidebar, context: navigation-link, slot: item, state: active, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-103}
+  - id: usage.nav-link-hover
+    definition_id: component.app-sidebar
+    scene: shell
+    component: app-sidebar
+    context: navigation-link
+    slot: item
+    state: hover
+    locator: "ui-source-graph.yaml#/usages/usage.nav-link-hover"
+    facts:
+      - {id: fact.nav-link.hover-bg, facet: state_presentations, subject: app-sidebar, context: navigation-link, slot: item, state: hover, property: background, value: {kind: token-ref, value: color.sidebar-accent}, negative: false, rule_id: QUALITY-103}
+      - {id: fact.nav-link.hover-decoration, facet: state_presentations, subject: app-sidebar, context: navigation-link, slot: item, state: hover, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-103}
+  - id: usage.action-focus
+    definition_id: component.button
+    scene: board
+    component: button
+    context: action-trigger
+    slot: control
+    state: focus-visible
+    locator: "ui-source-graph.yaml#/usages/usage.action-focus"
+    facts:
+      - {id: fact.action.focus-border, facet: state_presentations, subject: button, context: action-trigger, slot: control, state: focus-visible, property: border, value: {kind: token-ref, value: color.ring-focus}, negative: false, rule_id: AX-101}
+  - id: usage.action-hover
+    definition_id: component.button
+    scene: board
+    component: button
+    context: action-trigger
+    slot: control
+    state: hover
+    locator: "ui-source-graph.yaml#/usages/usage.action-hover"
+    facts:
+      - {id: fact.action.hover-bg, facet: state_presentations, subject: button, context: action-trigger, slot: control, state: hover, property: background, value: {kind: token-ref, value: color.primary-hover}, negative: false, rule_id: AX-101}
+      - {id: fact.action.hover-decoration, facet: state_presentations, subject: button, context: action-trigger, slot: control, state: hover, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: AX-101}
+  - id: usage.overlay-open
+    definition_id: scene.dialog
+    scene: dialog
+    component: null
+    context: overlay-surface
+    slot: overlay
+    state: open
+    locator: "ui-source-graph.yaml#/usages/usage.overlay-open"
+    facts:
+      - {id: fact.overlay-open.visibility, facet: state_presentations, subject: dialog, context: overlay-surface, slot: overlay, state: open, property: visibility, value: {kind: semantic, value: visible}, negative: false, rule_id: QUALITY-102}
+      - {id: fact.overlay-open.decoration, facet: state_presentations, subject: dialog, context: overlay-surface, slot: overlay, state: open, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-102}
+exclusions:
+  - {id: exclusion.board-section-nav, locator: "ui-source-graph.yaml#/definitions/scene.board", reason: out-of-scope}
+  - {id: exclusion.mobile, locator: "ui-source-graph.yaml#/exclusions/exclusion.mobile", reason: platform-mismatch}
+dynamic: []
