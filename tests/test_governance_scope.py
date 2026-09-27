@@ -14,28 +14,26 @@ class GovernanceScopeTests(unittest.TestCase):
     def test_domains_do_not_overlap(self) -> None:
         self.assertEqual(scope.check_domains(), [])
 
-    def test_web_v2_matches_baseline_and_is_clean(self) -> None:
-        self.assertEqual(scope.guard_web_v2(), [])
-
     def test_example_changed_path_guard_fails_closed(self) -> None:
         import check_governance_scope as scope
 
-        findings = scope.guard_example_paths(["tests/fixtures/fidelity/README.md", "example/workbench-shell/web-v3/src/x.ts"])
-        self.assertEqual(["EXAMPLE_PATH_IN_SCOPE: example/workbench-shell/web-v3/src/x.ts"], findings)
+        findings = scope.guard_example_paths(["tests/fixtures/fidelity/README.md", "example/sample-app/src/x.ts"])
+        self.assertEqual(["EXAMPLE_PATH_IN_SCOPE: example/sample-app/src/x.ts"], findings)
         self.assertEqual([], scope.guard_example_paths())
 
-    def test_example_guard_allows_only_prompts_web_prefix_and_removed_dotfiles(self) -> None:
+    def test_example_guard_allows_only_prompts_prefix(self) -> None:
         import check_governance_scope as scope
 
         paths = [
             "example/workbench-shell/prompts/README.md",
-            "example/workbench-shell/web/src/App.tsx",
-            "example/workbench-shell/.gitignore",
-            "example/workbench-shell/.oxlintrc.json",
+            "example/sample-app/src/App.tsx",
             "example/workbench-shell/stray-file.txt",
         ]
         self.assertEqual(
-            ["EXAMPLE_PATH_IN_SCOPE: example/workbench-shell/stray-file.txt"],
+            [
+                "EXAMPLE_PATH_IN_SCOPE: example/sample-app/src/App.tsx",
+                "EXAMPLE_PATH_IN_SCOPE: example/workbench-shell/stray-file.txt",
+            ],
             scope.guard_example_paths(paths),
         )
 
@@ -45,13 +43,8 @@ class GovernanceScopeTests(unittest.TestCase):
             with self.subTest(name=name):
                 self.assertTrue((fixture_root / name).is_dir())
 
-    def test_tests_do_not_import_web_v2(self) -> None:
-        needle = "example/workbench-shell/" + "web-v2"
-        for path in (ROOT / "tests").glob("test_*.py"):
-            self.assertNotIn(needle, path.read_text(encoding="utf-8"))
-
     def test_ci_and_root_validation_declare_sample_exclusions(self) -> None:
-        excluded = "example/workbench-shell/" + "web-v2/**"
+        excluded = "example/**"
         workflow = (ROOT / ".github/workflows/governance.yml").read_text(encoding="utf-8")
         makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
         runner = (ROOT / "scripts/run_governance_validation.py").read_text(encoding="utf-8")
@@ -65,7 +58,6 @@ class GovernanceScopeTests(unittest.TestCase):
         self.assertIn(excluded, runner)
         self.assertIn("content_read", runner)
         self.assertIn("commands_executed", runner)
-        self.assertNotIn("example/workbench-shell/" + "web-v2/package.json", runner)
 
     def test_root_makefile_has_complete_governance_targets_without_local_install(self) -> None:
         text = (ROOT / "Makefile").read_text(encoding="utf-8")

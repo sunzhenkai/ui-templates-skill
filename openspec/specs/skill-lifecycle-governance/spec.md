@@ -108,7 +108,7 @@ manifest SHALL 记录 bundle version、各 public skill version（Author、Apply
 - **THEN** runner 不改写历史，也不把旧计数与当前计数混合；当前结果绑定当前 revision
 
 ### Requirement: 最小 CI 门禁
-每个变更 SHALL 运行 governance CI，包括模板 validator 正反 fixtures、OpenSpec strict、Markdown 本地链接、eval schema/runner、skill frontmatter/reference、bundle smoke、manifest/reproducibility 和本地 `.agents/skills` 边界检查。CI SHALL 不依赖修改或通过 `example/workbench-shell/web-v2/**`。
+每个变更 SHALL 运行 governance CI，包括模板 validator 正反 fixtures、OpenSpec strict、Markdown 本地链接、eval schema/runner、skill frontmatter/reference、bundle smoke、manifest/reproducibility 和本地 `.agents/skills` 边界检查。CI SHALL 不依赖修改或通过 `example/**`。
 
 #### Scenario: governance 变更通过
 - **WHEN** 所有契约、文档、bundle 和 eval 检查通过
@@ -118,8 +118,8 @@ manifest SHALL 记录 bundle version、各 public skill version（Author、Apply
 - **WHEN** mutation fixture 制造低对比色、未知 origin、断链、缺 skill 或公开 skill 进入本仓 `.agents/skills`
 - **THEN** 对应 job 稳定失败并返回 finding code
 
-#### Scenario: web-v2 状态变化
-- **WHEN** `example/workbench-shell/web-v2/**` 存在已知问题或测试状态变化
+#### Scenario: example 生成物状态变化
+- **WHEN** `example/**` 存在已知问题或测试状态变化
 - **THEN** 本 change 的 governance 验收不读取、不修改且不以该目录结果决定通过
 
 ### Requirement: 文档与安装入口一致性
@@ -141,9 +141,9 @@ README、AGENTS、active OpenSpec、生产 skills、templates、catalog 和发�
 - **WHEN** archive change 或 immutable patch 记录当时的 `implementation/` 设计
 - **THEN** 历史文件保持不变并被标识为档案，不参与 active 文档一致性判定
 
-#### Scenario: web-v2 文档存在已知断链
+#### Scenario: example 生成物文档存在已知断链
 - **WHEN** 本 change 运行文档治理检查
-- **THEN** `example/workbench-shell/web-v2/**` 被记录为明确排除路径，不修改其文件，也不以其当前链接状态决定本 change 通过
+- **THEN** `example/**` 被记录为明确排除路径，不修改其文件，也不以其当前链接状态决定本 change 通过
 
 ### Requirement: 官方 catalog 随公开 skill 分发
 对外分发的 `ui-template-author` SHALL 在 skill 目录内携带只读官方 catalog，至少包含现行 published 模板 `workbench-shell` 及其 INDEX 行，以及每个模板的必备文件与已发布附件。`npx skills add` 与 `make bundle` 的公开产物 SHALL 都包含该 catalog。缺少 catalog、INDEX 行或任一 published 模板必备文件的公开产物 SHALL 不得发布，也不得被文档称为可 Apply。
@@ -199,7 +199,7 @@ README、AGENTS、active OpenSpec、生产 skills、templates、catalog 和发�
 
 #### Scenario: 既有样例不在本次修复范围
 - **WHEN** 本 change 验证 lifecycle governance
-- **THEN** 不要求修改 `example/workbench-shell/web-v2/**`，也不把其当前质量声明为本 change 的交付结果
+- **THEN** 不要求修改 `example/**`，也不把其当前质量声明为本 change 的交付结果
 
 ### Requirement: 外部知识与依赖边界
 bundle SHALL 不复制 `ui-ux-pro-max` 的数据集、持久化设计系统或 stack catalog。新增治理依赖 SHALL 采用固定版本和锁定清单，并 SHALL 在 manifest/许可清单中记录；外部知识只通过 Apply Query Contract 作为候选来源。
@@ -254,7 +254,7 @@ Contract eval SHALL 增加不依赖 `example/**` 的 repo Authoring 与 Apply ca
 - **THEN**profile version 和相应 skill/bundle version 按策略提升，旧 profile 不被静默按新语义读取
 
 ### Requirement: Example 治理排除保持有效
-本 change 的 root validation、profile fixtures、source replay、eval、bundle 和 release evidence SHALL 明确排除 `example/**`。任何任务 SHALL 不修改、格式化、迁移、运行或 promote `example/workbench-shell/web-v1/**`、`example/workbench-shell/web-v2/**`、`example/workbench-shell/web-v3/**` 或其他生成样例代码；样例质量 SHALL 不决定本 change 通过。
+本 change 的 root validation、profile fixtures、source replay、eval、bundle 和 release evidence SHALL 明确排除 `example/**`。任何任务 SHALL 不修改、格式化、迁移、运行或 promote `example/**` 下的生成样例代码；样例质量 SHALL 不决定本 change 通过。
 
 #### Scenario: Root governance 验收
 - **WHEN** 执行本 change 的 validate/test/eval/bundle 检查
@@ -287,7 +287,7 @@ Contract eval SHALL 增加不依赖 `example/**` 的 repo Authoring 与 Apply ca
 - **THEN** 能找到 FUNCTIONAL-LOOP、双 skill 入口、INDEX 状态和禁止改生成物的规约
 
 ### Requirement: 当前生成 web 治理排除
-root governance SHALL 排除 `example/workbench-shell/web/**` 以及既有 `web-v1/**`、`web-v2/**`、`web-v3/**`。样例质量 SHALL 不决定发布通过。保真修复 SHALL NOT 以生成 web 源码为唯一交付。
+root governance SHALL 排除 `example/**`。样例质量 SHALL 不决定发布通过。保真修复 SHALL NOT 以生成 web 源码为唯一交付。
 
 #### Scenario: 治理验收
 - **WHEN** 运行 validate/test/eval/bundle

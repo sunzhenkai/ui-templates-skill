@@ -33,10 +33,10 @@ python3 -m venv /tmp/ui-template-governance-venv
 ## Scope guard
 
 ```bash
-/tmp/ui-template-governance-venv/bin/python scripts/check_governance_scope.py --guard-web-v2
+/tmp/ui-template-governance-venv/bin/python scripts/check_governance_scope.py --guard-example-changed-paths
 ```
 
-该命令验证治理三域不交叠，并比较 web-v2 的 HEAD tree 和工作区状态；不会读取其业务文件内容或运行其测试。
+该命令验证治理三域不交叠，并拒绝任何以 `example/` 开头的 changed-path（唯一放行常驻样例输入 `example/workbench-shell/prompts/`）；不会读取样例内容或运行其测试。
 
 ## Active/release consistency 与 root gate
 
@@ -45,7 +45,7 @@ python3 -m venv /tmp/ui-template-governance-venv
 make validate REPORT_DIR=governance-reports
 ```
 
-checker 的路径域来自 `governance/scope.yaml`：active/release 检查本地链接和当前语义，OpenSpec 使用 base + `harden-template-lifecycle` delta 的 effective view 并显式报告 pending overlay；immutable history 只检查可读性，不改写术语；`web-v2`/`web-v3` exclusion 不遍历、不读取内容。root gate 另运行 tests、真实模板 validator、eval JSON/JUnit、OpenSpec strict、bundle 双构建/安装 smoke 与生产 mirror drift，并输出 `exclusions.json`、manifest 和 summary。
+checker 的路径域来自 `governance/scope.yaml`：active/release 检查本地链接和当前语义，OpenSpec 使用 base + `harden-template-lifecycle` delta 的 effective view 并显式报告 pending overlay；immutable history 只检查可读性，不改写术语；`example/**` exclusion 不遍历、不读取内容。root gate 另运行 tests、真实模板 validator、eval JSON/JUnit、OpenSpec strict、bundle 双构建/安装 smoke 与生产 mirror drift，并输出 `exclusions.json`、manifest 和 summary。
 
 ## 样例 promotion（默认不执行命令）
 
@@ -60,7 +60,7 @@ checker 的路径域来自 `governance/scope.yaml`：active/release 检查本地
   --output governance-reports/sample-promotion.json
 ```
 
-该命令只验证声明并生成符合 `schemas/governance/sample-promotion-report.schema.json` 的 evidence-only report，`commands_executed` 固定为 false；它不编辑样例、README 或发布元数据。scope exclusions（包括 web-v2/web-v3）会在任何样例 Git lookup 前被拒绝。
+该命令只验证声明并生成符合 `schemas/governance/sample-promotion-report.schema.json` 的 evidence-only report，`commands_executed` 固定为 false；它不编辑样例、README 或发布元数据。scope exclusions（包括 `example/**`）会在任何样例 Git lookup 前被拒绝。
 
 ## Candidate workspace convention
 

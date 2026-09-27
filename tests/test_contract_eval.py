@@ -242,7 +242,6 @@ class ContractEvalTests(unittest.TestCase):
         source = (ROOT / "scripts/contract_eval/runner.py").read_text(encoding="utf-8")
         self.assertNotIn("patches", source)
         self.assertNotIn("experience", source)
-        self.assertNotIn("web-v2", source)
         self.assertEqual(
             {
                 "skills/ui-template-author/evals/cases.yaml",

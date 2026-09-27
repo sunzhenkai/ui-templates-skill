@@ -3,13 +3,11 @@ name: governance
 on:
   push:
     paths-ignore:
-      - 'example/workbench-shell/web-v2/**'
-      - 'example/workbench-shell/web-v3/**'
+      - 'example/**'
       - 'docs/**'
   pull_request:
     paths-ignore:
-      - 'example/workbench-shell/web-v2/**'
-      - 'example/workbench-shell/web-v3/**'
+      - 'example/**'
       - 'docs/**'
 
 permissions:
@@ -22,7 +20,7 @@ jobs:
     env:
       GOVERNANCE_VENV: /tmp/ui-template-governance-venv
       REPORT_DIR: governance-reports
-      GOVERNANCE_EXCLUSIONS: 'example/workbench-shell/web-v2/**,example/workbench-shell/web-v3/**'
+      GOVERNANCE_EXCLUSIONS: 'example/**'
     steps:
       - uses: actions/checkout@v4
         with:

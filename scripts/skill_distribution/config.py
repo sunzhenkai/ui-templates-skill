@@ -97,7 +97,6 @@ def load_config(repo_root: Path, config_path: Path | None = None) -> Distributio
         "skills/*/examples/**",
         "openspec/**",
         "governance/scope.yaml",
-        "governance/baselines/**",
         "docs/**",
         "example/**",
         "semantic-review/**",

@@ -28,7 +28,6 @@ SOURCE_BLIND_TOKEN = re.compile(
     r"source[-_]compare|visual[- ]oracle|oracle[-_](?:revision|identity|path|locator)|meta\.sources",
     re.I,
 )
-HISTORICAL_OUTPUT_TOKEN = re.compile(r"(?:^|/)example/|(?:^|/)web-v[0-9]+(?:/|$)", re.I)
 LEGAL_FEEDBACK = {
     None: {"proposed"},
     "proposed": {"accepted", "known-gap", "rejected"},
@@ -659,14 +658,6 @@ def _source_blind_findings(checkpoint: dict[str, Any], apply_root: Path) -> list
             ))
 
     walk(checkpoint, "")
-    output_root = checkpoint.get("output_root")
-    if isinstance(output_root, str) and HISTORICAL_OUTPUT_TOKEN.search(output_root):
-        findings.append(Finding(
-            "SOURCE_BLIND_VIOLATION",
-            "checkpoint.yaml#output_root",
-            "output_root 不得指向 example/** 或历史 web-v* 生成物",
-            0,
-        ))
     stray = apply_root / "source-compare.yaml"
     if stray.exists():
         findings.append(Finding(

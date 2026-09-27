@@ -14,7 +14,7 @@
 1. 先删除 `templates/workbench-shell/` 与 `example/workbench-shell/web/`；
 2. 只依据**本次会话给出的 source**，按最新 `ui-template-author` 重建 template；
 3. 再按最新 `ui-template-apply` 从该 template 重建 example web；
-4. **全程不参考任何历史文件**：不得读取已删除的旧模板、旧 `web/`、`web-v1/`、`web-v2/`、`web-v3/`，也不得把它们当作对照物或"提示"。
+4. **全程不参考任何历史文件**：不得读取已删除的旧模板、`example/**` 下的任何历史生成物，也不得把它们当作对照物或"提示"。
 
 编排入口使用本仓库的 `ui-template-test` skill（干净模式）；template 生产由 `ui-template-author` 负责，web 生成由 `ui-template-apply` 负责。写模板与写页面是两个 skill，不得互相代做。
 
@@ -103,7 +103,7 @@ python3 scripts/run_template_certification.py verify \
 
 ## 明确禁止
 
-- 不得读取或参考任何历史 `web/`、`web-v*`、旧模板快照；
+- 不得读取或参考任何历史生成物、旧模板快照；
 - 不得把生成物当作修复面（改生成物再复跑对照永远无效）；
 - 不得用占位文件、复现说明或自报数值充当 oracle 证据；
 - 不得把 `self-consistency` 当认证通过，也不得绕过 promotion 阻断；

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""检查治理路径域，并保护 harden-template-lifecycle 的 web-v2 排除项。"""
+"""检查治理路径域，并拒绝任何 example/ 前缀的 changed-path。"""
 from __future__ import annotations
 
 import argparse
@@ -12,7 +12,6 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 SCOPE = ROOT / "governance/scope.yaml"
-BASELINE = ROOT / "governance/baselines/harden-template-lifecycle.yaml"
 
 
 def load(path: Path) -> dict:
@@ -51,7 +50,7 @@ def check_domains() -> list[str]:
         overlap = sorted(domains[left] & domains[right])
         if overlap:
             errors.append(f"SCOPE_OVERLAP {left}/{right}: {', '.join(overlap)}")
-    exact = "example/workbench-shell/web-v2/**"
+    exact = "example/**"
     if exact not in config["exclusions"]:
         errors.append(f"SCOPE_EXCLUSION_MISSING: {exact}")
     return errors
@@ -96,70 +95,30 @@ def git_changed_path_names() -> list[str]:
 
 def guard_example_paths(paths: list[str] | None = None) -> list[str]:
     names = paths if paths is not None else git_changed_path_names()
-    # example/workbench-shell 常驻只有 prompts；web 生成代码已删除，前缀保留给未来重建；
-    # 两个根级 web 配套 dotfile 已随生成物移除，只对这两个确切路径放行；
-    # 冻结排除样例（web-v2/web-v3/docs 等）仍然拒绝任何变更。
-    allowed_prefixes = ("example/workbench-shell/web/", "example/workbench-shell/prompts/")
-    allowed_removed_paths = {
-        "example/workbench-shell/.gitignore",
-        "example/workbench-shell/.oxlintrc.json",
-    }
+    # example/ 整体是治理排除项，唯一常驻内容只有样例输入 example/workbench-shell/prompts/；
+    # 其余 example/ 前缀的 changed-path 一律拒绝。
+    allowed_prefixes = ("example/workbench-shell/prompts/",)
     hits = sorted(
         {
             name
             for name in names
-            if path_has_example_prefix(name)
-            and not name.startswith(allowed_prefixes)
-            and name not in allowed_removed_paths
+            if path_has_example_prefix(name) and not name.startswith(allowed_prefixes)
         }
     )
     return [f"EXAMPLE_PATH_IN_SCOPE: {name}" for name in hits]
 
 
-def guard_web_v2() -> list[str]:
-    baseline = load(BASELINE)
-    path = str(baseline["path"])
-    errors: list[str] = []
-    tree_probe = subprocess.run(
-        ["git", "rev-parse", "--verify", "--quiet", f"HEAD:{path}"],
-        cwd=ROOT, text=True, capture_output=True,
-    )
-    if tree_probe.returncode != 0:
-        # 排除样例已从 HEAD 删除：治理要求它保持不存在且工作区无残留文件。
-        if baseline.get("head_tree") not in (None, ""):
-            errors.append(f"WEB_V2_BASELINE_STALE: path {path} absent from HEAD but baseline pins head_tree; re-record baseline")
-        present = {p for p in tracked_and_present_paths() if p == path or p.startswith(path + "/")}
-        if present:
-            errors.append("WEB_V2_WORKTREE_CHANGED:\n" + "\n".join(sorted(present)))
-        return errors
-    actual_tree = tree_probe.stdout.strip()
-    if actual_tree != baseline["head_tree"]:
-        errors.append(f"WEB_V2_BASELINE_MISMATCH: expected {baseline['head_tree']}, got {actual_tree}")
-    changed = subprocess.run(
-        ["git", "status", "--porcelain", "--untracked-files=all", "--", path],
-        cwd=ROOT, check=True, text=True, capture_output=True,
-    ).stdout
-    if changed:
-        errors.append("WEB_V2_WORKTREE_CHANGED:\n" + changed)
-    return errors
-
-
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--guard-web-v2", action="store_true", help="同时校验 web-v2 tree 与工作区状态")
     parser.add_argument("--guard-example-changed-paths", action="store_true", help="拒绝任何以 example/ 开头的 changed-path 名称")
     args = parser.parse_args()
     errors = check_domains()
-    if args.guard_web_v2:
-        errors.extend(guard_web_v2())
     if args.guard_example_changed_paths:
         errors.extend(guard_example_paths())
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
-    print("治理 scope 无意外交叠；web-v2 排除项已声明。")
-    if args.guard_web_v2:
-        print("web-v2 guard 通过：HEAD tree 与记录基线一致，工作区无改动。")
+    print("治理 scope 无意外交叠；example/** 排除项已声明。")
     if args.guard_example_changed_paths:
         print("example changed-path guard 通过：没有 example/ 前缀变更。")
     return 0

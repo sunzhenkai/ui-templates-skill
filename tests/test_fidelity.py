@@ -31,7 +31,7 @@ class FidelityContractTests(unittest.TestCase):
         import check_governance_scope as scope
 
         self.assertEqual(scope.guard_example_paths(), [])
-        self.assertTrue(scope.path_has_example_prefix("example/workbench-shell/" + "web-v2/package.json"))
+        self.assertTrue(scope.path_has_example_prefix("example/sample-app/package.json"))
         self.assertFalse(scope.path_has_example_prefix("tests/fixtures/fidelity/README.md"))
 
     def test_structural_fixture_passes_portable_with_counts_and_not_run_replay(self) -> None:
@@ -139,7 +139,7 @@ class FidelityContractTests(unittest.TestCase):
                 )
 
     def test_example_path_is_rejected_without_opening_content(self) -> None:
-        result = validate_paths([Path("example") / "workbench-shell" / "web-v3"], ROOT)
+        result = validate_paths([Path("example") / "sample-app" / "src" / "App.tsx"], ROOT)
         self.assertTrue(result.failed)
         self.assertEqual("EXAMPLE_PATH_IN_SCOPE", result.findings[0].code)
         self.assertEqual(["example/**"], result.to_dict()["discovery"]["exclusions"])

@@ -42,7 +42,7 @@ make bundle
 ## 验证与评估
 
 ```bash
-make validate       # root governance gate；显式排除 web-v2/web-v3 样例路径
+make validate       # root governance gate；显式排除 example/** 样例路径
 make test           # 全部 Python unittest
 make eval           # Authoring/Apply/Design contract eval，输出 JSON/JUnit
 ```
