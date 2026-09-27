@@ -6,6 +6,18 @@ L0–L6 只是变更集合的标签，不是七层完成仪式。从源创建或
 
 `core/layout.yaml` 的 placement regions 不是必然平级。采集图中 `container_role` 事实（如 inset 壳里 `page-header` / `page-toolbar` 的容器是 `page-canvas`）必须投影为 region 的 `parent` 与对应 `contains` 关系；validator 对 parent 悬空、parent 与 contains 边不一致 fail closed。把「卡内 header」拍平成「root 平级子节点」会直接导致 Apply 把 header 实现在内容卡外——投影时丢失嵌套等同于伪造拓扑。同理，`nav-group` 等侧栏 slot 的 border 事实（token-ref 或 `none` negative）必须保留：inset 壳「侧栏无边框、分隔由 canvas 提供」的负空间事实缺失时，Apply 会以组件库默认边框补位。
 
+## 视觉维度采集底线（L2/L4）
+
+以下维度在来源可观测时必须采集，禁止以「代表性采样」为由缺档；缺档会直接造成 Apply 用组件库默认补位：
+
+1. **字阶完整闭集**：来源 type scale 的每一步（size + line-height + 适用字重）各成一条 typography token；来源有几步就采几步。
+2. **控件密度阶梯**：交互控件的 height class（或等价 API）按 size 分档采成 `size.control-height-*` token，并与所用 text step 建立 rule（QUALITY-105 语义）；禁止只采一个高度让 Apply 自行推算。
+3. **图标事实**：导航项、菜单项、按钮的 leading icon（尺寸、位置、是否语义性）采成 primitive anatomy slots；来源按路由/目的地派生图标时记录派生规则的位置，不得写成「可选装饰」。
+4. **置顶事实**：header/工具条在滚动容器内的 sticky/pinned 行为采成 region `position`；来源注释或代码中明确描述过钉扎结构的，以代码结构为准。
+5. **弹窗适配**：对话框最大块向尺寸、body 内部滚动、header/footer shrink 的结构的采成 layout geometry + scroll domain + rule。
+6. **阴影角色**：menu 级与 window 级浮层各采一条 shadow token，禁止合并成一条「通用浮层阴影」。
+7. **前景/背景配对**：来源对文字可读性有明确约束的（如 WCAG 注释），采成 `color_pairs`；其余按声明配对的最小闭集补齐常用控件配对。
+
 ## 声明准入（写入前的统一前置）
 
 四种来源（web/repo/image/doc）只决定**如何采集**；写入 package 前的准入判据一致。每条候选声明必须过三证，缺一即 omit，不得降级写入：

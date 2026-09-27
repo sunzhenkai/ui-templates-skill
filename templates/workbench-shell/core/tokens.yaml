@@ -4,15 +4,43 @@ tokens:
     app-shell:
       value: oklch(0.964435 0.001327 286.375)
       origin: source
-      description: Light app-shell frame token.
+      description: Light app-shell frame token; the quiet outer chrome surface.
     page-canvas:
       value: oklch(0.988087 0 0)
       origin: source
-      description: Light page canvas token from packages/ui/styles/tokens.css.
+      description: Light page canvas token; lists, boards and conversations live here.
+    surface:
+      value: oklch(1 0 0)
+      origin: source
+      description: Card and bounded content-group surface token.
+    surface-raised:
+      value: oklch(1 0 0)
+      origin: source
+      description: Ephemeral overlay surface token for popovers, menus and dialogs.
+    secondary:
+      value: oklch(0.967 0.001 286.375)
+      origin: source
+      description: Secondary quiet fill token used by low-emphasis filled controls.
+    secondary-foreground:
+      value: oklch(0.21 0.006 285.885)
+      origin: source
+      description: Foreground token for content on the secondary fill.
+    secondary-hover:
+      value: color-mix(in oklab, oklch(0.967 0.001 286.375) 80%, transparent)
+      origin: computed
+      description: Secondary control hover is the secondary token at 80 percent alpha.
     primary-hover:
       value: color-mix(in oklab, oklch(0.21 0.006 285.885) 80%, transparent)
       origin: computed
       description: Default button hover is primary at 80 percent alpha.
+    brand-hover:
+      value: color-mix(in oklab, oklch(0.55 0.16 255) 90%, transparent)
+      origin: computed
+      description: Brand-filled control hover is the brand token at 90 percent alpha.
+    status-danger-hover:
+      value: color-mix(in oklab, oklch(0.577 0.245 27.325) 20%, transparent)
+      origin: computed
+      description: Destructive-tint control hover is the danger token at 20 percent alpha on the surface.
     ring:
       value: oklch(0.705 0.015 286.067)
       origin: source
@@ -25,6 +53,14 @@ tokens:
       value: oklch(0.935 0.003 286.375)
       origin: source
       description: Navigation hover/active surface token.
+    sidebar-accent-foreground:
+      value: oklch(0.21 0.006 285.885)
+      origin: source
+      description: Foreground token for content on the sidebar accent surface.
+    sidebar-foreground:
+      value: oklch(0.141 0.005 285.823)
+      origin: source
+      description: Foreground token for sidebar chrome text.
     surface-border:
       value: oklch(0.92 0.004 286.32)
       origin: source
@@ -37,80 +73,190 @@ tokens:
       value: oklch(0.95 0.002 286.375)
       origin: source
       description: Surface selected token.
-    surface:
-      value: oklch(1 0 0)
-      origin: source
-      description: Card/dialog surface token (--surface).
     divider:
       value: oklch(0.945 0.003 286.32)
       origin: source
-      description: Separator/divider token (--border separator paint).
+      description: Separator/divider token.
     text-primary:
       value: oklch(0.141 0.005 285.823)
       origin: source
-      description: Primary text token (--foreground).
+      description: Primary text token.
     text-secondary:
       value: oklch(0.505 0.016 285.938)
       origin: source
-      description: Secondary text token (--muted-foreground).
+      description: Secondary text token; the lightest readable text step, pinned by WCAG AA against the darkest surface (sidebar accent).
     text-muted:
       value: oklch(0.606 0.016 285.938)
       origin: source
-      description: Muted text token (--faint-foreground).
+      description: Muted token for non-text marks only (chevrons, empty-cell glyphs, large empty-state icons); not valid for text.
     text-disabled:
       value: oklch(0.606 0.016 285.938)
       origin: source
-      description: Disabled text token (--faint-foreground, disabled states add opacity).
+      description: Disabled text token; disabled states add opacity on top.
     text-on-primary:
       value: oklch(0.985 0 0)
       origin: source
-      description: Text on primary fill (--primary-foreground).
+      description: Text on primary fill.
     link:
       value: oklch(0.55 0.16 255)
       origin: source
-      description: Interactive/link accent token (--brand).
+      description: Interactive/link accent token (brand hue).
+    brand-foreground:
+      value: oklch(0.985 0 0)
+      origin: source
+      description: Text on the brand fill.
     primary:
       value: oklch(0.21 0.006 285.885)
       origin: source
-      description: Primary action fill token (--primary).
+      description: Primary action fill token.
     status-success:
       value: oklch(0.55 0.16 145)
       origin: source
-      description: Success status token (--success).
+      description: Success status token.
     status-warning:
       value: oklch(0.75 0.16 85)
       origin: source
-      description: Warning status token (--warning).
+      description: Warning status token.
     status-danger:
       value: oklch(0.577 0.245 27.325)
       origin: source
-      description: Danger status token (--destructive).
+      description: Danger status token.
+    status-info:
+      value: oklch(0.55 0.18 250)
+      origin: source
+      description: Informational status token.
+    chart-1:
+      value: oklch(0.55 0.16 255)
+      origin: source
+      description: Primary chart series token; anchors to the brand hue.
+    chart-2:
+      value: oklch(0.66 0.13 255)
+      origin: source
+      description: Secondary chart series token.
+    chart-3:
+      value: oklch(0.76 0.10 255)
+      origin: source
+      description: Tertiary chart series token.
+    chart-4:
+      value: oklch(0.85 0.06 255)
+      origin: source
+      description: Quaternary chart series token.
+    chart-5:
+      value: oklch(0.92 0.03 255)
+      origin: source
+      description: Quinary chart series token.
+  font:
+    weight:
+      regular:
+        value: 400
+        unit: unitless
+        origin: source
+        description: Default text weight.
+      medium:
+        value: 500
+        unit: unitless
+        origin: source
+        description: Weight for button labels, active navigation and emphasized inline text.
+      semibold:
+        value: 600
+        unit: unitless
+        origin: source
+        description: Weight for page titles and strong headings.
   radius:
+    sm:
+      value: 0.375
+      unit: rem
+      origin: computed
+      description: Nested surface radius, base radius times 0.6.
+    md:
+      value: 0.5
+      unit: rem
+      origin: computed
+      description: Row and menu radius, base radius times 0.8.
     lg:
       value: 0.625
       unit: rem
       origin: source
-      description: Default control radius.
+      description: Base control radius.
     xl:
       value: 0.875
       unit: rem
       origin: computed
-      description: Inset content-card radius, radius * 1.4.
+      description: Inset content-card and dialog radius, base radius times 1.4.
+    2xl:
+      value: 1.125
+      unit: rem
+      origin: computed
+      description: Base radius times 1.8.
+    3xl:
+      value: 1.375
+      unit: rem
+      origin: computed
+      description: Base radius times 2.2.
+    4xl:
+      value: 1.625
+      unit: rem
+      origin: computed
+      description: Base radius times 2.6.
   shadow:
     floating:
       value: 0 16px 40px rgb(15 23 42 / 0.14), 0 3px 10px rgb(15 23 42 / 0.08)
       origin: source
-      description: Floating overlay shadow.
+      description: Window-level overlay shadow for dialogs, sheets and the command palette.
+    menu:
+      value: 0 8px 24px rgb(15 23 42 / 0.08), 0 2px 6px rgb(15 23 42 / 0.05)
+      origin: source
+      description: Menu-level shadow for dropdowns, selects and popovers that hover just above their trigger.
     surface:
       value: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 1px rgb(15 23 42 / 0.03)
       origin: source
       description: Bounded surface shadow.
   size:
+    control-height-xs:
+      value: 24
+      unit: px
+      origin: source
+      description: Extra-small control height (compact chips and icon buttons).
+    control-height-sm:
+      value: 28
+      unit: px
+      origin: source
+      description: Small control height.
+    control-height-default:
+      value: 32
+      unit: px
+      origin: source
+      description: Default control height for buttons, inputs, nav items and select triggers.
+    control-height-lg:
+      value: 36
+      unit: px
+      origin: source
+      description: Large control height.
+    icon-default:
+      value: 16
+      unit: px
+      origin: source
+      description: Default inline icon size (leading icons, trailing affordances).
+    icon-compact:
+      value: 12
+      unit: px
+      origin: source
+      description: Compact icon size for extra-small controls.
+    icon-sm:
+      value: 14
+      unit: px
+      origin: source
+      description: Small icon size for small controls.
+    dialog-max-height:
+      value: 80
+      unit: '%'
+      origin: source
+      description: Overlay dialogs cap their block size at 80 percent of the dynamic viewport height.
     section-nav-default:
       value: 15
       unit: rem
       origin: source
-      description: Settings section navigation width (md:w-60).
+      description: Settings section navigation width.
     sidebar-default:
       value: 256
       unit: px
@@ -138,15 +284,126 @@ tokens:
       origin: source
       description: Shared page header and toolbar height.
   typography:
-    heading:
-      value: 18px
+    micro:
+      value: 11
+      unit: px
+      line_height: 15
+      line_height_unit: px
       origin: source
-      description: --text-title 18px / line-height 28px.
-    body:
-      value: 14px
-      origin: source
-      description: --text-body 14px / line-height 20px.
+      description: Counters, badges, timestamps and overline labels.
     secondary:
-      value: 12px
+      value: 12
+      unit: px
+      line_height: 16
+      line_height_unit: px
       origin: source
-      description: --text-caption 12px / line-height 16px.
+      description: Secondary and helper text.
+    label:
+      value: 13
+      unit: px
+      line_height: 18
+      line_height_unit: px
+      origin: source
+      description: Dense labels such as table headers and metadata rows.
+    body:
+      value: 14
+      unit: px
+      line_height: 20
+      line_height_unit: px
+      origin: source
+      description: UI body text, the workhorse size.
+    body-lg:
+      value: 15
+      unit: px
+      line_height: 22
+      line_height_unit: px
+      origin: source
+      description: Roomier body copy for dialog prose.
+    title-sm:
+      value: 16
+      unit: px
+      line_height: 24
+      line_height_unit: px
+      origin: source
+      description: Small headings and compact control text.
+    heading:
+      value: 18
+      unit: px
+      line_height: 28
+      line_height_unit: px
+      origin: source
+      description: Section headings.
+    title-lg:
+      value: 20
+      unit: px
+      line_height: 28
+      line_height_unit: px
+      origin: source
+      description: Card and dialog titles.
+    display-sm:
+      value: 24
+      unit: px
+      line_height: 32
+      line_height_unit: px
+      origin: source
+      description: Page titles.
+    display:
+      value: 36
+      unit: px
+      line_height: 40
+      line_height_unit: px
+      origin: source
+      description: Hero numbers and empty-state headlines.
+color_pairs:
+- foreground: token/color.text-primary
+  background: token/color.page-canvas
+  min_ratio: 4.5
+  reason: Body text on the page canvas.
+- foreground: token/color.text-primary
+  background: token/color.app-shell
+  min_ratio: 4.5
+  reason: Body text on the app-shell frame.
+- foreground: token/color.text-primary
+  background: token/color.surface
+  min_ratio: 4.5
+  reason: Body text on cards and bounded surfaces.
+- foreground: token/color.text-primary
+  background: token/color.surface-selected
+  min_ratio: 4.5
+  reason: Body text on selected rows.
+- foreground: token/color.text-primary
+  background: token/color.surface-hover
+  min_ratio: 4.5
+  reason: Body text on hovered rows.
+- foreground: token/color.text-secondary
+  background: token/color.page-canvas
+  min_ratio: 4.5
+  reason: Secondary text on the page canvas.
+- foreground: token/color.text-secondary
+  background: token/color.surface
+  min_ratio: 4.5
+  reason: Secondary text on cards and bounded surfaces.
+- foreground: token/color.text-secondary
+  background: token/color.sidebar-accent
+  min_ratio: 4.5
+  reason: Secondary text on the darkest light surface (nav hover); the binding constraint that pins the text-secondary lightness.
+- foreground: token/color.text-on-primary
+  background: token/color.primary
+  min_ratio: 4.5
+  reason: Label on the primary filled control.
+- foreground: token/color.secondary-foreground
+  background: token/color.secondary
+  min_ratio: 4.5
+  reason: Label on the secondary filled control.
+- foreground: token/color.brand-foreground
+  background: token/color.link
+  min_ratio: 4.5
+  reason: Label on the brand filled control.
+- foreground: token/color.status-danger
+  background: token/color.surface
+  min_ratio: 3.0
+  reason: Destructive accent text and tinted control labels on surfaces.
+- foreground: token/color.status-success
+  background: token/color.surface
+  min_ratio: 3.0
+  reason: Success status marks on surfaces.

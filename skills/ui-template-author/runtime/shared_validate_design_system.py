@@ -80,6 +80,179 @@ def canonical_digest(value: Any) -> str:
     return hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
 
 
+import math
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class _Color:
+    r: float
+    g: float
+    b: float
+    a: float = 1.0
+
+    def opaque(self) -> bool:
+        return math.isclose(self.a, 1.0, abs_tol=1e-9)
+
+
+_HEX_COLOR = re.compile(r"^#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")
+_OKLCH_COLOR = re.compile(
+    r"^oklch\(\s*(?P<l>[+-]?(?:\d+(?:\.\d*)?|\.\d+))%?\s+"
+    r"(?P<c>[+-]?(?:\d+(?:\.\d*)?|\.\d+))\s+"
+    r"(?P<h>[+-]?(?:\d+(?:\.\d*)?|\.\d+))(?:deg)?"
+    r"(?:\s*/\s*(?P<a>[+-]?(?:\d+(?:\.\d*)?|\.\d+)%?))?\s*\)$",
+    re.IGNORECASE,
+)
+
+
+def _alpha_value(value: str | None) -> float:
+    if value is None:
+        return 1.0
+    alpha = float(value[:-1]) / 100.0 if value.endswith("%") else float(value)
+    if not 0.0 <= alpha <= 1.0:
+        raise ValueError("alpha must be between 0 and 1")
+    return alpha
+
+
+def _clip_channel(value: float) -> float:
+    return min(1.0, max(0.0, value))
+
+
+def _srgb_to_linear(value: float) -> float:
+    return value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
+
+
+def parse_solid_color(value: Any) -> _Color:
+    """Parse the solid color subset (hex / oklch) allowed in color_pairs."""
+    if not isinstance(value, str):
+        raise ValueError("color must be a string")
+    match = _HEX_COLOR.fullmatch(value.strip())
+    if match:
+        raw = match.group(1)
+        channels = [int(raw[index:index + 2], 16) / 255.0 for index in (0, 2, 4)]
+        alpha = int(raw[6:8], 16) / 255.0 if len(raw) == 8 else 1.0
+        return _Color(*(_srgb_to_linear(channel) for channel in channels), alpha)
+    match = _OKLCH_COLOR.fullmatch(value.strip())
+    if not match:
+        raise ValueError(f"unsupported color syntax: {value!r}")
+    light_text = match.group("l")
+    light = float(light_text[:-1]) / 100.0 if light_text.endswith("%") else float(light_text)
+    chroma = float(match.group("c"))
+    hue = float(match.group("h")) % 360.0
+    if not 0.0 <= light <= 1.0 or chroma < 0.0:
+        raise ValueError("OKLCH lightness must be 0..1 and chroma must be non-negative")
+    angle = math.radians(hue)
+    lab_a, lab_b = chroma * math.cos(angle), chroma * math.sin(angle)
+    l_ = light + 0.3963377774 * lab_a + 0.2158037573 * lab_b
+    m_ = light - 0.1055613458 * lab_a - 0.0638541728 * lab_b
+    s_ = light - 0.0894841775 * lab_a - 1.2914855480 * lab_b
+    l, m, s = l_ ** 3, m_ ** 3, s_ ** 3
+    red = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s
+    green = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s
+    blue = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+    return _Color(_clip_channel(red), _clip_channel(green), _clip_channel(blue), _alpha_value(match.group("a")))
+
+
+def composite_over(foreground: _Color, background: _Color) -> _Color:
+    out_a = foreground.a + background.a * (1.0 - foreground.a)
+    if out_a <= 0:
+        raise ValueError("cannot composite two fully transparent colors")
+    return _Color(
+        (foreground.r * foreground.a + background.r * background.a * (1.0 - foreground.a)) / out_a,
+        (foreground.g * foreground.a + background.g * background.a * (1.0 - foreground.a)) / out_a,
+        (foreground.b * foreground.a + background.b * background.a * (1.0 - foreground.a)) / out_a,
+        out_a,
+    )
+
+
+def contrast_of(first: _Color, second: _Color) -> float:
+    if not first.opaque() or not second.opaque():
+        raise ValueError("contrast requires opaque colors")
+    l1 = 0.2126 * first.r + 0.7152 * first.g + 0.0722 * first.b
+    l2 = 0.2126 * second.r + 0.7152 * second.g + 0.0722 * second.b
+    high, low = max(l1, l2), min(l1, l2)
+    return (high + 0.05) / (low + 0.05)
+
+
+# Interactive primitives that must never be flattened into anonymous records:
+# the package format requires variant contracts (density included) and, for
+# content-bearing entries, icon/label anatomy. Keeping this list in the
+# validator makes the documented admission rule executable instead of prose.
+CONTRACT_REQUIRED_SLUGS = frozenset({"button", "nav-item", "menu-item", "tabs"})
+ANATOMY_REQUIRED_SLUGS = frozenset({"button", "nav-item", "menu-item", "tabs"})
+UI_CAPABILITIES = frozenset({"ui-kit", "page-system"})
+
+
+def _slug(entity_id: Any) -> str:
+    return str(entity_id).rsplit("/", 1)[-1]
+
+
+def _token_records(node: Any, prefix: str = "") -> dict[str, dict[str, Any]]:
+    records: dict[str, dict[str, Any]] = {}
+    if isinstance(node, dict) and "value" in node and "origin" in node:
+        records[prefix] = node
+    elif isinstance(node, dict):
+        for key, child in node.items():
+            records.update(_token_records(child, f"{prefix}.{key}" if prefix else str(key)))
+    return records
+
+
+def validate_color_pairs(documents: dict[str, Any], report: Report) -> None:
+    """Declared foreground/background pairs must resolve and meet WCAG ratios."""
+    tokens_doc = documents.get("tokens")
+    if not isinstance(tokens_doc, dict):
+        return
+    pairs = tokens_doc.get("color_pairs")
+    if pairs is None:
+        return
+    if not isinstance(pairs, list):
+        report.add("COLOR_PAIRS_INVALID", "layers.tokens.color_pairs", "color_pairs must be a list")
+        return
+    records = _token_records(tokens_doc.get("tokens", {}))
+    for index, pair in enumerate(pairs):
+        where = f"layers.tokens.color_pairs[{index}]"
+        if not isinstance(pair, dict):
+            report.add("COLOR_PAIRS_INVALID", where, "color pair must be a mapping")
+            continue
+        fg_path = str(pair.get("foreground", "")).removeprefix("token/")
+        bg_path = str(pair.get("background", "")).removeprefix("token/")
+        min_ratio = pair.get("min_ratio")
+        fg = records.get(fg_path)
+        bg = records.get(bg_path)
+        if fg is None or bg is None:
+            report.add("COLOR_PAIR_DANGLING", where, "color pair references an unknown token path", foreground=pair.get("foreground"), background=pair.get("background"))
+            continue
+        try:
+            fg_color = parse_solid_color(fg.get("value"))
+            bg_color = parse_solid_color(bg.get("value"))
+            if not bg_color.opaque():
+                bg_color = composite_over(bg_color, _Color(1.0, 1.0, 1.0, 1.0))
+            effective = composite_over(fg_color, bg_color) if not fg_color.opaque() else fg_color
+            ratio = contrast_of(effective, bg_color)
+        except ValueError as exc:
+            report.add("COLOR_PAIR_UNRESOLVABLE", where, f"color pair value is not a solid parseable color: {exc}")
+            continue
+        if isinstance(min_ratio, (int, float)) and ratio + 1e-9 < float(min_ratio):
+            report.add("COLOR_CONTRAST_TOO_LOW", where, "declared color pair does not meet min_ratio", pair=f"{pair.get('foreground')}-on-{pair.get('background')}", ratio=round(ratio, 4), min_ratio=min_ratio)
+
+
+def validate_typography_scale(documents: dict[str, Any], capability: str | None, report: Report) -> None:
+    """ui-kit/page-system typography steps must carry structured line-height."""
+    if capability not in UI_CAPABILITIES:
+        return
+    tokens_doc = documents.get("tokens")
+    typography = (tokens_doc or {}).get("tokens", {}).get("typography") if isinstance(tokens_doc, dict) else None
+    if not isinstance(typography, dict) or not typography:
+        report.add("TYPOGRAPHY_SCALE_MISSING", "layers.tokens.tokens.typography", f"capability {capability} requires a declared typography scale")
+        return
+    for path, record in sorted(_token_records(typography).items()):
+        where = f"layers.tokens.tokens.typography.{path}"
+        if not isinstance(record.get("line_height"), (int, float)):
+            report.add("TYPOGRAPHY_STEP_INCOMPLETE", where, "typography step must declare structured line_height")
+        elif "line_height_unit" not in record:
+            report.add("TYPOGRAPHY_STEP_INCOMPLETE", where, "typography step must declare line_height_unit")
+
+
 def load_yaml(path: Path) -> Any:
     return yaml.load(path.read_text(encoding="utf-8"), Loader=UniqueKeyLoader)
 
@@ -587,8 +760,16 @@ def validate_primitive_contracts(
     layers: dict[str, Path],
     documents: dict[str, Any],
     report: Report,
+    capability: str | None = None,
 ) -> None:
-    """Variant styling contracts: resolve tokens/rules and bind contexts."""
+    """Variant styling contracts: resolve tokens/rules and bind contexts.
+
+    For ui-kit/page-system packages the contract is fail-closed, not opt-in:
+    content-bearing interactive primitives must declare variant contracts
+    (density via control_height included) and icon/label anatomy. A package
+    that stays silent on these dimensions is exactly how flattened, icon-less,
+    mis-sized controls used to pass validation.
+    """
     primitives = documents.get("primitives")
     if not isinstance(primitives, dict):
         return
@@ -606,10 +787,27 @@ def validate_primitive_contracts(
         pid = item.get("id", "<primitive>")
         variants = [v for v in item.get("variants") or [] if isinstance(v, str)]
         contracts = item.get("variant_contracts")
+        mandatory = capability in UI_CAPABILITIES and _slug(pid) in CONTRACT_REQUIRED_SLUGS
+        anatomy = item.get("anatomy")
+        if capability in UI_CAPABILITIES and _slug(pid) in ANATOMY_REQUIRED_SLUGS:
+            slots = {entry.get("slot") for entry in anatomy if isinstance(entry, dict)} if isinstance(anatomy, list) else set()
+            missing_slots = [slot for slot in ("icon", "label") if slot not in slots]
+            if missing_slots:
+                report.add(
+                    "PRIMITIVE_ANATOMY_MISSING",
+                    f"layers.primitives.{pid}.anatomy",
+                    "content-bearing interactive primitive must declare icon and label anatomy slots: " + ", ".join(missing_slots),
+                )
         # Legacy packages may name variants without a portable contract map.  A later
         # certification/re-authoring pass must migrate them; a *partial* map is already
         # actionable now, so enforce every named variant once the map exists.
         if not isinstance(contracts, dict):
+            if mandatory:
+                report.add(
+                    "PRIMITIVE_CONTRACT_MISSING",
+                    f"layers.primitives.{pid}.variant_contracts",
+                    "interactive primitive must declare variant contracts with control_height; silence is not a portable contract",
+                )
             continue
         for variant in variants:
             if variant not in contracts:
@@ -1445,9 +1643,13 @@ def validate_target(
     validate_package_identity(target, manifest, report)
     validate_coverage_and_confidence(target, report)
     ids, refs, documents = collect_entities(layers, report)
+    if "tokens" not in documents and layers.get("tokens") and layers["tokens"].is_file():
+        documents["tokens"] = load_document(layers["tokens"])
     validate_references(ids, refs, report)
     validate_claim_admission(layers, ids, report)
-    validate_primitive_contracts(layers, documents, report)
+    validate_primitive_contracts(layers, documents, report, capability=manifest.get("capability"))
+    validate_color_pairs(documents, report)
+    validate_typography_scale(documents, manifest.get("capability"), report)
     validate_placement(manifest, layers, ids, documents, report)
     validate_fidelity_sidecar(target, report)
     report.component_family = derive_component_family(manifest, layers, ids)
