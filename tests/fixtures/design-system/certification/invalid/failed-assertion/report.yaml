@@ -5,7 +5,7 @@ gate:
     version: 1.0.0
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 3589a7f7b5b2e1f9a80f0ffdaee66c1e0655487be499a8ec66339eca75065763
+      value: 3b7bc74512d9bf9fc343227c0110601ad2ded6626e3ecea362aa7a4e0f426aca
   oracle:
     kind: git-revision
     revision: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -24,7 +24,7 @@ records:
   pattern: pattern/list-page
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 3589a7f7b5b2e1f9a80f0ffdaee66c1e0655487be499a8ec66339eca75065763
+    value: 3b7bc74512d9bf9fc343227c0110601ad2ded6626e3ecea362aa7a4e0f426aca
   build_identity: certification-build-001
   oracle_revision: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   route: page-type/detail
@@ -51,7 +51,7 @@ records:
   pattern: pattern/toolbar
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 3589a7f7b5b2e1f9a80f0ffdaee66c1e0655487be499a8ec66339eca75065763
+    value: 3b7bc74512d9bf9fc343227c0110601ad2ded6626e3ecea362aa7a4e0f426aca
   build_identity: certification-build-001
   oracle_revision: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   route: page-type/detail

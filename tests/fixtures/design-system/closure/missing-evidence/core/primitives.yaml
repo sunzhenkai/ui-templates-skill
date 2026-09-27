@@ -16,5 +16,23 @@ items:
   token_refs:
   - token/color.primary
   - token/space.md
+  - token/size.control-height-default
+  - token/typography.body
   rule_refs:
   - rule/NN-001
+  anatomy:
+  - slot: icon
+    order: 1
+  - slot: label
+    order: 2
+  variant_contracts:
+    primary:
+      presentation: filled
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      focus_ref: rule/NN-001
+    ghost:
+      presentation: ghost
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      focus_ref: rule/NN-001

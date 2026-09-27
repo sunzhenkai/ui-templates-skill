@@ -14,6 +14,12 @@
     },
     "tokens": {
       "$ref": "#/$defs/group"
+    },
+    "color_pairs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/colorPair"
+      }
     }
   },
   "$defs": {
@@ -43,6 +49,23 @@
             "ratio",
             "unitless"
           ]
+        },
+        "line_height": {
+          "type": "number"
+        },
+        "line_height_unit": {
+          "enum": [
+            "px",
+            "rem",
+            "em",
+            "%",
+            "unitless"
+          ]
+        },
+        "font_weight": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 900
         },
         "description": {
           "type": "string"
@@ -87,6 +110,33 @@
           }
         }
       ]
+    },
+    "colorPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "foreground",
+        "background",
+        "min_ratio"
+      ],
+      "properties": {
+        "foreground": {
+          "type": "string",
+          "pattern": "^token/[A-Za-z0-9_.-]+$"
+        },
+        "background": {
+          "type": "string",
+          "pattern": "^token/[A-Za-z0-9_.-]+$"
+        },
+        "min_ratio": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 21
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
     },
     "group": {
       "type": "object",

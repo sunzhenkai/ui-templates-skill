@@ -360,14 +360,6 @@ layout_scenes:
     order: 11
   - type: contains
     from: region.shell.root
-    to: region.shell.page-header
-    order: 8
-  - type: contains
-    from: region.shell.root
-    to: region.shell.page-toolbar
-    order: 9
-  - type: contains
-    from: region.shell.root
     to: region.shell.pin-list
     order: 5
   - type: contains
@@ -382,6 +374,14 @@ layout_scenes:
     from: region.shell.root
     to: region.shell.workspace-switcher
     order: 1
+  - type: contains
+    from: region.shell.page-canvas
+    to: region.shell.page-header
+    order: 1
+  - type: contains
+    from: region.shell.page-canvas
+    to: region.shell.page-toolbar
+    order: 2
   arrangement: vertical
   fill: intrinsic
   wrap: wrap
