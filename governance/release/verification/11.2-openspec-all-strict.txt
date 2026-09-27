@@ -1,6 +1,0 @@
-- Validating...
-✓ change/harden-template-lifecycle
-✓ spec/ui-template-apply-workflow
-✓ spec/ui-template-workflow
-✓ spec/workbench-shell-implementation
-Totals: 4 passed, 0 failed (4 items)
