@@ -11,7 +11,6 @@ import yaml
 from .chrome import (
     CHROME_FACT_PROPERTIES,
     CHROME_INCOMPLETE,
-    CHROME_SEMANTIC_VALUES,
     MANDATORY_FACT_MISSING,
     chrome_fact_gaps,
     mandatory_fact_gaps,
@@ -32,12 +31,10 @@ FACT_PROPERTIES = {
     "visibility", "container_presentation", "anatomy", "container_role",
     *CHROME_FACT_PROPERTIES,
 }
-SEMANTIC_VALUES = {
-    "none", "zero", "auto", "intrinsic", "fill", "non-wrap", "non-shrink",
-    "underline", "visible", "hidden", "viewport", "region", "inline", "block",
-    "horizontal", "vertical", "overlay", "icon-label", "label-only",
-    "root", "whole-trigger", "split-trigger", *CHROME_SEMANTIC_VALUES,
-}
+# Semantic fact values are an instance-declared open vocabulary (slot roles,
+# scene labels, layout semantics); the sidecar schema keeps a closed enum only
+# for the generic layout semantics it consumes. Polarity rules below still
+# fail closed on negative-value hygiene.
 NEGATIVE_VALUES = {"none", "zero", "non-wrap", "non-shrink", "hidden"}
 HARD_LIMITS = {
     "max_graph_bytes": 10_000_000,
@@ -153,8 +150,8 @@ def _validate_fact(raw: Any, where: str) -> dict[str, Any]:
             _id(fact[key], f"{where}.{key}")
     value = _closed(fact["value"], f"{where}.value", {"kind", "value"}, {"observed"})
     if value["kind"] == "semantic":
-        if value["value"] not in SEMANTIC_VALUES:
-            raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where}.value has unsupported semantic value")
+        if not isinstance(value["value"], str) or not value["value"]:
+            raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where}.value.value must be a non-empty string")
     elif value["kind"] == "token-ref":
         _id(value["value"], f"{where}.value.value")
     else:

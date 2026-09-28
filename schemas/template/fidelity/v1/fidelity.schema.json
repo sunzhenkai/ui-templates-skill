@@ -208,12 +208,7 @@
       }
     },
     "linkContext": {
-      "enum": [
-        "navigation-link",
-        "entity-row-link",
-        "button-link",
-        "inline-prose-link"
-      ]
+      "$ref": "#/$defs/stableId"
     },
     "semanticValue": {
       "enum": [
@@ -243,18 +238,6 @@
         "split-trigger",
         "inset",
         "flush",
-        "workspace-switcher",
-        "search",
-        "compose",
-        "nav-group",
-        "pin-list",
-        "rail",
-        "header-trigger",
-        "footer-utility",
-        "chat-fab",
-        "page-header",
-        "page-toolbar",
-        "page-canvas",
         "0",
         "1",
         "2",
@@ -505,20 +488,7 @@
       }
     },
     "slotRole": {
-      "enum": [
-        "workspace-switcher",
-        "search",
-        "compose",
-        "nav-group",
-        "pin-list",
-        "rail",
-        "header-trigger",
-        "footer-utility",
-        "chat-fab",
-        "page-header",
-        "page-toolbar",
-        "page-canvas"
-      ]
+      "$ref": "#/$defs/stableId"
     },
     "shellSlot": {
       "type": "object",
@@ -559,10 +529,7 @@
           "$ref": "#/$defs/stableId"
         },
         "role": {
-          "enum": [
-            "header-trigger",
-            "chat-fab"
-          ]
+          "$ref": "#/$defs/stableId"
         },
         "region": {
           "$ref": "#/$defs/stableId"
@@ -745,19 +712,11 @@
           "$ref": "#/$defs/provenance"
         },
         "scene_kind": {
-          "enum": [
-            "shell",
-            "board",
-            "master-detail",
-            "dialog",
-            "other"
-          ]
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
         },
         "shell_variant": {
-          "enum": [
-            "inset",
-            "flush"
-          ]
+          "$ref": "#/$defs/stableId"
         },
         "slots": {
           "type": "array",

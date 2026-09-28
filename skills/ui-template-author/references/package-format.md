@@ -32,6 +32,10 @@ templates/<name>/
 
 manifest 里的 `layers` 只能声明 capability 范围内文件。缺层是 capability 边界；Apply 不得即兴补语义。
 
+## Visual role tokens
+
+`meta.yaml` 可增加 `visual_role_tokens`：产品级视觉角色（`canvas`、`surface`、`text-primary`…`status-danger`、`typography.heading/body/secondary` 的固定闭集）到本模板 token path 的映射。声明后它**整体替代**内置默认路径表（默认表是首个模板 workbench-shell 的命名，如 `color.app-shell`/`color.page-canvas`），但角色闭集仍 fail-closed：缺角色、全部候选 path 缺失、或只由 `default` origin token 满足，分别报 `VISUAL_ROLE_MISSING` / `VISUAL_ROLE_DEFAULTED`。token 命名与首个模板不同的新模板必须声明该字段才能通过 `--require-visual-role-closure`。
+
 ## Digest
 
 - 每个 layer digest 是 `sha256-canonical-json-v1`，输入为 YAML/JSON 安全解析后的 canonical JSON。
