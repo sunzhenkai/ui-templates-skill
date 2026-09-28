@@ -21,8 +21,11 @@ items:
   - default
   token_refs:
   - token/space.header-height
+  - token/typography.body
+  - token/font.weight.semibold
   rule_refs:
   - rule/LAYOUT-106
+  - rule/LAYOUT-110
 - id: primitive/page-toolbar
   name: Page toolbar
   states:
@@ -71,8 +74,12 @@ items:
   - closed
   token_refs:
   - token/shadow.floating
+  - token/size.dialog-max-height
+  - token/color.surface-raised
+  - token/typography.body
   rule_refs:
   - rule/LAYOUT-105
+  - rule/LAYOUT-108
   - rule/QUALITY-102
   - rule/AX-104
 - id: primitive/command-palette
@@ -90,6 +97,9 @@ items:
   - rule/QUALITY-104
 - id: primitive/input
   name: Input
+  sizes:
+  - default
+  - sm
   states:
   - default
   - focus-visible
@@ -98,11 +108,38 @@ items:
   - token/radius.lg
   - token/color.ring
   - token/color.ring-focus
+  - token/size.control-height-default
+  - token/size.control-height-sm
+  - token/typography.body
   rule_refs:
   - rule/QUALITY-101
   - rule/QUALITY-104
+  - rule/QUALITY-105
 - id: primitive/button
   name: Button
+  variants:
+  - default
+  - outline
+  - brand
+  - brand-subtle
+  - secondary
+  - ghost
+  - destructive
+  - link
+  sizes:
+  - xs
+  - sm
+  - default
+  - lg
+  - icon
+  - icon-xs
+  - icon-sm
+  - icon-lg
+  anatomy:
+  - slot: icon
+    order: 1
+  - slot: label
+    order: 2
   states:
   - default
   - hover
@@ -114,10 +151,72 @@ items:
   - token/color.primary-hover
   - token/color.ring
   - token/color.ring-focus
+  - token/typography.body
+  - token/typography.label
+  - token/typography.secondary
+  - token/font.weight.medium
+  - token/size.control-height-xs
+  - token/size.control-height-sm
+  - token/size.control-height-default
+  - token/size.control-height-lg
+  - token/size.icon-default
+  - token/size.icon-compact
+  - token/size.icon-sm
   rule_refs:
   - rule/QUALITY-101
   - rule/QUALITY-104
+  - rule/QUALITY-105
+  - rule/QUALITY-106
   - rule/AX-101
+  variant_contracts:
+    default:
+      presentation: filled
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.primary-hover
+      focus_ref: rule/QUALITY-104
+    outline:
+      presentation: outline
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.surface-hover
+      focus_ref: rule/QUALITY-104
+    brand:
+      presentation: filled
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.brand-hover
+      focus_ref: rule/QUALITY-104
+    brand-subtle:
+      presentation: outline
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.surface-hover
+      focus_ref: rule/QUALITY-104
+    secondary:
+      presentation: filled
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.secondary-hover
+      focus_ref: rule/QUALITY-104
+    ghost:
+      presentation: ghost
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.surface-hover
+      focus_ref: rule/QUALITY-104
+    destructive:
+      presentation: outline
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.status-danger-hover
+      focus_ref: rule/QUALITY-104
+    link:
+      presentation: plain
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.primary-hover
+      focus_ref: rule/QUALITY-104
 - id: primitive/settings-nav
   name: Settings navigation
   states:
@@ -137,6 +236,18 @@ items:
   - rule/QUALITY-104
 - id: primitive/nav-item
   name: Navigation item
+  variants:
+  - default
+  - active
+  sizes:
+  - default
+  anatomy:
+  - slot: icon
+    order: 1
+  - slot: label
+    order: 2
+  - slot: trailing
+    order: 3
   states:
   - default
   - hover
@@ -148,9 +259,28 @@ items:
   - token/color.surface-hover
   - token/color.surface-selected
   - token/color.ring-focus
+  - token/typography.body
+  - token/font.weight.medium
+  - token/size.icon-default
+  - token/radius.md
+  - token/size.control-height-default
   rule_refs:
   - rule/QUALITY-103
   - rule/QUALITY-104
+  - rule/QUALITY-106
+  variant_contracts:
+    default:
+      presentation: plain
+      radius: token/radius.md
+      control_height: token/size.control-height-default
+      hover: token/color.sidebar-accent
+      focus_ref: rule/QUALITY-104
+    active:
+      presentation: plain
+      radius: token/radius.md
+      control_height: token/size.control-height-default
+      hover: token/color.sidebar-accent
+      focus_ref: rule/QUALITY-104
   context_bindings:
     navigation-link:
       selected: token/color.sidebar-accent

@@ -69,13 +69,20 @@ manifest 里的 `layers` 只能声明 capability 范围内文件。缺层是 cap
 
 ## Primitive contracts
 
-来源里能按 API 或调用点区分 `variant` / `size` 的交互控件，Author 不得把它们压平成一个 anonymous primitive。Primitives 层必须保留完整变体闭集；每个声明 variant 都要有 `variant_contracts` 条目，字段至少包含 `presentation`（`filled | outline | ghost | plain` 等闭集）、`radius` token、`control_height` token 和 focus 处理引用。hover / active 可用时也必须绑定 token。`button`、`nav-item`、`menu-item`、`tabs` 等可包含内容条目的 primitive 必须声明 anatomy slots（至少区分 icon 与 label；badge、shortcut、trailing 按来源补齐）与次序。缺失 contract、contract 指向未知 token/rule，或声明 variant 没有契约，都会在 Validate fail closed。禁止用组件库默认样式填补 contract 沉默。
+来源里能按 API 或调用点区分 `variant` / `size` 的交互控件，Author 不得把它们压平成一个 anonymous primitive。Primitives 层必须保留完整变体闭集；每个声明 variant 都要有 `variant_contracts` 条目，字段至少包含 `presentation`（`filled | outline | ghost | plain` 等闭集）、`radius` token、`control_height` token 和 focus 处理引用。hover / active 可用时也必须绑定 token。`button`、`nav-item`、`menu-item`、`tabs` 等可包含内容条目的 primitive 必须声明 anatomy slots（至少区分 icon 与 label；badge、shortcut、trailing 按来源补齐）与次序。缺失 contract、contract 指向未知 token/rule，或声明 variant 没有契约，都会在 Validate fail closed（`PRIMITIVE_CONTRACT_INVALID`）。`ui-kit`/`page-system` 下 `button`、`nav-item`、`menu-item`、`tabs` 完全沉默（无 `variant_contracts` 或无 icon/label `anatomy`）直接失败：`PRIMITIVE_CONTRACT_MISSING` / `PRIMITIVE_ANATOMY_MISSING`——沉默不是可移植契约，禁止用组件库默认样式填补 contract 沉默。
+
+## Tokens：结构化字阶、字重与对比度配对
+
+- typography step 除 `value`/`unit` 外必须携带结构化 `line_height` 与 `line_height_unit`；来源声明字重时写入 `font.weight.*`（`unit: unitless`）。来源给出几步就声明几步，禁止只采三个代表值后让 Apply 猜中间档；`capability >= ui-kit` 时 validator 对缺 `line_height` 的 step 报 `TYPOGRAPHY_STEP_INCOMPLETE`，无字阶报 `TYPOGRAPHY_SCALE_MISSING`。
+- 前景/背景配对写入 tokens 文件顶层 `color_pairs`（`foreground`/`background`/`min_ratio`，路径为 `token/` 前缀）。每条配对是可执行 contrast 断言：validator 解析两端颜色值并计算 WCAG 对比度，悬空报 `COLOR_PAIR_DANGLING`，值不可解析报 `COLOR_PAIR_UNRESOLVABLE`，低于 `min_ratio` 报 `COLOR_CONTRAST_TOO_LOW`。控件填充与文字色必须从声明配对中取用，不得临时组合。
 
 ## Placement topology
 
 `core/layout.yaml` 的每个 route 可声明可选 `placement` scene。scene 使用 stable region/slot ID、semantic role、`contains | owns | horizontal | vertical | overlay` relation、sibling order、scroll domain 和 responsive mode 表达通用拓扑；`pattern_refs` 必须属于该 route 的 Page Type closure，`evidence_refs` 必须解析到 active evidence，quantitative geometry 只能引用 `token/` path。`slots`/`breakpoints` 散文可继续存在，但不是机器 placement constraint 的唯一权威。
 
 page-system Generate-from-source 必须能闭合 topology、Page Type/Pattern identity 和 evidence；无法闭合时显式降级 capability 或停止，不得用 prose 或实现默认补齐。
+
+`placementRegion` 可声明 `position`（`static | sticky | fixed`）。来源中的置顶 chrome（卡内 header、sticky 列表头）必须把容器事实投影为 `parent` 并记录 `position: sticky`；只写平级 region 等价于丢失嵌套，Apply 会把 chrome 实现到容器之外。弹窗适配（max 块向尺寸 + body 内部滚动域 + header/footer shrink）以 region + scroll domain + geometry（`max-block-size`）+ rule 表达。
 
 ## Package feedback
 

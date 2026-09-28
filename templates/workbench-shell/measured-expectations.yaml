@@ -1,10 +1,10 @@
 schema: design-system-measured-expectations/v1
 package:
   id: workbench-shell
-  version: 3.0.1
+  version: 3.1.1
   digest:
     algorithm: sha256-canonical-json-v1
-    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
+    value: 49b59c17750496d69da5d04e5197a26f7fdaf0c7d1e2023d8ccf19f5ac6864df
 oracle:
   kind: git-revision
   revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386

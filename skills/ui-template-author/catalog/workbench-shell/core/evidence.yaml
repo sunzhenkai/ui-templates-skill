@@ -95,8 +95,7 @@ items:
   target: pattern/app-shell
   origin: computed
   locator: ui-source-graph.yaml#/definitions/scene.shell
-  method: derived from literal source graph imports and usages at fixed session graph
-    revision
+  method: derived from literal source graph imports and usages at fixed session graph revision
   source_id: source-002
   source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   confidence: medium
@@ -105,8 +104,7 @@ items:
   target: pattern/master-detail
   origin: computed
   locator: ui-source-graph.yaml#/definitions/scene.master-detail
-  method: derived from literal source graph imports and usages at fixed session graph
-    revision
+  method: derived from literal source graph imports and usages at fixed session graph revision
   source_id: source-002
   source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   confidence: medium
@@ -115,8 +113,7 @@ items:
   target: pattern/overlay-dialog
   origin: computed
   locator: ui-source-graph.yaml#/definitions/scene.dialog
-  method: derived from literal source graph imports and usages at fixed session graph
-    revision
+  method: derived from literal source graph imports and usages at fixed session graph revision
   source_id: source-002
   source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   confidence: medium
@@ -125,8 +122,7 @@ items:
   target: pattern/settings-section-nav
   origin: computed
   locator: ui-source-graph.yaml#/definitions/scene.settings
-  method: derived from literal source graph imports and usages at fixed session graph
-    revision
+  method: derived from literal source graph imports and usages at fixed session graph revision
   source_id: source-002
   source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   confidence: medium
@@ -135,8 +131,7 @@ items:
   target: pattern/workspace-board
   origin: computed
   locator: ui-source-graph.yaml#/definitions/scene.board
-  method: derived from literal source graph imports and usages at fixed session graph
-    revision
+  method: derived from literal source graph imports and usages at fixed session graph revision
   source_id: source-002
   source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   confidence: medium
@@ -460,3 +455,93 @@ items:
   source_id: source-001
   source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   confidence: medium
+- id: evidence-layout-shell-canvas-chrome
+  kind: layout
+  target: route/shell
+  origin: source
+  locator: packages/ui/components/ui/sidebar.tsx#SidebarInset + packages/views/layout/page-header.tsx#PageHeader
+  method: static structure reading at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-layout-shell-sticky-header
+  kind: layout
+  target: primitive/page-header
+  origin: source
+  locator: packages/views/issues/components/list-view.tsx#group/header-sticky-top-0 + packages/views/agents/components/agents-page.tsx#sticky-header-pins-inside-scroller
+  method: static structure reading at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-primitive-button-contracts
+  kind: component
+  target: primitive/button
+  origin: source
+  locator: packages/ui/components/ui/button.tsx#buttonVariants-size-ladder
+  method: static class measurement at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-primitive-nav-item-icon
+  kind: component
+  target: primitive/nav-item
+  origin: source
+  locator: packages/ui/components/ui/sidebar.tsx#SidebarMenuButton + packages/views/layout/route-icon-components.tsx
+  method: static structure reading at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-primitive-dialog-fit
+  kind: component
+  target: primitive/dialog
+  origin: source
+  locator: packages/views/modals/create-issue-dialog.tsx#max-h-80dvh + packages/views/modals/quick-create-issue.tsx#body-overflow
+  method: static structure reading at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-token-typography-scale
+  kind: token
+  target: token/typography
+  origin: source
+  locator: packages/ui/styles/tokens.css#type-scale
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-token-shadow-menu
+  kind: token
+  target: token/shadow.menu
+  origin: source
+  locator: packages/ui/styles/tokens.css#menu-shadow
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-token-control-heights
+  kind: token
+  target: token/size.control-height-default
+  origin: source
+  locator: packages/ui/components/ui/button.tsx#h-8-h-7-h-6-h-9 + packages/ui/components/ui/select.tsx#h-8
+  method: static class measurement at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-token-color-pairs
+  kind: token
+  target: token/color.text-secondary
+  origin: source
+  locator: packages/ui/styles/tokens.css#muted-foreground-wcag-note
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-layout-toolbar-single-row
+  kind: layout
+  target: route/shell
+  origin: source
+  locator: packages/views/layout/page-header.tsx#PAGE_TOOLBAR-flex-h-12-shrink-0
+  method: static structure reading at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high

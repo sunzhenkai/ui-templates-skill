@@ -12,3 +12,20 @@ tokens:
       value: 16
       unit: px
       origin: source
+  radius:
+    lg:
+      value: 10
+      unit: px
+      origin: default
+  size:
+    control-height-default:
+      value: 32
+      unit: px
+      origin: default
+  typography:
+    body:
+      value: 14
+      unit: px
+      line_height: 20
+      line_height_unit: px
+      origin: default

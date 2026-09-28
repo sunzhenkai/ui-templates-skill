@@ -958,6 +958,7 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             "items": [
                 {
                     "id": "primitive/button", "name": "Button", "variants": ["default"], "states": ["focus-visible"],
+                    "anatomy": [{"slot": "icon", "order": 1}, {"slot": "label", "order": 2}],
                     "variant_contracts": {
                         "default": {
                             "presentation": "filled", "radius": "token/radius.control",
@@ -982,6 +983,7 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                 },
                 "radius": {"control": {"value": 10, "unit": "px", "origin": "source"}},
                 "size": {"control-md": {"value": 32, "unit": "px", "origin": "source"}},
+                "typography": {"body": {"value": 14, "unit": "px", "line_height": 20, "line_height_unit": "px", "origin": "source"}},
             },
         }
         rules = {
