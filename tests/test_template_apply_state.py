@@ -1107,3 +1107,95 @@ class PlacementClosureTests(unittest.TestCase):
             )
             decision = recovery_decision(findings, checkpoint)
             self.assertEqual(2, decision["earliest_phase"])
+
+    def test_derived_route_with_resolvable_basis_passes(self) -> None:
+        from scripts.template_apply_state.state import _route_composition_findings
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "02-routes.yaml").write_text(yaml.safe_dump({
+                "routes": [{
+                    "id": "route/form",
+                    "path": "/form",
+                    "design_source": "derived",
+                    "derivation_basis": ["RULE-100", "primitive/input"],
+                    "structural_verification": "unavailable",
+                    "placement_plan": {"single_responsibility": "settings form"},
+                }],
+            }, sort_keys=False), encoding="utf-8")
+            (root / "04-components.yaml").write_text(yaml.safe_dump({
+                "routes": [{
+                    "id": "component/form-input",
+                    "primitives": ["primitive/input"],
+                    "placement_role": "content",
+                    "route_refs": ["route/form"],
+                }],
+            }, sort_keys=False), encoding="utf-8")
+            layers = {
+                "rules": {"RULE-100"},
+                "primitives": {"primitive/input"},
+                "page_types": {"page-type/detail"},
+                "patterns": {"pattern/list-page"},
+            }
+            findings = _route_composition_findings(
+                root,
+                {2: {"status": "complete"}, 4: {"status": "complete"}},
+                layers,
+                placement_context={"page_type_patterns": {"page-type/detail": ["pattern/list-page"]}},
+                structural_available=False,
+            )
+            self.assertEqual([], [finding.code for finding in findings])
+
+    def test_derived_route_basis_missing_or_dangling_fails(self) -> None:
+        from scripts.template_apply_state.state import _route_composition_findings
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "02-routes.yaml").write_text(yaml.safe_dump({
+                "routes": [
+                    {"id": "route/a", "path": "/a", "design_source": "derived",
+                     "structural_verification": "unavailable"},
+                    {"id": "route/b", "path": "/b", "design_source": "derived",
+                     "derivation_basis": ["pattern/ghost"], "structural_verification": "unavailable"},
+                    {"id": "route/c", "path": "/c", "design_source": "hybrid",
+                     "structural_verification": "unavailable"},
+                ],
+            }, sort_keys=False), encoding="utf-8")
+            findings = _route_composition_findings(
+                root,
+                {2: {"status": "complete"}},
+                {"patterns": {"pattern/list-page"}, "page_types": {"page-type/detail"}},
+                structural_available=False,
+            )
+            codes = {finding.code for finding in findings}
+            self.assertIn("DERIVATION_BASIS_MISSING", codes)
+            self.assertIn("DERIVATION_BASIS_DANGLING", codes)
+            self.assertIn("ROUTE_DESIGN_SOURCE_INVALID", codes)
+            derived_codes = {
+                finding.code for finding in findings
+                if "#/a" in finding.path or "#/b" in finding.path
+            }
+            self.assertNotIn("PLACEMENT_TEMPLATE_TRACE_MISSING", derived_codes)
+            self.assertNotIn("ROUTE_PAGE_TYPE_MISSING", derived_codes)
+
+    def test_template_route_default_behavior_unchanged(self) -> None:
+        from scripts.template_apply_state.state import _route_composition_findings
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "02-routes.yaml").write_text(yaml.safe_dump({
+                "routes": [{
+                    "id": "route/detail", "path": "/detail",
+                    "structural_verification": "unavailable",
+                }],
+            }, sort_keys=False), encoding="utf-8")
+            findings = _route_composition_findings(
+                root,
+                {2: {"status": "complete"}},
+                {"page_types": {"page-type/detail"}, "patterns": {"pattern/list-page"}},
+                structural_available=False,
+            )
+            codes = {finding.code for finding in findings}
+            self.assertIn("ROUTE_PAGE_TYPE_MISSING", codes)
+            self.assertIn("ROUTE_PATTERN_BINDING_MISSING", codes)
+            self.assertIn("PLACEMENT_TEMPLATE_TRACE_MISSING", codes)
