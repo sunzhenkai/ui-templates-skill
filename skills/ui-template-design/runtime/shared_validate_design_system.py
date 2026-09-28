@@ -580,15 +580,51 @@ def _token_record(tokens: dict[str, Any], path: str) -> dict[str, Any] | None:
     return current if isinstance(current, dict) and "value" in current and "origin" in current else None
 
 
-def validate_visual_role_closure(layers: dict[str, Path], report: Report) -> None:
+VISUAL_COLOR_ROLE_NAMES = tuple(VISUAL_COLOR_ROLES.keys())
+# VISUAL_TYPE_ROLES already carries the dotted token path shape.
+VISUAL_TYPE_ROLE_NAMES = VISUAL_TYPE_ROLES
+REQUIRED_VISUAL_ROLES = VISUAL_COLOR_ROLE_NAMES + VISUAL_TYPE_ROLE_NAMES
+
+
+def resolve_visual_role_tokens(meta: dict[str, Any] | None) -> dict[str, tuple[str, ...]] | None:
+    """Template-declared visual role map, or the built-in default table.
+
+    A package may declare ``meta.visual_role_tokens`` to bind the product's
+    visual roles to its own token paths; the declared map *replaces* the
+    default path table entirely, but the required role set stays fail-closed.
+    """
+    declared = (meta or {}).get("visual_role_tokens")
+    if declared is None:
+        table: dict[str, tuple[str, ...]] = {role: tuple(paths) for role, paths in VISUAL_COLOR_ROLES.items()}
+        table.update({f"typography.{name}": (f"typography.{name}",) for name in VISUAL_TYPE_ROLES})
+        return table
+    if not isinstance(declared, dict):
+        return None
+    resolved: dict[str, tuple[str, ...]] = {}
+    for role, paths in declared.items():
+        if isinstance(role, str) and isinstance(paths, list) and paths and all(isinstance(p, str) for p in paths):
+            resolved[role] = tuple(paths)
+    return resolved
+
+
+def validate_visual_role_closure(
+    layers: dict[str, Path], report: Report, meta: dict[str, Any] | None = None
+) -> None:
     """High-fidelity packages must expose visual roles, not only sampled values."""
+    table = resolve_visual_role_tokens(meta)
+    if table is None:
+        report.add("VISUAL_ROLE_MAP_INVALID", "meta.visual_role_tokens", "visual_role_tokens must be a role-to-paths mapping")
+        return
+    for role in REQUIRED_VISUAL_ROLES:
+        if role not in table:
+            report.add("VISUAL_ROLE_MISSING", f"meta.visual_role_tokens.{role}", f"required visual role is not declared: {role}")
     token_path = layers.get("tokens")
     token_document = load_document(token_path) if token_path and token_path.is_file() else {}
     tokens = token_document.get("tokens")
     if not isinstance(tokens, dict):
         report.add("VISUAL_ROLE_MISSING", "layers.tokens", "visual role closure requires a token document")
         return
-    for role, paths in VISUAL_COLOR_ROLES.items():
+    for role, paths in table.items():
         present = [(path, record) for path in paths if (record := _token_record(tokens, path)) is not None]
         if not present:
             report.add("VISUAL_ROLE_MISSING", f"tokens.{role}", f"missing required visual role: {role}")
@@ -597,16 +633,6 @@ def validate_visual_role_closure(layers: dict[str, Path], report: Report) -> Non
                 "VISUAL_ROLE_DEFAULTED",
                 f"tokens.{role}",
                 f"visual role {role} cannot be satisfied only by default tokens",
-            )
-    for role in VISUAL_TYPE_ROLES:
-        record = _token_record(tokens, role)
-        if record is None:
-            report.add("TYPOGRAPHY_ROLE_MISSING", f"tokens.{role}", f"missing required typography role: {role}")
-        elif record.get("origin") == "default":
-            report.add(
-                "TYPOGRAPHY_ROLE_DEFAULTED",
-                f"tokens.{role}",
-                f"typography role {role} cannot be satisfied by a default token",
             )
 
 
@@ -1656,7 +1682,8 @@ def validate_target(
     if require_component_family:
         enforce_family_closure(report.component_family, report)
     if require_visual_role_closure:
-        validate_visual_role_closure(layers, report)
+        meta_document = load_document(target / "meta.yaml") if (target / "meta.yaml").is_file() else None
+        validate_visual_role_closure(layers, report, meta=meta_document if isinstance(meta_document, dict) else None)
     if kind == "active":
         validate_binding(target, manifest, layers, report)
     return report.to_dict()

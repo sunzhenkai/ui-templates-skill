@@ -1,9 +1,18 @@
-"""Closed chrome composition for repo-structural-v1 shell scenes."""
+"""Chrome composition checks for repo-structural-v1 shell scenes.
+
+Vocabulary policy: shell variants, slot roles and anchor roles are
+*instance-declared* open vocabularies. The values below are the vocabulary of
+the first captured template (workbench-shell) and are kept only as capture
+hints / documentation; validators must not reject other values. Structural
+completeness (slots declared, orders unique, regions resolving) stays
+fail-closed.
+"""
 from __future__ import annotations
 
 from typing import Any
 
 SCENE_KINDS = ("shell", "board", "master-detail", "dialog", "other")
+# Capture-hint vocabulary of the first template; not an allowlist.
 SHELL_VARIANTS = ("inset", "flush")
 SLOT_ROLES = (
     "workspace-switcher",
@@ -19,7 +28,7 @@ SLOT_ROLES = (
     "page-toolbar",
     "page-canvas",
 )
-# Allowlist of optional chrome anchors; not a required set.
+# Capture-hint vocabulary of the first template; anchors are always optional.
 ANCHOR_ROLES = ("header-trigger", "chat-fab")
 CHROME_FACT_PROPERTIES = ("shell_variant", "slot_role", "slot_order", "anchor_role")
 SLOT_ORDER_SEMANTICS = tuple(str(index) for index in range(33))
@@ -78,13 +87,13 @@ def chrome_fact_gaps(facts: list[dict[str, Any]]) -> list[str]:
         elif property_name == "anchor_role":
             anchors.add(value)
     gaps: list[str] = []
-    if not variants or len(set(variants)) != 1 or variants[0] not in SHELL_VARIANTS:
+    if not variants or len(set(variants)) != 1 or not isinstance(variants[0], str) or not variants[0]:
         gaps.append("shell_variant")
     if not slots:
         gaps.append("slots")
     order_values = []
     for slot, role in slots:
-        if role not in SLOT_ROLES:
+        if not isinstance(role, str) or not role:
             gaps.append(f"slot_role:{role}")
         if slot not in orders:
             gaps.append(f"slot_order:{slot}")
@@ -92,13 +101,10 @@ def chrome_fact_gaps(facts: list[dict[str, Any]]) -> list[str]:
             order_values.append(orders[slot])
     if order_values and len(order_values) != len(set(order_values)):
         gaps.append("slot_order_unique")
+    # Anchors are optional attachments; roles are instance-declared vocabulary.
     for role in anchors:
-        if role not in ANCHOR_ROLES:
+        if not isinstance(role, str) or not role:
             gaps.append(f"anchor_role:{role}")
-    declared_anchors = {role for _slot, role in slots if role in ANCHOR_ROLES}
-    for role in declared_anchors:
-        if role not in anchors:
-            gaps.append(f"anchor:{role}")
     return sorted(set(gaps))
 
 
@@ -113,7 +119,7 @@ def chrome_record_gaps(record: dict[str, Any]) -> list[str]:
     if record.get("scene_kind") is None and record.get("scene") == "shell":
         gaps.append("scene_kind")
     variant = record.get("shell_variant")
-    if variant not in SHELL_VARIANTS:
+    if not isinstance(variant, str) or not variant:
         gaps.append("shell_variant")
     region_ids = {
         item.get("id")
@@ -129,7 +135,7 @@ def chrome_record_gaps(record: dict[str, Any]) -> list[str]:
         role = slot.get("role")
         order = slot.get("order")
         region = slot.get("region")
-        if role not in SLOT_ROLES:
+        if not isinstance(role, str) or not role:
             gaps.append(f"slot_role:{role}")
         if role in seen_roles:
             gaps.append(f"slot_role_duplicate:{role}")
@@ -143,15 +149,11 @@ def chrome_record_gaps(record: dict[str, Any]) -> list[str]:
     if orders and len(orders) != len(set(orders)):
         gaps.append("slot_order_unique")
     anchors = [item for item in record.get("chrome_anchors") or [] if isinstance(item, dict)]
-    present_anchors = {item.get("role") for item in anchors}
-    declared_anchors = {slot.get("role") for slot in slots if slot.get("role") in ANCHOR_ROLES}
-    for role in declared_anchors:
-        if role not in present_anchors:
-            gaps.append(f"anchor:{role}")
+    # Anchors are optional; no slot role forces an anchor record.
     for anchor in anchors:
         role = anchor.get("role")
         region = anchor.get("region")
-        if role not in ANCHOR_ROLES:
+        if not isinstance(role, str) or not role:
             gaps.append(f"anchor_role:{role}")
         if isinstance(region, str) and region not in region_ids:
             gaps.append(f"anchor_region:{region}")
@@ -204,10 +206,12 @@ def page_modes_replace_shell(declared: Any) -> bool:
 
 MANDATORY_FACT_MISSING = "MANDATORY_FACT_MISSING"
 
-# shell_variant: inset ⇒ the floating content card (page-canvas slot) must be
-# characterised: inset/margin, radius, border, shadow and background. Any fact
-# property in each group answers the question; exact values stay in tokens.yaml.
-INSET_CANVAS_GEOMETRY: tuple[tuple[str, tuple[str, ...]], ...] = (
+# A shell scene that declares a variant (anything except the profile-level
+# "flush" waiver, where chrome and content share one surface) must characterise
+# its variant surface(s): inset/margin, radius, border, shadow and background.
+# The surfaces are the slots named by the graph's shell_variant facts — an
+# instance-declared open vocabulary; exact values stay in tokens.yaml.
+VARIANT_SURFACE_GEOMETRY: tuple[tuple[str, tuple[str, ...]], ...] = (
     (
         "inset-or-gap",
         (
@@ -229,11 +233,14 @@ INSET_CANVAS_GEOMETRY: tuple[tuple[str, tuple[str, ...]], ...] = (
 )
 
 # Multi-section content scenes (board/other) must state where their section
-# navigation lives (in-card leading column, top, or none via exclusion).
+# navigation lives. The nav column is detected structurally (a slot carrying
+# anatomy facts or selected/hover/active background token-refs), never by a
+# fixed slot-role name.
 CONTENT_SCENE_KINDS = ("board", "other")
-# Content-surface slot names accepted by the inset geometry question (the
-# chrome role stays "page-canvas"; graphs may use the shorter "canvas").
-CANVAS_SLOTS = (None, "canvas", "page-canvas")
+# Profile-level waiver value: chrome and content share one surface, so
+# containment/separation questions do not apply. Any other variant value is
+# instance-declared and triggers them.
+FLUSH_VARIANT = "flush"
 # Round 2: component names that trigger the focus-treatment question.
 INTERACTIVE_CONTROL_NAMES = frozenset({
     "button", "icon-button", "input", "textarea", "select", "combobox",
@@ -243,19 +250,10 @@ INTERACTIVE_CONTROL_NAMES = frozenset({
 # (whole-row trigger vs separately-clickable affordance icon).
 TRIGGER_CONTROL_NAMES = frozenset({"select", "combobox", "dropdown", "dropdown-menu"})
 TRIGGER_ANATOMY_VALUES = frozenset({"whole-trigger", "split-trigger"})
-# Round 3: link interaction contexts whose default-state text decoration is
-# mandatory (the global "no underline unless opt-in" baseline is per-context).
-LINK_CONTEXTS = frozenset({"navigation-link", "entity-row-link", "button-link", "inline-prose-link"})
-# Round 3: header-like chrome slots whose containing region must be answered
-# for inset shells (page-header inside the inset canvas vs outside it), plus
-# the nav slot whose own border presence/absence separates chrome from canvas.
-HEADER_CONTAINER_SLOTS = ("page-header", "page-toolbar")
-NAV_SEPARATION_SLOT = "nav-group"
-CONTAINER_ROLE_VALUES = frozenset({"root", "page-canvas", "canvas"})
-SECTION_NAV_SLOT = "section-nav"
-# Master-detail scenes must place both panes and state the context panel.
-DETAIL_PANE_SLOTS = ("master-pane", "detail-pane")
-CONTEXT_PANEL_SLOT = "context-panel"
+# Round 3: link contexts whose default-state text decoration is mandatory.
+# Matched by structural naming ("link" in the declared context name), not by a
+# fixed context list, so newly declared link contexts are covered.
+LINK_CONTEXT_MARKER = "link"
 
 
 def _scene_definitions(graph: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -284,6 +282,43 @@ def _excluded_definition_ids(graph: dict[str, Any], graph_path: str) -> set[str]
         if locator.startswith(prefix):
             targets.add(locator[len(prefix):])
     return targets
+
+
+# Column-level layout properties: a slot carrying any of these is a
+# structural column candidate (as opposed to a lone interactive element).
+COLUMN_PROPERTIES = frozenset({
+    "anatomy", "arrangement", "container_presentation", "scroll_block", "scroll_inline", "size",
+})
+
+
+def _nav_column_slots(facts: list[dict[str, Any]]) -> set[Any]:
+    """Detect an in-card navigation column structurally — never by a fixed
+    slot-role name.
+
+    A slot qualifies when it declares item anatomy (icon/label structure), or
+    when it is a structural column (carries column-level layout properties)
+    AND binds selected/hover/active state backgrounds to tokens. A lone
+    interactive element (e.g. a single link hover fact) does not qualify.
+    """
+    anatomy_slots: set[Any] = set()
+    column_slots: set[Any] = set()
+    stateful_slots: set[Any] = set()
+    for item in facts:
+        if not isinstance(item, dict) or not item.get("slot"):
+            continue
+        slot = item.get("slot")
+        if item.get("property") == "anatomy":
+            anatomy_slots.add(slot)
+        if item.get("property") in COLUMN_PROPERTIES:
+            column_slots.add(slot)
+        if (
+            item.get("property") == "background"
+            and item.get("state") in {"selected", "active", "hover"}
+            and isinstance(item.get("value"), dict)
+            and item.get("value", {}).get("kind") == "token-ref"
+        ):
+            stateful_slots.add(slot)
+    return anatomy_slots | (column_slots & stateful_slots)
 
 
 def _matrix_questions(
@@ -323,84 +358,116 @@ def _matrix_questions(
         facts = scene_facts(name)
         kind = scene_kind_for(name)
         if kind == "shell":
-            variants = {
-                item.get("value", {}).get("value")
+            variant_facts = [
+                item
                 for item in facts
                 if item.get("property") == "shell_variant" and isinstance(item.get("value"), dict)
-            }
-            if variants == {"inset"}:
-                canvas_properties = {
-                    item.get("property") for item in facts if item.get("slot") in CANVAS_SLOTS
-                }
-                for label, options in INSET_CANVAS_GEOMETRY:
-                    key = f"inset-canvas:{label}:{name}"
-                    answer = "observed" if canvas_properties & set(options) else "unresolved"
-                    states[key] = ("excluded" if scene_excluded else answer, "scene")
-                # ---- round 3: chrome containment and separation ----
-                declared_header_slots = {
+            ]
+            if variant_facts:
+                declared_slots = {
                     item.get("slot")
                     for item in facts
-                    if item.get("property") == "slot_role"
-                    and isinstance(item.get("value"), dict)
-                    and item.get("value", {}).get("value") in HEADER_CONTAINER_SLOTS
+                    if item.get("property") == "slot_role" and item.get("slot")
                 }
-                if declared_header_slots:
+                surfaces = {item.get("slot") for item in variant_facts if item.get("slot")}
+                if not surfaces:
+                    surfaces = set(declared_slots)
+                variant_value = next(
+                    (item.get("value", {}).get("value") for item in variant_facts),
+                    None,
+                )
+                surface_properties = {
+                    (item.get("slot"), item.get("property")) for item in facts
+                }
+                for label, options in VARIANT_SURFACE_GEOMETRY:
+                    key = f"variant-surface:{label}:{name}"
+                    answered = bool(surfaces) and all(
+                        any((slot, option) in surface_properties for option in options)
+                        for slot in surfaces
+                    )
+                    states[key] = (
+                        ("excluded" if scene_excluded else "observed" if answered else "unresolved"),
+                        "scene",
+                    )
+                # ---- round 3: chrome containment and separation ----
+                # Any non-flush variant separates chrome from the content
+                # surface, so every declared chrome slot must state its
+                # container (root or a named surface) and its border
+                # explicitly (positive or negative). Slot roles and container
+                # names are instance-declared vocabulary.
+                chrome_slots = declared_slots - surfaces
+                if variant_value != FLUSH_VARIANT and chrome_slots:
                     contained = {
                         item.get("slot")
                         for item in facts
-                        if item.get("property") == "container_role"
-                        and isinstance(item.get("value"), dict)
-                        and item.get("value", {}).get("value") in CONTAINER_ROLE_VALUES
+                        if item.get("property") == "container_role" and item.get("slot")
                     }
                     states[f"chrome-containment:{name}"] = (
                         (
                             "excluded" if scene_excluded
-                            else "observed" if declared_header_slots <= contained
+                            else "observed" if chrome_slots <= contained
                             else "unresolved"
                         ),
                         "scene",
                     )
-                declared_nav = any(
-                    item.get("property") == "slot_role"
-                    and isinstance(item.get("value"), dict)
-                    and item.get("value", {}).get("value") == NAV_SEPARATION_SLOT
-                    for item in facts
-                )
-                if declared_nav:
-                    nav_border = any(
-                        item.get("property") == "border"
-                        and item.get("slot") == NAV_SEPARATION_SLOT
+                    bordered = {
+                        item.get("slot")
                         for item in facts
-                    )
+                        if item.get("property") == "border" and item.get("slot")
+                    }
                     states[f"chrome-separation:{name}"] = (
-                        ("excluded" if scene_excluded else "observed" if nav_border else "unresolved"),
+                        (
+                            "excluded" if scene_excluded
+                            else "observed" if chrome_slots <= bordered
+                            else "unresolved"
+                        ),
                         "scene",
                     )
         elif kind == "master-detail":
-            pane_slots = {item.get("slot") for item in facts}
+            # Panes are instance-declared: any two scroll-bearing slots form
+            # the master/detail pair.
+            pane_slots = {
+                item.get("slot")
+                for item in facts
+                if item.get("property") == "scroll_block" and item.get("slot")
+            }
             states[f"detail-panes:{name}"] = (
-                ("excluded" if scene_excluded else "observed" if set(DETAIL_PANE_SLOTS) <= pane_slots else "unresolved"),
+                ("excluded" if scene_excluded else "observed" if len(pane_slots) >= 2 else "unresolved"),
                 "scene",
             )
-            has_context = any(
-                usage.get("scene") == name and usage.get("slot") == CONTEXT_PANEL_SLOT for usage in usages
-            )
-            states[f"context-panel:{name}"] = (
-                ("excluded" if scene_excluded else "observed" if has_context else "unresolved"),
-                "scene",
-            )
+            # Auxiliary surfaces (e.g. a context panel) are detected from
+            # overlay facts on non-pane slots, never from a fixed slot name.
+            aux_slots = {
+                item.get("slot")
+                for item in facts
+                if item.get("slot")
+                and item.get("slot") not in pane_slots
+                and item.get("property") in {"overlay_scope", "overlay_anchor"}
+            }
+            if aux_slots:
+                characterised = {
+                    item.get("slot")
+                    for item in facts
+                    if item.get("slot") in aux_slots and item.get("property") == "overlay_scope"
+                }
+                states[f"aux-surfaces:{name}"] = (
+                    (
+                        "excluded" if scene_excluded
+                        else "observed" if aux_slots <= characterised
+                        else "unresolved"
+                    ),
+                    "scene",
+                )
         elif kind in CONTENT_SCENE_KINDS:
-            has_nav = any(
-                usage.get("scene") == name and usage.get("slot") == SECTION_NAV_SLOT for usage in usages
-            )
-            states[f"section-nav:{name}"] = (
-                ("excluded" if scene_excluded else "observed" if has_nav else "unresolved"),
+            nav_slots = _nav_column_slots(facts)
+            states[f"nav-column:{name}"] = (
+                ("excluded" if scene_excluded else "observed" if nav_slots else "unresolved"),
                 "scene",
             )
 
         # ---- round 2: in-card section navigation scenes ----
-        nav_usage = any(usage.get("scene") == name and usage.get("slot") == SECTION_NAV_SLOT for usage in usages)
-        if nav_usage:
+        nav_slots = _nav_column_slots(facts)
+        if nav_slots:
             # 2a. multi-pane topology: root non-scroll + >=2 pane scroll domains + nav stretch
             root_none = any(
                 item.get("property") == "root_scroll"
@@ -417,8 +484,8 @@ def _matrix_questions(
                 item.get("property") in {"size", "container_presentation"}
                 and isinstance(item.get("value"), dict)
                 and item.get("value", {}).get("value") == "fill"
-                and item.get("slot") == SECTION_NAV_SLOT
-                for item in facts + [f for u in usages if u.get("scene") == name for f in u.get("facts") or []]
+                and item.get("slot") in nav_slots
+                for item in facts
             )
             topology_ok = root_none and len(pane_slots) >= 2 and stretch
             states[f"pane-scroll:{name}"] = (
@@ -434,7 +501,9 @@ def _matrix_questions(
                 ("excluded" if scene_excluded else "observed" if anatomy else "unresolved"),
                 "scene",
             )
-            # 2c. page-surface selected/hover state (must not bind sidebar tokens)
+            # 2c. selected/hover/active state bound to a token (mechanism must
+            # be a token-ref; which surface token is a template-level decision
+            # recorded in tokens.yaml, not a matrix concern).
             nav_states = [
                 item for item in facts
                 if item.get("property") == "background"
@@ -442,12 +511,8 @@ def _matrix_questions(
                 and item.get("value", {}).get("kind") == "token-ref"
                 and item.get("state") in {"selected", "active", "hover"}
             ]
-            page_surface = [
-                item for item in nav_states
-                if "sidebar" not in str(item.get("value", {}).get("value", ""))
-            ]
             states[f"nav-state:{name}"] = (
-                ("excluded" if scene_excluded else "observed" if page_surface else "unresolved"),
+                ("excluded" if scene_excluded else "observed" if nav_states else "unresolved"),
                 "scene",
             )
 
@@ -505,7 +570,7 @@ def _matrix_questions(
         item.get("name"): item for item in definitions if item.get("kind") == "context"
     }
     for name in sorted(context_names or []):
-        if name not in LINK_CONTEXTS:
+        if LINK_CONTEXT_MARKER not in name:
             continue
         context_excluded = (context_definitions.get(name) or {}).get("id") in excluded_ids
         decoration_facts = [

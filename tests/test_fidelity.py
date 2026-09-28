@@ -264,7 +264,8 @@ class FidelityContractTests(unittest.TestCase):
             ("missing-variant", "CHROME_COMPOSITION_INCOMPLETE"),
             ("duplicate-order", "CHROME_COMPOSITION_INCOMPLETE"),
             ("dangling-anchor-region", "CHROME_COMPOSITION_INCOMPLETE"),
-            ("declared-anchor-unclosed", "CHROME_COMPOSITION_INCOMPLETE"),
+            ("declared-anchor-unclosed", None),
+            ("custom-vocabulary", None),
             ("evasion", "CHROME_COMPOSITION_INCOMPLETE"),
             ("layout-high", "LAYOUT_CONFIDENCE_WITHOUT_CHROME"),
         ]
@@ -300,10 +301,20 @@ class FidelityContractTests(unittest.TestCase):
                             for item in mutated["layout_scenes"][0]["chrome_anchors"]
                             if item.get("role") != "header-trigger"
                         ]
+                    elif kind == "custom-vocabulary":
+                        # Instance-declared vocabulary: slot roles outside the
+                        # first template's chrome set are legal.
+                        mutated["layout_scenes"][0]["slots"][0]["role"] = "top-nav"
+                        mutated["layout_scenes"][0]["chrome_anchors"] = [
+                            {"id": "anchor.shell.floating-help", "role": "floating-help", "region": "region.shell.root"}
+                        ]
                     else:
                         mutated["layout_scenes"][0]["scene_kind"] = "other"
                     (template / "fidelity.yaml").write_text(yaml.safe_dump(mutated, sort_keys=False, allow_unicode=True), encoding="utf-8")
                 result = validate_paths([root], ROOT)
+                if expected is None:
+                    self.assertFalse(result.failed, [finding.to_dict() for finding in result.findings])
+                    continue
                 self.assertTrue(result.failed)
                 self.assertTrue(
                     any(finding.code == expected for finding in result.findings),

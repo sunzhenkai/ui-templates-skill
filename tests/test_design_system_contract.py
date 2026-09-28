@@ -132,6 +132,89 @@ class DesignSystemContractTests(unittest.TestCase):
         self.assertNotEqual(0, code)
         self.assertIn("VISUAL_ROLE_MISSING", codes)
 
+    def test_visual_role_closure_honors_template_declared_token_paths(self) -> None:
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from validate_design_system import canonical_digest, load_document
+
+        def refresh_digests(target: Path) -> None:
+            manifest_path = target / "design-system.yaml"
+            manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+            manifest.setdefault("layer_digests", {})
+            for name, rel in manifest.get("layers", {}).items():
+                manifest["layer_digests"][name] = {
+                    "algorithm": "sha256-canonical-json-v1",
+                    "value": canonical_digest(load_document(target / rel)),
+                }
+            digest_input = dict(manifest)
+            digest_input.pop("contract_digest", None)
+            manifest["contract_digest"] = {
+                "algorithm": "sha256-canonical-json-v1",
+                "value": canonical_digest(digest_input),
+            }
+            manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
+
+        roles = (
+            "canvas surface surface-hover surface-selected border divider text-primary "
+            "text-secondary text-muted text-disabled text-on-primary link brand-primary "
+            "brand-hover status-success status-warning status-danger"
+        ).split()
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp) / "package"
+            shutil.copytree(FIXTURES / "packages/page-system-fixture", target)
+            tokens = yaml.safe_load((target / "core/tokens.yaml").read_text(encoding="utf-8"))
+            bucket = tokens.setdefault("tokens", {})
+            colors = bucket.setdefault("color", {})
+            for name in roles:
+                colors[name] = {"value": "#112233", "origin": "source"}
+            typography = bucket.setdefault("typography", {})
+            for name in ("heading", "body", "secondary"):
+                typography[name] = {
+                    "value": 14,
+                    "unit": "px",
+                    "line_height": 20,
+                    "line_height_unit": "px",
+                    "origin": "source",
+                }
+            (target / "core/tokens.yaml").write_text(yaml.safe_dump(tokens, sort_keys=False), encoding="utf-8")
+            meta = yaml.safe_load((target / "meta.yaml").read_text(encoding="utf-8"))
+            declared = {
+                **{role: [f"color.{role}"] for role in roles},
+                "typography.heading": ["typography.heading"],
+                "typography.body": ["typography.body"],
+                "typography.secondary": ["typography.secondary"],
+            }
+            meta["visual_role_tokens"] = declared
+            (target / "meta.yaml").write_text(yaml.safe_dump(meta, sort_keys=False), encoding="utf-8")
+            refresh_digests(target)
+
+            code, report = self.run_validator(target, "package", "--require-visual-role-closure")
+            self.assertEqual(0, code, report["errors"])
+
+            # Renaming a token without updating the declared map fails closed.
+            tokens = yaml.safe_load((target / "core/tokens.yaml").read_text(encoding="utf-8"))
+            colors = tokens["tokens"]["color"]
+            del colors["canvas"]
+            colors["app-canvas"] = {"value": "#112233", "origin": "source"}
+            (target / "core/tokens.yaml").write_text(yaml.safe_dump(tokens, sort_keys=False), encoding="utf-8")
+            refresh_digests(target)
+            code, report = self.run_validator(target, "package", "--require-visual-role-closure")
+            codes = {item["code"] for item in report["errors"]}
+            self.assertNotEqual(0, code)
+            self.assertIn("VISUAL_ROLE_MISSING", codes)
+
+            # A declared map missing a required role fails closed.
+            tokens["tokens"]["color"]["canvas"] = {"value": "#112233", "origin": "source"}
+            (target / "core/tokens.yaml").write_text(yaml.safe_dump(tokens, sort_keys=False), encoding="utf-8")
+            refresh_digests(target)
+            del declared["link"]
+            meta["visual_role_tokens"] = declared
+            (target / "meta.yaml").write_text(yaml.safe_dump(meta, sort_keys=False), encoding="utf-8")
+            refresh_digests(target)
+            code, report = self.run_validator(target, "package", "--require-visual-role-closure")
+            codes = {item["code"] for item in report["errors"]}
+            self.assertNotEqual(0, code)
+            self.assertIn("VISUAL_ROLE_MISSING", codes)
+
     def test_provenance_coverage_confidence_cross_checks(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

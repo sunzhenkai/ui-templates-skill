@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -86,10 +85,19 @@ class HighFidelityCertificationTests(unittest.TestCase):
         phase8["artifacts"] = [{"path": "08-verification.json", "digest": {"algorithm": "sha256-canonical-json-v1", "value": digest}}]
         evidence_dir = apply_root / "evidence"
         evidence_dir.mkdir(exist_ok=True)
-        for name in ("contract-gallery.json", "contract-gallery.png"):
-            source = CANDIDATE / "apply/.ui-template-apply/evidence" / name
-            if source.exists():
-                shutil.copy2(source, evidence_dir / name)
+        # The checkpoint under test is synthetic; synthesize the referenced
+        # evidence locally instead of depending on leftover candidate
+        # artifacts (which cleanup commits may remove).
+        (evidence_dir / "contract-gallery.json").write_text(
+            json.dumps({"records": len(artifact_data["records"])}, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        (evidence_dir / "contract-gallery.png").write_bytes(
+            bytes.fromhex(
+                "89504e470d0a1a0a0000000d494844520000000100000001080600000"
+                "01f15c4890000000d4944415478da63fcffff3f030005fe02fea73581460000000049454e44ae426082"
+            )
+        )
         path = apply_root / "checkpoint.yaml"
         path.write_text(yaml.safe_dump(checkpoint, sort_keys=False, allow_unicode=True), encoding="utf-8")
         return path

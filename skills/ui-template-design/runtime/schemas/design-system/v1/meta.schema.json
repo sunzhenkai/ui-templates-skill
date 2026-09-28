@@ -138,6 +138,18 @@
         }
       },
       "description": "Coverage per dimension. Cross-field constraint enforced by the unified validator: every declared item MUST appear in exactly one of observed/defaulted/unsupported, the three buckets MUST be mutually exclusive, and observed items MUST be declared."
+    },
+    "visual_role_tokens": {
+      "type": "object",
+      "description": "Template-declared mapping from product visual roles to this template's token paths. Declaring it replaces the built-in default path table (fail-closed role set stays required).",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "minItems": 1
+      }
     }
   }
 }

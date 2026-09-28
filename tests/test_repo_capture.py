@@ -18,8 +18,8 @@ from template_authoring.capture import CaptureError, capture_from_files, load_do
 from template_authoring.gate import run_authoring_gate
 
 FIXTURE = ROOT / "tests/fixtures/repo-capture"
-FIXED_REVISION = "849813d57c05f7d0e70ffc798c1f0b77abf6429b"
-FIXED_CLOSURE_DIGEST = "sha256:6abf3d1a1a37aca19bad00c2c2ed9175b6e3181264202481b6e9dec6152f3ad8"
+FIXED_REVISION = "3d1d1ade5d6dab2a6c8ebb66bd297f9b73d4b827"
+FIXED_CLOSURE_DIGEST = "sha256:ff847b79cbf7dc1707f8d7e69f5f96f643048fb709b0f7fade95b075cb5a9976"
 
 
 class RepoCaptureTests(unittest.TestCase):
@@ -66,7 +66,7 @@ class RepoCaptureTests(unittest.TestCase):
             self.assertFalse(first["unresolved"])
             self.assertGreaterEqual(first["summary"]["definitions"], 12)
             self.assertEqual(12, first["summary"]["usages"])
-            self.assertEqual(10, first["summary"]["negative_facts"])
+            self.assertEqual(13, first["summary"]["negative_facts"])
             identities = [(item["id"], item["status"]) for item in first["facts"]]
             self.assertEqual(identities, [(item["id"], item["status"]) for item in second["facts"]])
             replayed = replay(load_document(request_path), source, first)
@@ -192,7 +192,7 @@ class RepoCaptureTests(unittest.TestCase):
             with self.assertRaises(CaptureError) as raised:
                 capture_from_files(request_path, source)
             self.assertEqual("MANDATORY_FACT_MISSING", raised.exception.code)
-            self.assertIn("section-nav:board", raised.exception.details["gaps"])
+            self.assertIn("nav-column:board", raised.exception.details["gaps"])
 
     def test_mandatory_matrix_exclusion_answers_the_question(self) -> None:
         def drop_section_nav_and_exclude(graph):

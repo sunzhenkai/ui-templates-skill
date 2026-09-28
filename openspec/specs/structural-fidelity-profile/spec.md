@@ -35,7 +35,7 @@
 - **THEN** 该关系进入 unresolved，模板不得将其标记为 observed structural fact
 
 ### Requirement: Shell chrome composition records
-每个 included structural **shell** scene SHALL 在 layout topology 之外记录 chrome composition：闭集 `shell_variant`（`inset | flush`）与该 scene 内有序 `slots[]`（稳定 ID、闭集 role、所属 region）。`chrome_anchors` 是可选 record：仅当 slot/graph 声明了允许的锚点 role 时，对应锚点必须闭合且 region 存在。同级 `contains` 关系 SHALL 带稳定顺序，不得只声明无序归属。精确几何值 SHALL 继续只引用 `tokens.yaml`。槽位 role 闭集至少包含 `workspace-switcher`、`search`、`compose`、`nav-group`、`pin-list`、`rail`、`header-trigger`、`footer-utility`、`chat-fab`、`page-header`、`page-toolbar`、`page-canvas`。通用 profile 契约 SHALL NOT 把 `chat-fab`、A–E 或 Board 写成每个 shell 的必选项。来源无法唯一裁决变体、顺序或已声明锚点时 SHALL 进入 unresolved，不得把该 shell 标为 observed structural。
+每个 included structural **shell** scene SHALL 在 layout topology 之外记录 chrome composition：非空 `shell_variant` 字符串与该 scene 内有序 `slots[]`（稳定 ID、role、所属 region）。`shell_variant`、slot role 与 anchor role 是**模板实例自声明词汇**（kebab-case 稳定 ID），schema 与校验器 SHALL NOT 用固定枚举限制其取值；`inset`、`flush` 与 `workspace-switcher`…`page-canvas` 只是首个模板的实例值。`chrome_anchors` 是可选 record：任何 slot role 都 SHALL NOT 被强制要求锚点；已声明锚点的 role/region 必须自洽（region 存在）。同级 `contains` 关系 SHALL 带稳定顺序，不得只声明无序归属；slot `order` SHALL 唯一且在 0–32。精确几何值 SHALL 继续只引用 `tokens.yaml`。通用 profile 契约 SHALL NOT 把任何具体 variant、slot role、锚点 role、`chat-fab`、A–E 或 Board 写成每个 shell 的必选项。来源无法唯一裁决变体、顺序或锚点时 SHALL 进入 unresolved，不得把该 shell 标为 observed structural。
 
 #### Scenario: inset 壳与页头 trigger
 - **WHEN** 来源 shell 使用内缩画布，且声明了位于 page-header 的导航覆盖触发器
@@ -69,15 +69,19 @@
 - **THEN** validation 报告不完整映射，不允许以自由 prose 代替
 
 ### Requirement: Capture mandatory question matrix
-repo structural capture 的 literal graph SHALL 满足机器强制的必答事实矩阵，闭合范围不得只由作者起草的 scope 决定。当 shell scene 声明 `shell_variant: inset` 时，该 scene SHALL 同时携带内容承载面（page-canvas 槽位）的 inset/gap、radius、border、shadow、background 五项事实，每项以 token-ref、闭集语义或显式 negative 表达；缺任一项 SHALL 以 chrome composition 不完整的同级错误 fail closed。每个声明的 page_mode SHALL 回答其必答问题：多分区页（含设置类）必须声明 section navigation 的放置事实（内容区内部左列、顶部或无）；detail 页必须声明 master/detail 分侧与上下文面板位置。来源无法作答的项 SHALL 以带理由的显式 exclusions 呈现；沉默 SHALL 等价于闭合失败。骨架初始化输出 SHALL 附带按本矩阵生成的必答清单。
+repo structural capture 的 literal graph SHALL 满足机器强制的必答事实矩阵，闭合范围不得只由作者起草的 scope 决定。矩阵的触发条件 SHALL 只依赖结构性信号（facet/property/state 与槽位事实），不得依赖固定槽位名或实例词汇。当 shell scene 声明 `shell_variant`（profile 级豁免值 `flush` 除外；variant 值是实例自声明词汇）时，该 scene SHALL 同时携带变体事实点名的内容承载面的 inset/gap、radius、border、shadow、background 五项事实，每项以 token-ref、闭集语义或显式 negative 表达；缺任一项 SHALL 以 chrome composition 不完整的同级错误 fail closed。同一触发条件下，每个已声明 chrome slot SHALL 显式回答容器归属（`container_role`）与 border 存在性（含 `none` negative）。每个声明的 page_mode SHALL 回答其必答问题：多分区页（含设置类）必须以结构性信号（anatomy 事实或列级布局属性加状态绑定）声明二级导航放置；detail 页必须声明两个及以上滚动分侧，并对非分侧辅助面声明 overlay 语义。链接 context（graph 声明且名字含 `link`）必须在 default 态回答文本装饰。来源无法作答的项 SHALL 以带理由的显式 exclusions 呈现；沉默 SHALL 等价于闭合失败。骨架初始化输出 SHALL 附带按本矩阵生成的必答清单。
 
-#### Scenario: inset 壳缺内容卡片几何
-- **WHEN** capture graph 声明 `shell_variant: inset` 但 page-canvas 槽位缺少 radius 或 shadow 等必答事实且无对应 exclusions
+#### Scenario: 变体壳缺内容面几何
+- **WHEN** capture graph 为非 `flush` 的 `shell_variant` 但变体事实点名的内容面槽位缺少 radius 或 shadow 等必答事实且无对应 exclusions
 - **THEN** capture 以闭合不完整失败，不得产出 `captured` receipt，模板不得进入 Generate
 
 #### Scenario: 多分区页未声明二级导航
-- **WHEN** included page_mode 为多分区页而 graph 未声明 section navigation 放置事实，也没有带理由的 exclusions
+- **WHEN** included page_mode 为多分区页而 graph 未以结构性信号声明二级导航放置事实，也没有带理由的 exclusions
 - **THEN** capture 失败并指出缺失的必答项，不得以「scope 未包含」为由放行
+
+#### Scenario: 第二模板用自己的槽位词汇
+- **WHEN** 第二个模板的 shell 声明自己的 chrome slot 词汇（如 `top-nav`、`account-menu`），非 `flush` variant
+- **THEN** 容器归属与 border 必答问题同等适用；不得因槽位名不在首个模板的词汇表而跳过或拒绝
 
 #### Scenario: 显式不知道
 - **WHEN** 来源确实无法唯一裁决某必答项

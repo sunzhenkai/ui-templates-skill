@@ -58,16 +58,28 @@ class Round3MandatoryMatrixTests(unittest.TestCase):
         self.assertIn("chrome-containment:shell", self.gaps(_shell_graph([])))
 
     def test_chrome_containment_answered_by_container_role(self) -> None:
+        # Every declared chrome slot must state its container under a
+        # separating variant — slot roles are instance-declared vocabulary.
         graph = _shell_graph([
             _fact("fact.header.container", property="container_role", value={"kind": "semantic", "value": "page-canvas"}),
+            _fact("fact.nav.container", property="container_role", slot="nav-group", value={"kind": "semantic", "value": "page-canvas"}),
         ])
         self.assertNotIn("chrome-containment:shell", self.gaps(graph))
 
     def test_chrome_containment_root_still_answers(self) -> None:
         graph = _shell_graph([
             _fact("fact.header.container", property="container_role", value={"kind": "semantic", "value": "root"}),
+            _fact("fact.nav.container", property="container_role", slot="nav-group", value={"kind": "semantic", "value": "root"}),
         ])
         self.assertNotIn("chrome-containment:shell", self.gaps(graph))
+
+    def test_chrome_containment_custom_role_asks_too(self) -> None:
+        # A second template's own chrome vocabulary gets the same question.
+        graph = _shell_graph([
+            _fact("fact.slot.topnav", property="slot_role", slot="top-nav", value={"kind": "semantic", "value": "top-nav"}),
+            _fact("fact.order.topnav", property="slot_order", slot="top-nav", value={"kind": "semantic", "value": "2"}),
+        ])
+        self.assertIn("chrome-containment:shell", self.gaps(graph))
 
     def test_chrome_separation_silence_fails_closed(self) -> None:
         self.assertIn("chrome-separation:shell", self.gaps(_shell_graph([])))
@@ -75,6 +87,7 @@ class Round3MandatoryMatrixTests(unittest.TestCase):
     def test_chrome_separation_negative_border_answers(self) -> None:
         graph = _shell_graph([
             _fact("fact.nav.border-none", facet="component_geometry", property="border", slot="nav-group", value={"kind": "semantic", "value": "none"}, negative=True),
+            _fact("fact.header.border-none", facet="component_geometry", property="border", slot="page-header", value={"kind": "semantic", "value": "none"}, negative=True),
         ])
         self.assertNotIn("chrome-separation:shell", self.gaps(graph))
 
@@ -117,6 +130,12 @@ class Round3MandatoryMatrixTests(unittest.TestCase):
     def test_state_decoration_non_link_context_not_asked(self) -> None:
         states = mandatory_answer_states(_shell_graph([]), GRAPH_PATH, ["shell"], ["action-trigger"])
         self.assertNotIn("state-decoration:action-trigger", states)
+
+    def test_state_decoration_custom_link_context_asked(self) -> None:
+        # Context vocabulary is graph-declared: any *link* context gets the
+        # default-decoration question, not just the first template's four.
+        states = mandatory_answer_states(_shell_graph([]), GRAPH_PATH, ["shell"], ["footer-legal-link"])
+        self.assertIn("state-decoration:footer-legal-link", states)
 
     def test_trigger_anatomy_silence_fails_closed(self) -> None:
         graph = {

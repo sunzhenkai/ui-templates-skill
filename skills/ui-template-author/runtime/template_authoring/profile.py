@@ -4,7 +4,7 @@ from collections import defaultdict
 from typing import Any
 
 from .capture import digest
-from .chrome import ANCHOR_ROLES, CHROME_FACT_PROPERTIES, SHELL_VARIANTS, SLOT_ROLES, mandatory_answer_states, scene_kind_for
+from .chrome import CHROME_FACT_PROPERTIES, mandatory_answer_states, scene_kind_for
 
 PROFILE = "repo-structural-v1"
 REQUIRED_PADDING = (
@@ -103,9 +103,9 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
         elif facet == "state_presentations":
             state_groups[(
                 str(fact.get("subject")),
-                str(fact.get("context") or "navigation-link"),
+                str(fact.get("context") or "default"),
                 str(fact.get("state") or "default"),
-                str(fact.get("slot") or "item"),
+                str(fact.get("slot") or "default"),
             )].append(fact)
     layout_scenes = []
     for scene, group in sorted(layout_groups.items()):
@@ -181,7 +181,7 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
                 seen_regions.add(region_id)
             slots.append({
                 "id": f"slot.{scene}.{role}",
-                "role": role if role in SLOT_ROLES else role,
+                "role": role,
                 "region": region_id,
                 "order": slot_orders.get(slot, 0),
             })
@@ -197,7 +197,7 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
                 seen_regions.add(region_id)
             chrome_anchors.append({
                 "id": f"anchor.{scene}.{role}",
-                "role": role if role in ANCHOR_ROLES else role,
+                "role": role,
                 "region": region_id,
             })
         # container_role facts project to nested regions: a slot declared inside
@@ -257,7 +257,7 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
         }
         if scene_kind == "shell" or scene == "shell":
             variant = properties.get("shell_variant", {}).get("value", {}).get("value")
-            record["shell_variant"] = variant if variant in SHELL_VARIANTS else variant
+            record["shell_variant"] = variant
             record["slots"] = slots
             record["chrome_anchors"] = chrome_anchors
         layout_scenes.append(record)
@@ -282,7 +282,7 @@ def facts_to_fidelity(receipt: dict[str, Any], *, captured_at: str = "2026-01-01
         record = {
             "id": f"state.{subject}.{context}.{state}.{slot}",
             "subject_role": subject,
-            "context": context if context in {"navigation-link", "entity-row-link", "button-link", "inline-prose-link"} else "navigation-link",
+            "context": context,
             "state": state if state in {"default", "hover", "focus-visible", "active", "disabled", "open"} else "hover",
             "surface": slot,
             "rule_id": group[0]["rule_id"],
