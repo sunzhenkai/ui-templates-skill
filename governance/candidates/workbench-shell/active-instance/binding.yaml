@@ -1,14 +1,14 @@
 schema: design-system-binding/v1
 contract_id: workbench-shell
-contract_version: 3.0.1
+contract_version: 3.2.0
 output_root: example/workbench-shell/web
 stack:
   language: typescript
   ui_framework: react
-  bundler: vite
-  routing: react-router
   styling: tailwind
   component_system: shadcn
+  bundler: vite
+  routing: react-router
   package_manager: pnpm
 primitive_paths: {}
 projections:
@@ -20,12 +20,18 @@ projections:
     native_key: :root.--color-primary
   - token: token/color.surface
     native_key: :root.--color-surface
+  - token: token/space.2
+    native_key: :root.--space-2
+  - token: token/space.3
+    native_key: :root.--space-3
   - token: token/space.4
     native_key: :root.--space-4
+  - token: token/space.6
+    native_key: :root.--space-6
   digest:
     algorithm: sha256-canonical-json-v1
-    value: 8793cde5f8e73ac4a40c4cd9a585f9a20a01d294ace89634e1eb3956093ba180
-updated_at: '2026-09-19T03:45:00Z'
+    value: 66ef5d2e042dccaafb9b24f1e8378ce04f4d0a8bc74e5dae68af042be5c54436
+updated_at: '2026-09-28T04:10:00Z'
 binding_digest:
   algorithm: sha256-canonical-json-v1
-  value: 32424bf70b4f6084fb6f060957b173081fe9f4442540f08f5ac7c58340265db9
+  value: 8b2c5553b4b7d65cd6d8f8bce7d9377f9b655d2bf4ff963f31c21570f7e5e561

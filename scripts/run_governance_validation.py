@@ -132,6 +132,10 @@ def validate(root: Path, report_dir: Path) -> dict:
         [python, "scripts/manage_skill_distribution.py", "catalog", "--check"],
         cwd=root, label="catalog drift",
     )
+    run(
+        [python, "scripts/check_template_index.py", "--templates", "templates"],
+        cwd=root, label="production index closure",
+    )
     tests = run(
         [python, "-m", "unittest", "discover", "-s", "tests", "-v"],
         cwd=root, label="unit tests",

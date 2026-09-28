@@ -18,8 +18,8 @@ from template_authoring.capture import CaptureError, capture_from_files, load_do
 from template_authoring.gate import run_authoring_gate
 
 FIXTURE = ROOT / "tests/fixtures/repo-capture"
-FIXED_REVISION = "849813d57c05f7d0e70ffc798c1f0b77abf6429b"
-FIXED_CLOSURE_DIGEST = "sha256:6abf3d1a1a37aca19bad00c2c2ed9175b6e3181264202481b6e9dec6152f3ad8"
+FIXED_REVISION = "6c9d6bfb60c648346554a96d0b02e766172742e1"
+FIXED_CLOSURE_DIGEST = "sha256:760fe25b0957ee15455b2e40761539f5604d3e77ab43a602c0cffaba454405e4"
 
 
 class RepoCaptureTests(unittest.TestCase):
@@ -502,10 +502,51 @@ class RepoCaptureTests(unittest.TestCase):
             ("scripts/template_apply_state/fidelity.py", "skills/ui-template-author/runtime/template_apply_state/fidelity.py"),
             ("scripts/contract_eval/runner.py", "skills/ui-template-author/runtime/contract_eval/runner.py"),
             ("scripts/manage_template_index.py", "skills/ui-template-author/runtime/manage_template_index.py"),
+            # Apply 会话状态机与 CLI 同样是可执行契约：它们曾经不在这个清单里，
+            # 结果 author runtime 长期落后于 scripts/，Author 侧根本看不到
+            # primitives 场景来源。凡是"同一份实现、装进 runtime"的文件都必须在此登记。
+            ("scripts/derive_apply_scenarios.py", "skills/ui-template-author/runtime/derive_apply_scenarios.py"),
+            ("scripts/template_apply_state/state.py", "skills/ui-template-author/runtime/template_apply_state/state.py"),
+            ("scripts/template_apply_state/state.py", "skills/ui-template-apply/runtime/template_apply_state/state.py"),
+            ("scripts/template_apply_state/fidelity.py", "skills/ui-template-apply/runtime/template_apply_state/fidelity.py"),
+            ("scripts/check_template_apply_state.py", "skills/ui-template-author/runtime/check_template_apply_state.py"),
+            ("scripts/check_template_apply_state.py", "skills/ui-template-apply/runtime/check_template_apply_state.py"),
+            ("scripts/template_validation/schema.py", "skills/ui-template-author/runtime/template_validation/schema.py"),
+            ("scripts/template_validation/schema.py", "skills/ui-template-apply/runtime/template_validation/schema.py"),
+            ("scripts/adopt_package.py", "skills/ui-template-apply/runtime/adopt_package.py"),
+            ("scripts/adopt_package.py", "skills/ui-template-design/runtime/adopt_package.py"),
+            ("scripts/check_template_index.py", "skills/ui-template-author/runtime/check_template_index.py"),
+            # 安装态真正被调用的是 shared_validate_design_system.py；它此前从未进入
+            # 同步清单，导致仓库侧新增的子命令在 bundle 里根本不存在。
+            ("scripts/validate_design_system.py", "skills/ui-template-author/runtime/shared_validate_design_system.py"),
+            ("scripts/validate_design_system.py", "skills/ui-template-apply/runtime/shared_validate_design_system.py"),
+            ("scripts/validate_design_system.py", "skills/ui-template-design/runtime/shared_validate_design_system.py"),
+            ("scripts/validate_design_system.py", "skills/ui-template-apply/runtime/validate_design_system.py"),
+            ("schemas/design-system/v1/binding-handoff.schema.json", "skills/ui-template-author/runtime/schemas/design-system/v1/binding-handoff.schema.json"),
+            ("schemas/design-system/v1/binding-handoff.schema.json", "skills/ui-template-apply/runtime/schemas/design-system/v1/binding-handoff.schema.json"),
+            ("schemas/design-system/v1/binding-handoff.schema.json", "skills/ui-template-design/runtime/schemas/design-system/v1/binding-handoff.schema.json"),
         )
         for source, runtime in pairs:
             with self.subTest(source=source):
                 self.assertEqual((ROOT / source).read_bytes(), (ROOT / runtime).read_bytes())
+
+    def test_bundle_runtime_wrappers_are_declared_wrappers_not_stale_copies(self) -> None:
+        """runtime 允许存在 bundle 专用包装，但必须是薄壳，不得落后于 scripts/ 的能力。"""
+        wrappers = (
+            ("scripts/run_contract_evals.py", "skills/ui-template-author/runtime/run_contract_evals.py"),
+            ("scripts/validate_templates.py", "skills/ui-template-author/runtime/validate_templates.py"),
+            ("scripts/validate_design_system.py", "skills/ui-template-author/runtime/validate_design_system.py"),
+        )
+        for source, runtime in wrappers:
+            with self.subTest(source=source):
+                original = (ROOT / source).read_text(encoding="utf-8")
+                wrapper = (ROOT / runtime).read_text(encoding="utf-8")
+                self.assertIn("raise SystemExit(main(", wrapper)
+                # 薄壳不得复制实现体：行数规模一旦接近被包裹模块就说明是过期拷贝。
+                self.assertLess(
+                    len(wrapper.splitlines()),
+                    max(40, len(original.splitlines()) // 2),
+                )
 
 
 if __name__ == "__main__":

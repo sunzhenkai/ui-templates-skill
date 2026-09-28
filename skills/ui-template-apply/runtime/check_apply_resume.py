@@ -29,19 +29,27 @@ LAYER_PHASES = {
     "rules": [6, 7, 8],
     "binding": [1, 3, 4, 5, 6, 7, 8],
     "build": [0, 3, 4, 5, 6, 7, 8],
+    "source": [8],
 }
 
 
-def plan(checkpoint_path: Path, design_root: Path) -> dict[str, Any]:
+def plan(checkpoint_path: Path, design_root: Path, source_identity: str | None = None) -> dict[str, Any]:
     checkpoint = load(checkpoint_path)
     contract = load(design_root / "design-system.yaml")
     binding = load(design_root / "binding.yaml")
     blockers: list[str] = []
     template_path = design_root / "meta.yaml"
     fidelity_path = design_root / "fidelity.yaml"
+    primitives_path = design_root / "core/primitives.yaml"
     template = load(template_path) if template_path.is_file() else None
     fidelity = load(fidelity_path) if fidelity_path.is_file() else None
+    primitives = load(primitives_path) if primitives_path.is_file() else None
     template_identity = template if fidelity is None else {"template": template, "fidelity": fidelity}
+    if primitives is not None:
+        template_identity = {**template_identity, "primitives": primitives}
+    # Identity must be composed exactly as build_checkpoint/validate_checkpoint do,
+    # otherwise a template carrying primitives can never resume and every session
+    # degrades into a full reopen.
     template_digest = canonical_digest(template_identity) if template is not None else None
     if checkpoint.get("contract", {}).get("id") != contract.get("id") or checkpoint.get("contract", {}).get("version") != contract.get("version"):
         blockers.append("CONTRACT_IDENTITY_MISMATCH")
@@ -49,8 +57,12 @@ def plan(checkpoint_path: Path, design_root: Path) -> dict[str, Any]:
         blockers.append("CONTRACT_DIGEST_MISMATCH")
     if template is None:
         blockers.append("TEMPLATE_IDENTITY_MISSING")
-    elif checkpoint.get("template", {}).get("digest") is not None and checkpoint["template"]["digest"].get("value") != template_digest:
-        blockers.append("TEMPLATE_IDENTITY_DIGEST_MISMATCH")
+    else:
+        recorded_template = checkpoint.get("template", {}).get("digest")
+        if not isinstance(recorded_template, dict) or recorded_template.get("value") != template_digest:
+            # An absent template.digest is not an exemption: the checkpoint has to
+            # bind template identity, otherwise selective continuation is unattributable.
+            blockers.append("TEMPLATE_IDENTITY_DIGEST_MISMATCH")
     if checkpoint.get("binding_digest", {}).get("value") != binding.get("binding_digest", {}).get("value"):
         blockers.append("BINDING_DIGEST_MISMATCH")
     recorded = {item["name"]: item["digest"]["value"] for item in checkpoint.get("projection_digests", [])}
@@ -58,6 +70,9 @@ def plan(checkpoint_path: Path, design_root: Path) -> dict[str, Any]:
         if recorded.get(projection["name"]) != projection["digest"]["value"]:
             blockers.append("PROJECTION_DIGEST_MISMATCH")
     layers = set(checkpoint.get("change_set", []))
+    if source_identity is not None and checkpoint.get("source_identity") != source_identity:
+        # Source moved, so browser evidence in Phase 8 is stale even when no layer changed.
+        layers.add("source")
     if blockers:
         phases: list[int] = list(range(10))
     else:
@@ -78,9 +93,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("checkpoint", type=Path)
     parser.add_argument("--design-root", type=Path, default=Path(".ui-template-design"))
+    parser.add_argument("--source-identity", help="当前源码 identity；变化时至少重开 Phase 8")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
-    payload = plan(args.checkpoint.resolve(), args.design_root.resolve())
+    payload = plan(args.checkpoint.resolve(), args.design_root.resolve(), args.source_identity)
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
     return 0 if not payload["blocked"] else 1
 

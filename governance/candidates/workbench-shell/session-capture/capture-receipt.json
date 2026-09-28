@@ -84,12 +84,28 @@
         "exports": [
           "page-header"
         ],
-        "facts": [],
+        "facts": [
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.page-header.anatomy",
+            "negative": false,
+            "property": "anatomy",
+            "rule_id": "QUALITY-112",
+            "slot": "title",
+            "state": "default",
+            "subject": "page-header",
+            "value": {
+              "kind": "semantic",
+              "value": "icon-title"
+            }
+          }
+        ],
         "id": "component.page-header",
         "kind": "component",
         "locator": "ui-source-graph.yaml#/definitions/component.page-header",
         "name": "page-header",
-        "source_span_sha256": "sha256:98adb78127175aeda847729039dba61297687d8bd7b7d87eb05fd03a81a26c88"
+        "source_span_sha256": "sha256:30d34b595ec7d1ac6be7749314c2c8b27cb21ab1e71d4518e6951c235876b42a"
       },
       {
         "exports": [
@@ -556,6 +572,82 @@
           {
             "context": null,
             "facet": "component_geometry",
+            "id": "fact.board.canvas-padding-block-start",
+            "negative": false,
+            "property": "padding_block_start",
+            "rule_id": "LAYOUT-113",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "board",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "24px"
+              },
+              "value": "space.6"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.board.canvas-padding-inline-end",
+            "negative": false,
+            "property": "padding_inline_end",
+            "rule_id": "LAYOUT-113",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "board",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "24px"
+              },
+              "value": "space.6"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.board.canvas-padding-block-end",
+            "negative": false,
+            "property": "padding_block_end",
+            "rule_id": "LAYOUT-113",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "board",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "24px"
+              },
+              "value": "space.6"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.board.canvas-padding-inline-start",
+            "negative": false,
+            "property": "padding_inline_start",
+            "rule_id": "LAYOUT-113",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "board",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "24px"
+              },
+              "value": "space.6"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
             "id": "fact.board.page-header-height",
             "negative": false,
             "property": "size",
@@ -603,7 +695,7 @@
             "subject": "board",
             "value": {
               "kind": "semantic",
-              "value": "underline"
+              "value": "none"
             }
           }
         ],
@@ -611,7 +703,7 @@
         "locator": "ui-source-graph.yaml#/usages/usage.board",
         "scene": "board",
         "slot": "page-header",
-        "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+        "source_span_sha256": "sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161",
         "state": "default"
       },
       {
@@ -794,6 +886,79 @@
         "scene": "shell",
         "slot": "chat-fab",
         "source_span_sha256": "sha256:93be83ae9adf5f85a001c4b24f02a1c41e800a6ed8ee5278ed89ce8479564947",
+        "state": "default"
+      },
+      {
+        "component": "data-table",
+        "context": "action-trigger",
+        "definition_id": "scene.board",
+        "facts": [
+          {
+            "context": "action-trigger",
+            "facet": "state_presentations",
+            "id": "fact.data-table.actions-default-hidden",
+            "negative": true,
+            "property": "visibility",
+            "rule_id": "DENSITY-101",
+            "slot": "row-actions",
+            "state": "default",
+            "subject": "data-table",
+            "value": {
+              "kind": "semantic",
+              "value": "hidden"
+            }
+          },
+          {
+            "context": "action-trigger",
+            "facet": "state_presentations",
+            "id": "fact.data-table.actions-hover-visible",
+            "negative": false,
+            "property": "visibility",
+            "rule_id": "DENSITY-101",
+            "slot": "row-actions",
+            "state": "hover",
+            "subject": "data-table",
+            "value": {
+              "kind": "semantic",
+              "value": "visible"
+            }
+          },
+          {
+            "context": "action-trigger",
+            "facet": "state_presentations",
+            "id": "fact.data-table.secondary-default-visible",
+            "negative": false,
+            "property": "visibility",
+            "rule_id": "DENSITY-101",
+            "slot": "row-secondary-text",
+            "state": "default",
+            "subject": "data-table",
+            "value": {
+              "kind": "semantic",
+              "value": "visible"
+            }
+          },
+          {
+            "context": "action-trigger",
+            "facet": "state_presentations",
+            "id": "fact.data-table.secondary-hover-hidden",
+            "negative": true,
+            "property": "visibility",
+            "rule_id": "DENSITY-101",
+            "slot": "row-secondary-text",
+            "state": "hover",
+            "subject": "data-table",
+            "value": {
+              "kind": "semantic",
+              "value": "hidden"
+            }
+          }
+        ],
+        "id": "usage.data-table-disclosure",
+        "locator": "ui-source-graph.yaml#/usages/usage.data-table-disclosure",
+        "scene": "board",
+        "slot": "row",
+        "source_span_sha256": "sha256:2ad50173258fb8db97a0be708a9d974ebd5da3002ba377a7582b034eaad7e003",
         "state": "default"
       },
       {
@@ -1394,13 +1559,214 @@
               "kind": "token-ref",
               "value": "color.surface-selected"
             }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.settings.nav-item-size",
+            "negative": false,
+            "property": "size",
+            "rule_id": "QUALITY-113",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "36px"
+              },
+              "value": "size.control-height-lg"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.settings.nav-item-padding-block-start",
+            "negative": false,
+            "property": "padding_block_start",
+            "rule_id": "QUALITY-113",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "8px"
+              },
+              "value": "space.2"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.settings.nav-item-padding-inline-end",
+            "negative": false,
+            "property": "padding_inline_end",
+            "rule_id": "QUALITY-113",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "12px"
+              },
+              "value": "space.3"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.settings.nav-item-padding-block-end",
+            "negative": false,
+            "property": "padding_block_end",
+            "rule_id": "QUALITY-113",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "8px"
+              },
+              "value": "space.2"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.settings.nav-item-padding-inline-start",
+            "negative": false,
+            "property": "padding_inline_start",
+            "rule_id": "QUALITY-113",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "12px"
+              },
+              "value": "space.3"
+            }
+          },
+          {
+            "context": "navigation-link",
+            "facet": "state_presentations",
+            "id": "fact.settings.nav-text-default",
+            "negative": false,
+            "property": "text",
+            "rule_id": "QUALITY-113",
+            "slot": "section-nav",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.text-secondary"
+            }
+          },
+          {
+            "context": "navigation-link",
+            "facet": "state_presentations",
+            "id": "fact.settings.nav-text-selected",
+            "negative": false,
+            "property": "text",
+            "rule_id": "QUALITY-113",
+            "slot": "section-nav",
+            "state": "selected",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.text-primary"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.settings.canvas-padding-block-start",
+            "negative": false,
+            "property": "padding_block_start",
+            "rule_id": "LAYOUT-113",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "24px"
+              },
+              "value": "space.6"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.settings.canvas-padding-inline-end",
+            "negative": false,
+            "property": "padding_inline_end",
+            "rule_id": "LAYOUT-113",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "24px"
+              },
+              "value": "space.6"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.settings.canvas-padding-block-end",
+            "negative": false,
+            "property": "padding_block_end",
+            "rule_id": "LAYOUT-113",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "24px"
+              },
+              "value": "space.6"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.settings.canvas-padding-inline-start",
+            "negative": false,
+            "property": "padding_inline_start",
+            "rule_id": "LAYOUT-113",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "settings",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "24px"
+              },
+              "value": "space.6"
+            }
           }
         ],
         "id": "usage.settings-section-nav",
         "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
         "scene": "settings",
         "slot": "section-nav",
-        "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+        "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
         "state": "default"
       },
       {
@@ -1556,6 +1922,21 @@
             "value": {
               "kind": "semantic",
               "value": "nav-group"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.nav-border-none",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-103",
+            "slot": "nav-group",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
             }
           },
           {
@@ -1847,45 +2228,45 @@
             "context": null,
             "facet": "component_geometry",
             "id": "fact.shell.canvas-padding-block-start",
-            "negative": false,
+            "negative": true,
             "property": "padding_block_start",
-            "rule_id": "LAYOUT-107",
+            "rule_id": "LAYOUT-112",
             "slot": "page-canvas",
             "state": "default",
             "subject": "shell",
             "value": {
-              "kind": "token-ref",
-              "value": "space.2"
+              "kind": "semantic",
+              "value": "zero"
             }
           },
           {
             "context": null,
             "facet": "component_geometry",
             "id": "fact.shell.canvas-padding-inline-end",
-            "negative": false,
+            "negative": true,
             "property": "padding_inline_end",
-            "rule_id": "LAYOUT-107",
+            "rule_id": "LAYOUT-112",
             "slot": "page-canvas",
             "state": "default",
             "subject": "shell",
             "value": {
-              "kind": "token-ref",
-              "value": "space.2"
+              "kind": "semantic",
+              "value": "zero"
             }
           },
           {
             "context": null,
             "facet": "component_geometry",
             "id": "fact.shell.canvas-padding-block-end",
-            "negative": false,
+            "negative": true,
             "property": "padding_block_end",
-            "rule_id": "LAYOUT-107",
+            "rule_id": "LAYOUT-112",
             "slot": "page-canvas",
             "state": "default",
             "subject": "shell",
             "value": {
-              "kind": "token-ref",
-              "value": "space.2"
+              "kind": "semantic",
+              "value": "zero"
             }
           },
           {
@@ -1894,7 +2275,79 @@
             "id": "fact.shell.canvas-padding-inline-start",
             "negative": true,
             "property": "padding_inline_start",
-            "rule_id": "LAYOUT-107",
+            "rule_id": "LAYOUT-112",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "zero"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-inset-block-start",
+            "negative": false,
+            "property": "inset_block_start",
+            "rule_id": "LAYOUT-112",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "8px"
+              },
+              "value": "space.2"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-inset-inline-end",
+            "negative": false,
+            "property": "inset_inline_end",
+            "rule_id": "LAYOUT-112",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "8px"
+              },
+              "value": "space.2"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-inset-block-end",
+            "negative": false,
+            "property": "inset_block_end",
+            "rule_id": "LAYOUT-112",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "8px"
+              },
+              "value": "space.2"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.canvas-inset-inline-start",
+            "negative": true,
+            "property": "inset_inline_start",
+            "rule_id": "LAYOUT-112",
             "slot": "page-canvas",
             "state": "default",
             "subject": "shell",
@@ -1962,18 +2415,127 @@
               "kind": "token-ref",
               "value": "color.page-canvas"
             }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.slot.content",
+            "negative": false,
+            "property": "slot_role",
+            "rule_id": "LAYOUT-113",
+            "slot": "content",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "content"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.order.content",
+            "negative": false,
+            "property": "slot_order",
+            "rule_id": "LAYOUT-113",
+            "slot": "content",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "13"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.header-container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-103",
+            "slot": "page-header",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "page-canvas"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.toolbar-container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-103",
+            "slot": "page-toolbar",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "page-canvas"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.content-container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-113",
+            "slot": "content",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "page-canvas"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.content-padding-block-start",
+            "negative": false,
+            "property": "padding_block_start",
+            "rule_id": "LAYOUT-113",
+            "slot": "content",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "8px"
+              },
+              "value": "space.2"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.content-scroll",
+            "negative": false,
+            "property": "scroll_block",
+            "rule_id": "LAYOUT-113",
+            "slot": "content",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "region"
+            }
           }
         ],
         "id": "usage.shell",
         "locator": "ui-source-graph.yaml#/usages/usage.shell",
         "scene": "shell",
         "slot": "page-canvas",
-        "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+        "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
         "state": "default"
       }
     ]
   },
-  "closure_digest": "sha256:1324a8d7390d0ce916492f9fcdd93d582408f8d2f5560ee1a92ef4f416c064fd",
+  "closure_digest": "sha256:ca1a9af4b06f5fea686b55c782987a6bb70ee768b579256c7e9a55b583e53a8c",
   "facts": [
     {
       "context": "action-trigger",
@@ -2070,13 +2632,109 @@
       "property": "arrangement",
       "rule_id": "LAYOUT-102",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "source_span_sha256": "sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161",
       "state": "default",
       "status": "observed",
       "subject": "board",
       "value": {
         "kind": "semantic",
         "value": "vertical"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.board.canvas-padding-block-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.board",
+      "negative": false,
+      "owner_id": "usage.board",
+      "owner_kind": "usage",
+      "property": "padding_block_end",
+      "rule_id": "LAYOUT-113",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161",
+      "state": "default",
+      "status": "observed",
+      "subject": "board",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "24px"
+        },
+        "value": "space.6"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.board.canvas-padding-block-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.board",
+      "negative": false,
+      "owner_id": "usage.board",
+      "owner_kind": "usage",
+      "property": "padding_block_start",
+      "rule_id": "LAYOUT-113",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161",
+      "state": "default",
+      "status": "observed",
+      "subject": "board",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "24px"
+        },
+        "value": "space.6"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.board.canvas-padding-inline-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.board",
+      "negative": false,
+      "owner_id": "usage.board",
+      "owner_kind": "usage",
+      "property": "padding_inline_end",
+      "rule_id": "LAYOUT-113",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161",
+      "state": "default",
+      "status": "observed",
+      "subject": "board",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "24px"
+        },
+        "value": "space.6"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.board.canvas-padding-inline-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.board",
+      "negative": false,
+      "owner_id": "usage.board",
+      "owner_kind": "usage",
+      "property": "padding_inline_start",
+      "rule_id": "LAYOUT-113",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161",
+      "state": "default",
+      "status": "observed",
+      "subject": "board",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "24px"
+        },
+        "value": "space.6"
       }
     },
     {
@@ -2158,13 +2816,13 @@
       "property": "text_decoration",
       "rule_id": "QUALITY-103",
       "slot": "section-nav",
-      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "source_span_sha256": "sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161",
       "state": "default",
       "status": "observed",
       "subject": "board",
       "value": {
         "kind": "semantic",
-        "value": "underline"
+        "value": "none"
       }
     },
     {
@@ -2218,7 +2876,7 @@
       "property": "size",
       "rule_id": "LAYOUT-106",
       "slot": "page-header",
-      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "source_span_sha256": "sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161",
       "state": "default",
       "status": "observed",
       "subject": "page-header",
@@ -2242,7 +2900,7 @@
       "property": "scroll_block",
       "rule_id": "LAYOUT-102",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "source_span_sha256": "sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161",
       "state": "default",
       "status": "observed",
       "subject": "board",
@@ -2262,7 +2920,7 @@
       "property": "size",
       "rule_id": "LAYOUT-106",
       "slot": "page-toolbar",
-      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "source_span_sha256": "sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161",
       "state": "default",
       "status": "observed",
       "subject": "page-header",
@@ -2353,6 +3011,86 @@
       "value": {
         "kind": "token-ref",
         "value": "space.chat-launcher-size"
+      }
+    },
+    {
+      "context": "action-trigger",
+      "facet": "state_presentations",
+      "id": "fact.data-table.actions-default-hidden",
+      "locator": "ui-source-graph.yaml#/usages/usage.data-table-disclosure",
+      "negative": true,
+      "owner_id": "usage.data-table-disclosure",
+      "owner_kind": "usage",
+      "property": "visibility",
+      "rule_id": "DENSITY-101",
+      "slot": "row-actions",
+      "source_span_sha256": "sha256:2ad50173258fb8db97a0be708a9d974ebd5da3002ba377a7582b034eaad7e003",
+      "state": "default",
+      "status": "observed",
+      "subject": "data-table",
+      "value": {
+        "kind": "semantic",
+        "value": "hidden"
+      }
+    },
+    {
+      "context": "action-trigger",
+      "facet": "state_presentations",
+      "id": "fact.data-table.actions-hover-visible",
+      "locator": "ui-source-graph.yaml#/usages/usage.data-table-disclosure",
+      "negative": false,
+      "owner_id": "usage.data-table-disclosure",
+      "owner_kind": "usage",
+      "property": "visibility",
+      "rule_id": "DENSITY-101",
+      "slot": "row-actions",
+      "source_span_sha256": "sha256:2ad50173258fb8db97a0be708a9d974ebd5da3002ba377a7582b034eaad7e003",
+      "state": "hover",
+      "status": "observed",
+      "subject": "data-table",
+      "value": {
+        "kind": "semantic",
+        "value": "visible"
+      }
+    },
+    {
+      "context": "action-trigger",
+      "facet": "state_presentations",
+      "id": "fact.data-table.secondary-default-visible",
+      "locator": "ui-source-graph.yaml#/usages/usage.data-table-disclosure",
+      "negative": false,
+      "owner_id": "usage.data-table-disclosure",
+      "owner_kind": "usage",
+      "property": "visibility",
+      "rule_id": "DENSITY-101",
+      "slot": "row-secondary-text",
+      "source_span_sha256": "sha256:2ad50173258fb8db97a0be708a9d974ebd5da3002ba377a7582b034eaad7e003",
+      "state": "default",
+      "status": "observed",
+      "subject": "data-table",
+      "value": {
+        "kind": "semantic",
+        "value": "visible"
+      }
+    },
+    {
+      "context": "action-trigger",
+      "facet": "state_presentations",
+      "id": "fact.data-table.secondary-hover-hidden",
+      "locator": "ui-source-graph.yaml#/usages/usage.data-table-disclosure",
+      "negative": true,
+      "owner_id": "usage.data-table-disclosure",
+      "owner_kind": "usage",
+      "property": "visibility",
+      "rule_id": "DENSITY-101",
+      "slot": "row-secondary-text",
+      "source_span_sha256": "sha256:2ad50173258fb8db97a0be708a9d974ebd5da3002ba377a7582b034eaad7e003",
+      "state": "hover",
+      "status": "observed",
+      "subject": "data-table",
+      "value": {
+        "kind": "semantic",
+        "value": "hidden"
       }
     },
     {
@@ -2772,6 +3510,26 @@
       }
     },
     {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.page-header.anatomy",
+      "locator": "ui-source-graph.yaml#/definitions/component.page-header",
+      "negative": false,
+      "owner_id": "component.page-header",
+      "owner_kind": "definition",
+      "property": "anatomy",
+      "rule_id": "QUALITY-112",
+      "slot": "title",
+      "source_span_sha256": "sha256:30d34b595ec7d1ac6be7749314c2c8b27cb21ab1e71d4518e6951c235876b42a",
+      "state": "default",
+      "status": "observed",
+      "subject": "page-header",
+      "value": {
+        "kind": "semantic",
+        "value": "icon-title"
+      }
+    },
+    {
       "context": "navigation-link",
       "facet": "state_presentations",
       "id": "fact.settings-nav.focus-border",
@@ -2793,6 +3551,102 @@
     },
     {
       "context": null,
+      "facet": "component_geometry",
+      "id": "fact.settings.canvas-padding-block-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "padding_block_end",
+      "rule_id": "LAYOUT-113",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "24px"
+        },
+        "value": "space.6"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.settings.canvas-padding-block-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "padding_block_start",
+      "rule_id": "LAYOUT-113",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "24px"
+        },
+        "value": "space.6"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.settings.canvas-padding-inline-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "padding_inline_end",
+      "rule_id": "LAYOUT-113",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "24px"
+        },
+        "value": "space.6"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.settings.canvas-padding-inline-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "padding_inline_start",
+      "rule_id": "LAYOUT-113",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "24px"
+        },
+        "value": "space.6"
+      }
+    },
+    {
+      "context": null,
       "facet": "layout_scenes",
       "id": "fact.settings.content-scroll",
       "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
@@ -2802,7 +3656,7 @@
       "property": "scroll_block",
       "rule_id": "LAYOUT-102",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
       "state": "default",
       "status": "observed",
       "subject": "settings",
@@ -2822,7 +3676,7 @@
       "property": "anatomy",
       "rule_id": "LAYOUT-102",
       "slot": "section-nav",
-      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
       "state": "default",
       "status": "observed",
       "subject": "settings",
@@ -2842,13 +3696,133 @@
       "property": "background",
       "rule_id": "QUALITY-103",
       "slot": "section-nav",
-      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
       "state": "hover",
       "status": "observed",
       "subject": "settings",
       "value": {
         "kind": "token-ref",
         "value": "color.surface-hover"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.settings.nav-item-padding-block-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "padding_block_end",
+      "rule_id": "QUALITY-113",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "8px"
+        },
+        "value": "space.2"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.settings.nav-item-padding-block-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "padding_block_start",
+      "rule_id": "QUALITY-113",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "8px"
+        },
+        "value": "space.2"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.settings.nav-item-padding-inline-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "padding_inline_end",
+      "rule_id": "QUALITY-113",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "12px"
+        },
+        "value": "space.3"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.settings.nav-item-padding-inline-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "padding_inline_start",
+      "rule_id": "QUALITY-113",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "12px"
+        },
+        "value": "space.3"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.settings.nav-item-size",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "size",
+      "rule_id": "QUALITY-113",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "36px"
+        },
+        "value": "size.control-height-lg"
       }
     },
     {
@@ -2862,7 +3836,7 @@
       "property": "arrangement",
       "rule_id": "LAYOUT-102",
       "slot": "section-nav",
-      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
       "state": "default",
       "status": "observed",
       "subject": "settings",
@@ -2882,7 +3856,7 @@
       "property": "scroll_block",
       "rule_id": "LAYOUT-102",
       "slot": "section-nav",
-      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
       "state": "default",
       "status": "observed",
       "subject": "settings",
@@ -2902,7 +3876,7 @@
       "property": "background",
       "rule_id": "QUALITY-103",
       "slot": "section-nav",
-      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
       "state": "selected",
       "status": "observed",
       "subject": "settings",
@@ -2922,13 +3896,53 @@
       "property": "container_presentation",
       "rule_id": "LAYOUT-102",
       "slot": "section-nav",
-      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
       "state": "default",
       "status": "observed",
       "subject": "settings",
       "value": {
         "kind": "semantic",
         "value": "fill"
+      }
+    },
+    {
+      "context": "navigation-link",
+      "facet": "state_presentations",
+      "id": "fact.settings.nav-text-default",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "text",
+      "rule_id": "QUALITY-113",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "default",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.text-secondary"
+      }
+    },
+    {
+      "context": "navigation-link",
+      "facet": "state_presentations",
+      "id": "fact.settings.nav-text-selected",
+      "locator": "ui-source-graph.yaml#/usages/usage.settings-section-nav",
+      "negative": false,
+      "owner_id": "usage.settings-section-nav",
+      "owner_kind": "usage",
+      "property": "text",
+      "rule_id": "QUALITY-113",
+      "slot": "section-nav",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
+      "state": "selected",
+      "status": "observed",
+      "subject": "settings",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.text-primary"
       }
     },
     {
@@ -2942,7 +3956,7 @@
       "property": "root_scroll",
       "rule_id": "LAYOUT-102",
       "slot": null,
-      "source_span_sha256": "sha256:f9da4312a10e061157b8f7a7a5707cd528ba29d8652572db4ab5ef3d67b2c8ba",
+      "source_span_sha256": "sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f",
       "state": "default",
       "status": "observed",
       "subject": "settings",
@@ -2962,7 +3976,7 @@
       "property": "anchor_role",
       "rule_id": "LAYOUT-001",
       "slot": "chat-fab",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -2982,7 +3996,7 @@
       "property": "anchor_role",
       "rule_id": "LAYOUT-001",
       "slot": "header-trigger",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3002,7 +4016,7 @@
       "property": "arrangement",
       "rule_id": "LAYOUT-001",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3022,7 +4036,7 @@
       "property": "background",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3042,7 +4056,7 @@
       "property": "border",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3054,21 +4068,113 @@
     {
       "context": null,
       "facet": "component_geometry",
-      "id": "fact.shell.canvas-padding-block-end",
+      "id": "fact.shell.canvas-inset-block-end",
       "locator": "ui-source-graph.yaml#/usages/usage.shell",
       "negative": false,
       "owner_id": "usage.shell",
       "owner_kind": "usage",
-      "property": "padding_block_end",
-      "rule_id": "LAYOUT-107",
+      "property": "inset_block_end",
+      "rule_id": "LAYOUT-112",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
         "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "8px"
+        },
         "value": "space.2"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-inset-block-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "inset_block_start",
+      "rule_id": "LAYOUT-112",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "8px"
+        },
+        "value": "space.2"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-inset-inline-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "inset_inline_end",
+      "rule_id": "LAYOUT-112",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "8px"
+        },
+        "value": "space.2"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-inset-inline-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "inset_inline_start",
+      "rule_id": "LAYOUT-112",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "zero"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.canvas-padding-block-end",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "padding_block_end",
+      "rule_id": "LAYOUT-112",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "zero"
       }
     },
     {
@@ -3076,19 +4182,19 @@
       "facet": "component_geometry",
       "id": "fact.shell.canvas-padding-block-start",
       "locator": "ui-source-graph.yaml#/usages/usage.shell",
-      "negative": false,
+      "negative": true,
       "owner_id": "usage.shell",
       "owner_kind": "usage",
       "property": "padding_block_start",
-      "rule_id": "LAYOUT-107",
+      "rule_id": "LAYOUT-112",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
-        "kind": "token-ref",
-        "value": "space.2"
+        "kind": "semantic",
+        "value": "zero"
       }
     },
     {
@@ -3096,19 +4202,19 @@
       "facet": "component_geometry",
       "id": "fact.shell.canvas-padding-inline-end",
       "locator": "ui-source-graph.yaml#/usages/usage.shell",
-      "negative": false,
+      "negative": true,
       "owner_id": "usage.shell",
       "owner_kind": "usage",
       "property": "padding_inline_end",
-      "rule_id": "LAYOUT-107",
+      "rule_id": "LAYOUT-112",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
-        "kind": "token-ref",
-        "value": "space.2"
+        "kind": "semantic",
+        "value": "zero"
       }
     },
     {
@@ -3120,9 +4226,9 @@
       "owner_id": "usage.shell",
       "owner_kind": "usage",
       "property": "padding_inline_start",
-      "rule_id": "LAYOUT-107",
+      "rule_id": "LAYOUT-112",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3142,7 +4248,7 @@
       "property": "radius",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3162,13 +4268,117 @@
       "property": "shadow",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
         "kind": "token-ref",
         "value": "shadow.surface"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.content-container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-113",
+      "slot": "content",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "page-canvas"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.content-padding-block-start",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "padding_block_start",
+      "rule_id": "LAYOUT-113",
+      "slot": "content",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "8px"
+        },
+        "value": "space.2"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.content-scroll",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "scroll_block",
+      "rule_id": "LAYOUT-113",
+      "slot": "content",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "region"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.header-container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-103",
+      "slot": "page-header",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "page-canvas"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.nav-border-none",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-103",
+      "slot": "nav-group",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
       }
     },
     {
@@ -3182,7 +4392,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "chat-fab",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3202,13 +4412,33 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "compose",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
         "kind": "semantic",
         "value": "3"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.order.content",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_order",
+      "rule_id": "LAYOUT-113",
+      "slot": "content",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "13"
       }
     },
     {
@@ -3222,7 +4452,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "footer-utility",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3242,7 +4472,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "header-trigger",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3262,7 +4492,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "nav-group",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3282,7 +4512,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3302,7 +4532,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "page-header",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3322,7 +4552,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "page-toolbar",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3342,7 +4572,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "pin-list",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3362,7 +4592,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "rail",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3382,7 +4612,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "search",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3402,7 +4632,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "workspace-switcher",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3422,7 +4652,7 @@
       "property": "root_scroll",
       "rule_id": "LAYOUT-001",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3442,7 +4672,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "chat-fab",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3462,13 +4692,33 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "compose",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
         "kind": "semantic",
         "value": "compose"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.slot.content",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "slot_role",
+      "rule_id": "LAYOUT-113",
+      "slot": "content",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "content"
       }
     },
     {
@@ -3482,7 +4732,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "footer-utility",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3502,7 +4752,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "header-trigger",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3522,7 +4772,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "nav-group",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3542,7 +4792,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3562,7 +4812,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "page-header",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3582,7 +4832,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "page-toolbar",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3602,7 +4852,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "pin-list",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3622,7 +4872,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "rail",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3642,7 +4892,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "search",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3662,13 +4912,33 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "workspace-switcher",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
         "kind": "semantic",
         "value": "workspace-switcher"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.toolbar-container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-103",
+      "slot": "page-toolbar",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "page-canvas"
       }
     },
     {
@@ -3682,7 +4952,7 @@
       "property": "shell_variant",
       "rule_id": "LAYOUT-001",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3733,12 +5003,12 @@
         "shell"
       ]
     },
-    "source_id": "source-multica-session",
-    "source_revision": "2df765a3c8f39789c9fb76316378bcffc20d22d9"
+    "source_id": "source-002",
+    "source_revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca"
   },
   "source": {
-    "graph_digest": "sha256:141f2d9c0464ec1e89900e01e31998a42e3d6397bd3cf07201da4727df2879b4",
-    "revision": "2df765a3c8f39789c9fb76316378bcffc20d22d9"
+    "graph_digest": "sha256:bcdfc052a85c78876253b1334cca617c1b5560369981edf02c144a06e19d34d2",
+    "revision": "92e96f0d6779eaa733c61230ea7c4fe1cbc95bca"
   },
   "status": "captured",
   "style_only_reason": null,
@@ -3747,10 +5017,10 @@
     "dynamic": 0,
     "exclusions": 2,
     "exports": 16,
-    "facts": 84,
+    "facts": 116,
     "imports": 18,
-    "negative_facts": 10,
-    "usages": 20
+    "negative_facts": 17,
+    "usages": 21
   },
   "unresolved": []
 }

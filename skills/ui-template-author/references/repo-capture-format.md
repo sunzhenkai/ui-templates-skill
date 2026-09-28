@@ -60,3 +60,16 @@ closure 只证明 scope 内问题已闭合；本节问题由机器强制，沉�
 4. **选择类控件触发器解剖**：scope 内名称命中 `select | combobox | dropdown | dropdown-menu` 的组件必须携带 `anatomy` 事实（component_geometry facet，闭集语义 `whole-trigger | split-trigger`）：`whole-trigger` 表示整行触发器是单一命中控件、尾随 affordance 图标只是其内部装饰（图标命中区属于触发器）；`split-trigger` 表示 affordance 是独立可点控件。该事实投影进 component geometry，Apply 不得发明与解剖相反的命中结构。
 
 作答方式与前两轮一致：facts 或指向目标 definition（scene/component/context）的显式 exclusions；`fidelity.yaml` 的 `mandatory_answers` 覆盖以上全部条目。
+
+## Mandatory question matrix — round 4（close-chrome-geometry-and-density-blind-spots）
+
+在前三轮基础上追加（同一 fail-closed 语义，gaps 标签 `chrome-edge:` / `content-region:` / `header-anatomy:` / `nav-item-geometry:` / `nav-item-type:` / `row-disclosure:`）。六问针对的是已被真实生成物证实丢失的六类事实：chrome 与画布边的贴合关系、chrome 之下内容区的归属与间距、页头标题解剖、section-nav 条目几何与字阶、行级渐进披露。
+
+1. **chrome 贴边**：shell scene 声明 `shell_variant: inset` 且声明 `page-header` / `page-toolbar` 槽位时，canvas 槽位必须携带 `padding_block_start` 事实（token-ref，或语义 `zero` 且 `negative: true`）。inset 卡的 chrome 紧贴画布 block-start 边缘（内部 padding 为零、inset 由画布相对 root 的外边距提供）与 chrome 浮在画布 padding 区内是两种布局形态，不得由采集沉默交给 Apply 默认。
+2. **内容区归属与间距**：上述 scene 必须声明 `content` 槽位（layout slot role 闭集新增 `content`，即 chrome 之下、独立滚动的内容区），并携带三件事实：`container_role`（`page-canvas`/`canvas`）、block-start 间距（`padding_block_start` 或 `gap`，token-ref 或显式 zero negative）、`scroll_block`（`region`）。chrome 与内容之间的间距由内容区 block-start 承载，来源不得交给 Apply 发明。
+3. **页头标题解剖**：scope.components 中名称命中页头闭集（`page-header` 或以 `-header` 结尾）的组件必须携带 `anatomy` 事实（component_geometry facet，闭集语义 `icon-title | title-only`；新增语义值）。`icon-title` 表示标题左侧带 leading icon 的页头，`title-only` 为纯标题。
+4. **section-nav 条目几何**：声明 section-nav usage 的 scene 必须在 section-nav 槽位携带条目 `size` 几何事实（token-ref）。条目块高不得由 Apply 从字阶推定。
+5. **section-nav 条目字阶与前景色**：同上 scene 必须携带 section-nav 条目 `default` 与 `selected` 两态的 `text` token-ref 状态事实（state_presentations facet，值可为 typography 或 color token）。未选中/选中前景色与字阶不得沉默。
+6. **行级渐进披露**：scope.components 中名称命中 `data-table` 闭集的组件必须携带行二级内容（如 `row-actions`、`row-secondary-text`）`default` 与 `hover` 两态的 `visibility` 状态事实（`visible`，或 `hidden` 且 `negative: true`；`hidden` 已在 negative 闭集内）。列表密度由披露机制刻画，不得把全部二级内容常驻渲染。
+
+作答方式与前三轮一致：facts 或指向目标 definition 的显式 exclusions；`fidelity.yaml` 的 `mandatory_answers` 覆盖以上全部条目。`visibility: hidden` 投影进 fidelity 后必须登记 explicit negative fact（validator `FIDELITY_NEGATIVE_FACT_MISSING`，与 `text_decoration: none` 同级 fail closed）。

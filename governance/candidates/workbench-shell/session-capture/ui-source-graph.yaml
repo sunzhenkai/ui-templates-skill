@@ -20,7 +20,7 @@ definitions:
   - {id: component.data-table, kind: component, name: data-table, locator: "ui-source-graph.yaml#/definitions/component.data-table", exports: [data-table], facts: []}
   - {id: component.dialog, kind: component, name: dialog, locator: "ui-source-graph.yaml#/definitions/component.dialog", exports: [dialog], facts: []}
   - {id: component.input, kind: component, name: input, locator: "ui-source-graph.yaml#/definitions/component.input", exports: [input], facts: []}
-  - {id: component.page-header, kind: component, name: page-header, locator: "ui-source-graph.yaml#/definitions/component.page-header", exports: [page-header], facts: []}
+  - {id: component.page-header, kind: component, name: page-header, locator: "ui-source-graph.yaml#/definitions/component.page-header", exports: [page-header], facts: [{id: fact.page-header.anatomy, facet: component_geometry, subject: page-header, context: null, slot: title, state: default, property: anatomy, value: {kind: semantic, value: icon-title}, negative: false, rule_id: QUALITY-112}]}
   - {id: component.settings-nav, kind: component, name: settings-nav, locator: "ui-source-graph.yaml#/definitions/component.settings-nav", exports: [settings-nav], facts: []}
   - {id: context.action-trigger, kind: context, name: action-trigger, locator: "ui-source-graph.yaml#/definitions/context.action-trigger", exports: [], facts: []}
   - {id: context.navigation-link, kind: context, name: navigation-link, locator: "ui-source-graph.yaml#/definitions/context.navigation-link", exports: [], facts: []}
@@ -64,6 +64,7 @@ usages:
       - {id: fact.shell.slot.compose, facet: layout_scenes, subject: shell, context: null, slot: compose, state: default, property: slot_role, value: {kind: semantic, value: compose}, negative: false, rule_id: LAYOUT-001}
       - {id: fact.shell.order.compose, facet: layout_scenes, subject: shell, context: null, slot: compose, state: default, property: slot_order, value: {kind: semantic, value: "3"}, negative: false, rule_id: LAYOUT-001}
       - {id: fact.shell.slot.nav-group, facet: layout_scenes, subject: shell, context: null, slot: nav-group, state: default, property: slot_role, value: {kind: semantic, value: nav-group}, negative: false, rule_id: LAYOUT-001}
+      - {id: fact.shell.nav-border-none, facet: component_geometry, subject: shell, context: null, slot: nav-group, state: default, property: border, value: {kind: semantic, value: none}, negative: true, rule_id: LAYOUT-103}
       - {id: fact.shell.order.nav-group, facet: layout_scenes, subject: shell, context: null, slot: nav-group, state: default, property: slot_order, value: {kind: semantic, value: "4"}, negative: false, rule_id: LAYOUT-001}
       - {id: fact.shell.slot.pin-list, facet: layout_scenes, subject: shell, context: null, slot: pin-list, state: default, property: slot_role, value: {kind: semantic, value: pin-list}, negative: false, rule_id: LAYOUT-001}
       - {id: fact.shell.order.pin-list, facet: layout_scenes, subject: shell, context: null, slot: pin-list, state: default, property: slot_order, value: {kind: semantic, value: "5"}, negative: false, rule_id: LAYOUT-001}
@@ -83,14 +84,25 @@ usages:
       - {id: fact.shell.slot.chat-fab, facet: layout_scenes, subject: shell, context: null, slot: chat-fab, state: default, property: slot_role, value: {kind: semantic, value: chat-fab}, negative: false, rule_id: LAYOUT-001}
       - {id: fact.shell.order.chat-fab, facet: layout_scenes, subject: shell, context: null, slot: chat-fab, state: default, property: slot_order, value: {kind: semantic, value: "12"}, negative: false, rule_id: LAYOUT-001}
       - {id: fact.shell.anchor.chat-fab, facet: layout_scenes, subject: shell, context: null, slot: chat-fab, state: default, property: anchor_role, value: {kind: semantic, value: chat-fab}, negative: false, rule_id: LAYOUT-001}
-      - {id: fact.shell.canvas-padding-block-start, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_block_start, value: {kind: token-ref, value: space.2}, negative: false, rule_id: LAYOUT-107}
-      - {id: fact.shell.canvas-padding-inline-end, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_inline_end, value: {kind: token-ref, value: space.2}, negative: false, rule_id: LAYOUT-107}
-      - {id: fact.shell.canvas-padding-block-end, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_block_end, value: {kind: token-ref, value: space.2}, negative: false, rule_id: LAYOUT-107}
-      - {id: fact.shell.canvas-padding-inline-start, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_inline_start, value: {kind: semantic, value: zero}, negative: true, rule_id: LAYOUT-107}
+      - {id: fact.shell.canvas-padding-block-start, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_block_start, value: {kind: semantic, value: zero}, negative: true, rule_id: LAYOUT-112}
+      - {id: fact.shell.canvas-padding-inline-end, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_inline_end, value: {kind: semantic, value: zero}, negative: true, rule_id: LAYOUT-112}
+      - {id: fact.shell.canvas-padding-block-end, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_block_end, value: {kind: semantic, value: zero}, negative: true, rule_id: LAYOUT-112}
+      - {id: fact.shell.canvas-padding-inline-start, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: padding_inline_start, value: {kind: semantic, value: zero}, negative: true, rule_id: LAYOUT-112}
+      - {id: fact.shell.canvas-inset-block-start, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: inset_block_start, value: {kind: token-ref, value: space.2, observed: {kind: css-length, value: "8px"}}, negative: false, rule_id: LAYOUT-112}
+      - {id: fact.shell.canvas-inset-inline-end, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: inset_inline_end, value: {kind: token-ref, value: space.2, observed: {kind: css-length, value: "8px"}}, negative: false, rule_id: LAYOUT-112}
+      - {id: fact.shell.canvas-inset-block-end, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: inset_block_end, value: {kind: token-ref, value: space.2, observed: {kind: css-length, value: "8px"}}, negative: false, rule_id: LAYOUT-112}
+      - {id: fact.shell.canvas-inset-inline-start, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: inset_inline_start, value: {kind: semantic, value: zero}, negative: true, rule_id: LAYOUT-112}
       - {id: fact.shell.canvas-radius, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: radius, value: {kind: token-ref, value: radius.xl}, negative: false, rule_id: LAYOUT-107}
       - {id: fact.shell.canvas-border, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: border, value: {kind: token-ref, value: color.surface-border}, negative: false, rule_id: LAYOUT-107}
       - {id: fact.shell.canvas-shadow, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: shadow, value: {kind: token-ref, value: shadow.surface}, negative: false, rule_id: LAYOUT-107}
       - {id: fact.shell.canvas-background, facet: component_geometry, subject: shell, context: null, slot: page-canvas, state: default, property: background, value: {kind: token-ref, value: color.page-canvas}, negative: false, rule_id: LAYOUT-107}
+      - {id: fact.shell.slot.content, facet: layout_scenes, subject: shell, context: null, slot: content, state: default, property: slot_role, value: {kind: semantic, value: content}, negative: false, rule_id: LAYOUT-113}
+      - {id: fact.shell.order.content, facet: layout_scenes, subject: shell, context: null, slot: content, state: default, property: slot_order, value: {kind: semantic, value: "13"}, negative: false, rule_id: LAYOUT-113}
+      - {id: fact.shell.header-container, facet: layout_scenes, subject: shell, context: null, slot: page-header, state: default, property: container_role, value: {kind: semantic, value: page-canvas}, negative: false, rule_id: LAYOUT-103}
+      - {id: fact.shell.toolbar-container, facet: layout_scenes, subject: shell, context: null, slot: page-toolbar, state: default, property: container_role, value: {kind: semantic, value: page-canvas}, negative: false, rule_id: LAYOUT-103}
+      - {id: fact.shell.content-container, facet: layout_scenes, subject: shell, context: null, slot: content, state: default, property: container_role, value: {kind: semantic, value: page-canvas}, negative: false, rule_id: LAYOUT-113}
+      - {id: fact.shell.content-padding-block-start, facet: component_geometry, subject: shell, context: null, slot: content, state: default, property: padding_block_start, value: {kind: token-ref, value: space.2, observed: {kind: css-length, value: "8px"}}, negative: false, rule_id: LAYOUT-113}
+      - {id: fact.shell.content-scroll, facet: layout_scenes, subject: shell, context: null, slot: content, state: default, property: scroll_block, value: {kind: semantic, value: region}, negative: false, rule_id: LAYOUT-113}
   - id: usage.board
     definition_id: scene.board
     scene: board
@@ -102,9 +114,13 @@ usages:
     facts:
       - {id: fact.board.arrangement, facet: layout_scenes, subject: board, context: null, slot: page-canvas, state: default, property: arrangement, value: {kind: semantic, value: vertical}, negative: false, rule_id: LAYOUT-102}
       - {id: fact.board.page-scroll, facet: layout_scenes, subject: board, context: null, slot: page-canvas, state: default, property: scroll_block, value: {kind: semantic, value: block}, negative: false, rule_id: LAYOUT-102}
+      - {id: fact.board.canvas-padding-block-start, facet: component_geometry, subject: board, context: null, slot: page-canvas, state: default, property: padding_block_start, value: {kind: token-ref, value: space.6, observed: {kind: css-length, value: "24px"}}, negative: false, rule_id: LAYOUT-113}
+      - {id: fact.board.canvas-padding-inline-end, facet: component_geometry, subject: board, context: null, slot: page-canvas, state: default, property: padding_inline_end, value: {kind: token-ref, value: space.6, observed: {kind: css-length, value: "24px"}}, negative: false, rule_id: LAYOUT-113}
+      - {id: fact.board.canvas-padding-block-end, facet: component_geometry, subject: board, context: null, slot: page-canvas, state: default, property: padding_block_end, value: {kind: token-ref, value: space.6, observed: {kind: css-length, value: "24px"}}, negative: false, rule_id: LAYOUT-113}
+      - {id: fact.board.canvas-padding-inline-start, facet: component_geometry, subject: board, context: null, slot: page-canvas, state: default, property: padding_inline_start, value: {kind: token-ref, value: space.6, observed: {kind: css-length, value: "24px"}}, negative: false, rule_id: LAYOUT-113}
       - {id: fact.board.page-header-height, facet: component_geometry, subject: page-header, context: null, slot: page-header, state: default, property: size, value: {kind: token-ref, value: space.header-height, observed: {kind: css-length, value: "3rem"}}, negative: false, rule_id: LAYOUT-106}
       - {id: fact.board.page-toolbar-height, facet: component_geometry, subject: page-header, context: null, slot: page-toolbar, state: default, property: size, value: {kind: token-ref, value: space.header-height, observed: {kind: css-length, value: "3rem"}}, negative: false, rule_id: LAYOUT-106}
-      - {id: fact.board.nav-default-underline, facet: state_presentations, subject: board, context: navigation-link, slot: section-nav, state: default, property: text_decoration, value: {kind: semantic, value: underline}, negative: true, rule_id: QUALITY-103}
+      - {id: fact.board.nav-default-underline, facet: state_presentations, subject: board, context: navigation-link, slot: section-nav, state: default, property: text_decoration, value: {kind: semantic, value: none}, negative: true, rule_id: QUALITY-103}
   - id: usage.board-columns
     definition_id: scene.board
     scene: board
@@ -119,6 +135,19 @@ usages:
       - {id: fact.board.inline-scroll, facet: layout_scenes, subject: board, context: null, slot: columns, state: default, property: scroll_inline, value: {kind: semantic, value: inline}, negative: false, rule_id: LAYOUT-002}
       - {id: fact.board.column-width, facet: component_geometry, subject: data-table, context: null, slot: columns, state: default, property: size, value: {kind: token-ref, value: size.board-column, observed: {kind: css-length, value: "280px"}}, negative: false, rule_id: LAYOUT-002}
       - {id: fact.board.column-gap, facet: component_geometry, subject: data-table, context: null, slot: columns, state: default, property: gap, value: {kind: token-ref, value: space.4, observed: {kind: css-length, value: "16px"}}, negative: false, rule_id: LAYOUT-002}
+  - id: usage.data-table-disclosure
+    definition_id: scene.board
+    scene: board
+    component: data-table
+    context: action-trigger
+    slot: row
+    state: default
+    locator: "ui-source-graph.yaml#/usages/usage.data-table-disclosure"
+    facts:
+      - {id: fact.data-table.actions-default-hidden, facet: state_presentations, subject: data-table, context: action-trigger, slot: row-actions, state: default, property: visibility, value: {kind: semantic, value: hidden}, negative: true, rule_id: DENSITY-101}
+      - {id: fact.data-table.actions-hover-visible, facet: state_presentations, subject: data-table, context: action-trigger, slot: row-actions, state: hover, property: visibility, value: {kind: semantic, value: visible}, negative: false, rule_id: DENSITY-101}
+      - {id: fact.data-table.secondary-default-visible, facet: state_presentations, subject: data-table, context: action-trigger, slot: row-secondary-text, state: default, property: visibility, value: {kind: semantic, value: visible}, negative: false, rule_id: DENSITY-101}
+      - {id: fact.data-table.secondary-hover-hidden, facet: state_presentations, subject: data-table, context: action-trigger, slot: row-secondary-text, state: hover, property: visibility, value: {kind: semantic, value: hidden}, negative: true, rule_id: DENSITY-101}
   - id: usage.settings-section-nav
     definition_id: scene.settings
     scene: settings
@@ -136,6 +165,17 @@ usages:
       - {id: fact.settings.nav-anatomy, facet: layout_scenes, subject: settings, context: null, slot: section-nav, state: default, property: anatomy, value: {kind: semantic, value: icon-label}, negative: false, rule_id: LAYOUT-102}
       - {id: fact.settings.nav-hover, facet: state_presentations, subject: settings, context: navigation-link, slot: section-nav, state: hover, property: background, value: {kind: token-ref, value: color.surface-hover}, negative: false, rule_id: QUALITY-103}
       - {id: fact.settings.nav-selected, facet: state_presentations, subject: settings, context: navigation-link, slot: section-nav, state: selected, property: background, value: {kind: token-ref, value: color.surface-selected}, negative: false, rule_id: QUALITY-103}
+      - {id: fact.settings.nav-item-size, facet: component_geometry, subject: settings, context: null, slot: section-nav, state: default, property: size, value: {kind: token-ref, value: size.control-height-lg, observed: {kind: css-length, value: "36px"}}, negative: false, rule_id: QUALITY-113}
+      - {id: fact.settings.nav-item-padding-block-start, facet: component_geometry, subject: settings, context: null, slot: section-nav, state: default, property: padding_block_start, value: {kind: token-ref, value: space.2, observed: {kind: css-length, value: "8px"}}, negative: false, rule_id: QUALITY-113}
+      - {id: fact.settings.nav-item-padding-inline-end, facet: component_geometry, subject: settings, context: null, slot: section-nav, state: default, property: padding_inline_end, value: {kind: token-ref, value: space.3, observed: {kind: css-length, value: "12px"}}, negative: false, rule_id: QUALITY-113}
+      - {id: fact.settings.nav-item-padding-block-end, facet: component_geometry, subject: settings, context: null, slot: section-nav, state: default, property: padding_block_end, value: {kind: token-ref, value: space.2, observed: {kind: css-length, value: "8px"}}, negative: false, rule_id: QUALITY-113}
+      - {id: fact.settings.nav-item-padding-inline-start, facet: component_geometry, subject: settings, context: null, slot: section-nav, state: default, property: padding_inline_start, value: {kind: token-ref, value: space.3, observed: {kind: css-length, value: "12px"}}, negative: false, rule_id: QUALITY-113}
+      - {id: fact.settings.nav-text-default, facet: state_presentations, subject: settings, context: navigation-link, slot: section-nav, state: default, property: text, value: {kind: token-ref, value: color.text-secondary}, negative: false, rule_id: QUALITY-113}
+      - {id: fact.settings.nav-text-selected, facet: state_presentations, subject: settings, context: navigation-link, slot: section-nav, state: selected, property: text, value: {kind: token-ref, value: color.text-primary}, negative: false, rule_id: QUALITY-113}
+      - {id: fact.settings.canvas-padding-block-start, facet: component_geometry, subject: settings, context: null, slot: page-canvas, state: default, property: padding_block_start, value: {kind: token-ref, value: space.6, observed: {kind: css-length, value: "24px"}}, negative: false, rule_id: LAYOUT-113}
+      - {id: fact.settings.canvas-padding-inline-end, facet: component_geometry, subject: settings, context: null, slot: page-canvas, state: default, property: padding_inline_end, value: {kind: token-ref, value: space.6, observed: {kind: css-length, value: "24px"}}, negative: false, rule_id: LAYOUT-113}
+      - {id: fact.settings.canvas-padding-block-end, facet: component_geometry, subject: settings, context: null, slot: page-canvas, state: default, property: padding_block_end, value: {kind: token-ref, value: space.6, observed: {kind: css-length, value: "24px"}}, negative: false, rule_id: LAYOUT-113}
+      - {id: fact.settings.canvas-padding-inline-start, facet: component_geometry, subject: settings, context: null, slot: page-canvas, state: default, property: padding_inline_start, value: {kind: token-ref, value: space.6, observed: {kind: css-length, value: "24px"}}, negative: false, rule_id: LAYOUT-113}
   - id: usage.master-detail-layout
     definition_id: scene.master-detail
     scene: master-detail

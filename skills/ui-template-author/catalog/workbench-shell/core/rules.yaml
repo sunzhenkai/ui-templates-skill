@@ -62,11 +62,55 @@ items:
   - token/shadow.floating
   status: active
 - id: rule/LAYOUT-110
-  statement: The page-header region pins to the block-start edge of the page-canvas scroll domain (position sticky) and renders inside the canvas,
-    so it stays visible while canvas content scrolls beneath it.
+  statement: The page-header and page-toolbar bands are static siblings above the content region; they stay visible because
+    the content region owns block scrolling beneath them, not because of sticky positioning.
   severity: must
   token_refs:
   - token/space.header-height
+  status: active
+- id: rule/LAYOUT-112
+  statement: Chrome bands hug the canvas block-start edge - the inset canvas carries zero internal padding on every logical
+    side, and the surrounding air comes from the canvas inset from the shell frame (block-start, inline-end and block-end),
+    with the inline-start edge flush against the sidebar.
+  severity: must
+  token_refs:
+  - token/space.2
+  status: active
+- id: rule/LAYOUT-113
+  statement: The content region under the chrome owns block scrolling and carries the block-start spacing between chrome and
+    content; the default shell content spacing is the space.2 step, while board and settings canvases use the space.6 step.
+  severity: must
+  token_refs:
+  - token/space.2
+  - token/space.6
+  status: active
+- id: rule/QUALITY-112
+  statement: Collection page headers carry a leading icon at the default icon size in the muted foreground ahead of the title;
+    the icon identifies the collection and is not decorative.
+  severity: must
+  token_refs:
+  - token/size.icon-default
+  - token/color.text-muted
+  status: active
+- id: rule/QUALITY-113
+  statement: Settings section-nav items use the body type step at the large control height with space.2 block and space.3
+    inline padding; unselected items use text-secondary foreground, selected items use text-primary at medium weight on the
+    surface-selected background.
+  severity: must
+  token_refs:
+  - token/typography.body
+  - token/size.control-height-lg
+  - token/space.2
+  - token/space.3
+  - token/color.text-secondary
+  - token/color.text-primary
+  - token/color.surface-selected
+  status: active
+- id: rule/DENSITY-101
+  statement: Data-table rows progressively disclose - row actions stay hidden until row hover, and secondary text yields to
+    row actions on row hover; no row-level secondary content renders permanently when the disclosure state says hidden.
+  severity: must
+  token_refs: []
   status: active
 - id: rule/RESP-101
   statement: At the compact viewport the navigation group becomes an overlay sheet rather than a permanent in-flow column.

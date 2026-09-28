@@ -1,27 +1,57 @@
 schema: design-system-patterns/v1
 items:
-  - id: pattern/workbench-shell
-    name: Inset workbench shell
-    primitives: [primitive/app-sidebar, primitive/page-header, primitive/chat-fab, primitive/command-palette]
-    page_type: page-type/workbench
-    rule_refs: [rule/LAYOUT-001, rule/LAYOUT-107]
-  - id: pattern/board-columns
-    name: Horizontally scrolling board columns
-    primitives: [primitive/data-table, primitive/button, primitive/page-header]
-    page_type: page-type/board
-    rule_refs: [rule/LAYOUT-002, rule/LAYOUT-106, rule/AX-101]
-  - id: pattern/settings-navigation
-    name: Settings navigation and content
-    primitives: [primitive/settings-nav, primitive/input]
-    page_type: page-type/settings
-    rule_refs: [rule/LAYOUT-102, rule/QUALITY-103, rule/QUALITY-104]
-  - id: pattern/master-detail
-    name: Master-detail panes
-    primitives: [primitive/app-sidebar]
-    page_type: page-type/master-detail
-    rule_refs: [rule/LAYOUT-003]
-  - id: pattern/dialog-overlay
-    name: Viewport dialog overlay
-    primitives: [primitive/dialog]
-    page_type: page-type/dialog
-    rule_refs: [rule/LAYOUT-005, rule/QUALITY-001, rule/QUALITY-102]
+- id: pattern/app-shell
+  name: Inset workbench shell
+  primitives:
+  - primitive/app-sidebar
+  - primitive/command-palette
+  - primitive/chat-fab
+  - primitive/page-header
+  - primitive/page-toolbar
+  rule_refs:
+  - rule/LAYOUT-101
+  - rule/LAYOUT-102
+  - rule/LAYOUT-103
+  - rule/LAYOUT-104
+  - rule/LAYOUT-112
+  - rule/LAYOUT-113
+- id: pattern/settings-section-nav
+  name: Settings section navigation
+  primitives:
+  - primitive/settings-nav
+  - primitive/nav-item
+  rule_refs:
+  - rule/LAYOUT-107
+  - rule/QUALITY-103
+  - rule/QUALITY-113
+- id: pattern/workspace-board
+  name: Workspace board
+  primitives:
+  - primitive/page-header
+  - primitive/page-toolbar
+  - primitive/data-table
+  - primitive/button
+  rule_refs:
+  - rule/LAYOUT-106
+  - rule/QUALITY-103
+  - rule/AX-101
+  - rule/LAYOUT-113
+  - rule/DENSITY-101
+- id: pattern/master-detail
+  name: Master detail
+  primitives:
+  - primitive/page-header
+  - primitive/detail-pane
+  rule_refs:
+  - rule/LAYOUT-105
+  - rule/LAYOUT-106
+- id: pattern/overlay-dialog
+  name: Overlay dialog
+  primitives:
+  - primitive/dialog
+  - primitive/button
+  - primitive/input
+  rule_refs:
+  - rule/LAYOUT-105
+  - rule/QUALITY-102
+  - rule/AX-104

@@ -27,6 +27,23 @@ from template_apply_state import (
 from template_apply_state.state import DIGEST_ALGORITHM
 
 
+def _layer_or_none(explicit: Path | None, active_instance: Path | None, relative: str) -> Any:
+    """Resolve a scenario source from an explicit path or the Active Instance layer.
+
+    The Phase 8 coverage set must close over fidelity + layout + expectations +
+    primitives. When the caller points at an Active Instance, every layer present
+    there joins the set; a layer the package simply does not ship stays absent
+    rather than silently shrinking the gate for the ones it does ship.
+    """
+    if explicit is not None:
+        return load_structured(explicit)
+    if active_instance is not None:
+        candidate = active_instance / relative
+        if candidate.is_file():
+            return load_structured(candidate)
+    return None
+
+
 def collect_active_layers(active_instance: Path) -> dict[str, set[str]] | None:
     """Load declared Stable Entity IDs from an Active Instance for route binding."""
     core = active_instance / "core"
@@ -85,6 +102,9 @@ def parser() -> argparse.ArgumentParser:
     init.add_argument("--tokens", type=Path, required=True)
     init.add_argument("--scope", type=Path, required=True)
     init.add_argument("--fidelity", type=Path, help="模板/Active Instance 的 fidelity.yaml；缺省按 legacy-baseline")
+    init.add_argument("--primitives", type=Path, help="core/primitives.yaml；绑定 variant/anatomy contract 场景")
+    init.add_argument("--layout", type=Path, help="core/layout.yaml；绑定 placement 闭包场景")
+    init.add_argument("--expectations", type=Path, help="measured-expectations.yaml；绑定 expectation 比对场景")
     init.add_argument("--source-identity", required=True)
     init.add_argument("--build-identity", required=True)
     init.add_argument("--mode", choices=["bootstrap", "increment"], default="bootstrap")
@@ -128,6 +148,9 @@ def parser() -> argparse.ArgumentParser:
     checkpoint.add_argument("--scope", type=Path, required=True)
     checkpoint.add_argument("--fidelity", type=Path)
     checkpoint.add_argument("--previous-fidelity", type=Path)
+    checkpoint.add_argument("--primitives", type=Path, help="core/primitives.yaml；variant/anatomy scenarios fail closed")
+    checkpoint.add_argument("--layout", type=Path, help="core/layout.yaml；placement 闭包 scenarios fail closed")
+    checkpoint.add_argument("--expectations", type=Path, help="measured-expectations.yaml；expectation 比对 scenarios fail closed")
     checkpoint.add_argument("--source-identity", required=True)
     checkpoint.add_argument("--build-identity", required=True)
     checkpoint.add_argument(
@@ -143,6 +166,8 @@ def parser() -> argparse.ArgumentParser:
     scenarios.add_argument("--fidelity", type=Path, help="模板/Active Instance 的 fidelity.yaml")
     scenarios.add_argument("--layout", type=Path, help="core/layout.yaml（placement geometry/pattern 闭包场景来源）")
     scenarios.add_argument("--expectations", type=Path, help="measured-expectations.yaml（期望比对场景来源）")
+    scenarios.add_argument("--primitives", type=Path, help="core/primitives.yaml（variant/anatomy contract 场景来源）")
+    scenarios.add_argument("--active-root", type=Path, help="Active Instance 根目录；自动读取 core/primitives.yaml")
     lint = sub.add_parser(
         "artifact-lint",
         help="对单个 apply 产物做写时校验：YAML 可解析、无裸日期、digest 字段为 canonical 对象、可 canonical JSON 编码",
@@ -173,6 +198,7 @@ def run_checkpoint_init(args: argparse.Namespace) -> int:
             build_identity=args.build_identity,
             mode=args.mode,
             fidelity_value=load_structured(args.fidelity) if args.fidelity else None,
+            primitives_value=load_structured(args.primitives) if args.primitives else None,
             origin=args.origin,
             resolved_path=args.resolved_path,
             output_root=args.output_root,
@@ -226,7 +252,9 @@ def main() -> int:
         profile = load_structured(args.fidelity) if args.fidelity else None
         layout = load_structured(args.layout) if args.layout else None
         expectations = load_structured(args.expectations) if args.expectations else None
-        ids = derive_scenario_ids(profile, layout, expectations)
+        primitives_path = args.primitives or (args.active_root / "core/primitives.yaml" if args.active_root else None)
+        primitives = load_structured(primitives_path) if primitives_path else None
+        ids = derive_scenario_ids(profile, layout, expectations, primitives)
         payload = {
             "count": len(ids),
             "scenarios": ids,
@@ -234,6 +262,7 @@ def main() -> int:
                 "fidelity": bool(args.fidelity),
                 "layout": bool(args.layout),
                 "expectations": bool(args.expectations),
+                "primitives": bool(primitives),
             },
         }
         print(json.dumps(payload, ensure_ascii=False, indent=2))
@@ -330,6 +359,20 @@ def main() -> int:
             previous_fidelity=load_structured(args.previous_fidelity) if args.previous_fidelity else None,
             active_layers=collect_active_layers(args.active_instance) if getattr(args, "active_instance", None) else None,
             placement_context=collect_placement_context(args.active_instance) if getattr(args, "active_instance", None) else None,
+            primitives_value=(
+                load_structured(args.primitives if args.primitives else args.active_instance / "core/primitives.yaml")
+                if getattr(args, "primitives", None) or getattr(args, "active_instance", None) else None
+            ),
+            layout_value=_layer_or_none(
+                getattr(args, "layout", None),
+                args.active_instance,
+                "core/layout.yaml",
+            ),
+            expectations_value=_layer_or_none(
+                getattr(args, "expectations", None),
+                args.active_instance,
+                "measured-expectations.yaml",
+            ),
         )
         payload = recovery_decision(findings, checkpoint)
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))

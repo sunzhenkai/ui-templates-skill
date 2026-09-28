@@ -1,45 +1,312 @@
 schema: design-system-primitives/v1
 items:
-  - id: primitive/app-sidebar
-    name: App sidebar
-    states: [default, hover, active, focus-visible]
-    token_refs: [token/color.sidebar-accent, token/color.ring, token/size.sidebar-default]
-    rule_refs: [rule/LAYOUT-001, rule/QUALITY-103, rule/QUALITY-104]
-  - id: primitive/button
-    name: Button
-    states: [default, hover, focus-visible]
-    token_refs: [token/color.primary-hover, token/color.ring-focus, token/radius.lg]
-    rule_refs: [rule/QUALITY-101, rule/AX-101]
-  - id: primitive/input
-    name: Input
-    states: [default, focus-visible]
-    token_refs: [token/color.ring, token/radius.lg]
-    rule_refs: [rule/QUALITY-101, rule/QUALITY-104]
-  - id: primitive/dialog
-    name: Dialog
-    states: [default, open]
-    token_refs: [token/space.4, token/radius.xl, token/shadow.floating]
-    rule_refs: [rule/LAYOUT-005, rule/QUALITY-001]
-  - id: primitive/chat-fab
-    name: Chat launcher
-    states: [default]
-    token_refs: [token/space.chat-launcher-size, token/space.chat-launcher-inset]
-    rule_refs: [rule/LAYOUT-104]
-  - id: primitive/command-palette
-    name: Command palette
-    states: [default]
-  - id: primitive/data-table
-    name: Board column
-    states: [default]
-    token_refs: [token/size.board-column, token/space.4]
-    rule_refs: [rule/LAYOUT-002]
-  - id: primitive/page-header
-    name: Page header
-    states: [default]
-    token_refs: [token/space.header-height]
-    rule_refs: [rule/LAYOUT-106]
-  - id: primitive/settings-nav
-    name: Settings navigation
-    states: [default, hover, focus-visible, active]
-    token_refs: [token/color.surface-hover, token/color.surface-selected, token/color.ring]
-    rule_refs: [rule/LAYOUT-102, rule/QUALITY-103, rule/QUALITY-104]
+- id: primitive/app-sidebar
+  name: App sidebar
+  states:
+  - default
+  - hover
+  - active
+  - selected
+  - focus-visible
+  token_refs:
+  - token/color.sidebar-accent
+  - token/size.sidebar-default
+  rule_refs:
+  - rule/LAYOUT-103
+  - rule/QUALITY-101
+  - rule/QUALITY-103
+- id: primitive/page-header
+  name: Page header
+  anatomy:
+  - slot: icon
+    order: 1
+  - slot: label
+    order: 2
+  states:
+  - default
+  token_refs:
+  - token/space.header-height
+  - token/typography.body
+  - token/font.weight.semibold
+  - token/size.icon-default
+  - token/color.text-muted
+  rule_refs:
+  - rule/LAYOUT-106
+  - rule/LAYOUT-110
+  - rule/QUALITY-112
+- id: primitive/page-toolbar
+  name: Page toolbar
+  states:
+  - default
+  - hover
+  - focus-visible
+  token_refs:
+  - token/space.header-height
+  - token/color.primary-hover
+  - token/color.ring-focus
+  rule_refs:
+  - rule/LAYOUT-106
+  - rule/AX-101
+- id: primitive/chat-fab
+  name: Chat launcher
+  states:
+  - default
+  - hover
+  - active
+  - focus-visible
+  token_refs:
+  - token/space.chat-launcher-size
+  - token/space.chat-launcher-inset
+  - token/shadow.floating
+  - token/color.surface-border
+  - token/color.ring-focus
+  rule_refs:
+  - rule/LAYOUT-104
+  - rule/QUALITY-102
+  - rule/QUALITY-104
+- id: primitive/data-table
+  name: Data table
+  states:
+  - default
+  - hover
+  - selected
+  token_refs:
+  - token/color.surface-hover
+  - token/color.surface-selected
+  rule_refs:
+  - rule/QUALITY-103
+  - rule/DENSITY-101
+- id: primitive/dialog
+  name: Dialog
+  states:
+  - open
+  - closed
+  token_refs:
+  - token/shadow.floating
+  - token/size.dialog-max-height
+  - token/color.surface-raised
+  - token/typography.body
+  rule_refs:
+  - rule/LAYOUT-105
+  - rule/LAYOUT-108
+  - rule/QUALITY-102
+  - rule/AX-104
+- id: primitive/command-palette
+  name: Command palette
+  states:
+  - closed
+  - open
+  - hover
+  - focus-visible
+  token_refs:
+  - token/shadow.floating
+  - token/color.ring-focus
+  rule_refs:
+  - rule/QUALITY-102
+  - rule/QUALITY-104
+- id: primitive/input
+  name: Input
+  sizes:
+  - default
+  - sm
+  states:
+  - default
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/radius.lg
+  - token/color.ring
+  - token/color.ring-focus
+  - token/size.control-height-default
+  - token/size.control-height-sm
+  - token/typography.body
+  rule_refs:
+  - rule/QUALITY-101
+  - rule/QUALITY-104
+  - rule/QUALITY-105
+- id: primitive/button
+  name: Button
+  variants:
+  - default
+  - outline
+  - brand
+  - brand-subtle
+  - secondary
+  - ghost
+  - destructive
+  - link
+  sizes:
+  - xs
+  - sm
+  - default
+  - lg
+  - icon
+  - icon-xs
+  - icon-sm
+  - icon-lg
+  anatomy:
+  - slot: icon
+    order: 1
+  - slot: label
+    order: 2
+  states:
+  - default
+  - hover
+  - active
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/radius.lg
+  - token/color.primary-hover
+  - token/color.ring
+  - token/color.ring-focus
+  - token/typography.body
+  - token/typography.label
+  - token/typography.secondary
+  - token/font.weight.medium
+  - token/size.control-height-xs
+  - token/size.control-height-sm
+  - token/size.control-height-default
+  - token/size.control-height-lg
+  - token/size.icon-default
+  - token/size.icon-compact
+  - token/size.icon-sm
+  rule_refs:
+  - rule/QUALITY-101
+  - rule/QUALITY-104
+  - rule/QUALITY-105
+  - rule/QUALITY-106
+  - rule/AX-101
+  variant_contracts:
+    default:
+      presentation: filled
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.primary-hover
+      focus_ref: rule/QUALITY-104
+    outline:
+      presentation: outline
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.surface-hover
+      focus_ref: rule/QUALITY-104
+    brand:
+      presentation: filled
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.brand-hover
+      focus_ref: rule/QUALITY-104
+    brand-subtle:
+      presentation: outline
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.surface-hover
+      focus_ref: rule/QUALITY-104
+    secondary:
+      presentation: filled
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.secondary-hover
+      focus_ref: rule/QUALITY-104
+    ghost:
+      presentation: ghost
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.surface-hover
+      focus_ref: rule/QUALITY-104
+    destructive:
+      presentation: outline
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.status-danger-hover
+      focus_ref: rule/QUALITY-104
+    link:
+      presentation: plain
+      radius: token/radius.lg
+      control_height: token/size.control-height-default
+      hover: token/color.primary-hover
+      focus_ref: rule/QUALITY-104
+- id: primitive/settings-nav
+  name: Settings navigation
+  states:
+  - default
+  - hover
+  - selected
+  - focus-visible
+  token_refs:
+  - token/size.section-nav-default
+  - token/color.surface-border
+  - token/color.surface-hover
+  - token/color.surface-selected
+  - token/color.ring-focus
+  - token/size.control-height-lg
+  - token/space.2
+  - token/space.3
+  - token/typography.body
+  - token/color.text-secondary
+  - token/color.text-primary
+  rule_refs:
+  - rule/LAYOUT-107
+  - rule/QUALITY-103
+  - rule/QUALITY-104
+  - rule/QUALITY-113
+- id: primitive/nav-item
+  name: Navigation item
+  variants:
+  - default
+  - active
+  sizes:
+  - default
+  anatomy:
+  - slot: icon
+    order: 1
+  - slot: label
+    order: 2
+  - slot: trailing
+    order: 3
+  states:
+  - default
+  - hover
+  - active
+  - selected
+  - focus-visible
+  token_refs:
+  - token/color.sidebar-accent
+  - token/color.surface-hover
+  - token/color.surface-selected
+  - token/color.ring-focus
+  - token/typography.body
+  - token/font.weight.medium
+  - token/size.icon-default
+  - token/radius.md
+  - token/size.control-height-default
+  rule_refs:
+  - rule/QUALITY-103
+  - rule/QUALITY-104
+  - rule/QUALITY-106
+  variant_contracts:
+    default:
+      presentation: plain
+      radius: token/radius.md
+      control_height: token/size.control-height-default
+      hover: token/color.sidebar-accent
+      focus_ref: rule/QUALITY-104
+    active:
+      presentation: plain
+      radius: token/radius.md
+      control_height: token/size.control-height-default
+      hover: token/color.sidebar-accent
+      focus_ref: rule/QUALITY-104
+  context_bindings:
+    navigation-link:
+      selected: token/color.sidebar-accent
+      hover: token/color.sidebar-accent
+- id: primitive/detail-pane
+  name: Detail pane
+  states:
+  - default
+  - scroll
+  token_refs:
+  - token/color.surface-border
+  rule_refs:
+  - rule/LAYOUT-105

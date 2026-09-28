@@ -1,16 +1,216 @@
 schema: design-system-rules/v1
 items:
-  - {id: rule/LAYOUT-001, statement: "Use the observed inset shell slot order and preserve its header-trigger and chat-fab anchors.", severity: must, status: active}
-  - {id: rule/LAYOUT-002, statement: "Board columns do not wrap or shrink and scroll on the inline axis.", severity: must, token_refs: [token/size.board-column, token/space.4], status: active}
-  - {id: rule/LAYOUT-003, statement: "Master-detail uses a horizontal split with block scrolling in both panes; its context panel is region-scoped.", severity: must, status: active}
-  - {id: rule/LAYOUT-005, statement: "Dialog overlays are viewport-scoped and viewport-anchored when open.", severity: must, status: active}
-  - {id: rule/LAYOUT-102, statement: "Settings uses vertical navigation and independent regional block scrolling for navigation and content.", severity: must, status: active}
-  - {id: rule/LAYOUT-104, statement: "Place the chat launcher using its declared size and inset tokens.", severity: must, token_refs: [token/space.chat-launcher-size, token/space.chat-launcher-inset], status: active}
-  - {id: rule/LAYOUT-106, statement: "Use the declared header-height token for board headers and toolbars.", severity: must, token_refs: [token/space.header-height], status: active}
-  - {id: rule/LAYOUT-107, statement: "Inset page canvas has zero inline-start padding and declared canvas surface geometry.", severity: must, token_refs: [token/space.2, token/radius.xl, token/color.surface-border, token/shadow.surface], status: active}
-  - {id: rule/QUALITY-001, statement: "Dialog content uses the declared padding, radius, and floating shadow.", severity: must, token_refs: [token/space.4, token/radius.xl, token/shadow.floating], status: active}
-  - {id: rule/QUALITY-102, statement: "An open overlay is visible and has no text decoration.", severity: must, status: active}
-  - {id: rule/QUALITY-103, statement: "Navigation items remove underline; their observed active and hover fills use their declared surface tokens.", severity: must, token_refs: [token/color.sidebar-accent, token/color.surface-hover, token/color.surface-selected], status: active}
-  - {id: rule/QUALITY-104, statement: "Input and settings navigation expose a focus-visible border using the ring token.", severity: must, token_refs: [token/color.ring], status: active}
-  - {id: rule/QUALITY-101, statement: "Buttons and inputs use the declared lg radius.", severity: must, token_refs: [token/radius.lg], status: active}
-  - {id: rule/AX-101, statement: "Action controls use the declared focus ring and observed hover fill.", severity: must, token_refs: [token/color.ring-focus, token/color.primary-hover], status: active}
+- id: rule/LAYOUT-101
+  statement: 'The shell uses an inset canvas: the sidebar remains in the shell frame and the page canvas is a bounded surface.'
+  severity: must
+  token_refs:
+  - token/color.page-canvas
+  - token/radius.xl
+  status: active
+- id: rule/LAYOUT-102
+  statement: The shell root does not scroll; the page canvas owns block scrolling, and settings owns independent navigation and content scroll
+    regions.
+  severity: must
+  token_refs:
+  - token/space.2
+  status: active
+- id: rule/LAYOUT-103
+  statement: 'Chrome slots render in the declared order: workspace switcher, search, compose, nav group, pin list, rail, header trigger, page
+    canvas, footer utility, then chat launcher. Inside the inset shell the page-header and page-toolbar regions are children of the page-canvas
+    region, not siblings of it.'
+  severity: must
+  token_refs:
+  - token/size.sidebar-default
+  status: active
+- id: rule/LAYOUT-104
+  statement: The chat launcher is a viewport overlay anchored to the bottom-right inset and uses the declared launcher geometry.
+  severity: must
+  token_refs:
+  - token/space.chat-launcher-size
+  - token/space.chat-launcher-inset
+  status: active
+- id: rule/LAYOUT-105
+  statement: Master-detail keeps master and detail panes side by side with independent block scroll domains; dialogs overlay the viewport and
+    expose an open surface.
+  severity: must
+  token_refs: []
+  status: active
+- id: rule/LAYOUT-106
+  statement: Page headers and page toolbars use the shared header height so chrome bands align across routes.
+  severity: must
+  token_refs:
+  - token/space.header-height
+  status: active
+- id: rule/LAYOUT-107
+  statement: The inset page canvas carries padding, radius, border, shadow, and page-canvas background; settings section navigation is a vertical
+    icon-label rail with its own width and border.
+  severity: must
+  token_refs:
+  - token/space.2
+  - token/radius.xl
+  - token/color.surface-border
+  - token/shadow.surface
+  - token/color.page-canvas
+  - token/size.section-nav-default
+  status: active
+- id: rule/LAYOUT-108
+  statement: An overlay dialog caps its block size at the declared dialog-max-height of the viewport; header and footer regions shrink, the body
+    region owns internal block scrolling, and no dialog content is clipped by the viewport.
+  severity: must
+  token_refs:
+  - token/size.dialog-max-height
+  - token/shadow.floating
+  status: active
+- id: rule/LAYOUT-110
+  statement: The page-header and page-toolbar bands are static siblings above the content region; they stay visible because
+    the content region owns block scrolling beneath them, not because of sticky positioning.
+  severity: must
+  token_refs:
+  - token/space.header-height
+  status: active
+- id: rule/LAYOUT-112
+  statement: Chrome bands hug the canvas block-start edge - the inset canvas carries zero internal padding on every logical
+    side, and the surrounding air comes from the canvas inset from the shell frame (block-start, inline-end and block-end),
+    with the inline-start edge flush against the sidebar.
+  severity: must
+  token_refs:
+  - token/space.2
+  status: active
+- id: rule/LAYOUT-113
+  statement: The content region under the chrome owns block scrolling and carries the block-start spacing between chrome and
+    content; the default shell content spacing is the space.2 step, while board and settings canvases use the space.6 step.
+  severity: must
+  token_refs:
+  - token/space.2
+  - token/space.6
+  status: active
+- id: rule/QUALITY-112
+  statement: Collection page headers carry a leading icon at the default icon size in the muted foreground ahead of the title;
+    the icon identifies the collection and is not decorative.
+  severity: must
+  token_refs:
+  - token/size.icon-default
+  - token/color.text-muted
+  status: active
+- id: rule/QUALITY-113
+  statement: Settings section-nav items use the body type step at the large control height with space.2 block and space.3
+    inline padding; unselected items use text-secondary foreground, selected items use text-primary at medium weight on the
+    surface-selected background.
+  severity: must
+  token_refs:
+  - token/typography.body
+  - token/size.control-height-lg
+  - token/space.2
+  - token/space.3
+  - token/color.text-secondary
+  - token/color.text-primary
+  - token/color.surface-selected
+  status: active
+- id: rule/DENSITY-101
+  statement: Data-table rows progressively disclose - row actions stay hidden until row hover, and secondary text yields to
+    row actions on row hover; no row-level secondary content renders permanently when the disclosure state says hidden.
+  severity: must
+  token_refs: []
+  status: active
+- id: rule/RESP-101
+  statement: At the compact viewport the navigation group becomes an overlay sheet rather than a permanent in-flow column.
+  severity: must
+  token_refs: []
+  status: active
+- id: rule/QUALITY-101
+  statement: Control and navigation geometry follows the declared token values; do not substitute ad-hoc dimensions.
+  severity: must
+  token_refs:
+  - token/radius.lg
+  - token/size.sidebar-default
+  status: active
+- id: rule/QUALITY-102
+  statement: Overlay surfaces use the floating shadow token, while bounded page surfaces use the surface shadow token.
+  severity: must
+  token_refs:
+  - token/shadow.floating
+  - token/shadow.surface
+  status: active
+- id: rule/QUALITY-103
+  statement: Navigation links use sidebar accent for hover and active states; settings links use surface hover and surface selected states, and
+    links do not underline.
+  severity: must
+  token_refs:
+  - token/color.sidebar-accent
+  - token/color.surface-hover
+  - token/color.surface-selected
+  status: active
+- id: rule/QUALITY-104
+  statement: Interactive controls use the ring token for focus border and a 50 percent ring-alpha shadow for focus-visible treatment.
+  severity: must
+  token_refs:
+  - token/color.ring
+  - token/color.ring-focus
+  status: active
+- id: rule/QUALITY-105
+  statement: Interactive controls use the declared control-height scale (xs 24, sm 28, default 32, lg 36 px) bound to the control size; control
+    text uses the declared typography steps (default body, sm label, xs caption) and button labels use the medium font weight. Control height
+    never derives from text line-height alone.
+  severity: must
+  token_refs:
+  - token/size.control-height-xs
+  - token/size.control-height-sm
+  - token/size.control-height-default
+  - token/size.control-height-lg
+  - token/typography.body
+  - token/typography.label
+  - token/typography.secondary
+  - token/font.weight.medium
+  status: active
+- id: rule/QUALITY-106
+  statement: Navigation items carry a leading icon at the default icon size ahead of the label; the icon identifies the destination and is not
+    decorative.
+  severity: must
+  token_refs:
+  - token/size.icon-default
+  - token/typography.body
+  status: active
+- id: rule/QUALITY-107
+  statement: Text renders only at the declared typography steps with their structured line-heights; metadata and helper text uses text-secondary,
+    and text-muted is reserved for non-text marks.
+  severity: must
+  token_refs:
+  - token/typography.body
+  - token/color.text-secondary
+  - token/color.text-muted
+  status: active
+- id: rule/QUALITY-108
+  statement: Menu-level surfaces (dropdowns, selects, popovers) use the menu shadow token; window-level overlays (dialogs, sheets, command palette)
+    use the floating shadow token.
+  severity: must
+  token_refs:
+  - token/shadow.menu
+  - token/shadow.floating
+  status: active
+- id: rule/QUALITY-109
+  statement: Foreground/background pairings come from the declared color_pairs and meet their min_ratio; controls must compose declared pairs
+    (for example text-on-primary on primary) instead of ad-hoc foreground/background combinations.
+  severity: must
+  token_refs:
+  - token/color.text-on-primary
+  - token/color.primary
+  status: active
+- id: rule/AX-101
+  statement: Table actions use primary-hover on hover and the focus ring on focus-visible.
+  severity: must
+  token_refs:
+  - token/color.primary-hover
+  - token/color.ring-focus
+  status: active
+- id: rule/AX-104
+  statement: An open dialog is visible and overlays the viewport.
+  severity: must
+  token_refs: []
+  status: active
+- id: rule/LAYOUT-111
+  statement: The page toolbar is a single non-wrapping row at the shared header height; when the available width is insufficient, toolbar controls
+    shrink or truncate inside the row instead of wrapping into a second row. Content beneath the toolbar never overlaps the toolbar band.
+  severity: must
+  token_refs:
+  - token/space.header-height
+  status: active

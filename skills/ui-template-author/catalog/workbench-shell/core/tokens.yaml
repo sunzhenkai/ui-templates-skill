@@ -268,6 +268,21 @@ tokens:
       unit: rem
       origin: computed
       description: Tailwind spacing step 2.
+    '3':
+      value: 0.75
+      unit: rem
+      origin: source
+      description: Tailwind spacing step 3; settings nav item inline padding.
+    '4':
+      value: 1
+      unit: rem
+      origin: source
+      description: Tailwind spacing step 4; board column gap and dialog padding.
+    '6':
+      value: 1.5
+      unit: rem
+      origin: source
+      description: Tailwind spacing step 6; board and settings canvas content padding.
     chat-launcher-inset:
       value: 0.5
       unit: rem

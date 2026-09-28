@@ -1,6 +1,6 @@
 schema: design-system/v1
 id: workbench-shell
-version: 3.0.1
+version: 3.2.0
 status: frozen
 capability: page-system
 layers:
@@ -11,30 +11,30 @@ layers:
   layout: core/layout.yaml
   rules: core/rules.yaml
   evidence: core/evidence.yaml
-contract_digest:
-  algorithm: sha256-canonical-json-v1
-  value: 4cf93e3afd601a872a5e385dfd09b15b101455738d35fbf2cd522109979a89a0
-created_at: '2026-09-19'
-updated_at: '2026-09-19T02:28:00Z'
+created_at: '2026-09-15'
+updated_at: '2026-09-28T02:30:00Z'
 layer_digests:
   tokens:
     algorithm: sha256-canonical-json-v1
-    value: 0aad42adb2884eea70d0ad40116483780e0055f8cf38708e95990f9473996202
+    value: 41e9b68f09b4cf8727d127541a21bd3423a64c96ea82b3d58d7c84a63c904bf4
   primitives:
     algorithm: sha256-canonical-json-v1
-    value: 32a3ab6b22cef4440142f32419bdf6702d8453c6988b91b61710b1db493e3dc5
+    value: 29dee4a7d13795c515a0bf5859f3bbee07b66aa0ff1405508c7237824264740f
   patterns:
     algorithm: sha256-canonical-json-v1
-    value: 441bd750b8e18dc61b6e9d711fc8895075f80271d76fceb6d30d8dc20c8bc446
+    value: 213b9b42cc9151ec8139be93c52530cf48160389c6e3b34ab96aa9ce4f5475c7
   page-types:
     algorithm: sha256-canonical-json-v1
-    value: 051a21a185dc52388db4bb15ed11e08d99dfaf3e18e32a82c6a719153ce68251
+    value: 968768e8794eeac6ad690823194cbb4b825698f41c23cdfd657c8c94a5a37e61
   layout:
     algorithm: sha256-canonical-json-v1
-    value: c9f141a9aa0b464ea9b1c5e72d656300faa4967c3ebfe978a6a8132d8fb5e8f9
+    value: a6c3e691d4a6747958a55a6ecf2eed8ff7233e106fa2ef916680c45c2fc8c059
   rules:
     algorithm: sha256-canonical-json-v1
-    value: 6812c47b1db6427d8bbd2d7d597c134979bc9d40fc7c27285cfef43019560b0e
+    value: 3336c11cb7ed09593915851bb92f9fd84d6d4d018e065e4c123fc6944da33b22
   evidence:
     algorithm: sha256-canonical-json-v1
-    value: df754f02b764a90a9c3a6d2225c2c0601cc9044e640bf7cad3782af99929116d
+    value: 0cf9a10e521758d0f1c5cae57b16c98d2d9dbd5520cca713dddb38d173291ef2
+contract_digest:
+  algorithm: sha256-canonical-json-v1
+  value: e3c03aa6915fd6605c47a0198ab709bd48a59b3dd90f9b7f23401092e35e836b

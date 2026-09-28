@@ -14,6 +14,7 @@ items:
   - page-header
   - page-toolbar
   - page-canvas
+  - content
   - footer-utility
   - chat-fab
   breakpoints:
@@ -26,6 +27,8 @@ items:
   - rule/LAYOUT-104
   - rule/RESP-101
   - rule/LAYOUT-110
+  - rule/LAYOUT-112
+  - rule/LAYOUT-113
   placement:
     id: shell
     shell_variant: inset
@@ -56,7 +59,9 @@ items:
     - id: region.shell.page-header
       role: page-header
       parent: region.shell.page-canvas
-      position: sticky
+    - id: region.shell.content
+      role: content
+      parent: region.shell.page-canvas
     - id: region.shell.page-toolbar
       role: page-toolbar
       parent: region.shell.page-canvas
@@ -110,6 +115,10 @@ items:
       role: page-canvas
       region: region.shell.page-canvas
       order: 10
+    - id: slot.shell.content
+      role: content
+      region: region.shell.content
+      order: 13
     - id: slot.shell.footer-utility
       role: footer-utility
       region: region.shell.footer-utility
@@ -167,24 +176,31 @@ items:
       from: region.shell.page-canvas
       to: region.shell.page-toolbar
       order: 2
+    - type: contains
+      from: region.shell.page-canvas
+      to: region.shell.content
+      order: 3
     scroll_domains:
-    - id: scroll.shell.canvas
+    - id: scroll.shell.content
       axis: block
-      owner: region.shell.page-canvas
+      owner: region.shell.content
     responsive_modes:
     - id: mode.desktop
       viewport: desktop
     - id: mode.compact
       viewport: compact
     geometry:
-    - id: geometry.shell.canvas.padding-start
+    - id: geometry.shell.canvas.inset-block-start
+      role: inset-block-start
+      token: token/space.2
+    - id: geometry.shell.canvas.inset-inline-end
+      role: inset-inline-end
+      token: token/space.2
+    - id: geometry.shell.canvas.inset-block-end
+      role: inset-block-end
+      token: token/space.2
+    - id: geometry.shell.content.padding-block-start
       role: padding-block-start
-      token: token/space.2
-    - id: geometry.shell.canvas.padding-end
-      role: padding-inline-end
-      token: token/space.2
-    - id: geometry.shell.canvas.padding-bottom
-      role: padding-block-end
       token: token/space.2
     - id: geometry.shell.canvas.radius
       role: radius
@@ -212,6 +228,8 @@ items:
   - rule/LAYOUT-102
   - rule/LAYOUT-106
   - rule/LAYOUT-110
+  - rule/LAYOUT-113
+  - rule/DENSITY-101
   placement:
     id: board
     regions:
@@ -267,6 +285,18 @@ items:
     - id: geometry.board.page-toolbar.size
       role: size
       token: token/space.header-height
+    - id: geometry.board.canvas.padding-block-start
+      role: padding-block-start
+      token: token/space.6
+    - id: geometry.board.canvas.padding-inline-end
+      role: padding-inline-end
+      token: token/space.6
+    - id: geometry.board.canvas.padding-block-end
+      role: padding-block-end
+      token: token/space.6
+    - id: geometry.board.canvas.padding-inline-start
+      role: padding-inline-start
+      token: token/space.6
     pattern_refs:
     - pattern/workspace-board
     evidence_refs:
@@ -348,6 +378,8 @@ items:
   rule_refs:
   - rule/LAYOUT-102
   - rule/LAYOUT-107
+  - rule/LAYOUT-113
+  - rule/QUALITY-113
   placement:
     id: settings
     regions:
@@ -396,6 +428,18 @@ items:
     - id: geometry.settings.section-nav.border
       role: border
       token: token/color.surface-border
+    - id: geometry.settings.canvas.padding-block-start
+      role: padding-block-start
+      token: token/space.6
+    - id: geometry.settings.canvas.padding-inline-end
+      role: padding-inline-end
+      token: token/space.6
+    - id: geometry.settings.canvas.padding-block-end
+      role: padding-block-end
+      token: token/space.6
+    - id: geometry.settings.canvas.padding-inline-start
+      role: padding-inline-start
+      token: token/space.6
     pattern_refs:
     - pattern/settings-section-nav
     evidence_refs:

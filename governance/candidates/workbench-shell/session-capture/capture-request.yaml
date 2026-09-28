@@ -1,7 +1,7 @@
 schema_version: 1
 capture_profile: repo-literal-graph-v1
-source_id: source-multica-session
-source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9
+source_id: source-002
+source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
 graph_path: ui-source-graph.yaml
 platform: web
 conformance: structural

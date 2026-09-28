@@ -424,6 +424,9 @@ def validate_semantics(
         negatives = {(item.get("property"), item.get("value")) for item in record.get("negative_facts") or [] if isinstance(item, dict)}
         if decoration == "none" and ("text_decoration", "none") not in negatives:
             add("FIDELITY_NEGATIVE_FACT_MISSING", "text_decoration none 必须作为 explicit negative fact", f"state_presentations.{index}.negative_facts")
+        visibility = record.get("visibility")
+        if visibility == "hidden" and ("visibility", "hidden") not in negatives:
+            add("FIDELITY_NEGATIVE_FACT_MISSING", "visibility hidden 必须作为 explicit negative fact", f"state_presentations.{index}.negative_facts")
         if decoration == "underline" and any(property_name == "text_decoration" for property_name, _value in negatives):
             add(
                 "FIDELITY_STATE_DECORATION_CONFLICT",
