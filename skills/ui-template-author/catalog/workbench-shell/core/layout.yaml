@@ -25,6 +25,7 @@ items:
   - rule/LAYOUT-103
   - rule/LAYOUT-104
   - rule/RESP-101
+  - rule/LAYOUT-110
   placement:
     id: shell
     shell_variant: inset
@@ -54,10 +55,11 @@ items:
       parent: region.shell.root
     - id: region.shell.page-header
       role: page-header
-      parent: region.shell.root
+      parent: region.shell.page-canvas
+      position: sticky
     - id: region.shell.page-toolbar
       role: page-toolbar
-      parent: region.shell.root
+      parent: region.shell.page-canvas
     - id: region.shell.page-canvas
       role: page-canvas
       parent: region.shell.root
@@ -147,14 +149,6 @@ items:
       order: 7
     - type: contains
       from: region.shell.root
-      to: region.shell.page-header
-      order: 8
-    - type: contains
-      from: region.shell.root
-      to: region.shell.page-toolbar
-      order: 9
-    - type: contains
-      from: region.shell.root
       to: region.shell.page-canvas
       order: 10
     - type: contains
@@ -165,6 +159,14 @@ items:
       from: region.shell.root
       to: region.shell.chat-fab
       order: 12
+    - type: contains
+      from: region.shell.page-canvas
+      to: region.shell.page-header
+      order: 1
+    - type: contains
+      from: region.shell.page-canvas
+      to: region.shell.page-toolbar
+      order: 2
     scroll_domains:
     - id: scroll.shell.canvas
       axis: block
@@ -209,6 +211,7 @@ items:
   rule_refs:
   - rule/LAYOUT-102
   - rule/LAYOUT-106
+  - rule/LAYOUT-110
   placement:
     id: board
     regions:
@@ -216,10 +219,11 @@ items:
       role: root
     - id: region.board.page-header
       role: page-header
-      parent: region.board.root
+      parent: region.board.page-canvas
+      position: sticky
     - id: region.board.page-toolbar
       role: page-toolbar
-      parent: region.board.root
+      parent: region.board.page-canvas
     - id: region.board.page-canvas
       role: page-canvas
       parent: region.board.root
@@ -239,16 +243,16 @@ items:
     relations:
     - type: contains
       from: region.board.root
+      to: region.board.page-canvas
+      order: 3
+    - type: contains
+      from: region.board.page-canvas
       to: region.board.page-header
       order: 1
     - type: contains
-      from: region.board.root
+      from: region.board.page-canvas
       to: region.board.page-toolbar
       order: 2
-    - type: contains
-      from: region.board.root
-      to: region.board.page-canvas
-      order: 3
     scroll_domains:
     - id: scroll.board.canvas
       axis: block
@@ -406,6 +410,7 @@ items:
   rule_refs:
   - rule/LAYOUT-105
   - rule/AX-104
+  - rule/LAYOUT-108
   placement:
     id: dialog
     regions:
@@ -414,6 +419,9 @@ items:
     - id: region.dialog.overlay
       role: overlay
       parent: region.dialog.root
+    - id: region.dialog.content
+      role: content
+      parent: region.dialog.overlay
     slots:
     - id: slot.dialog.overlay
       role: overlay
@@ -431,7 +439,14 @@ items:
     - id: geometry.dialog.overlay.shadow
       role: shadow
       token: token/shadow.floating
+    - id: geometry.dialog.content.max-block-size
+      role: max-block-size
+      token: token/size.dialog-max-height
     pattern_refs:
     - pattern/overlay-dialog
     evidence_refs:
     - evidence-layout-dialog
+    scroll_domains:
+    - id: scroll.dialog.content
+      axis: block
+      owner: region.dialog.content

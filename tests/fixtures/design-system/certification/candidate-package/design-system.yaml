@@ -14,7 +14,7 @@ layers:
 layer_digests:
   tokens:
     algorithm: sha256-canonical-json-v1
-    value: 250e08668ca320705604e3697fd462c00a704927199dee3771a86c1edcd5eb7b
+    value: 7b3b4757eb53d811020add0ce161cb3824caac595978836208fc41e4fb910fef
   rules:
     algorithm: sha256-canonical-json-v1
     value: f0c6ede91b7792b5c4a58f22ad6fd1c17c59502276c0c0480a266b29c876d7fe
@@ -23,7 +23,7 @@ layer_digests:
     value: 1d4711adf6e31059e3cf1b5beff40595d7bea43a3fea442ae6486287b4b85da1
   primitives:
     algorithm: sha256-canonical-json-v1
-    value: 102a789227d7c7a92b62c31026c87418e908d735aaa4825b4edfef7a94c6beaf
+    value: 9d78ccb4973e1f58d46c2ab8f839a1c62393977340e383b57a824c85952de541
   patterns:
     algorithm: sha256-canonical-json-v1
     value: a0411dac8c409926b3092cb71fa28c3557086a95a1aa8e8cdb7bbf0bcd418dbf
@@ -37,4 +37,4 @@ created_at: '2026-09-08'
 updated_at: '2026-09-08T00:00:00Z'
 contract_digest:
   algorithm: sha256-canonical-json-v1
-  value: 3589a7f7b5b2e1f9a80f0ffdaee66c1e0655487be499a8ec66339eca75065763
+  value: 3b7bc74512d9bf9fc343227c0110601ad2ded6626e3ecea362aa7a4e0f426aca
