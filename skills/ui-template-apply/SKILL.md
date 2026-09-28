@@ -48,7 +48,7 @@ description: 消费 `design-system/v1` Active Instance 按 Phase 0–9 实现真
 8. Browser verification → `08-verification.json` + `evidence/`
 9. Review/feedback → `09-review.md` + `feedback/`
 
-每阶段状态和 digest 写入 `checkpoint.yaml`（新会话使用 `design-system-apply-checkpoint/v1`）。恢复先验证 scope、contract/binding/projection digest、stable IDs、change set、source/build identity 和 Phase 8/9 证据；用 Impact-based Resume 从最早失效 phase 重开。任何身份/digest 失配都停止，不得选择性继续。页面存在不能替代证据。
+路由按需消费：`design_source: template | derived`（缺省 template）。模板场景能覆盖的需求走 template route；模板未观测的界面/组件/layout 形态走 derived route，声明可解析的 `derivation_basis`（模板 rule/token/primitive stable ID 或 LOCAL rule ID）后继续实现，不得静默发明，也不再因模板闭集缺口停止。每阶段状态和 digest 写入 `checkpoint.yaml`（新会话使用 `design-system-apply-checkpoint/v1`）。恢复先验证 scope、contract/binding/projection digest、stable IDs、change set、source/build identity 和 Phase 8/9 证据；用 Impact-based Resume 从最早失效 phase 重开。任何身份/digest 失配都停止，不得选择性继续。页面存在不能替代证据。
 
 ## 工具与质量
 

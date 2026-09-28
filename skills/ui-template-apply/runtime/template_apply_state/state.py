@@ -758,32 +758,74 @@ def _route_composition_findings(
                 "included route 必须有稳定 route ID，供 placement-sensitive component 引用",
                 2,
             ))
-        if page_type is None:
+        design_source = raw.get("design_source", "template")
+        if design_source not in ("template", "derived"):
             findings.append(Finding(
-                "ROUTE_PAGE_TYPE_MISSING",
-                f"02-routes.yaml#{route_path}",
-                "included route 必须映射到已声明 Page Type",
+                "ROUTE_DESIGN_SOURCE_INVALID",
+                f"02-routes.yaml#{route_path}.design_source",
+                "design_source 必须是 template | derived",
                 2,
+                {"value": design_source if isinstance(design_source, str) else type(design_source).__name__},
             ))
-        elif page_type not in active_layers.get("page_types", set()):
-            findings.append(Finding(
-                "ROUTE_PAGE_TYPE_DANGLING",
-                f"02-routes.yaml#{route_path}",
-                f"unknown page type: {page_type}",
-                2,
-            ))
+            design_source = "template"
+        derived = design_source == "derived"
+        if derived:
+            basis = raw.get("derivation_basis")
+            if not isinstance(basis, list) or not basis or not all(isinstance(item, str) for item in basis):
+                findings.append(Finding(
+                    "DERIVATION_BASIS_MISSING",
+                    f"02-routes.yaml#{route_path}.derivation_basis",
+                    "derived route 必须声明非空 derivation_basis（模板 stable ID 或本会话 LOCAL rule ID）",
+                    2,
+                ))
+                basis = []
+            else:
+                basis_known_ids: set[str] = set()
+                for id_set in active_layers.values():
+                    basis_known_ids |= id_set
+                for ref in basis:
+                    if ref.startswith("LOCAL-"):
+                        continue
+                    if ref not in basis_known_ids:
+                        findings.append(Finding(
+                            "DERIVATION_BASIS_DANGLING",
+                            f"02-routes.yaml#{route_path}.derivation_basis",
+                            f"derivation_basis 引用了不可解析的模板 stable ID: {ref}",
+                            2,
+                            {"target": ref},
+                        ))
+
+        if not derived:
+            if page_type is None:
+                findings.append(Finding(
+                    "ROUTE_PAGE_TYPE_MISSING",
+                    f"02-routes.yaml#{route_path}",
+                    "included template route 必须映射到已声明 Page Type",
+                    2,
+                ))
+            elif page_type not in active_layers.get("page_types", set()):
+                findings.append(Finding(
+                    "ROUTE_PAGE_TYPE_DANGLING",
+                    f"02-routes.yaml#{route_path}",
+                    f"unknown page type: {page_type}",
+                    2,
+                ))
 
         pattern_refs = raw.get("pattern_refs")
+        if pattern_refs is None:
+            pattern_refs = [] if derived else None
         if not isinstance(pattern_refs, list) or not pattern_refs or not all(
             isinstance(item, str) for item in pattern_refs
         ):
-            findings.append(Finding(
-                "ROUTE_PATTERN_BINDING_MISSING",
-                f"02-routes.yaml#{route_path}",
-                "included route 必须绑定至少一个已声明 Pattern",
-                2,
-            ))
-            pattern_refs = []
+            if not derived:
+                findings.append(Finding(
+                    "ROUTE_PATTERN_BINDING_MISSING",
+                    f"02-routes.yaml#{route_path}",
+                    "included template route 必须绑定至少一个已声明 Pattern",
+                    2,
+                ))
+            if not isinstance(pattern_refs, list) or not all(isinstance(item, str) for item in pattern_refs):
+                pattern_refs = []
         else:
             for target in pattern_refs:
                 if target not in active_layers.get("patterns", set()):
@@ -794,30 +836,35 @@ def _route_composition_findings(
                         2,
                         {"target": target},
                     ))
-            allowed_patterns = ((placement_context or {}).get("page_type_patterns") or {}).get(page_type)
-            if isinstance(allowed_patterns, list):
-                outside = sorted(set(pattern_refs) - set(allowed_patterns))
-                if outside:
-                    findings.append(Finding(
-                        "ROUTE_PATTERN_NOT_IN_PAGE_TYPE",
-                        f"02-routes.yaml#{route_path}.pattern_refs",
-                        "route Pattern 超出绑定 Page Type 的声明 closure",
-                        2,
-                        {"outside": outside, "page_type": page_type},
-                    ))
+            if not derived:
+                allowed_patterns = ((placement_context or {}).get("page_type_patterns") or {}).get(page_type)
+                if isinstance(allowed_patterns, list):
+                    outside = sorted(set(pattern_refs) - set(allowed_patterns))
+                    if outside:
+                        findings.append(Finding(
+                            "ROUTE_PATTERN_NOT_IN_PAGE_TYPE",
+                            f"02-routes.yaml#{route_path}.pattern_refs",
+                            "route Pattern 超出绑定 Page Type 的声明 closure",
+                            2,
+                            {"outside": outside, "page_type": page_type},
+                        ))
 
         placement_plan = raw.get("placement_plan")
         template_refs = placement_plan.get("template_refs") if isinstance(placement_plan, dict) else None
+        if template_refs is None and derived:
+            template_refs = []
         if not isinstance(template_refs, list) or not template_refs or not all(
             isinstance(item, str) for item in template_refs
         ):
-            findings.append(Finding(
-                "PLACEMENT_TEMPLATE_TRACE_MISSING",
-                f"02-routes.yaml#{route_path}.placement_plan.template_refs",
-                "included route 的布局形态决策必须携带解析到模板 stable ID 的 template_refs",
-                2,
-            ))
-            template_refs = []
+            if not derived:
+                findings.append(Finding(
+                    "PLACEMENT_TEMPLATE_TRACE_MISSING",
+                    f"02-routes.yaml#{route_path}.placement_plan.template_refs",
+                    "included template route 的布局形态决策必须携带解析到模板 stable ID 的 template_refs",
+                    2,
+                ))
+            if not isinstance(template_refs, list) or not all(isinstance(item, str) for item in template_refs):
+                template_refs = []
         known_template_ids: set[str] = set()
         for id_set in active_layers.values():
             known_template_ids |= id_set
@@ -832,7 +879,7 @@ def _route_composition_findings(
                 ))
 
         layouts_map = (placement_context or {}).get("layouts", {})
-        if isinstance(layouts_map, dict) and isinstance(raw.get("layout_ref"), str):
+        if not derived and isinstance(layouts_map, dict) and isinstance(raw.get("layout_ref"), str):
             bound = layouts_map.get(raw["layout_ref"])
             if isinstance(bound, dict):
                 placement = bound.get("placement")
@@ -878,7 +925,7 @@ def _route_composition_findings(
             ))
 
         layouts = (placement_context or {}).get("layouts", {})
-        if isinstance(layouts, dict):
+        if not derived and isinstance(layouts, dict):
             candidates = {
                 layout_id: layout
                 for layout_id, layout in layouts.items()
@@ -928,6 +975,13 @@ def _route_composition_findings(
         route_patterns_by_id: dict[str, list[str]] = {}
         if isinstance(route_id, str) and pattern_refs:
             route_patterns_by_id[route_id] = list(pattern_refs)
+        derived_route_ids: set[str] = set()
+        if derived and isinstance(route_id, str) and route_id:
+            derived_route_ids.add(route_id)
+            route_patterns_by_id.setdefault(route_id, []).extend(
+                item for item in (raw.get("derivation_basis") or [])
+                if isinstance(item, str) and item not in route_patterns_by_id[route_id]
+            )
     for raw in entries(apply_root / "04-components.yaml"):
         name = raw.get("id") or raw.get("name") or "<component>"
         refs: list[str] = []
@@ -966,12 +1020,15 @@ def _route_composition_findings(
             authorized: set[str] = set()
             for route_ref in route_refs:
                 authorized.update(route_patterns_by_id.get(route_ref, set()))
+            on_derived_route = all(route_ref in derived_route_ids for route_ref in route_refs)
             placement_pattern = raw.get("placement_pattern")
-            if not isinstance(placement_pattern, str) or not placement_pattern:
+            if on_derived_route and (placement_pattern is None or placement_pattern in authorized):
+                pass
+            elif not isinstance(placement_pattern, str) or not placement_pattern:
                 findings.append(Finding(
                     "PLACEMENT_COMPONENT_UNAUTHORIZED",
                     f"04-components.yaml#{name}.placement_pattern",
-                    "placement-sensitive component 必须声明授权 Pattern",
+                    "placement-sensitive component 必须声明授权 Pattern 或引用 derived route",
                     4,
                     {"placement_role": placement_role, "routes": route_refs},
                 ))
