@@ -15,11 +15,13 @@ def main() -> int:
     parser.add_argument("fidelity", type=Path)
     parser.add_argument("--layout", type=Path, help="Active Instance core/layout.yaml，提供 placement geometry 与 pattern 闭包场景")
     parser.add_argument("--expectations", type=Path, help="certification 产出的 measured expectation set，逐条产生 oracle 锚定比对场景")
+    parser.add_argument("--primitives", type=Path, help="core/primitives.yaml，逐 variant/anatomy contract 产生场景")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
     layout = load_data(args.layout) if args.layout else None
     expectations = load_data(args.expectations) if args.expectations else None
-    scenarios = derive_scenario_ids(load_fidelity(args.fidelity), layout, expectations)
+    primitives = load_data(args.primitives) if args.primitives else None
+    scenarios = derive_scenario_ids(load_fidelity(args.fidelity), layout, expectations, primitives)
     if args.json:
         print(json.dumps({"count": len(scenarios), "scenario_ids": scenarios}, ensure_ascii=False, indent=2))
     else:

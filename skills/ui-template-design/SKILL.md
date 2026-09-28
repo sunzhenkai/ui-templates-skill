@@ -30,7 +30,7 @@ description: 在消费项目创建、领养、重构、迭代并冻结 `design-s
 
 阶段不可跳过。完成看产物与证据，不看「已经写了页面」。状态在项目根 `.ui-template-design/`。
 
-0. Intake → `00-intake.md`：任务类 `bootstrap | refactor | iterate`、source origin `blank | template-package | legacy-freeze-migration`、站点 `greenfield | existing`、输出根、变更集合、decision gates 账本。Active digest 不匹配则停止。`iterate` 不重开完整 0–9。
+0. Intake → `00-intake.md`：任务类 `bootstrap | refactor | iterate`、source origin `blank | template-package | legacy-freeze-migration`、站点 `greenfield | existing`、输出根、变更集合、decision gates 账本。Active digest 不匹配则停止。`iterate` 不重开完整 0–9。`iterate` 还必须先消费 Apply 交回的 binding 缺口：读消费项目 `.ui-template-apply/phase9-binding-handoff.yaml`（schema `design-system-binding-handoff/v1`），用 `validate_design_system.py validate-binding-handoff <file> --evidence-root .ui-template-apply` 校验，把 `findings[]` 折进变更集合并刷新 binding digest。binding 缺口**不属于** `design-system-feedback/v1`（其 ownership 闭集只有 `package`），Author 不认领它；该产物是 binding 归属的唯一交接路径，缺失即该归属无主。
 1. Stack / binding → `00-architecture.yaml` 与 `binding.yaml`：greenfield 按选型引导逐层列出候选（分层建议语义 + 官方 CLI 优先，见 greenfield.md）并由用户选择；existing 确认保持或另行拆分迁移。未确认不得写应用源码。
 2. UX Model & Inventory → `01-ux-model.md`、`01-inventory.yaml`。`refactor` 必做；`iterate` 禁止全量 inventory。
 3. Token Freeze / Projection → `core/tokens.yaml` 与 binding projections；existing 含 `02-legacy-mapping.yaml`。精确值只在 `core/tokens.yaml`。

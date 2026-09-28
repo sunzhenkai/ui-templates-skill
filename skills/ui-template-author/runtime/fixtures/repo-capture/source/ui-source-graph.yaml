@@ -88,6 +88,13 @@ usages:
       - {id: fact.board.nav-anatomy, facet: layout_scenes, subject: board, context: null, slot: section-nav, state: default, property: anatomy, value: {kind: semantic, value: icon-label}, negative: false, rule_id: LAYOUT-002}
       - {id: fact.board.nav-selected, facet: state_presentations, subject: board, context: navigation-link, slot: section-nav, state: selected, property: background, value: {kind: token-ref, value: themes.light.background}, negative: false, rule_id: QUALITY-002}
       - {id: fact.board.nav-hover, facet: state_presentations, subject: board, context: navigation-link, slot: section-nav, state: hover, property: background, value: {kind: token-ref, value: themes.light.background}, negative: false, rule_id: QUALITY-002}
+      - {id: fact.board.nav-item-size, facet: component_geometry, subject: board, context: null, slot: section-nav, state: default, property: size, value: {kind: token-ref, value: sizing.nav-item-height}, negative: false, rule_id: QUALITY-002}
+      - {id: fact.board.nav-item-pbs, facet: component_geometry, subject: board, context: null, slot: section-nav, state: default, property: padding_block_start, value: {kind: token-ref, value: spacing.content-card}, negative: false, rule_id: QUALITY-002}
+      - {id: fact.board.nav-item-pie, facet: component_geometry, subject: board, context: null, slot: section-nav, state: default, property: padding_inline_end, value: {kind: token-ref, value: spacing.content-card}, negative: false, rule_id: QUALITY-002}
+      - {id: fact.board.nav-item-pbe, facet: component_geometry, subject: board, context: null, slot: section-nav, state: default, property: padding_block_end, value: {kind: token-ref, value: spacing.content-card}, negative: false, rule_id: QUALITY-002}
+      - {id: fact.board.nav-item-pis, facet: component_geometry, subject: board, context: null, slot: section-nav, state: default, property: padding_inline_start, value: {kind: token-ref, value: spacing.content-card}, negative: false, rule_id: QUALITY-002}
+      - {id: fact.board.nav-item-text-default, facet: state_presentations, subject: board, context: navigation-link, slot: section-nav, state: default, property: text, value: {kind: token-ref, value: themes.light.muted-foreground}, negative: false, rule_id: QUALITY-002}
+      - {id: fact.board.nav-item-text-selected, facet: state_presentations, subject: board, context: navigation-link, slot: section-nav, state: selected, property: text, value: {kind: token-ref, value: themes.light.muted-foreground}, negative: false, rule_id: QUALITY-002}
   - id: usage.master-scroll
     definition_id: scene.master-detail
     scene: master-detail

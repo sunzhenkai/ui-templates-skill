@@ -17,15 +17,23 @@ items:
   - rule/QUALITY-103
 - id: primitive/page-header
   name: Page header
+  anatomy:
+  - slot: icon
+    order: 1
+  - slot: label
+    order: 2
   states:
   - default
   token_refs:
   - token/space.header-height
   - token/typography.body
   - token/font.weight.semibold
+  - token/size.icon-default
+  - token/color.text-muted
   rule_refs:
   - rule/LAYOUT-106
   - rule/LAYOUT-110
+  - rule/QUALITY-112
 - id: primitive/page-toolbar
   name: Page toolbar
   states:
@@ -67,6 +75,7 @@ items:
   - token/color.surface-selected
   rule_refs:
   - rule/QUALITY-103
+  - rule/DENSITY-101
 - id: primitive/dialog
   name: Dialog
   states:
@@ -230,10 +239,17 @@ items:
   - token/color.surface-hover
   - token/color.surface-selected
   - token/color.ring-focus
+  - token/size.control-height-lg
+  - token/space.2
+  - token/space.3
+  - token/typography.body
+  - token/color.text-secondary
+  - token/color.text-primary
   rule_refs:
   - rule/LAYOUT-107
   - rule/QUALITY-103
   - rule/QUALITY-104
+  - rule/QUALITY-113
 - id: primitive/nav-item
   name: Navigation item
   variants:

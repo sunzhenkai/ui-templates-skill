@@ -1,0 +1,1349 @@
+# Fidelity sidecar projected from the session literal source graph (repo-structural-v1).
+schema_version: 1
+profile: repo-structural-v1
+conformance: structural
+platforms:
+- web
+style_only_reason: null
+scope:
+  scenes:
+  - board
+  - dialog
+  - master-detail
+  - settings
+  - shell
+  components:
+  - app-sidebar
+  - button
+  - chat-fab
+  - command-palette
+  - data-table
+  - dialog
+  - input
+  - page-header
+  - settings-nav
+  contexts:
+  - action-trigger
+  - navigation-link
+  - overlay-surface
+layout_scenes:
+- id: scene.board
+  scene: board
+  scene_kind: board
+  rule_id: rule.LAYOUT-102
+  status: observed
+  regions:
+  - id: region.board.root
+    role: root
+  - id: region.board.page-canvas
+    role: page-canvas
+  - id: region.board.columns
+    role: columns
+  relations:
+  - type: contains
+    from: region.board.root
+    to: region.board.page-canvas
+  - type: contains
+    from: region.board.root
+    to: region.board.columns
+  arrangement: vertical
+  fill: intrinsic
+  wrap: non-wrap
+  shrink: non-shrink
+  scroll_domains:
+  - id: scroll.board.inline
+    axis: inline
+    owner: region.board.columns
+    nested_in: null
+  - id: scroll.board.page-canvas
+    axis: block
+    owner: region.board.page-canvas
+    nested_in: null
+  overlays: []
+  responsive_modes:
+  - id: mode.desktop
+    viewport: desktop
+  negative_facts:
+  - property: shrink
+    value: non-shrink
+  - property: wrap
+    value: non-wrap
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.board'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: scene.dialog
+  scene: dialog
+  scene_kind: dialog
+  rule_id: rule.LAYOUT-005
+  status: observed
+  regions:
+  - id: region.dialog.root
+    role: root
+  - id: region.dialog.overlay
+    role: overlay
+  relations:
+  - type: contains
+    from: region.dialog.root
+    to: region.dialog.overlay
+  - type: overlay
+    from: region.dialog.root
+    to: region.dialog.overlay
+  arrangement: vertical
+  fill: intrinsic
+  wrap: wrap
+  shrink: shrink
+  scroll_domains: []
+  overlays:
+  - id: overlay.dialog
+    scope: viewport
+    anchor: region.dialog.root
+    region: region.dialog.overlay
+  responsive_modes:
+  - id: mode.desktop
+    viewport: desktop
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.dialog-scene'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:d7462af1eef0f029ae773653aef069d6e623c0bf87e1b88bedf889da5a1f44dc
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: scene.master-detail
+  scene: master-detail
+  scene_kind: master-detail
+  rule_id: rule.LAYOUT-003
+  status: observed
+  regions:
+  - id: region.master-detail.detail-pane
+    role: detail-pane
+  - id: region.master-detail.root
+    role: root
+  - id: region.master-detail.master-pane
+    role: master-pane
+  - id: region.master-detail.context-panel
+    role: context-panel
+  relations:
+  - type: contains
+    from: region.master-detail.root
+    to: region.master-detail.detail-pane
+  - type: contains
+    from: region.master-detail.root
+    to: region.master-detail.master-pane
+  - type: contains
+    from: region.master-detail.root
+    to: region.master-detail.context-panel
+  - type: overlay
+    from: region.master-detail.root
+    to: region.master-detail.context-panel
+  arrangement: horizontal
+  fill: intrinsic
+  wrap: wrap
+  shrink: shrink
+  scroll_domains:
+  - id: scroll.master-detail.detail-pane
+    axis: block
+    owner: region.master-detail.detail-pane
+    nested_in: null
+  - id: scroll.master-detail.master-pane
+    axis: block
+    owner: region.master-detail.master-pane
+    nested_in: null
+  overlays:
+  - id: overlay.master-detail
+    scope: region
+    anchor: region.master-detail.root
+    region: region.master-detail.context-panel
+  responsive_modes:
+  - id: mode.desktop
+    viewport: desktop
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.detail-scroll'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:81ec7d606bfbd74f15077d01c5d66900b16657af490c99f4ca27b9fdf8156a80
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: scene.settings
+  scene: settings
+  scene_kind: other
+  rule_id: rule.LAYOUT-102
+  status: observed
+  regions:
+  - id: region.settings.page-canvas
+    role: page-canvas
+  - id: region.settings.section-nav
+    role: section-nav
+  - id: region.settings.root
+    role: root
+  relations:
+  - type: contains
+    from: region.settings.root
+    to: region.settings.page-canvas
+  - type: contains
+    from: region.settings.root
+    to: region.settings.section-nav
+  arrangement: vertical
+  fill: intrinsic
+  wrap: wrap
+  shrink: shrink
+  scroll_domains:
+  - id: scroll.settings.page-canvas
+    axis: block
+    owner: region.settings.page-canvas
+    nested_in: null
+  - id: scroll.settings.section-nav
+    axis: block
+    owner: region.settings.section-nav
+    nested_in: null
+  overlays: []
+  responsive_modes:
+  - id: mode.desktop
+    viewport: desktop
+  negative_facts:
+  - property: root_scroll
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.settings-section-nav'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: scene.shell
+  scene: shell
+  scene_kind: shell
+  rule_id: rule.LAYOUT-001
+  status: observed
+  regions:
+  - id: region.shell.root
+    role: root
+  - id: region.shell.chat-fab
+    role: chat-fab
+  - id: region.shell.header-trigger
+    role: header-trigger
+  - id: region.shell.page-canvas
+    role: page-canvas
+  - id: region.shell.content
+    role: content
+    parent: region.shell.page-canvas
+  - id: region.shell.page-header
+    role: page-header
+    parent: region.shell.page-canvas
+  - id: region.shell.compose
+    role: compose
+  - id: region.shell.footer-utility
+    role: footer-utility
+  - id: region.shell.nav-group
+    role: nav-group
+  - id: region.shell.page-toolbar
+    role: page-toolbar
+    parent: region.shell.page-canvas
+  - id: region.shell.pin-list
+    role: pin-list
+  - id: region.shell.rail
+    role: rail
+  - id: region.shell.search
+    role: search
+  - id: region.shell.workspace-switcher
+    role: workspace-switcher
+  relations:
+  - type: contains
+    from: region.shell.root
+    to: region.shell.chat-fab
+    order: 12
+  - type: contains
+    from: region.shell.root
+    to: region.shell.header-trigger
+    order: 7
+  - type: contains
+    from: region.shell.root
+    to: region.shell.page-canvas
+    order: 10
+  - type: contains
+    from: region.shell.page-canvas
+    to: region.shell.content
+    order: 13
+  - type: contains
+    from: region.shell.page-canvas
+    to: region.shell.page-header
+    order: 8
+  - type: contains
+    from: region.shell.root
+    to: region.shell.compose
+    order: 3
+  - type: contains
+    from: region.shell.root
+    to: region.shell.footer-utility
+    order: 11
+  - type: contains
+    from: region.shell.root
+    to: region.shell.nav-group
+    order: 4
+  - type: contains
+    from: region.shell.page-canvas
+    to: region.shell.page-toolbar
+    order: 9
+  - type: contains
+    from: region.shell.root
+    to: region.shell.pin-list
+    order: 5
+  - type: contains
+    from: region.shell.root
+    to: region.shell.rail
+    order: 6
+  - type: contains
+    from: region.shell.root
+    to: region.shell.search
+    order: 2
+  - type: contains
+    from: region.shell.root
+    to: region.shell.workspace-switcher
+    order: 1
+  arrangement: horizontal
+  fill: intrinsic
+  wrap: wrap
+  shrink: shrink
+  scroll_domains:
+  - id: scroll.shell.content
+    axis: block
+    owner: region.shell.content
+    nested_in: null
+  overlays: []
+  responsive_modes:
+  - id: mode.desktop
+    viewport: desktop
+  negative_facts:
+  - property: root_scroll
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.shell'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+  shell_variant: inset
+  slots:
+  - id: slot.shell.workspace-switcher
+    role: workspace-switcher
+    region: region.shell.workspace-switcher
+    order: 1
+  - id: slot.shell.search
+    role: search
+    region: region.shell.search
+    order: 2
+  - id: slot.shell.compose
+    role: compose
+    region: region.shell.compose
+    order: 3
+  - id: slot.shell.nav-group
+    role: nav-group
+    region: region.shell.nav-group
+    order: 4
+  - id: slot.shell.pin-list
+    role: pin-list
+    region: region.shell.pin-list
+    order: 5
+  - id: slot.shell.rail
+    role: rail
+    region: region.shell.rail
+    order: 6
+  - id: slot.shell.header-trigger
+    role: header-trigger
+    region: region.shell.header-trigger
+    order: 7
+  - id: slot.shell.page-header
+    role: page-header
+    region: region.shell.page-header
+    order: 8
+  - id: slot.shell.page-toolbar
+    role: page-toolbar
+    region: region.shell.page-toolbar
+    order: 9
+  - id: slot.shell.page-canvas
+    role: page-canvas
+    region: region.shell.page-canvas
+    order: 10
+  - id: slot.shell.footer-utility
+    role: footer-utility
+    region: region.shell.footer-utility
+    order: 11
+  - id: slot.shell.chat-fab
+    role: chat-fab
+    region: region.shell.chat-fab
+    order: 12
+  - id: slot.shell.content
+    role: content
+    region: region.shell.content
+    order: 13
+  chrome_anchors:
+  - id: anchor.shell.chat-fab
+    role: chat-fab
+    region: region.shell.chat-fab
+  - id: anchor.shell.header-trigger
+    role: header-trigger
+    region: region.shell.header-trigger
+component_geometry:
+- id: geometry.app-sidebar.nav-group
+  component: app-sidebar
+  slot: nav-group
+  rule_id: rule.LAYOUT-001
+  status: observed
+  properties:
+    size:
+      kind: token-ref
+      value: size.sidebar-default
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.app-sidebar-width'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:3bb9eea99fe13edb945c6016e04a0f6a30475cf250a0b2803c00e1df11e245de
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.board.page-canvas
+  component: board
+  slot: page-canvas
+  rule_id: rule.LAYOUT-113
+  status: observed
+  properties:
+    padding_block_end:
+      kind: token-ref
+      value: space.6
+    padding_block_start:
+      kind: token-ref
+      value: space.6
+    padding_inline_end:
+      kind: token-ref
+      value: space.6
+    padding_inline_start:
+      kind: token-ref
+      value: space.6
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.board'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.button.control
+  component: button
+  slot: control
+  rule_id: rule.QUALITY-101
+  status: observed
+  properties:
+    radius:
+      kind: token-ref
+      value: radius.lg
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.button-geometry'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:f4212c5c182db1b28545eb177a4bff4d0845eceed00a1187b457ef2675cc104f
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.chat-fab.chat-fab
+  component: chat-fab
+  slot: chat-fab
+  rule_id: rule.LAYOUT-104
+  status: observed
+  properties:
+    inset_block_end:
+      kind: token-ref
+      value: space.chat-launcher-inset
+    inset_inline_end:
+      kind: token-ref
+      value: space.chat-launcher-inset
+    size:
+      kind: token-ref
+      value: space.chat-launcher-size
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.chat-fab-geometry'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:93be83ae9adf5f85a001c4b24f02a1c41e800a6ed8ee5278ed89ce8479564947
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.data-table.columns
+  component: data-table
+  slot: columns
+  rule_id: rule.LAYOUT-002
+  status: observed
+  properties:
+    gap:
+      kind: token-ref
+      value: space.4
+    size:
+      kind: token-ref
+      value: size.board-column
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.board-columns'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:6f17d96cdcd6ab552882fc5cf75e93eaa68782faa2a5689788706e973ee86fbe
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.dialog.content
+  component: dialog
+  slot: content
+  rule_id: rule.QUALITY-001
+  status: observed
+  properties:
+    padding_block_end:
+      kind: token-ref
+      value: space.4
+    padding_block_start:
+      kind: token-ref
+      value: space.4
+    padding_inline_end:
+      kind: token-ref
+      value: space.4
+    padding_inline_start:
+      kind: token-ref
+      value: space.4
+    radius:
+      kind: token-ref
+      value: radius.xl
+    shadow:
+      kind: token-ref
+      value: shadow.floating
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.dialog-content'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:8b84941babe4ab20d3cbfeb7fd916af0daa7f772d906de1cfe5994decf595236
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.input.field
+  component: input
+  slot: field
+  rule_id: rule.QUALITY-101
+  status: observed
+  properties:
+    radius:
+      kind: token-ref
+      value: radius.lg
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.input-geometry'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:8199927961ff4a3cee28f892555d4b1d8d7d56b5cc20646a0b68f240de5900fc
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.page-header.page-header
+  component: page-header
+  slot: page-header
+  rule_id: rule.LAYOUT-106
+  status: observed
+  properties:
+    size:
+      kind: token-ref
+      value: space.header-height
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.board'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.page-header.page-toolbar
+  component: page-header
+  slot: page-toolbar
+  rule_id: rule.LAYOUT-106
+  status: observed
+  properties:
+    size:
+      kind: token-ref
+      value: space.header-height
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.board'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.page-header.title
+  component: page-header
+  slot: title
+  rule_id: rule.QUALITY-112
+  status: observed
+  properties:
+    anatomy:
+      kind: semantic
+      value: icon-title
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/definitions/component.page-header'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:30d34b595ec7d1ac6be7749314c2c8b27cb21ab1e71d4518e6951c235876b42a
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.settings.page-canvas
+  component: settings
+  slot: page-canvas
+  rule_id: rule.LAYOUT-113
+  status: observed
+  properties:
+    padding_block_end:
+      kind: token-ref
+      value: space.6
+    padding_block_start:
+      kind: token-ref
+      value: space.6
+    padding_inline_end:
+      kind: token-ref
+      value: space.6
+    padding_inline_start:
+      kind: token-ref
+      value: space.6
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.settings-section-nav'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.settings.section-nav
+  component: settings
+  slot: section-nav
+  rule_id: rule.QUALITY-113
+  status: observed
+  properties:
+    padding_block_end:
+      kind: token-ref
+      value: space.2
+    padding_block_start:
+      kind: token-ref
+      value: space.2
+    padding_inline_end:
+      kind: token-ref
+      value: space.3
+    padding_inline_start:
+      kind: token-ref
+      value: space.3
+    size:
+      kind: token-ref
+      value: size.control-height-lg
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.settings-section-nav'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.shell.content
+  component: shell
+  slot: content
+  rule_id: rule.LAYOUT-113
+  status: observed
+  properties:
+    padding_block_start:
+      kind: token-ref
+      value: space.2
+  negative_facts: []
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.shell'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.shell.nav-group
+  component: shell
+  slot: nav-group
+  rule_id: rule.LAYOUT-103
+  status: observed
+  properties:
+    border:
+      kind: semantic
+      value: none
+  negative_facts:
+  - property: border
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.shell'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: geometry.shell.page-canvas
+  component: shell
+  slot: page-canvas
+  rule_id: rule.LAYOUT-107
+  status: observed
+  properties:
+    border:
+      kind: token-ref
+      value: color.surface-border
+    inset_block_end:
+      kind: token-ref
+      value: space.2
+    inset_block_start:
+      kind: token-ref
+      value: space.2
+    inset_inline_end:
+      kind: token-ref
+      value: space.2
+    inset_inline_start:
+      kind: semantic
+      value: zero
+    padding_block_end:
+      kind: semantic
+      value: zero
+    padding_block_start:
+      kind: semantic
+      value: zero
+    padding_inline_end:
+      kind: semantic
+      value: zero
+    padding_inline_start:
+      kind: semantic
+      value: zero
+    radius:
+      kind: token-ref
+      value: radius.xl
+    shadow:
+      kind: token-ref
+      value: shadow.surface
+  negative_facts:
+  - property: inset_inline_start
+    value: zero
+  - property: padding_block_end
+    value: zero
+  - property: padding_block_start
+    value: zero
+  - property: padding_inline_end
+    value: zero
+  - property: padding_inline_start
+    value: zero
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.shell'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:6e23033fd06b1bcc3d4cb22f668de2e34a33108a2cb51ac701d5d8dc989e0a6a
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+state_presentations:
+- id: state.app-sidebar.navigation-link.active.item
+  subject_role: app-sidebar
+  context: navigation-link
+  state: active
+  surface: item
+  rule_id: rule.QUALITY-103
+  status: observed
+  background:
+    kind: token-ref
+    value: color.sidebar-accent
+  text: null
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.nav-link-active'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:dd922f70f717cd8338c84532ebca1ea63e3f3f4f9de2028d42ce96e8219ececb
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.app-sidebar.navigation-link.hover.item
+  subject_role: app-sidebar
+  context: navigation-link
+  state: hover
+  surface: item
+  rule_id: rule.QUALITY-103
+  status: observed
+  background:
+    kind: token-ref
+    value: color.sidebar-accent
+  text: null
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.nav-link-hover'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:774437acfa9a6210503c6c1ff7150364fcbc7c650956b3aa898e9fca60593fc9
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.board.navigation-link.default.section-nav
+  subject_role: board
+  context: navigation-link
+  state: default
+  surface: section-nav
+  rule_id: rule.QUALITY-103
+  status: observed
+  background: null
+  text: null
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.board'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:a787bac1202d03ef800a29d357a3fc1dd56dd85253d2e85b1f2cca5a746ac161
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.button.action-trigger.focus-visible.control
+  subject_role: button
+  context: navigation-link
+  state: focus-visible
+  surface: control
+  rule_id: rule.AX-101
+  status: observed
+  background: null
+  text: null
+  border:
+    kind: token-ref
+    value: color.ring-focus
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.action-focus'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:c2ef7cafaacb93949eee0341eb9f2d9df1c482004349636fa264dc86e56200ba
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.button.action-trigger.hover.control
+  subject_role: button
+  context: navigation-link
+  state: hover
+  surface: control
+  rule_id: rule.AX-101
+  status: observed
+  background:
+    kind: token-ref
+    value: color.primary-hover
+  text: null
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.action-hover'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:9d438b07d59c15332168fb9068660a94de47ec40d22e27af99350947c91a870f
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.data-table.action-trigger.default.row-actions
+  subject_role: data-table
+  context: navigation-link
+  state: default
+  surface: row-actions
+  rule_id: rule.DENSITY-101
+  status: observed
+  background: null
+  text: null
+  border: null
+  text_decoration: none
+  visibility: hidden
+  container_presentation: none
+  negative_facts:
+  - property: visibility
+    value: hidden
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.data-table-disclosure'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:2ad50173258fb8db97a0be708a9d974ebd5da3002ba377a7582b034eaad7e003
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.data-table.action-trigger.default.row-secondary-text
+  subject_role: data-table
+  context: navigation-link
+  state: default
+  surface: row-secondary-text
+  rule_id: rule.DENSITY-101
+  status: observed
+  background: null
+  text: null
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.data-table-disclosure'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:2ad50173258fb8db97a0be708a9d974ebd5da3002ba377a7582b034eaad7e003
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.data-table.action-trigger.hover.row-actions
+  subject_role: data-table
+  context: navigation-link
+  state: hover
+  surface: row-actions
+  rule_id: rule.DENSITY-101
+  status: observed
+  background: null
+  text: null
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.data-table-disclosure'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:2ad50173258fb8db97a0be708a9d974ebd5da3002ba377a7582b034eaad7e003
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.data-table.action-trigger.hover.row-secondary-text
+  subject_role: data-table
+  context: navigation-link
+  state: hover
+  surface: row-secondary-text
+  rule_id: rule.DENSITY-101
+  status: observed
+  background: null
+  text: null
+  border: null
+  text_decoration: none
+  visibility: hidden
+  container_presentation: none
+  negative_facts:
+  - property: visibility
+    value: hidden
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.data-table-disclosure'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:2ad50173258fb8db97a0be708a9d974ebd5da3002ba377a7582b034eaad7e003
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.dialog.overlay-surface.open.overlay
+  subject_role: dialog
+  context: navigation-link
+  state: open
+  surface: overlay
+  rule_id: rule.QUALITY-102
+  status: observed
+  background: null
+  text: null
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.overlay-open'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:7ed66d9188d5c591dbad8ec72473c0cd38b6aaef86780ea20723aae5b33ca266
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.input.action-trigger.focus-visible.field
+  subject_role: input
+  context: navigation-link
+  state: focus-visible
+  surface: field
+  rule_id: rule.QUALITY-104
+  status: observed
+  background: null
+  text: null
+  border:
+    kind: token-ref
+    value: color.ring
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.input-geometry'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:8199927961ff4a3cee28f892555d4b1d8d7d56b5cc20646a0b68f240de5900fc
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.settings.navigation-link.default.section-nav
+  subject_role: settings
+  context: navigation-link
+  state: default
+  surface: section-nav
+  rule_id: rule.QUALITY-113
+  status: observed
+  background: null
+  text:
+    kind: token-ref
+    value: color.text-secondary
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.settings-section-nav'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.settings.navigation-link.hover.section-nav
+  subject_role: settings
+  context: navigation-link
+  state: hover
+  surface: section-nav
+  rule_id: rule.QUALITY-103
+  status: observed
+  background:
+    kind: token-ref
+    value: color.surface-hover
+  text: null
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.settings-section-nav'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.settings.navigation-link.selected.section-nav
+  subject_role: settings
+  context: navigation-link
+  state: hover
+  surface: section-nav
+  rule_id: rule.QUALITY-103
+  status: observed
+  background:
+    kind: token-ref
+    value: color.surface-selected
+  text:
+    kind: token-ref
+    value: color.text-primary
+  border: null
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.settings-section-nav'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:5265de30434194851ae72b10d48b4731f46aca3b55bea5eb1b87a092ab5e300f
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+- id: state.settings-nav.navigation-link.focus-visible.item
+  subject_role: settings-nav
+  context: navigation-link
+  state: focus-visible
+  surface: item
+  rule_id: rule.QUALITY-104
+  status: observed
+  background: null
+  text: null
+  border:
+    kind: token-ref
+    value: color.ring
+  text_decoration: none
+  visibility: visible
+  container_presentation: none
+  negative_facts:
+  - property: text_decoration
+    value: none
+  provenance:
+    source_id: source-002
+    source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+    locator:
+      path: ui-source-graph.yaml
+      symbol: null
+      selector: null
+      pointer: '#/usages/usage.settings-nav-focus'
+      line: null
+    method: source-graph
+    source_span_sha256: sha256:b742f60ba94e09bfe9efe0339086c3b0706aa11aa700f4980a5d77f998f91567
+    captured_at: '2026-01-01T00:00:00Z'
+    confidence: high
+unresolved: []
+mandatory_answers:
+  section-nav:board: excluded
+  detail-panes:master-detail: observed
+  context-panel:master-detail: observed
+  section-nav:settings: observed
+  pane-scroll:settings: observed
+  nav-anatomy:settings: observed
+  nav-state:settings: observed
+  nav-item-geometry:settings: observed
+  nav-item-type:settings: observed
+  inset-canvas:inset-or-gap:shell: observed
+  inset-canvas:radius:shell: observed
+  inset-canvas:border:shell: observed
+  inset-canvas:shadow:shell: observed
+  inset-canvas:background:shell: observed
+  chrome-containment:shell: observed
+  chrome-separation:shell: observed
+  chrome-edge:shell: observed
+  content-region:shell: observed
+  focus:button: observed
+  focus:input: observed
+  focus:settings-nav: observed
+  state-decoration:navigation-link: observed
+  header-anatomy:page-header: observed
+  row-disclosure:data-table: observed

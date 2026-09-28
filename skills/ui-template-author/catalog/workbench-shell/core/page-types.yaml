@@ -10,6 +10,8 @@ items:
   - rule/LAYOUT-103
   - rule/LAYOUT-104
   - rule/RESP-101
+  - rule/LAYOUT-112
+  - rule/LAYOUT-113
 - id: page-type/settings
   name: Settings page
   patterns:
@@ -17,6 +19,7 @@ items:
   rule_refs:
   - rule/LAYOUT-107
   - rule/QUALITY-103
+  - rule/QUALITY-113
 - id: page-type/board
   name: Board page
   patterns:
@@ -24,6 +27,8 @@ items:
   rule_refs:
   - rule/LAYOUT-106
   - rule/AX-101
+  - rule/LAYOUT-113
+  - rule/DENSITY-101
 - id: page-type/master-detail
   name: Master detail page
   patterns:

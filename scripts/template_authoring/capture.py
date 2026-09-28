@@ -36,6 +36,7 @@ SEMANTIC_VALUES = {
     "none", "zero", "auto", "intrinsic", "fill", "non-wrap", "non-shrink",
     "underline", "visible", "hidden", "viewport", "region", "inline", "block",
     "horizontal", "vertical", "overlay", "icon-label", "label-only",
+    "icon-title", "title-only",
     "root", "whole-trigger", "split-trigger", *CHROME_SEMANTIC_VALUES,
 }
 NEGATIVE_VALUES = {"none", "zero", "non-wrap", "non-shrink", "hidden"}

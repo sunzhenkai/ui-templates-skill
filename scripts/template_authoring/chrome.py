@@ -18,6 +18,9 @@ SLOT_ROLES = (
     "page-header",
     "page-toolbar",
     "page-canvas",
+    # Round 4: scrollable content region under the chrome bands inside the
+    # canvas; carries its own block spacing and scroll domain.
+    "content",
 )
 # Allowlist of optional chrome anchors; not a required set.
 ANCHOR_ROLES = ("header-trigger", "chat-fab")
@@ -253,6 +256,20 @@ HEADER_CONTAINER_SLOTS = ("page-header", "page-toolbar")
 NAV_SEPARATION_SLOT = "nav-group"
 CONTAINER_ROLE_VALUES = frozenset({"root", "page-canvas", "canvas"})
 SECTION_NAV_SLOT = "section-nav"
+# Round 4: chrome geometry and density blind spots.
+CONTENT_SLOT = "content"
+# Chrome band flush semantics: the canvas card either hugs its chrome at the
+# block-start edge (padding_block_start explicit zero) or carries a token gap.
+CHROME_EDGE_PROPERTIES = ("padding_block_start",)
+# Header components must state their title anatomy (leading icon or not).
+HEADER_COMPONENT_NAMES = frozenset({"page-header"})
+HEADER_COMPONENT_SUFFIX = "-header"
+HEADER_ANATOMY_VALUES = frozenset({"icon-title", "title-only"})
+# List-row components must state progressive disclosure of row-level secondary
+# content (actions/secondary text) across default and hover states.
+LIST_ROW_COMPONENT_NAMES = frozenset({"data-table"})
+ROW_DISCLOSURE_STATES = ("default", "hover")
+ROW_DISCLOSURE_PROPERTIES = ("visibility",)
 # Master-detail scenes must place both panes and state the context panel.
 DETAIL_PANE_SLOTS = ("master-pane", "detail-pane")
 CONTEXT_PANEL_SLOT = "context-panel"
@@ -376,6 +393,43 @@ def _matrix_questions(
                         ("excluded" if scene_excluded else "observed" if nav_border else "unresolved"),
                         "scene",
                     )
+                # ---- round 4: chrome edge flush and content region ----
+                if declared_header_slots:
+                    edge_answered = any(
+                        item.get("property") in CHROME_EDGE_PROPERTIES
+                        and item.get("slot") in CANVAS_SLOTS
+                        for item in facts
+                    )
+                    states[f"chrome-edge:{name}"] = (
+                        ("excluded" if scene_excluded else "observed" if edge_answered else "unresolved"),
+                        "scene",
+                    )
+                    content_facts = [item for item in facts if item.get("slot") == CONTENT_SLOT]
+                    content_declared = any(
+                        item.get("property") == "slot_role"
+                        and isinstance(item.get("value"), dict)
+                        and item.get("value", {}).get("value") == CONTENT_SLOT
+                        for item in content_facts
+                    )
+                    content_spacing = any(
+                        item.get("property") in {"padding_block_start", "gap"}
+                        for item in content_facts
+                    )
+                    content_scroll = any(
+                        item.get("property") == "scroll_block"
+                        for item in content_facts
+                    )
+                    content_contained = any(
+                        item.get("property") == "container_role"
+                        and isinstance(item.get("value"), dict)
+                        and item.get("value", {}).get("value") in CONTAINER_ROLE_VALUES
+                        for item in content_facts
+                    )
+                    content_ok = content_declared and content_spacing and content_scroll and content_contained
+                    states[f"content-region:{name}"] = (
+                        ("excluded" if scene_excluded else "observed" if content_ok else "unresolved"),
+                        "scene",
+                    )
         elif kind == "master-detail":
             pane_slots = {item.get("slot") for item in facts}
             states[f"detail-panes:{name}"] = (
@@ -450,6 +504,30 @@ def _matrix_questions(
                 ("excluded" if scene_excluded else "observed" if page_surface else "unresolved"),
                 "scene",
             )
+            # ---- round 4: section-nav item geometry and typography ----
+            item_size = any(
+                item.get("property") == "size"
+                and isinstance(item.get("value"), dict)
+                and item.get("value", {}).get("kind") == "token-ref"
+                for item in facts
+                if item.get("slot") == SECTION_NAV_SLOT
+            )
+            states[f"nav-item-geometry:{name}"] = (
+                ("excluded" if scene_excluded else "observed" if item_size else "unresolved"),
+                "scene",
+            )
+            item_text_states = {
+                item.get("state")
+                for item in facts
+                if item.get("property") == "text"
+                and isinstance(item.get("value"), dict)
+                and item.get("value", {}).get("kind") == "token-ref"
+                and item.get("state") in {"default", "selected"}
+            }
+            states[f"nav-item-type:{name}"] = (
+                ("excluded" if scene_excluded else "observed" if item_text_states == {"default", "selected"} else "unresolved"),
+                "scene",
+            )
 
     # ---- round 2: interactive control focus treatment ----
     for name in sorted(components):
@@ -521,7 +599,66 @@ def _matrix_questions(
             ("excluded" if context_excluded else "observed" if decoration_facts else "unresolved"),
             "context",
         )
+
+    # ---- round 4: header title anatomy ----
+    for name in sorted(components):
+        if not _is_header_component(name):
+            continue
+        component = components[name]
+        component_excluded = component.get("id") in excluded_ids
+        anatomy_facts = [
+            item
+            for item in (component.get("facts") or []) + [
+                fact
+                for usage in usages
+                if usage.get("component") == name
+                for fact in (usage.get("facts") or [])
+            ]
+            if isinstance(item, dict)
+            and item.get("facet") == "component_geometry"
+            and item.get("property") == "anatomy"
+            and isinstance(item.get("value"), dict)
+            and item.get("value", {}).get("value") in HEADER_ANATOMY_VALUES
+        ]
+        states[f"header-anatomy:{name}"] = (
+            ("excluded" if component_excluded else "observed" if anatomy_facts else "unresolved"),
+            "component",
+        )
+
+    # ---- round 4: list-row progressive disclosure ----
+    for name in sorted(components):
+        if name not in LIST_ROW_COMPONENT_NAMES:
+            continue
+        component = components[name]
+        component_excluded = component.get("id") in excluded_ids
+        disclosure_states = {
+            item.get("state")
+            for item in (component.get("facts") or []) + [
+                fact
+                for usage in usages
+                if usage.get("component") == name
+                for fact in (usage.get("facts") or [])
+            ]
+            if isinstance(item, dict)
+            and item.get("facet") == "state_presentations"
+            and item.get("property") in ROW_DISCLOSURE_PROPERTIES
+            and item.get("state") in ROW_DISCLOSURE_STATES
+        }
+        states[f"row-disclosure:{name}"] = (
+            (
+                "excluded" if component_excluded
+                else "observed" if disclosure_states == set(ROW_DISCLOSURE_STATES)
+                else "unresolved"
+            ),
+            "component",
+        )
     return states
+
+
+def _is_header_component(name: str | None) -> bool:
+    if not isinstance(name, str) or not name:
+        return False
+    return name in HEADER_COMPONENT_NAMES or name.endswith(HEADER_COMPONENT_SUFFIX)
 
 
 def _is_interactive_control(name: str | None) -> bool:

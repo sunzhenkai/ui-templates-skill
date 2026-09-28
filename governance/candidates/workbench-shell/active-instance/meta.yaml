@@ -1,21 +1,26 @@
 schema: design-system-meta/v1
 name: workbench-shell
-version: 3.0.1
-description: Portable workbench shell captured from a closed structural source graph
-  and CSS token declarations.
+version: 3.2.0
+description: Neutral dual-theme workbench app shell with an inset canvas, dense 14px interface, crisp separation and restrained blue accents.
 sources:
 - id: source-001
   type: repo
-  ref: session-source:multica
-  revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9
-  captured_at: '2026-09-19T02:28:00Z'
-captured_at: '2026-09-19'
+  ref: https://github.com/multica-ai/multica
+  revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  captured_at: '2026-09-15T00:00:00Z'
+- id: source-002
+  type: repo
+  ref: session-local capture graph commit in a multica worktree based on 200dcb44 (not published upstream)
+  revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  captured_at: '2026-09-15T00:00:00Z'
+captured_at: '2026-09-15'
 platforms:
 - web
 tags:
 - workbench
 - shell
-- candidate
+- dashboard
+- admin
 confidence:
   overall: medium
   layout: high
@@ -32,57 +37,63 @@ coverage:
   viewports:
     declared:
     - desktop
-    - mobile
-    observed: []
-    defaulted: []
-    unsupported:
+    - compact
+    observed:
     - desktop
-    - mobile
+    - compact
+    defaulted: []
+    unsupported: []
   themes:
     declared:
     - light
     - dark
     observed:
     - light
-    - dark
     defaulted: []
-    unsupported: []
+    unsupported:
+    - dark
   page_modes:
     declared:
     - shell
     - board
-    - settings
     - master-detail
+    - settings
     - dialog
     observed:
     - shell
     - board
-    - settings
     - master-detail
+    - settings
     - dialog
     defaulted: []
     unsupported: []
   components:
     declared:
     - app-sidebar
-    - button
+    - page-header
     - chat-fab
-    - command-palette
     - data-table
     - dialog
-    - input
-    - page-header
+    - command-palette
     - settings-nav
+    - input
+    - button
+    - page-toolbar
+    - nav-item
+    - detail-pane
     observed:
     - app-sidebar
-    - button
+    - page-header
     - chat-fab
-    - command-palette
     - data-table
     - dialog
-    - input
-    - page-header
+    - command-palette
     - settings-nav
+    - input
+    - button
+    - page-toolbar
+    - nav-item
+    - detail-pane
     defaulted: []
     unsupported: []
   states:
@@ -90,13 +101,21 @@ coverage:
     - default
     - hover
     - active
+    - selected
     - focus-visible
     - open
+    - closed
+    - disabled
+    - invalid
     observed:
-    - default
     - hover
     - active
+    - selected
     - focus-visible
     - open
-    defaulted: []
-    unsupported: []
+    defaulted:
+    - default
+    - closed
+    - disabled
+    unsupported:
+    - invalid

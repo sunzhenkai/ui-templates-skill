@@ -14,6 +14,8 @@ themes:
     ring: {value: "#ffffff", origin: source}
     sidebar-hover: {value: "#111827", origin: source}
     page-canvas: {value: "oklch(0.18 0.005 285.823)", origin: source}
+sizing:
+  nav-item-height: {value: 36, unit: px, origin: source}
 spacing:
   base: {value: 4, unit: px, origin: source}
   allowed: {value: [4, 8, 16], unit: px, origin: source}

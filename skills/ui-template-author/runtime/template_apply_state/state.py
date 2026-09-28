@@ -255,13 +255,45 @@ def _schema_store(schema_dir: Path | None = None) -> SchemaStore:
     )
 
 
+def _v1_schema_dir_candidates(here: Path) -> list[Path]:
+    # design-system/v1 层 schema（apply-checkpoint 等）的定位，与 template/v2 同构。
+    return [
+        here.parents[1] / "schemas/design-system/v1",
+        here.parents[2] / "schemas/design-system/v1",
+        here.parents[3] / "ui-template-author/runtime/schemas/design-system/v1",
+    ]
+
+
+def _v1_schema_store(schema_dir: Path | None = None) -> SchemaStore:
+    if schema_dir is not None:
+        return SchemaStore(schema_dir)
+    here = Path(__file__).resolve()
+    candidates = _v1_schema_dir_candidates(here)
+    for candidate in candidates:
+        if (candidate / "apply-checkpoint.schema.json").is_file():
+            return SchemaStore(candidate)
+    raise ApplyStateError(
+        "design-system/v1 schema 目录未找到（已探测: "
+        + "; ".join(str(item) for item in candidates)
+        + "）；安装态应随 ui-template-apply/runtime/schemas/design-system/v1 存在"
+    )
+
+
 def _schema_findings(kind: str, data: Any, path: str, schema_dir: Path | None = None, phase: int | None = None) -> list[Finding]:
     if not isinstance(data, dict):
         return [Finding("APPLY_SCHEMA_INVALID", path, "记录根必须是 object", phase)]
-    # design-system-apply-checkpoint/v1 是 apply 会话 checkpoint 的文档化格式，
-    # 由 validate_checkpoint 自身逐项校验；该标记不得豁免其他 kind 的 schema 校验。
+    # design-system-apply-checkpoint/v1 是 apply 会话 checkpoint 的文档化格式：
+    # 走 design-system/v1 的 apply-checkpoint schema；legacy template v2 checkpoint
+    # 仍走 checkpoint.schema.json。该标记不得豁免其他 kind 的 schema 校验。
     if kind == "checkpoint" and data.get("schema") == "design-system-apply-checkpoint/v1":
-        return []
+        try:
+            errors = _v1_schema_store(schema_dir).errors("apply-checkpoint", data)
+        except ValueError as exc:
+            return [Finding("APPLY_SCHEMA_INVALID", path, str(exc), phase)]
+        return [
+            Finding("APPLY_SCHEMA_INVALID", f"{path}#{subpath}" if subpath else path, message, phase, details)
+            for subpath, message, details in errors
+        ]
     if data.get("schema_version") != 2:
         return [Finding("APPLY_SCHEMA_UNSUPPORTED", path, "仅支持 schema_version: 2", phase, {"declared": data.get("schema_version")})]
     return [
@@ -462,11 +494,16 @@ def validate_checkpoint(
     previous_fidelity: Any | None = None,
     active_layers: dict[str, set[str]] | None = None,
     placement_context: dict[str, Any] | None = None,
+    primitives_value: dict[str, Any] | None = None,
+    layout_value: dict[str, Any] | None = None,
+    expectations_value: dict[str, Any] | None = None,
 ) -> list[Finding]:
     root = apply_root.resolve()
     findings = _schema_findings("checkpoint", checkpoint, "checkpoint.yaml", schema_dir)
     findings.extend(_source_blind_findings(checkpoint, root))
     identity_value = template_value if fidelity_value is None else {"template": template_value, "fidelity": fidelity_value}
+    if primitives_value is not None:
+        identity_value = {**identity_value, "primitives": primitives_value}
     template_digest = canonical_digest(identity_value)
     tokens_digest = canonical_digest(tokens_value)
     current_template = _template_identity(template_value)
@@ -486,13 +523,25 @@ def validate_checkpoint(
     if not _digest_equal(checkpoint.get("template", {}).get("digest"), template_digest):
         from .fidelity import fidelity_recovery_findings
 
-        facet_findings = fidelity_recovery_findings(previous=previous_fidelity, current=fidelity_value)
+        facet_findings = fidelity_recovery_findings(
+                previous=previous_fidelity, current=fidelity_value,
+                previous_primitives=None, current_primitives=primitives_value,
+            )
         if facet_findings and checkpoint_identity == current_template:
             findings.extend(facet_findings)
         else:
             findings.append(Finding("CHECKPOINT_TEMPLATE_DRIFT", "checkpoint.yaml#template.digest", "模板语义已变化", 0))
     if not _digest_equal(checkpoint.get("tokens_digest"), tokens_digest):
         findings.append(Finding("CHECKPOINT_TOKEN_DRIFT", "checkpoint.yaml#tokens_digest", "tokens 语义已变化", 1))
+    if expectations_value is not None:
+        recorded = (checkpoint.get("fidelity") or {}).get("expectation_digest")
+        if not _digest_equal(recorded, canonical_digest(expectations_value)):
+            findings.append(Finding(
+                "CHECKPOINT_EXPECTATION_DRIFT",
+                "checkpoint.yaml#fidelity.expectation_digest",
+                "measured expectation set 语义已变化，Phase 8 既有比对结论过期",
+                8,
+            ))
     if checkpoint.get("scope") != scope:
         findings.append(Finding("CHECKPOINT_SCOPE_CHANGED", "checkpoint.yaml#scope", "included/deferred/excluded 范围已变化", 0))
     if checkpoint.get("source_identity") != source_identity:
@@ -567,7 +616,12 @@ def validate_checkpoint(
             phase8_data = loaded
             if fidelity_value is not None:
                 from .fidelity import derive_scenario_ids
-                expected_scenarios = set(derive_scenario_ids(fidelity_value))
+                expected_scenarios = set(derive_scenario_ids(
+                    fidelity_value,
+                    layout=layout_value,
+                    expectations=expectations_value,
+                    primitives=primitives_value,
+                ))
                 covered_scenarios: set[str] = set()
                 for record in phase8_data.get("records", []):
                     if isinstance(record, dict) and isinstance(record.get("scenario_ids"), list):
@@ -970,6 +1024,7 @@ def build_checkpoint(
     binding_digest: dict[str, Any] | None = None,
     change_set: list[str] | None = None,
     now: str | None = None,
+    primitives_value: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """生成与 validate_checkpoint 口径一致、可零 findings 通过校验的 checkpoint。
 
@@ -979,6 +1034,8 @@ def build_checkpoint(
     if mode not in {"bootstrap", "increment"}:
         raise ApplyStateError("mode 只能是 bootstrap 或 increment")
     identity_value = template_value if fidelity_value is None else {"template": template_value, "fidelity": fidelity_value}
+    if primitives_value is not None:
+        identity_value = {**identity_value, "primitives": primitives_value}
     current = _template_identity(template_value)
     name = current.get("name")
     if not isinstance(name, str) or not name:

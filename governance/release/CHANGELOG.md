@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## Apply 身份门禁与生产索引闭环 — Unreleased
+
+补齐三段流水线里"文档已承诺、但没有可执行实现"的缺口。基线全绿（`make validate` 12/12、252 测试通过），因此以下每条都是现有门禁漏掉的洞。
+
+- Phase 8 场景覆盖改为四源闭合：`validate_checkpoint` 同时消费 fidelity、layout、expectations、primitives（新增 `layout_value` / `expectations_value`，CLI 增 `--layout` / `--expectations`，`--active-instance` 自动带全）。此前只传两源，`workbench-shell` 上 182 条必需场景只强制 110 条，**25 条 measured expectations 全部形同虚设**；现覆盖 248/248。
+- checkpoint 新增 `fidelity.expectation_digest` 绑定与 `CHECKPOINT_EXPECTATION_DRIFT`（phase 8），expectation set 变化使既有比对结论过期。
+- Impact-based Resume 身份口径与校验器对齐（补 `primitives` 参与 digest），并把**缺失 `template.digest` 从"跳过检查"改为判 mismatch**；新增 `--source-identity`，源码变化至少重开 Phase 8。此前无 `template.digest` 的 checkpoint 可 `blocked=false`、exit 0 通过。
+- `design-system-apply-checkpoint/v1` schema 此前从未被任何代码加载，`_schema_findings` 对该标记直接短路。现已接入，并补齐 schema 与 `build_checkpoint` 实际输出的差异（`template.digest` / `tokens_digest` / `scope` / `updated_at`，移除位置错误的顶层 `template_digest`）。
+- `adopt_package.py` 复制清单补 `measured-expectations.yaml`（原先静默丢弃，Phase 8 因此无验收对象）；`scripts/adopt_package.py` 立为权威源，apply / design 两处 runtime 镜像同步。
+- 新增 `scripts/check_template_index.py` 并接入 `make validate`：强制"每行必有同名目录 / 每个模板目录必有一行 / 前四列与 `meta.yaml` 一致"。此前把 INDEX 描述与日期改错、再放一个未登记目录，`catalog --check` 全部零 findings——catalog 本身由 INDEX 生成，看不见 INDEX 自己错。
+- `binding` 归属此前无交接产物、且 Design 的 SKILL.md 从不提及 feedback，导致该归属类别无主（Author 正确地不认领，记录卡死）。新增 `design-system-binding-handoff/v1` 与 `validate_design_system.py validate-binding-handoff`（evidence 解析失败即 fail closed），并在 Apply Phase 9 与 Design `iterate` 两侧接线。`feedback/v1` 的 `ownership: package` 闭集保持不变——binding 缺口本就不该进 package feedback。
+- `manage_template_index.py delete` 此前对 `templates/<name>/` 直接 `rmtree`，无任何"这确实是模板包吗"的检查；现要求目录含 `design-system.yaml`（v1）或 `meta.yaml`（legacy v2），否则拒绝删除且不动 INDEX。
+- runtime 漂移门禁由 12 对扩到 27 对，补上此前漏网的 `shared_validate_design_system.py`（安装态真正被 discovery wrapper 调用的那份，未登记导致仓库侧新增子命令在 bundle 里根本不存在）、`adopt_package.py`、`check_template_index.py` 与新 schema；另加"bundle 包装必须是薄壳"检查，防止 wrapper 退化成过期拷贝。
+- `governance/scope.yaml` 补登 `skills/ui-template-apply/runtime/**`。此前 author 与 design 都有 `runtime/**`，唯独 apply 漏了，于是整个 apply runtime（checkpoint 状态机、恢复规划器、领养脚本、共用 validator 与 schema 镜像）都不在 active release 治理域内——它照样随 bundle 分发、照样被改，却不受任何检查覆盖，40 个文件全部逃逸。
+
+### 本轮证伪的评审结论
+
+原评审清单中 6 条经实测为误报，未做改动，记录在此以免重复排查：P1-2 catalog 漂移已由 `catalog --check` 门禁；P1-5 的 index `before/after_digest`、`unchanged_during_gate`、`removal_set` 与 `SILENT_DECISION_REMOVAL` 均已实现在 `template_authoring/gate.py`；P2-3 `merge_feedback` 确实使用 `apply_root`；P2-2 author catalog `INDEX.md` 确有状态列；P2-4 source/build/expectation 三类过期检查均绑定 Phase 8；P2-6 `chat-fab` 本就是可选锚点，且 `scenarios` 子命令会显式披露缺失来源。
+
 ## Template Certification Gate — Unreleased
 
 Source-blind Apply 边界硬化与模板保真认证闭环。

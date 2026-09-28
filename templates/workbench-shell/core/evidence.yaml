@@ -243,6 +243,43 @@ items:
   source_id: source-002
   source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
   confidence: medium
+- id: evidence-token-space-2
+  kind: token
+  target: token/space.2
+  origin: computed
+  locator: packages/ui/styles/tokens.css#:space/2
+  method: derived from declared CSS token arithmetic or utility alpha
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+  basis: Canvas inset from the shell frame is the Tailwind spacing step 2 margin on the inset card.
+- id: evidence-token-space-3
+  kind: token
+  target: token/space.3
+  origin: source
+  locator: packages/ui/styles/tokens.css#:space/3
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-space-4
+  kind: token
+  target: token/space.4
+  origin: source
+  locator: packages/ui/styles/tokens.css#:space/4
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-space-6
+  kind: token
+  target: token/space.6
+  origin: source
+  locator: packages/ui/styles/tokens.css#:space/6
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
 - id: evidence-token-color-app-shell
   kind: token
   target: token/color.app-shell

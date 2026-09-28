@@ -657,7 +657,21 @@ class ApplyStateTests(unittest.TestCase):
     def test_apply_checkpoint_marker_skips_only_checkpoint_kind(self) -> None:
         from scripts.template_apply_state.state import _schema_findings
 
-        marked = {"schema": "design-system-apply-checkpoint/v1", "records": []}
+        # The design-system-apply-checkpoint/v1 marker routes the record through
+        # the design-system/v1 apply-checkpoint schema (fail closed), it is not
+        # an exemption from schema validation.
+        digest = {"algorithm": "sha256-canonical-json-v1", "value": "0" * 64}
+        marked = {
+            "schema": "design-system-apply-checkpoint/v1",
+            "mode": "bootstrap",
+            "template": {"name": "demo", "version": "1.0.0", "digest": digest},
+            "tokens_digest": digest,
+            "scope": {"included": [], "deferred": [], "excluded": []},
+            "source_identity": "source-001",
+            "build_identity": "fixture-build",
+            "updated_at": "2026-01-01T00:00:00Z",
+            "phases": [],
+        }
         self.assertEqual([], _schema_findings("checkpoint", marked, "checkpoint.yaml"))
         self.assertNotEqual([], _schema_findings("verification", marked, "08-verification.json"))
 

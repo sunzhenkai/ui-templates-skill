@@ -1734,6 +1734,33 @@ def validate_feedback(path: Path, evidence_root: Path | None = None) -> dict[str
     return report.to_dict()
 
 
+def validate_binding_handoff(path: Path, evidence_root: Path | None = None) -> dict[str, Any]:
+    """Validate an Apply→Design binding handoff.
+
+    Binding-scoped gaps must not be written into package feedback (its ownership
+    enum is closed to `package`), so this artifact is the only route by which a
+    binding defect reaches its owner. It therefore fails closed on the same terms
+    as package feedback: schema-valid, identity-bound, evidence-resolvable.
+    """
+    report = Report("binding-handoff", path)
+    document = validate_schema_document(path, "binding-handoff.schema.json", report, "binding_handoff")
+    if document is None:
+        return report.to_dict()
+    seen: set[str] = set()
+    for index, finding in enumerate(document.get("findings", [])):
+        identifier = finding.get("id")
+        if identifier in seen:
+            report.add("BINDING_HANDOFF_DUPLICATE_FINDING", f"findings.{index}.id", f"{identifier} 重复")
+        seen.add(identifier)
+        for reference in finding.get("evidence_refs", []):
+            candidate = safe_relative(
+                (path.parent if evidence_root is None else evidence_root), reference, report, "evidence_refs"
+            )
+            if candidate is not None and not candidate.exists():
+                report.add("EVIDENCE_REF_MISSING", f"findings.{index}.evidence_refs.{reference}", "evidence path does not exist")
+    return report.to_dict()
+
+
 def compute_manifest_digest(path: Path) -> dict[str, Any]:
     manifest = load_document(path)
     manifest = dict(manifest)
@@ -1784,6 +1811,9 @@ def main(argv: list[str] | None = None) -> int:
     expectations.add_argument("document", type=Path)
     expectations.add_argument("--package-root", type=Path)
     expectations.add_argument("--certification-report", type=Path)
+    handoff = sub.add_parser("validate-binding-handoff")
+    handoff.add_argument("document", type=Path)
+    handoff.add_argument("--evidence-root", type=Path)
     args = parser.parse_args(argv)
     if args.command == "compute-digest":
         print(json.dumps(compute_manifest_digest(args.manifest), ensure_ascii=False, sort_keys=True, indent=2))
@@ -1797,6 +1827,12 @@ def main(argv: list[str] | None = None) -> int:
             inventory=args.inventory.resolve() if args.inventory else None,
             package_root=args.package_root.resolve() if args.package_root else None,
             evidence_root=args.evidence_root.resolve() if args.evidence_root else None,
+        )
+        print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
+        return 0 if payload["valid"] else 1
+    if args.command == "validate-binding-handoff":
+        payload = validate_binding_handoff(
+            args.document.resolve(), args.evidence_root.resolve() if args.evidence_root else None
         )
         print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))
         return 0 if payload["valid"] else 1

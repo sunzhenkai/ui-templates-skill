@@ -13,6 +13,8 @@ items:
   - rule/LAYOUT-102
   - rule/LAYOUT-103
   - rule/LAYOUT-104
+  - rule/LAYOUT-112
+  - rule/LAYOUT-113
 - id: pattern/settings-section-nav
   name: Settings section navigation
   primitives:
@@ -21,6 +23,7 @@ items:
   rule_refs:
   - rule/LAYOUT-107
   - rule/QUALITY-103
+  - rule/QUALITY-113
 - id: pattern/workspace-board
   name: Workspace board
   primitives:
@@ -32,6 +35,8 @@ items:
   - rule/LAYOUT-106
   - rule/QUALITY-103
   - rule/AX-101
+  - rule/LAYOUT-113
+  - rule/DENSITY-101
 - id: pattern/master-detail
   name: Master detail
   primitives:

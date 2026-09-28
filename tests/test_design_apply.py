@@ -29,6 +29,24 @@ class DesignApplyTests(unittest.TestCase):
         self.assertEqual({"component-system:shadcn", "style-engine:tailwind", "token-projection:tailwind-v4", "visual-direction"}, set(payload["triggers"]))
         self.assertEqual({"frontend-design", "shadcn", "tailwind-css-patterns", "tailwind-design-system"}, {item["name"] for item in payload["allowed"]})
 
+    def _template_identity_digest(self) -> str:
+        # Identity must be composed and hashed exactly as check_apply_resume.plan()
+        # does; import its own helpers so the fixture can never drift from the
+        # resume implementation.
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("check_apply_resume", APPLY / "check_apply_resume.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        meta = module.load(ACTIVE / "meta.yaml")
+        fidelity_path = ACTIVE / "fidelity.yaml"
+        fidelity = module.load(fidelity_path) if fidelity_path.is_file() else None
+        identity = meta if fidelity is None else {"template": meta, "fidelity": fidelity}
+        primitives_path = ACTIVE / "core/primitives.yaml"
+        if primitives_path.is_file():
+            identity = {**identity, "primitives": module.load(primitives_path)}
+        return module.canonical_digest(identity)
+
     def test_impact_resume_reopens_only_dependent_phases(self) -> None:
         contract = yaml.safe_load((ACTIVE / "design-system.yaml").read_text(encoding="utf-8"))
         binding = yaml.safe_load((ACTIVE / "binding.yaml").read_text(encoding="utf-8"))
@@ -37,6 +55,11 @@ class DesignApplyTests(unittest.TestCase):
             "mode": "increment",
             "change_set": ["tokens"],
             "contract": {"id": contract["id"], "version": contract["version"], "digest": contract["contract_digest"]},
+            "template": {
+                "name": yaml.safe_load((ACTIVE / "meta.yaml").read_text(encoding="utf-8"))["name"],
+                "version": yaml.safe_load((ACTIVE / "meta.yaml").read_text(encoding="utf-8"))["version"],
+                "digest": {"algorithm": "sha256-canonical-json-v1", "value": self._template_identity_digest()},
+            },
             "binding_digest": binding["binding_digest"],
             "projection_digests": [{"name": item["name"], "digest": item["digest"]} for item in binding["projections"]],
             "stable_ids": ["primitive/button"],

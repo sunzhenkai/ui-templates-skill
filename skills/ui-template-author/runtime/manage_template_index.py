@@ -403,9 +403,24 @@ def cmd_delete(index: Path, templates: Path, name: str, catalog: Path | None) ->
         print(f"DELETE_REQUIRES_RETIRED: {name} is {rows[name][4]}", file=sys.stderr)
         return 1
     directory = templates / name
+    if directory.exists() and not directory.is_dir():
+        print(f"DELETE_TARGET_NOT_DIRECTORY: {directory}", file=sys.stderr)
+        return 1
+    if directory.is_dir() and not any(
+        (directory / manifest).is_file() for manifest in ("design-system.yaml", "meta.yaml")
+    ):
+        # rmtree 是不可逆的。先确认这确实是模板包目录（design-system/v1 或 legacy v2），
+        # 避免把同名非模板目录连根删掉；此时不动 INDEX，移走误放目录后可直接重试。
+        print(
+            f"DELETE_TARGET_NOT_TEMPLATE: {directory} 既无 design-system.yaml 也无 meta.yaml，拒绝删除",
+            file=sys.stderr,
+        )
+        return 1
     del rows[name]
     write_index(index, rows)
     if directory.is_dir():
+        # 先写 INDEX 再删目录：rmtree 失败时模板内容仍在，只是暂时无行，
+        # 可重新登记恢复；反序会留下内容已丢的孤儿目录。
         shutil.rmtree(directory)
     print(f"{name}\tdeleted")
     return 0
