@@ -1,0 +1,44 @@
+{
+  "active_instance": {
+    "binding_digest": {
+      "algorithm": "sha256-canonical-json-v1",
+      "value": "f99934c4025240731b85c33568de74dc1b4768d70e9b9d60bf47838e3a70d2e1"
+    },
+    "contract_digest": {
+      "algorithm": "sha256-canonical-json-v1",
+      "value": "e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a"
+    },
+    "projection_digest": {
+      "algorithm": "sha256-canonical-json-v1",
+      "value": "6beb04e5f8a6d56c7e06531807d13cc67e0067c59a7a8f138cba03bad6774fcb"
+    },
+    "status": "frozen"
+  },
+  "apply_mode": "bootstrap",
+  "build": {
+    "generated_at": "2026-09-29T01:34:18Z",
+    "identity": "workbench-shell-cert-3.1.2-20260929093308",
+    "output_root": "tmp/workbench-cert-current"
+  },
+  "oracle": {
+    "kind": "git-revision",
+    "revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+  },
+  "package": {
+    "digest": {
+      "algorithm": "sha256-canonical-json-v1",
+      "value": "e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a"
+    },
+    "id": "workbench-shell",
+    "version": "3.1.2"
+  },
+  "prompts_digest": {
+    "algorithm": "sha256-tree-v1",
+    "value": "d3e423f5b69a73b9acd812b658319ab248d6127dfc56f64242746586b8726e29"
+  },
+  "schema": "template-certification-gate-identity/v1",
+  "source_blind": {
+    "apply_receives_oracle_paths": false,
+    "prior_generated_output_reused": false
+  }
+}

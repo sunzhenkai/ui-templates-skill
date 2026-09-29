@@ -1,0 +1,19 @@
+schema_version: 2
+site: greenfield
+output_root: governance/candidates/workbench-shell-recapture/certification/clean-build-v2
+confirmed_by_user: true
+observed_constraints: Certification clean build; no prior generated web was reused.
+init_command: pnpm install && pnpm build
+build_identity: workbench-shell-cert-3.1.2-clean-20260929094936
+layers:
+  language: typescript
+  ui_framework: react
+  bundler: vite
+  routing: react-router
+  styling: tailwind
+  state: zustand
+  data: local-mock-data-layer
+  unit_test: vitest
+  browser: playwright
+  package_manager: pnpm
+  repo_shape: single-app-directory

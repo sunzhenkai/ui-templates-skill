@@ -86,6 +86,8 @@ def parser() -> argparse.ArgumentParser:
     init.add_argument("--scope", type=Path, required=True)
     init.add_argument("--fidelity", type=Path, help="模板/Active Instance 的 fidelity.yaml；缺省按 legacy-baseline")
     init.add_argument("--primitives", type=Path, help="core/primitives.yaml；绑定 variant/anatomy contract 场景")
+    init.add_argument("--layout", type=Path, help="core/layout.yaml；placement geometry/containment scenarios fail closed")
+    init.add_argument("--expectations", type=Path, help="measured-expectations.yaml；oracle-anchored scenarios fail closed")
     init.add_argument("--source-identity", required=True)
     init.add_argument("--build-identity", required=True)
     init.add_argument("--mode", choices=["bootstrap", "increment"], default="bootstrap")
@@ -121,6 +123,7 @@ def parser() -> argparse.ArgumentParser:
     verification.add_argument("path", type=Path)
     verification.add_argument("--apply-root", type=Path, required=True)
     verification.add_argument("--kind", choices=["phase-8-verification", "phase-9-review"], required=True)
+    verification.add_argument("--expectations", type=Path, help="measured-expectations.yaml；强制 expectation measurement 与 expected 一致")
     verification.add_argument("--known-rule-id", action="append", default=None)
     checkpoint = sub.add_parser("checkpoint")
     checkpoint.add_argument("--apply-root", type=Path, required=True)
@@ -130,6 +133,8 @@ def parser() -> argparse.ArgumentParser:
     checkpoint.add_argument("--fidelity", type=Path)
     checkpoint.add_argument("--previous-fidelity", type=Path)
     checkpoint.add_argument("--primitives", type=Path, help="core/primitives.yaml；variant/anatomy scenarios fail closed")
+    checkpoint.add_argument("--layout", type=Path, help="core/layout.yaml；placement containment/geometry scenarios fail closed")
+    checkpoint.add_argument("--expectations", type=Path, help="measured-expectations.yaml；oracle-anchored measurements fail closed")
     checkpoint.add_argument("--source-identity", required=True)
     checkpoint.add_argument("--build-identity", required=True)
     checkpoint.add_argument(
@@ -178,6 +183,8 @@ def run_checkpoint_init(args: argparse.Namespace) -> int:
             mode=args.mode,
             fidelity_value=load_structured(args.fidelity) if args.fidelity else None,
             primitives_value=load_structured(args.primitives) if args.primitives else None,
+            layout_value=load_structured(args.layout) if args.layout else None,
+            expectations_value=load_structured(args.expectations) if args.expectations else None,
             origin=args.origin,
             resolved_path=args.resolved_path,
             output_root=args.output_root,
@@ -318,6 +325,7 @@ def main() -> int:
             apply_root=args.apply_root,
             expected_kind=args.kind,
             known_rule_ids=known_rule_ids,
+            expectations_value=load_structured(args.expectations) if args.expectations else None,
         )
         payload = {"valid": not findings, "findings": [item.to_dict() for item in findings]}
     else:
@@ -342,6 +350,8 @@ def main() -> int:
                 load_structured(args.primitives if args.primitives else args.active_instance / "core/primitives.yaml")
                 if getattr(args, "primitives", None) or getattr(args, "active_instance", None) else None
             ),
+            layout_value=load_structured(args.layout if args.layout else args.active_instance / "core/layout.yaml") if getattr(args, "layout", None) or getattr(args, "active_instance", None) else None,
+            expectations_value=load_structured(args.expectations) if getattr(args, "expectations", None) else None,
         )
         payload = recovery_decision(findings, checkpoint)
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2))

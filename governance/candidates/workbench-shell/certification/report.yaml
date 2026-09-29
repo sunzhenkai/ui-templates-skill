@@ -1,11 +1,11 @@
 schema: design-system-fidelity-certification/v1
 gate:
   package:
+    id: workbench-shell
+    version: 3.1.2
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
-    id: workbench-shell
-    version: 3.0.1
+      value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
   oracle:
     kind: git-revision
     revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
@@ -13,21 +13,21 @@ gate:
     algorithm: sha256-tree-v1
     value: d3e423f5b69a73b9acd812b658319ab248d6127dfc56f64242746586b8726e29
   build:
-    identity: workbench-shell-current-20260920-01
-    output_root: example/workbench-shell/web-v3
-    generated_at: '2026-09-20T16:22:11Z'
+    identity: workbench-shell-cert-3.1.2-clean-20260929094936
+    output_root: governance/candidates/workbench-shell-recapture/certification/clean-build-v2
+    generated_at: '2026-09-29T02:10:00Z'
   apply_mode: bootstrap
   active_instance:
-    binding_digest:
-      algorithm: sha256-canonical-json-v1
-      value: 32424bf70b4f6084fb6f060957b173081fe9f4442540f08f5ac7c58340265db9
+    status: frozen
     contract_digest:
       algorithm: sha256-canonical-json-v1
-      value: 4cf93e3afd601a872a5e385dfd09b15b101455738d35fbf2cd522109979a89a0
+      value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
+    binding_digest:
+      algorithm: sha256-canonical-json-v1
+      value: f99934c4025240731b85c33568de74dc1b4768d70e9b9d60bf47838e3a70d2e1
     projection_digest:
       algorithm: sha256-canonical-json-v1
-      value: 61381c61bd435e9d852897f1e39490421ecd34ebf3739c956bc646e4c1913473
-    status: frozen
+      value: 6beb04e5f8a6d56c7e06531807d13cc67e0067c59a7a8f138cba03bad6774fcb
   feedback:
     package_feedback: closed
 status: passed
@@ -36,8 +36,8 @@ records:
   pattern: pattern/app-shell
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
-  build_identity: workbench-shell-current-20260920-01
+    value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
+  build_identity: workbench-shell-cert-3.1.2-clean-20260929094936
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues
   composition:
@@ -88,8 +88,8 @@ records:
     observed: 1px
     oracle_measurement_ref: oracle-app-shell-header-border
   evidence:
-    current_screenshot: certification/current-output/evidence/current-app-shell-desktop-light.png
-    oracle_screenshot: certification/oracle-output/evidence/oracle-app-shell-desktop-light.png
+    current_screenshot: current-output/evidence/current-app-shell-desktop-light.png
+    oracle_screenshot: oracle-output/evidence/oracle-app-shell-desktop-light.png
     oracle_measurements:
     - method: computed-style
       tolerance: exact
@@ -130,8 +130,8 @@ records:
   pattern: pattern/workspace-board
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
-  build_identity: workbench-shell-current-20260920-01
+    value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
+  build_identity: workbench-shell-cert-3.1.2-clean-20260929094936
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues
   composition:
@@ -181,8 +181,8 @@ records:
     observed: 1px
     oracle_measurement_ref: oracle-workspace-board-header-border
   evidence:
-    current_screenshot: certification/current-output/evidence/current-workspace-board-desktop-light.png
-    oracle_screenshot: certification/oracle-output/evidence/oracle-workspace-board-desktop-light.png
+    current_screenshot: current-output/evidence/current-workspace-board-desktop-light.png
+    oracle_screenshot: oracle-output/evidence/oracle-workspace-board-desktop-light.png
     oracle_measurements:
     - method: computed-style
       tolerance: <=2px
@@ -223,8 +223,8 @@ records:
   pattern: pattern/settings-section-nav
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
-  build_identity: workbench-shell-current-20260920-01
+    value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
+  build_identity: workbench-shell-cert-3.1.2-clean-20260929094936
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/settings
   composition:
@@ -272,8 +272,8 @@ records:
     observed: 1px
     oracle_measurement_ref: oracle-settings-nav-border
   evidence:
-    current_screenshot: certification/current-output/evidence/current-settings-section-nav-desktop-light.png
-    oracle_screenshot: certification/oracle-output/evidence/oracle-settings-section-nav-desktop-light.png
+    current_screenshot: current-output/evidence/current-settings-section-nav-desktop-light.png
+    oracle_screenshot: oracle-output/evidence/oracle-settings-section-nav-desktop-light.png
     oracle_measurements:
     - method: computed-style
       tolerance: <=2px
@@ -314,8 +314,8 @@ records:
   pattern: pattern/master-detail
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
-  build_identity: workbench-shell-current-20260920-01
+    value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
+  build_identity: workbench-shell-cert-3.1.2-clean-20260929094936
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues/DEMO-1
   composition:
@@ -363,8 +363,8 @@ records:
     observed: 1px
     oracle_measurement_ref: oracle-master-detail-header-border
   evidence:
-    current_screenshot: certification/current-output/evidence/current-master-detail-desktop-light.png
-    oracle_screenshot: certification/oracle-output/evidence/oracle-master-detail-desktop-light.png
+    current_screenshot: current-output/evidence/current-master-detail-desktop-light.png
+    oracle_screenshot: oracle-output/evidence/oracle-master-detail-desktop-light.png
     oracle_measurements:
     - method: computed-style
       tolerance: <=2px
@@ -405,8 +405,8 @@ records:
   pattern: pattern/overlay-dialog
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 6d549ccc703c84554f23cc22931cd7a008a7d25fba7e04f30b88a84d2451f21e
-  build_identity: workbench-shell-current-20260920-01
+    value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
+  build_identity: workbench-shell-cert-3.1.2-clean-20260929094936
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues?__oracle_action=open-new-issue
   composition:
@@ -455,8 +455,8 @@ records:
     observed: 0px
     oracle_measurement_ref: oracle-overlay-dialog-borderless
   evidence:
-    current_screenshot: certification/current-output/evidence/current-overlay-dialog-desktop-light.png
-    oracle_screenshot: certification/oracle-output/evidence/oracle-overlay-dialog-desktop-light.png
+    current_screenshot: current-output/evidence/current-overlay-dialog-desktop-light.png
+    oracle_screenshot: oracle-output/evidence/oracle-overlay-dialog-desktop-light.png
     oracle_measurements:
     - method: computed-style
       tolerance: exact

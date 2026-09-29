@@ -64,3 +64,8 @@ review 覆盖视觉一致性、信息语义、元素放置、响应式、交互�
 ## 最终报告
 
 报告基于结构化产物汇总：当前 identities、included/deferred/excluded、按 rule domain 的 passed/failed/waived/recheck、实际命令、stale evidence 处理、P0/P1 接受记录和 feedback UUID。禁止使用“通过 N 项固定清单”替代 coverage/rule-ID 明细。
+
+
+## Numeric verification contract
+
+新会话 checkpoint 携带 `verification_contract: numeric-v1`。Phase 8 的每个 scenario 必须有结构化 measurement：expected/observed/passed/evidence_ref。Tailwind v4 token map 必须声明 `projection.theme_mode: static` 且逐条覆盖 template tokens；built CSS 必须实际输出变量；`@theme` 默认 tree-shaking 造成的 16px/26px/空 variable 不能用 prose 通过。长度允许显式 `tolerance: "<=Npx"`，其他语义按 exact 比对。

@@ -1,0 +1,85 @@
+schema_version: 2
+components:
+  - id: app-shell
+    name: "Workbench App Shell"
+    semantic: "全局导航与内嵌任务画布"
+    pattern: pattern/app-shell
+    primitive: primitive/app-sidebar
+    primitives: [primitive/app-sidebar, primitive/command-palette, primitive/page-header, primitive/page-toolbar, primitive/chat-fab]
+    states: [default, hover, selected, focus-visible, compact-overlay]
+    keyboard: "Tab/Arrow 移动导航；Ctrl/⌘K 打开搜索；C 创建事件；? 打开快捷键帮助"
+    source: custom-consumes-template-primitives
+    route_refs: [route-home, route-inbox, route-events, route-board, route-oncall, route-analytics]
+    placement_role: shell-chrome
+    placement_pattern: pattern/app-shell
+    template_rule_ids: [LAYOUT-101, LAYOUT-102, LAYOUT-103, LAYOUT-104, LAYOUT-110, RESP-101, QUALITY-103, QUALITY-104, QUALITY-105, QUALITY-106]
+
+  - id: data-collection
+    name: "Collection table and toolbar"
+    semantic: "筛选、表格、选择、分页与批量操作"
+    pattern: pattern/app-shell
+    primitive: primitive/data-table
+    primitives: [primitive/data-table, primitive/page-toolbar, primitive/button, primitive/input]
+    states: [loading, success, empty, error, selected, disabled, submitting]
+    keyboard: "表格操作可 Tab 聚焦；批量控件有可见标签或 aria-label"
+    source: custom-consumes-template-primitives
+    route_refs: [route-inbox, route-events, route-board, route-oncall, route-analytics]
+    placement_role: route-toolbar-and-canvas
+    placement_pattern: pattern/app-shell
+    template_rule_ids: [LAYOUT-106, LAYOUT-111, QUALITY-105, QUALITY-107, AX-101]
+
+  - id: master-detail-surface
+    name: "Master detail surface"
+    semantic: "事件/服务的主集合与详情双窗格"
+    pattern: pattern/master-detail
+    primitive: primitive/detail-pane
+    primitives: [primitive/detail-pane, primitive/page-header, primitive/button, primitive/input]
+    states: [loading, success, empty, error, not-found, scroll]
+    keyboard: "上下条切换和详情操作均可键盘到达"
+    source: custom-consumes-template-primitives
+    route_refs: [route-event-detail, route-services]
+    placement_role: master-detail-panes
+    placement_pattern: pattern/master-detail
+    template_rule_ids: [LAYOUT-105, QUALITY-102, QUALITY-107]
+
+  - id: workspace-board
+    name: "Workspace board"
+    semantic: "状态分组、日程时段和指标分区"
+    pattern: pattern/workspace-board
+    primitive: primitive/data-table
+    primitives: [primitive/data-table, primitive/page-header, primitive/page-toolbar, primitive/button]
+    states: [loading, success, empty, error, drag-active, conflict]
+    keyboard: "状态变更有等效菜单操作；拖拽仅是增强"
+    source: custom-consumes-template-primitives
+    route_refs: [route-board, route-oncall, route-analytics]
+    placement_role: board-canvas
+    placement_pattern: pattern/workspace-board
+    template_rule_ids: [LAYOUT-106, LAYOUT-111, AX-101, QUALITY-103]
+
+  - id: settings-surface
+    name: "Settings section surface"
+    semantic: "设置分区导航与表单画布"
+    pattern: pattern/settings-section-nav
+    primitive: primitive/settings-nav
+    primitives: [primitive/settings-nav, primitive/nav-item, primitive/input, primitive/button]
+    states: [default, hover, selected, focus-visible, invalid, submitting, unsaved]
+    keyboard: "分区和表单控件顺序可达；未保存离开有确认"
+    source: custom-consumes-template-primitives
+    route_refs: [route-settings]
+    placement_role: settings-sections
+    placement_pattern: pattern/settings-section-nav
+    template_rule_ids: [LAYOUT-107, QUALITY-103, QUALITY-104, QUALITY-105]
+
+  - id: overlay-dialogs
+    name: "Global dialogs and palette"
+    semantic: "创建事件、确认、上下文补充、搜索与帮助"
+    pattern: pattern/overlay-dialog
+    primitive: primitive/dialog
+    primitives: [primitive/dialog, primitive/command-palette, primitive/input, primitive/button]
+    states: [open, closed, loading, empty, error, invalid, submitting]
+    keyboard: "进入浮层焦点入浮层；Esc 关闭；退出焦点回触发点"
+    source: custom-consumes-template-primitives
+    route_refs: [route-create-event-overlay, route-inbox, route-events, route-settings]
+    placement_role: global-overlay
+    placement_pattern: pattern/overlay-dialog
+    template_rule_ids: [LAYOUT-108, AX-104, QUALITY-102, QUALITY-108]

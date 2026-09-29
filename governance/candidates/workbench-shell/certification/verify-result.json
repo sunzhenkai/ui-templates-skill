@@ -8,7 +8,30 @@
     "valid": true,
     "errors": [],
     "warnings": [],
-    "digests": {}
+    "digests": {},
+    "apply_checkpoint": {
+      "path": "/home/wii/code/repos/github/sunzhenkai/ui-templates-skill/governance/candidates/workbench-shell/apply/checkpoint.yaml",
+      "valid": true,
+      "errors": [],
+      "phase8_artifact": {
+        "valid": true,
+        "record_count": 1
+      },
+      "scenario_coverage": {
+        "expected_count": 186,
+        "covered_count": 186,
+        "missing_count": 0
+      }
+    },
+    "expectations": {
+      "schema_version": 1,
+      "target": "/home/wii/code/repos/github/sunzhenkai/ui-templates-skill/governance/candidates/workbench-shell/measured-expectations.yaml",
+      "kind": "expectations",
+      "valid": true,
+      "errors": [],
+      "warnings": [],
+      "digests": {}
+    }
   },
   "failures": [],
   "note": "accepted candidates still await explicit user promotion; a self-consistency outcome proves internal agreement only and must not be promoted; failed ownership must be written back to package, apply-skill or certification-prompt, followed by clean regeneration."

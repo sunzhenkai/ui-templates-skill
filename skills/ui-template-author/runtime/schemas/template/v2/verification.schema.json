@@ -12,6 +12,7 @@
     "build_identity": {"type": "string", "minLength": 1},
     "browser_identity": {"type": "string", "minLength": 1},
     "records": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/record"}},
+    "verification_contract": {"enum": ["numeric-v1"]},
     "created_at": {"$ref": "common.schema.json#/$defs/timestamp"}
   },
   "allOf": [
@@ -20,6 +21,12 @@
       "then": {
         "properties": {
           "records": {"items": {"allOf": [{"$ref": "#/$defs/record"}, {"properties": {"status": {"enum": ["passed", "failed", "waived"]}}, "required": ["scenario_ids"], "not": {"required": ["phase8_record_id"]}}]}}
+        },
+        "if": {"properties": {"verification_contract": {"const": "numeric-v1"}}, "required": ["verification_contract"]},
+        "then": {
+          "properties": {
+            "records": {"items": {"allOf": [{"$ref": "#/$defs/record"}, {"properties": {"status": {"enum": ["passed", "failed", "waived"]}}, "required": ["measurements"]}]}}
+          }
         }
       }
     },
@@ -33,6 +40,19 @@
     }
   ],
   "$defs": {
+    "measurement": {
+      "type": "object", "additionalProperties": false,
+      "required": ["scenario_id", "method", "expected", "observed", "passed", "evidence_ref"],
+      "properties": {
+        "scenario_id": {"type": "string", "minLength": 1},
+        "method": {"enum": ["computed-style", "logical-geometry", "scroll-metrics", "interaction-probe", "accessibility-tree"]},
+        "expected": {},
+        "observed": {"type": ["string", "number"], "minLength": 1},
+        "passed": {"type": "boolean"},
+        "tolerance": {"type": "string", "pattern": "^(?:<=|≤)\\s*[0-9]+(?:\\.[0-9]+)?px$"},
+        "evidence_ref": {"type": "string", "minLength": 1}
+      }
+    },
     "record": {
       "type": "object", "additionalProperties": false,
       "required": ["id", "rule_id", "status", "expected", "actual", "route", "viewport", "theme", "state", "evidence_refs"],
@@ -47,6 +67,7 @@
         "theme": {"type": "string", "minLength": 1},
         "state": {"type": "string", "minLength": 1},
         "scenario_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "measurements": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/measurement"}},
         "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
       }
     }

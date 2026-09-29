@@ -96,7 +96,7 @@ greenfield 必须有 `confirmed_by_user: true` 与预声明 `build_identity`，�
 ## Phase 1 — Design direction & token freeze
 
 - `01-design-direction.md`：mood、anti-pattern、主题、密度、边界/动效及外部查询记录；还必须记录页面单一职责、design thesis、信息词汇表、安静元素、模板兼容的视觉重点、禁止的默认套路和实现前自我批判。`frontend-design` 只提供 two-pass brainstorm、anti-default critique 与表达取舍；缺工具时手写同等字段。
-- `01-token-map.yaml`：`schema_version: 2`、template/token digest、每个 template token 到项目 token 的映射；偏离含 rule ID、理由、确认。同时定义 `design_rules[]`，每条必须有 `id`、`kind: style | information | placement`、decision、适用 route/component、`token_paths[]`、`template_rule_ids[]`、候选方案与理由；用户确认的偏离必须记录 confirmation。IDs 使用闭集 `LOCAL-STYLE-###`、`LOCAL-INFORMATION-###`、`LOCAL-PLACEMENT-###`。
+- `01-token-map.yaml`：`schema_version: 2`、template/token digest、每个 template token 到项目 token 的映射；Tailwind v4 numeric checkpoint 必须在 token map 声明 `projection: {engine: tailwind-v4, theme_mode: static}`，并使用 `@theme static`（或等价 `:root` 保留层）输出全部映射变量；`TOKEN_PROJECTION_TAILWIND_STATIC_REQUIRED` / `TOKEN_MAP_INCOMPLETE` 会拦截默认 tree-shaking。默认 `@theme` 会被未使用 utility 树剔除，导致 14px/32px/颜色 token 静默丢失；偏离含 rule ID、理由、确认。同时定义 `design_rules[]`，每条必须有 `id`、`kind: style | information | placement`、decision、适用 route/component、`token_paths[]`、`template_rule_ids[]`、候选方案与理由；用户确认的偏离必须记录 confirmation。IDs 使用闭集 `LOCAL-STYLE-###`、`LOCAL-INFORMATION-###`、`LOCAL-PLACEMENT-###`。
 - style rule 把同一 semantic role（如 primary action、secondary action、status、metadata、input、data cell）绑定到一致 typography、color、spacing、radius、border、shadow、density 和状态 treatment；information rule 记录信息该由什么语义 primitive 承载；placement rule 记录任务组、主要信息/动作和阅读/焦点顺序。这些是会话内 local rules，不得写入模板、不得作为 feedback target。
 
 Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可消费 token 已映射，无未解释 arbitrary value；主题角色/状态完整；三类 local design rules 可解析且不与模板 `spec.md`、`tokens.yaml`、`fidelity.yaml` 或已确认 design freeze 冲突。不得从 prose 重演精确值。
@@ -140,7 +140,7 @@ python3 skills/ui-template-apply/runtime/check_template_apply_state.py scenarios
 
 ## Phase 9 — Review & feedback（`09-review.md`, `feedback/`）
 
-`09-review.md` 必须以 YAML front matter 开头；front matter 使用同一 verification schema，`kind: phase-9-review`，顶层同样必须绑定执行复验的 `browser_identity`。每条记录仅允许 `recheck-passed | recheck-failed`，并以 `phase8_record_id` 引用一条 Phase 8 UUID；引用的 rule ID、expected、route、viewport、theme、state 必须一致——**这六个字段直接从被引用的 Phase 8 record 复制，不要手写重述**（`expected` 措辞不同即 `VERIFICATION_RECHECK_IDENTITY_MISMATCH`）；`created_at` 写带引号字符串，`template_digest` 用 canonical 对象（见「产物写时纪律」）。`actual` 与 evidence refs 记录修复后的 current-build 复验结果。一个 Phase 8 record 最多对应一条 Phase 9 record，未知或重复引用均 fail closed。保留的 Phase 8 `failed` 仅在其关联记录为 `recheck-passed` 且 Phase 9 记录整体有效时闭合；未关联、`recheck-failed` 或身份过期仍阻止完成。正文可写 P0/P1/P2 解释与取舍。
+`09-review.md` 必须以 YAML front matter 开头；front matter 使用同一 verification schema，`kind: phase-9-review`，顶层同样必须绑定执行复验的 `browser_identity`。每条记录仅允许 `recheck-passed | recheck-failed`，并以 `phase8_record_id` 引用一条 Phase 8 UUID；引用的 rule ID、expected、route、viewport、theme、state 必须一致——**这六个字段直接从被引用的 Phase 8 record 复制，不要手写重述**（`expected` 措辞不同即 `VERIFICATION_RECHECK_IDENTITY_MISMATCH`）；`created_at` 写带引号字符串，`template_digest` 用 canonical 对象（见「产物写时纪律」）。`actual` 与 evidence refs 记录修复后的 current-build 复验结果。`verification_contract: numeric-v1` 的 Phase 8 record 必须为每个 `scenario_id` 提供 `measurements[]`：method、expected、observed、passed、evidence_ref；长度值可用 `tolerance: "<=Npx"`。纯 prose、截图名或“已检查”不是 observed。checkpoint 门禁会逐 scenario 查缺失、重复、身份漂移、失败值和期望漂移。一个 Phase 8 record 最多对应一条 Phase 9 record，未知或重复引用均 fail closed。保留的 Phase 8 `failed` 仅在其关联记录为 `recheck-passed` 且 Phase 9 记录整体有效时闭合；未关联、`recheck-failed` 或身份过期仍阻止完成。正文可写 P0/P1/P2 解释与取舍。
 
 Phase 9 先分类 feedback ownership：`package` 写 `design-system-feedback/v1` proposed 记录并移交 Author；`binding` 只按用户确认的 binding change set 修复；`apply-skill` 回写本 skill。旧 schema v2 feedback 只用于迁移读取。创建/合并规则见本文件“Feedback”。
 
@@ -152,7 +152,7 @@ python3 ui-template-author/runtime/manage_template_index.py apply-close --apply-
 
 ## checkpoint 与身份
 
-新会话 `checkpoint.yaml` 符合 `design-system-apply-checkpoint/v1`，固定含 mode、0–9 十个有序 phase、contract id/version/digest、binding digest、projection digests、stable IDs、change set、output root、artifact digest、source identity、build identity、updated_at；旧 schema v2 checkpoint 只用于迁移或只读恢复审计。**新会话用 `checkpoint-init` 生成骨架**（自动计算 `template.digest`/`tokens_digest`，一次通过 `checkpoint` 校验，不手写、不试错）；该格式由 `validate_checkpoint` 逐项校验，`schema:` 标记不豁免其他文件的 schema 校验。恢复校验必须把 checkpoint `template.name`/`template.version` 分别绑定当前模板 meta 的 `name`/`template_version`（兼容显式 envelope 的 `version` 字段）；任一 identity 字段不一致均为 Phase 0 失效，不能只靠可伪造的 digest 通过。digest 统一为：安全解析值 → UTF-8 sorted-key canonical JSON（`ensure_ascii=false`、无多余空白、拒绝 NaN）→ SHA-256，算法标识 `sha256-canonical-json-v1`。因此 YAML 格式/键序变化不使 tokens 失效，语义变化会。
+新会话 `checkpoint.yaml` 符合 `design-system-apply-checkpoint/v1`，固定含 mode、0–9 十个有序 phase、contract id/version/digest、binding digest、projection digests、stable IDs、change set、output root、artifact digest、source identity、build identity、updated_at；structural fidelity 新会话还必须绑定 `verification_contract: numeric-v1` 与 `verification_inputs`（layout/expectations/primitives canonical digests），任一 input 漂移即 `CHECKPOINT_NUMERIC_INPUT_DRIFT`；旧 schema v2 checkpoint 只用于迁移或只读恢复审计。**新会话用 `checkpoint-init` 生成骨架**（自动计算 `template.digest`/`tokens_digest`，一次通过 `checkpoint` 校验，不手写、不试错）；该格式由 `validate_checkpoint` 逐项校验，`schema:` 标记不豁免其他文件的 schema 校验。恢复校验必须把 checkpoint `template.name`/`template.version` 分别绑定当前模板 meta 的 `name`/`template_version`（兼容显式 envelope 的 `version` 字段）；任一 identity 字段不一致均为 Phase 0 失效，不能只靠可伪造的 digest 通过。digest 统一为：安全解析值 → UTF-8 sorted-key canonical JSON（`ensure_ascii=false`、无多余空白、拒绝 NaN）→ SHA-256，算法标识 `sha256-canonical-json-v1`。因此 YAML 格式/键序变化不使 tokens 失效，语义变化会。
 
 恢复用 `check_apply_resume.py` 计算 Impact-based Resume：digest 失配全量重开；否则按 change set 依赖面重开最早 phase。source identity：有 Git 时记录 commit + dirty diff digest；无 Git 时记录目标源码快照 digest。build identity 来自目标项目声明的构建命令/产物，必须非空且可复现；不得写“latest”。
 
@@ -163,6 +163,7 @@ python3 scripts/check_template_apply_state.py checkpoint-init \
   --apply-root .ui-template-apply --template <template-meta-or-envelope> \
   --tokens <template/tokens.yaml> --scope <scope-yaml> \
   [--fidelity <template/fidelity.yaml>] [--primitives <template/primitives.yaml>] \
+  [--layout <template/layout.yaml>] [--expectations <template/measured-expectations.yaml>] \
   [--mode bootstrap] [--origin catalog] \
   [--output-root apps/agent-web] [--contract-id <id> --contract-version <semver> --contract-digest <sha256>] \
   --source-identity <revision> --build-identity <build-id>

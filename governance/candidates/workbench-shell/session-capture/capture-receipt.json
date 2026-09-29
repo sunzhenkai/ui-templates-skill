@@ -594,7 +594,7 @@
           {
             "context": "navigation-link",
             "facet": "state_presentations",
-            "id": "fact.board.nav-default-underline",
+            "id": "fact.board.nav-default-decoration",
             "negative": true,
             "property": "text_decoration",
             "rule_id": "QUALITY-103",
@@ -603,7 +603,7 @@
             "subject": "board",
             "value": {
               "kind": "semantic",
-              "value": "underline"
+              "value": "none"
             }
           }
         ],
@@ -611,7 +611,7 @@
         "locator": "ui-source-graph.yaml#/usages/usage.board",
         "scene": "board",
         "slot": "page-header",
-        "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+        "source_span_sha256": "sha256:dc102059e916b61c215aed13dc755e5c5fa411f8bc5c40bb4ef86204f144a3a1",
         "state": "default"
       },
       {
@@ -1962,18 +1962,382 @@
               "kind": "token-ref",
               "value": "color.page-canvas"
             }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.workspace-switcher.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "workspace-switcher",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "root"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.workspace-switcher.border",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "workspace-switcher",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.search.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "search",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "root"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.search.border",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "search",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.compose.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "compose",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "root"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.compose.border",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "compose",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.nav-group.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "nav-group",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "root"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.nav-group.border",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "nav-group",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.pin-list.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "pin-list",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "root"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.pin-list.border",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "pin-list",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.rail.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "rail",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "root"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.rail.border",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "rail",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.header-trigger.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "header-trigger",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "root"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.header-trigger.border",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "header-trigger",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.page-header.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "page-header",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "page-canvas"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.page-header.border",
+            "negative": false,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "page-header",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "token-ref",
+              "value": "color.surface-border"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.page-toolbar.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "page-toolbar",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "page-canvas"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.page-toolbar.border",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "page-toolbar",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.footer-utility.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "footer-utility",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "root"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.footer-utility.border",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "footer-utility",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.chat-fab.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "chat-fab",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "root"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.chat-fab.border",
+            "negative": true,
+            "property": "border",
+            "rule_id": "LAYOUT-101",
+            "slot": "chat-fab",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "none"
+            }
+          },
+          {
+            "context": null,
+            "facet": "component_geometry",
+            "id": "fact.shell.page-toolbar-size",
+            "negative": false,
+            "property": "size",
+            "rule_id": "LAYOUT-106",
+            "slot": "page-toolbar",
+            "state": "default",
+            "subject": "page-toolbar",
+            "value": {
+              "kind": "token-ref",
+              "observed": {
+                "kind": "css-length",
+                "value": "48px"
+              },
+              "value": "space.header-height"
+            }
+          },
+          {
+            "context": null,
+            "facet": "layout_scenes",
+            "id": "fact.shell.page-canvas.container",
+            "negative": false,
+            "property": "container_role",
+            "rule_id": "LAYOUT-101",
+            "slot": "page-canvas",
+            "state": "default",
+            "subject": "shell",
+            "value": {
+              "kind": "semantic",
+              "value": "root"
+            }
           }
         ],
         "id": "usage.shell",
         "locator": "ui-source-graph.yaml#/usages/usage.shell",
         "scene": "shell",
         "slot": "page-canvas",
-        "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+        "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
         "state": "default"
       }
     ]
   },
-  "closure_digest": "sha256:1324a8d7390d0ce916492f9fcdd93d582408f8d2f5560ee1a92ef4f416c064fd",
+  "closure_digest": "sha256:a2f4732011ae9005f1405bdd06116514acd3355bf6827e244f41f237a5865d66",
   "facts": [
     {
       "context": "action-trigger",
@@ -2070,7 +2434,7 @@
       "property": "arrangement",
       "rule_id": "LAYOUT-102",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "source_span_sha256": "sha256:dc102059e916b61c215aed13dc755e5c5fa411f8bc5c40bb4ef86204f144a3a1",
       "state": "default",
       "status": "observed",
       "subject": "board",
@@ -2150,7 +2514,7 @@
     {
       "context": "navigation-link",
       "facet": "state_presentations",
-      "id": "fact.board.nav-default-underline",
+      "id": "fact.board.nav-default-decoration",
       "locator": "ui-source-graph.yaml#/usages/usage.board",
       "negative": true,
       "owner_id": "usage.board",
@@ -2158,13 +2522,13 @@
       "property": "text_decoration",
       "rule_id": "QUALITY-103",
       "slot": "section-nav",
-      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "source_span_sha256": "sha256:dc102059e916b61c215aed13dc755e5c5fa411f8bc5c40bb4ef86204f144a3a1",
       "state": "default",
       "status": "observed",
       "subject": "board",
       "value": {
         "kind": "semantic",
-        "value": "underline"
+        "value": "none"
       }
     },
     {
@@ -2218,7 +2582,7 @@
       "property": "size",
       "rule_id": "LAYOUT-106",
       "slot": "page-header",
-      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "source_span_sha256": "sha256:dc102059e916b61c215aed13dc755e5c5fa411f8bc5c40bb4ef86204f144a3a1",
       "state": "default",
       "status": "observed",
       "subject": "page-header",
@@ -2242,7 +2606,7 @@
       "property": "scroll_block",
       "rule_id": "LAYOUT-102",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "source_span_sha256": "sha256:dc102059e916b61c215aed13dc755e5c5fa411f8bc5c40bb4ef86204f144a3a1",
       "state": "default",
       "status": "observed",
       "subject": "board",
@@ -2262,7 +2626,7 @@
       "property": "size",
       "rule_id": "LAYOUT-106",
       "slot": "page-toolbar",
-      "source_span_sha256": "sha256:1d511980875f1a5cd8ed42e3c447b7dc9025c68c2818f1a4ecb95b48c4b7fbc7",
+      "source_span_sha256": "sha256:dc102059e916b61c215aed13dc755e5c5fa411f8bc5c40bb4ef86204f144a3a1",
       "state": "default",
       "status": "observed",
       "subject": "page-header",
@@ -2962,7 +3326,7 @@
       "property": "anchor_role",
       "rule_id": "LAYOUT-001",
       "slot": "chat-fab",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -2982,7 +3346,7 @@
       "property": "anchor_role",
       "rule_id": "LAYOUT-001",
       "slot": "header-trigger",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3002,7 +3366,7 @@
       "property": "arrangement",
       "rule_id": "LAYOUT-001",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3022,7 +3386,7 @@
       "property": "background",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3042,7 +3406,7 @@
       "property": "border",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3062,7 +3426,7 @@
       "property": "padding_block_end",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3082,7 +3446,7 @@
       "property": "padding_block_start",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3102,7 +3466,7 @@
       "property": "padding_inline_end",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3122,7 +3486,7 @@
       "property": "padding_inline_start",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3142,7 +3506,7 @@
       "property": "radius",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3162,13 +3526,213 @@
       "property": "shadow",
       "rule_id": "LAYOUT-107",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
         "kind": "token-ref",
         "value": "shadow.surface"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.chat-fab.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "chat-fab",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.chat-fab.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "chat-fab",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "root"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.compose.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "compose",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.compose.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "compose",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "root"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.footer-utility.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "footer-utility",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.footer-utility.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "footer-utility",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "root"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.header-trigger.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "header-trigger",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.header-trigger.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "header-trigger",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "root"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.nav-group.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "nav-group",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.nav-group.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "nav-group",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "root"
       }
     },
     {
@@ -3182,7 +3746,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "chat-fab",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3202,7 +3766,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "compose",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3222,7 +3786,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "footer-utility",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3242,7 +3806,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "header-trigger",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3262,7 +3826,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "nav-group",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3282,7 +3846,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3302,7 +3866,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "page-header",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3322,7 +3886,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "page-toolbar",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3342,7 +3906,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "pin-list",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3362,7 +3926,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "rail",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3382,7 +3946,7 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "search",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3402,13 +3966,217 @@
       "property": "slot_order",
       "rule_id": "LAYOUT-001",
       "slot": "workspace-switcher",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
         "kind": "semantic",
         "value": "1"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.page-canvas.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "page-canvas",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "root"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.page-header.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "page-header",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "token-ref",
+        "value": "color.surface-border"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.page-header.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "page-header",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "page-canvas"
+      }
+    },
+    {
+      "context": null,
+      "facet": "component_geometry",
+      "id": "fact.shell.page-toolbar-size",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "size",
+      "rule_id": "LAYOUT-106",
+      "slot": "page-toolbar",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "page-toolbar",
+      "value": {
+        "kind": "token-ref",
+        "observed": {
+          "kind": "css-length",
+          "value": "48px"
+        },
+        "value": "space.header-height"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.page-toolbar.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "page-toolbar",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.page-toolbar.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "page-toolbar",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "page-canvas"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.pin-list.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "pin-list",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.pin-list.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "pin-list",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "root"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.rail.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "rail",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.rail.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "rail",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "root"
       }
     },
     {
@@ -3422,13 +4190,53 @@
       "property": "root_scroll",
       "rule_id": "LAYOUT-001",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
         "kind": "semantic",
         "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.search.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "search",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.search.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "search",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "root"
       }
     },
     {
@@ -3442,7 +4250,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "chat-fab",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3462,7 +4270,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "compose",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3482,7 +4290,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "footer-utility",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3502,7 +4310,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "header-trigger",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3522,7 +4330,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "nav-group",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3542,7 +4350,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3562,7 +4370,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "page-header",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3582,7 +4390,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "page-toolbar",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3602,7 +4410,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "pin-list",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3622,7 +4430,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "rail",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3642,7 +4450,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "search",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3662,7 +4470,7 @@
       "property": "slot_role",
       "rule_id": "LAYOUT-001",
       "slot": "workspace-switcher",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
@@ -3682,13 +4490,53 @@
       "property": "shell_variant",
       "rule_id": "LAYOUT-001",
       "slot": "page-canvas",
-      "source_span_sha256": "sha256:661fbcab433346fe43bdf39e16db923f42fa6b2b581d02b3e78ae07c317bf10a",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
       "state": "default",
       "status": "observed",
       "subject": "shell",
       "value": {
         "kind": "semantic",
         "value": "inset"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.workspace-switcher.border",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": true,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "border",
+      "rule_id": "LAYOUT-101",
+      "slot": "workspace-switcher",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "none"
+      }
+    },
+    {
+      "context": null,
+      "facet": "layout_scenes",
+      "id": "fact.shell.workspace-switcher.container",
+      "locator": "ui-source-graph.yaml#/usages/usage.shell",
+      "negative": false,
+      "owner_id": "usage.shell",
+      "owner_kind": "usage",
+      "property": "container_role",
+      "rule_id": "LAYOUT-101",
+      "slot": "workspace-switcher",
+      "source_span_sha256": "sha256:b739d7736da7507c009b9c4ec42f56ab3a3e182e35a8c01a5ee37603be5c94d4",
+      "state": "default",
+      "status": "observed",
+      "subject": "shell",
+      "value": {
+        "kind": "semantic",
+        "value": "root"
       }
     }
   ],
@@ -3702,8 +4550,8 @@
     "graph_path": "ui-source-graph.yaml",
     "limits": {
       "max_definitions": 100,
-      "max_facts": 200,
-      "max_graph_bytes": 200000,
+      "max_facts": 250,
+      "max_graph_bytes": 250000,
       "max_imports": 100,
       "max_usages": 100
     },
@@ -3733,12 +4581,12 @@
         "shell"
       ]
     },
-    "source_id": "source-multica-session",
-    "source_revision": "2df765a3c8f39789c9fb76316378bcffc20d22d9"
+    "source_id": "source-001",
+    "source_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
   },
   "source": {
-    "graph_digest": "sha256:141f2d9c0464ec1e89900e01e31998a42e3d6397bd3cf07201da4727df2879b4",
-    "revision": "2df765a3c8f39789c9fb76316378bcffc20d22d9"
+    "graph_digest": "sha256:544f76f2138178a2b95c6f79d1efb3187a8ec09c85638b41dbca434f373a8e97",
+    "revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
   },
   "status": "captured",
   "style_only_reason": null,
@@ -3747,9 +4595,9 @@
     "dynamic": 0,
     "exclusions": 2,
     "exports": 16,
-    "facts": 84,
+    "facts": 108,
     "imports": 18,
-    "negative_facts": 10,
+    "negative_facts": 20,
     "usages": 20
   },
   "unresolved": []

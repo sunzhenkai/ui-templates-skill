@@ -1,0 +1,114 @@
+{
+  "capture": {
+    "closure_digest": "sha256:a2f4732011ae9005f1405bdd06116514acd3355bf6827e244f41f237a5865d66",
+    "profile": "repo-literal-graph-v1",
+    "scope": {
+      "components": [
+        "app-sidebar",
+        "button",
+        "chat-fab",
+        "command-palette",
+        "data-table",
+        "dialog",
+        "input",
+        "page-header",
+        "settings-nav"
+      ],
+      "contexts": [
+        "action-trigger",
+        "navigation-link",
+        "overlay-surface"
+      ],
+      "scenes": [
+        "board",
+        "dialog",
+        "master-detail",
+        "settings",
+        "shell"
+      ]
+    },
+    "source_graph_digest": "sha256:544f76f2138178a2b95c6f79d1efb3187a8ec09c85638b41dbca434f373a8e97",
+    "source_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+    "summary": {
+      "definitions": 19,
+      "dynamic": 0,
+      "exclusions": 2,
+      "exports": 16,
+      "facts": 108,
+      "imports": 18,
+      "negative_facts": 20,
+      "usages": 20
+    },
+    "unresolved": []
+  },
+  "degradation": null,
+  "eval": {
+    "counts": {
+      "declared": 32,
+      "executed": 32,
+      "llm": 2,
+      "parsed": 32,
+      "script": 30
+    },
+    "revision": "0d94a51f4f8e685ad45f3979a278a5130710424a+eval.f5f351299ae8e466",
+    "runner_version": "1.0.0",
+    "runtime_fingerprint": "sha256:c93792b10b3efa0316c237fc78549ffb4d7f4de4f8c89c64d305b5f7aca040db",
+    "status": "passed"
+  },
+  "gate": {
+    "capture": "captured",
+    "eval": "passed",
+    "reproducibility": "passed",
+    "validation": "passed"
+  },
+  "issues": [],
+  "production_index": {
+    "after_digest": "sha256:df5517f8c92f714f1d77d2f6573eadc6a607e6292e7a1e724ed2239173f7c0c2",
+    "before_digest": "sha256:df5517f8c92f714f1d77d2f6573eadc6a607e6292e7a1e724ed2239173f7c0c2",
+    "promoted": false,
+    "unchanged_during_gate": true
+  },
+  "profile": {
+    "canonical_digest": "sha256:17a693e7b20d07d0fe0e9b1ba49a04acade0ba7dff80546cdf22d8387241a039",
+    "conformance": "structural",
+    "profile": "repo-structural-v1",
+    "schema_version": "design-system/v1",
+    "scope": {
+      "components": [
+        "app-sidebar",
+        "button",
+        "chat-fab",
+        "command-palette",
+        "data-table",
+        "dialog",
+        "input",
+        "page-header",
+        "settings-nav"
+      ],
+      "contexts": [
+        "action-trigger",
+        "navigation-link",
+        "overlay-surface"
+      ],
+      "scenes": [
+        "board",
+        "dialog",
+        "master-detail",
+        "settings",
+        "shell"
+      ]
+    },
+    "unresolved": []
+  },
+  "removal_set": [],
+  "replay": {
+    "declared": 25,
+    "errors": [],
+    "executed": 25,
+    "passed": 25,
+    "resolved": 25,
+    "status": "passed"
+  },
+  "report_schema_version": 1,
+  "status": "passed"
+}

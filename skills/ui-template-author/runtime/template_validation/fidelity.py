@@ -542,6 +542,7 @@ def replay_profile(
     source_roots: dict[str, Path],
     candidate_template: Path | None = None,
     capture_receipt: dict[str, Any] | None = None,
+    graph_root: Path | None = None,
 ) -> dict[str, Any]:
     records: list[dict[str, Any]] = []
     for collection in ("layout_scenes", "component_geometry", "state_presentations"):
@@ -574,7 +575,8 @@ def replay_profile(
             bound = root.resolve(strict=True)
             if not isinstance(relative, str):
                 raise FidelityError("SOURCE_LOCATOR_MISSING", "observed record 缺少 locator.path")
-            target = _confine(bound, relative)
+            replay_root = graph_root.resolve(strict=True) if graph_root is not None else bound
+            target = _confine(replay_root, relative)
             if candidate is not None:
                 try:
                     target.relative_to(candidate)

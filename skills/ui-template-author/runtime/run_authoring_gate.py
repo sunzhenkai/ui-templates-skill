@@ -24,13 +24,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--report-out", type=Path)
     parser.add_argument("--promote-index", action="store_true")
     parser.add_argument("--removed", action="append", default=[], dest="removed")
+    parser.add_argument("--graph-root", type=Path, help="Read-only session graph artifact root; source checkout remains unchanged.")
     args = parser.parse_args(argv)
     report = run_authoring_gate(
         request_path=args.request, source_root=args.source_root,
         candidate_template=args.candidate_template, candidate_index=args.candidate_index,
         production_index=args.production_index, validator=args.validator,
         eval_runner=args.eval_runner, receipt_out=args.receipt_out,
-        promote_index=args.promote_index, removed=args.removed,
+        promote_index=args.promote_index, removed=args.removed, graph_root=args.graph_root,
     )
     text = json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
     if args.report_out:

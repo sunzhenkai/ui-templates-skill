@@ -1,0 +1,318 @@
+schema_version: 2
+template:
+  name: workbench-shell
+  version: 3.1.2
+  digest: 17a693e7b20d07d0fe0e9b1ba49a04acade0ba7dff80546cdf22d8387241a039
+token_digest: b9f92ef7bbf947c158da7d56746e27ece64bd7d04c781edd10c6a6d6e51dd53e
+strategy: Tailwind v4 static @theme variables preserve every template token in built
+  CSS.
+projection:
+  engine: tailwind-v4
+  theme_mode: static
+  target: src/styles/tokens.css
+mappings:
+- template_path: tokens.color.app-shell
+  project_token: --wt-color-app-shell
+  value: oklch(0.964435 0.001327 286.375)
+  origin: source
+- template_path: tokens.color.page-canvas
+  project_token: --wt-color-page-canvas
+  value: oklch(0.988087 0 0)
+  origin: source
+- template_path: tokens.color.surface
+  project_token: --wt-color-surface
+  value: oklch(1 0 0)
+  origin: source
+- template_path: tokens.color.surface-raised
+  project_token: --wt-color-surface-raised
+  value: oklch(1 0 0)
+  origin: source
+- template_path: tokens.color.secondary
+  project_token: --wt-color-secondary
+  value: oklch(0.967 0.001 286.375)
+  origin: source
+- template_path: tokens.color.secondary-foreground
+  project_token: --wt-color-secondary-foreground
+  value: oklch(0.21 0.006 285.885)
+  origin: source
+- template_path: tokens.color.secondary-hover
+  project_token: --wt-color-secondary-hover
+  value: color-mix(in oklab, oklch(0.967 0.001 286.375) 80%, transparent)
+  origin: computed
+- template_path: tokens.color.primary-hover
+  project_token: --wt-color-primary-hover
+  value: color-mix(in oklab, oklch(0.21 0.006 285.885) 80%, transparent)
+  origin: computed
+- template_path: tokens.color.brand-hover
+  project_token: --wt-color-brand-hover
+  value: color-mix(in oklab, oklch(0.55 0.16 255) 90%, transparent)
+  origin: computed
+- template_path: tokens.color.status-danger-hover
+  project_token: --wt-color-status-danger-hover
+  value: color-mix(in oklab, oklch(0.577 0.245 27.325) 20%, transparent)
+  origin: computed
+- template_path: tokens.color.ring
+  project_token: --wt-color-ring
+  value: oklch(0.705 0.015 286.067)
+  origin: source
+- template_path: tokens.color.ring-focus
+  project_token: --wt-color-ring-focus
+  value: oklch(0.705 0.015 286.067 / 0.5)
+  origin: computed
+- template_path: tokens.color.sidebar-accent
+  project_token: --wt-color-sidebar-accent
+  value: oklch(0.935 0.003 286.375)
+  origin: source
+- template_path: tokens.color.sidebar-accent-foreground
+  project_token: --wt-color-sidebar-accent-foreground
+  value: oklch(0.21 0.006 285.885)
+  origin: source
+- template_path: tokens.color.sidebar-foreground
+  project_token: --wt-color-sidebar-foreground
+  value: oklch(0.141 0.005 285.823)
+  origin: source
+- template_path: tokens.color.surface-border
+  project_token: --wt-color-surface-border
+  value: oklch(0.92 0.004 286.32)
+  origin: source
+- template_path: tokens.color.surface-hover
+  project_token: --wt-color-surface-hover
+  value: oklch(0.967 0.001 286.375)
+  origin: source
+- template_path: tokens.color.surface-selected
+  project_token: --wt-color-surface-selected
+  value: oklch(0.95 0.002 286.375)
+  origin: source
+- template_path: tokens.color.divider
+  project_token: --wt-color-divider
+  value: oklch(0.945 0.003 286.32)
+  origin: source
+- template_path: tokens.color.text-primary
+  project_token: --wt-color-text-primary
+  value: oklch(0.141 0.005 285.823)
+  origin: source
+- template_path: tokens.color.text-secondary
+  project_token: --wt-color-text-secondary
+  value: oklch(0.505 0.016 285.938)
+  origin: source
+- template_path: tokens.color.text-muted
+  project_token: --wt-color-text-muted
+  value: oklch(0.606 0.016 285.938)
+  origin: source
+- template_path: tokens.color.text-disabled
+  project_token: --wt-color-text-disabled
+  value: oklch(0.606 0.016 285.938)
+  origin: source
+- template_path: tokens.color.text-on-primary
+  project_token: --wt-color-text-on-primary
+  value: oklch(0.985 0 0)
+  origin: source
+- template_path: tokens.color.link
+  project_token: --wt-color-link
+  value: oklch(0.55 0.16 255)
+  origin: source
+- template_path: tokens.color.brand-foreground
+  project_token: --wt-color-brand-foreground
+  value: oklch(0.985 0 0)
+  origin: source
+- template_path: tokens.color.primary
+  project_token: --wt-color-primary
+  value: oklch(0.21 0.006 285.885)
+  origin: source
+- template_path: tokens.color.status-success
+  project_token: --wt-color-status-success
+  value: oklch(0.55 0.16 145)
+  origin: source
+- template_path: tokens.color.status-warning
+  project_token: --wt-color-status-warning
+  value: oklch(0.75 0.16 85)
+  origin: source
+- template_path: tokens.color.status-danger
+  project_token: --wt-color-status-danger
+  value: oklch(0.577 0.245 27.325)
+  origin: source
+- template_path: tokens.color.status-info
+  project_token: --wt-color-status-info
+  value: oklch(0.55 0.18 250)
+  origin: source
+- template_path: tokens.color.chart-1
+  project_token: --wt-color-chart-1
+  value: oklch(0.55 0.16 255)
+  origin: source
+- template_path: tokens.color.chart-2
+  project_token: --wt-color-chart-2
+  value: oklch(0.66 0.13 255)
+  origin: source
+- template_path: tokens.color.chart-3
+  project_token: --wt-color-chart-3
+  value: oklch(0.76 0.10 255)
+  origin: source
+- template_path: tokens.color.chart-4
+  project_token: --wt-color-chart-4
+  value: oklch(0.85 0.06 255)
+  origin: source
+- template_path: tokens.color.chart-5
+  project_token: --wt-color-chart-5
+  value: oklch(0.92 0.03 255)
+  origin: source
+- template_path: tokens.font.weight.regular
+  project_token: --wt-font-weight-regular
+  value: 400
+  origin: source
+- template_path: tokens.font.weight.medium
+  project_token: --wt-font-weight-medium
+  value: 500
+  origin: source
+- template_path: tokens.font.weight.semibold
+  project_token: --wt-font-weight-semibold
+  value: 600
+  origin: source
+- template_path: tokens.radius.sm
+  project_token: --wt-radius-sm
+  value: 0.375
+  origin: computed
+- template_path: tokens.radius.md
+  project_token: --wt-radius-md
+  value: 0.5
+  origin: computed
+- template_path: tokens.radius.lg
+  project_token: --wt-radius-lg
+  value: 0.625
+  origin: source
+- template_path: tokens.radius.xl
+  project_token: --wt-radius-xl
+  value: 0.875
+  origin: computed
+- template_path: tokens.radius.2xl
+  project_token: --wt-radius-2xl
+  value: 1.125
+  origin: computed
+- template_path: tokens.radius.3xl
+  project_token: --wt-radius-3xl
+  value: 1.375
+  origin: computed
+- template_path: tokens.radius.4xl
+  project_token: --wt-radius-4xl
+  value: 1.625
+  origin: computed
+- template_path: tokens.shadow.floating
+  project_token: --wt-shadow-floating
+  value: 0 16px 40px rgb(15 23 42 / 0.14), 0 3px 10px rgb(15 23 42 / 0.08)
+  origin: source
+- template_path: tokens.shadow.menu
+  project_token: --wt-shadow-menu
+  value: 0 8px 24px rgb(15 23 42 / 0.08), 0 2px 6px rgb(15 23 42 / 0.05)
+  origin: source
+- template_path: tokens.shadow.surface
+  project_token: --wt-shadow-surface
+  value: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 1px rgb(15 23 42 / 0.03)
+  origin: source
+- template_path: tokens.size.control-height-xs
+  project_token: --wt-size-control-height-xs
+  value: 24
+  origin: source
+- template_path: tokens.size.control-height-sm
+  project_token: --wt-size-control-height-sm
+  value: 28
+  origin: source
+- template_path: tokens.size.control-height-default
+  project_token: --wt-size-control-height-default
+  value: 32
+  origin: source
+- template_path: tokens.size.control-height-lg
+  project_token: --wt-size-control-height-lg
+  value: 36
+  origin: source
+- template_path: tokens.size.icon-default
+  project_token: --wt-size-icon-default
+  value: 16
+  origin: source
+- template_path: tokens.size.icon-compact
+  project_token: --wt-size-icon-compact
+  value: 12
+  origin: source
+- template_path: tokens.size.icon-sm
+  project_token: --wt-size-icon-sm
+  value: 14
+  origin: source
+- template_path: tokens.size.dialog-max-height
+  project_token: --wt-size-dialog-max-height
+  value: 80
+  origin: source
+- template_path: tokens.size.section-nav-default
+  project_token: --wt-size-section-nav-default
+  value: 15
+  origin: source
+- template_path: tokens.size.sidebar-default
+  project_token: --wt-size-sidebar-default
+  value: 256
+  origin: source
+- template_path: tokens.space.2
+  project_token: --wt-space-2
+  value: 0.5
+  origin: computed
+- template_path: tokens.space.chat-launcher-inset
+  project_token: --wt-space-chat-launcher-inset
+  value: 0.5
+  origin: source
+- template_path: tokens.space.chat-launcher-size
+  project_token: --wt-space-chat-launcher-size
+  value: 2.5
+  origin: source
+- template_path: tokens.space.header-height
+  project_token: --wt-space-header-height
+  value: 3
+  origin: source
+- template_path: tokens.typography.micro
+  project_token: --wt-typography-micro
+  value: 11
+  origin: source
+- template_path: tokens.typography.secondary
+  project_token: --wt-typography-secondary
+  value: 12
+  origin: source
+- template_path: tokens.typography.label
+  project_token: --wt-typography-label
+  value: 13
+  origin: source
+- template_path: tokens.typography.body
+  project_token: --wt-typography-body
+  value: 14
+  origin: source
+- template_path: tokens.typography.body-lg
+  project_token: --wt-typography-body-lg
+  value: 15
+  origin: source
+- template_path: tokens.typography.title-sm
+  project_token: --wt-typography-title-sm
+  value: 16
+  origin: source
+- template_path: tokens.typography.heading
+  project_token: --wt-typography-heading
+  value: 18
+  origin: source
+- template_path: tokens.typography.title-lg
+  project_token: --wt-typography-title-lg
+  value: 20
+  origin: source
+- template_path: tokens.typography.display-sm
+  project_token: --wt-typography-display-sm
+  value: 24
+  origin: source
+- template_path: tokens.typography.display
+  project_token: --wt-typography-display
+  value: 36
+  origin: source
+design_rules:
+- id: LOCAL-STYLE-001
+  kind: style
+  decision: Use exact template tokens for all semantic roles.
+  scope: global
+  token_paths:
+  - tokens.color.primary
+  template_rule_ids:
+  - QUALITY-101
+  alternatives:
+  - component defaults
+  reason: prevent tree-shaken token drift
+  confirmation: certification gate

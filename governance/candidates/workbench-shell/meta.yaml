@@ -1,6 +1,6 @@
 schema: design-system-meta/v1
 name: workbench-shell
-version: 3.0.1
+version: 3.1.2
 description: Neutral dual-theme workbench app shell with an inset canvas, dense 14px
   interface, crisp separation and restrained blue accents.
 sources:
@@ -121,3 +121,45 @@ coverage:
     - disabled
     unsupported:
     - invalid
+visual_role_tokens:
+  canvas:
+  - color.app-shell
+  - color.page-canvas
+  surface:
+  - color.surface
+  surface-hover:
+  - color.surface-hover
+  surface-selected:
+  - color.surface-selected
+  border:
+  - color.surface-border
+  divider:
+  - color.divider
+  text-primary:
+  - color.text-primary
+  text-secondary:
+  - color.text-secondary
+  text-muted:
+  - color.text-muted
+  text-disabled:
+  - color.text-disabled
+  text-on-primary:
+  - color.text-on-primary
+  link:
+  - color.link
+  brand-primary:
+  - color.primary
+  brand-hover:
+  - color.primary-hover
+  status-success:
+  - color.status-success
+  status-warning:
+  - color.status-warning
+  status-danger:
+  - color.status-danger
+  typography.heading:
+  - typography.heading
+  typography.body:
+  - typography.body
+  typography.secondary:
+  - typography.secondary

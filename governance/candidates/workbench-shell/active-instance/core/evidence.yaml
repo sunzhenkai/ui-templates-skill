@@ -1,58 +1,547 @@
 schema: design-system-evidence/v1
 items:
-  - id: evidence-token-css
-    kind: token
-    target: token/color.app-shell
-    origin: source
-    source_id: source-001
-    source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9
-    locator: packages/ui/styles/tokens.css
-    method: CSS custom-property declaration
-    confidence: high
-    captured_at: "2026-09-19T02:28:00Z"
-  - id: evidence-layout-shell
-    kind: layout
-    target: route/workbench
-    origin: source
-    source_id: source-001
-    source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9
-    locator: ui-source-graph.yaml#/usages/usage.shell
-    method: closed source graph fact extraction
-    confidence: high
-    captured_at: "2026-09-19T02:28:00Z"
-  - id: evidence-layout-board
-    kind: layout
-    target: route/board
-    origin: source
-    source_id: source-001
-    source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9
-    locator: ui-source-graph.yaml#/usages/usage.board-columns
-    method: closed source graph fact extraction
-    confidence: high
-    captured_at: "2026-09-19T02:28:00Z"
-  - id: evidence-default-action-colors
-    kind: default
-    target: token/color.primary-hover
-    origin: default
-    basis: "The capture refers to a primary hover role but the CSS token path contains no dedicated primary-hover or ring-focus declaration; conservative fallback is explicitly declared."
-    confidence: low
-    captured_at: "2026-09-19T02:28:00Z"
-  - {id: evidence-workbench-page, kind: layout, target: page-type/workbench, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/scene.shell", method: closed source graph definition, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-board-page, kind: layout, target: page-type/board, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/scene.board", method: closed source graph definition, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-settings-page, kind: layout, target: page-type/settings, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/scene.settings", method: closed source graph definition, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-master-detail-page, kind: layout, target: page-type/master-detail, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/scene.master-detail", method: closed source graph definition, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-dialog-page, kind: layout, target: page-type/dialog, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/scene.dialog", method: closed source graph definition, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-workbench-pattern, kind: layout, target: pattern/workbench-shell, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.shell", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-board-pattern, kind: layout, target: pattern/board-columns, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.board-columns", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-settings-pattern, kind: layout, target: pattern/settings-navigation, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.settings-section-nav", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-master-detail-pattern, kind: layout, target: pattern/master-detail, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.master-detail-layout", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-dialog-pattern, kind: component, target: pattern/dialog-overlay, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.dialog-content", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-sidebar-primitive, kind: component, target: primitive/app-sidebar, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.app-sidebar-width", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-button-primitive, kind: component, target: primitive/button, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.button-geometry", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-chat-primitive, kind: component, target: primitive/chat-fab, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.chat-fab-geometry", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-command-palette-primitive, kind: component, target: primitive/command-palette, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/definitions/component.command-palette", method: closed source graph definition, confidence: medium, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-table-primitive, kind: component, target: primitive/data-table, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.board-columns", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-dialog-primitive, kind: component, target: primitive/dialog, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.dialog-content", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-input-primitive, kind: component, target: primitive/input, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.input-geometry", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-header-primitive, kind: component, target: primitive/page-header, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.board", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
-  - {id: evidence-settings-nav-primitive, kind: component, target: primitive/settings-nav, origin: source, source_id: source-001, source_revision: 2df765a3c8f39789c9fb76316378bcffc20d22d9, locator: "ui-source-graph.yaml#/usages/usage.settings-section-nav", method: closed source graph fact extraction, confidence: high, captured_at: "2026-09-19T02:28:00Z"}
+- id: evidence-layout-board
+  kind: layout
+  target: route/board
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.board
+  method: derived from literal source graph facts at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-layout-dialog
+  kind: layout
+  target: route/dialog
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.dialog
+  method: derived from literal source graph facts at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-layout-master-detail
+  kind: layout
+  target: route/master-detail
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.master-detail
+  method: derived from literal source graph facts at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-layout-settings
+  kind: layout
+  target: route/settings
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.settings
+  method: derived from literal source graph facts at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-layout-shell
+  kind: layout
+  target: route/shell
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.shell
+  method: derived from literal source graph facts at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-page-type-app-shell
+  kind: layout
+  target: page-type/app-shell
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/entry.shell
+  method: derived from literal source graph scene closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-page-type-board
+  kind: layout
+  target: page-type/board
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/entry.shell
+  method: derived from literal source graph scene closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-page-type-dialog
+  kind: layout
+  target: page-type/dialog
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/entry.shell
+  method: derived from literal source graph scene closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-page-type-master-detail
+  kind: layout
+  target: page-type/master-detail
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/entry.shell
+  method: derived from literal source graph scene closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-page-type-settings
+  kind: layout
+  target: page-type/settings
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/entry.shell
+  method: derived from literal source graph scene closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-pattern-app-shell
+  kind: component
+  target: pattern/app-shell
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.shell
+  method: derived from literal source graph imports and usages at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-pattern-master-detail
+  kind: component
+  target: pattern/master-detail
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.master-detail
+  method: derived from literal source graph imports and usages at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-pattern-overlay-dialog
+  kind: component
+  target: pattern/overlay-dialog
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.dialog
+  method: derived from literal source graph imports and usages at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-pattern-settings-section-nav
+  kind: component
+  target: pattern/settings-section-nav
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.settings
+  method: derived from literal source graph imports and usages at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-pattern-workspace-board
+  kind: component
+  target: pattern/workspace-board
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.board
+  method: derived from literal source graph imports and usages at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-app-sidebar
+  kind: component
+  target: primitive/app-sidebar
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/component.app-sidebar
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-button
+  kind: component
+  target: primitive/button
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/component.button
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-chat-fab
+  kind: component
+  target: primitive/chat-fab
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/component.chat-fab
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-command-palette
+  kind: component
+  target: primitive/command-palette
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/component.command-palette
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-data-table
+  kind: component
+  target: primitive/data-table
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/component.data-table
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-detail-pane
+  kind: component
+  target: primitive/detail-pane
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/scene.master-detail
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-dialog
+  kind: component
+  target: primitive/dialog
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/component.dialog
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-input
+  kind: component
+  target: primitive/input
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/component.input
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-nav-item
+  kind: component
+  target: primitive/nav-item
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/context.nav-item
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-page-header
+  kind: component
+  target: primitive/page-header
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/component.page-header
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-page-toolbar
+  kind: component
+  target: primitive/page-toolbar
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/component.page-toolbar
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-primitive-settings-nav
+  kind: component
+  target: primitive/settings-nav
+  origin: computed
+  locator: ui-source-graph.yaml#/definitions/component.settings-nav
+  method: literal source graph closure at fixed session graph revision
+  source_id: source-002
+  source_revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
+  confidence: medium
+- id: evidence-token-color-app-shell
+  kind: token
+  target: token/color.app-shell
+  origin: source
+  locator: packages/ui/styles/tokens.css#:root/--app-shell
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-color-page-canvas
+  kind: token
+  target: token/color.page-canvas
+  origin: source
+  locator: packages/ui/styles/tokens.css#:color/page-canvas
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-color-primary-hover
+  kind: token
+  target: token/color.primary-hover
+  origin: computed
+  locator: packages/ui/styles/tokens.css#:color/primary-hover
+  method: derived from declared CSS token arithmetic or utility alpha
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+  basis: Default button hover is primary at 80 percent alpha.
+- id: evidence-token-color-ring
+  kind: token
+  target: token/color.ring
+  origin: source
+  locator: packages/ui/styles/tokens.css#:color/ring
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-color-ring-focus
+  kind: token
+  target: token/color.ring-focus
+  origin: computed
+  locator: packages/ui/styles/tokens.css#:color/ring-focus
+  method: derived from declared CSS token arithmetic or utility alpha
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+  basis: Focus ring is the ring token at 50 percent alpha.
+- id: evidence-token-color-sidebar-accent
+  kind: token
+  target: token/color.sidebar-accent
+  origin: source
+  locator: packages/ui/styles/tokens.css#:color/sidebar-accent
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-color-surface-border
+  kind: token
+  target: token/color.surface-border
+  origin: source
+  locator: packages/ui/styles/tokens.css#:color/surface-border
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-color-surface-hover
+  kind: token
+  target: token/color.surface-hover
+  origin: source
+  locator: packages/ui/styles/tokens.css#:color/surface-hover
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-color-surface-selected
+  kind: token
+  target: token/color.surface-selected
+  origin: source
+  locator: packages/ui/styles/tokens.css#:color/surface-selected
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-radius-lg
+  kind: token
+  target: token/radius.lg
+  origin: source
+  locator: packages/ui/styles/tokens.css#:radius/lg
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-radius-xl
+  kind: token
+  target: token/radius.xl
+  origin: computed
+  locator: packages/ui/styles/tokens.css#:radius/xl
+  method: derived from declared CSS token arithmetic or utility alpha
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+  basis: Inset content-card radius, radius * 1.4.
+- id: evidence-token-shadow-floating
+  kind: token
+  target: token/shadow.floating
+  origin: source
+  locator: packages/ui/styles/tokens.css#:shadow/floating
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-shadow-surface
+  kind: token
+  target: token/shadow.surface
+  origin: source
+  locator: packages/ui/styles/tokens.css#:shadow/surface
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-size-section-nav-default
+  kind: token
+  target: token/size.section-nav-default
+  origin: source
+  locator: packages/ui/styles/tokens.css#:size/section-nav-default
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-size-section-nav-default
+  kind: token
+  target: token/size.section-nav-default
+  origin: source
+  locator: packages/views/settings/components/settings-page.tsx#md:w-60
+  method: static class measurement at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-size-sidebar-default
+  kind: token
+  target: token/size.sidebar-default
+  origin: source
+  locator: packages/ui/styles/tokens.css#:size/sidebar-default
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-size-sidebar-default
+  kind: token
+  target: token/size.sidebar-default
+  origin: source
+  locator: packages/ui/components/ui/sidebar.tsx#SIDEBAR_WIDTH_DEFAULT
+  method: static constant extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-space-2
+  kind: token
+  target: token/space.2
+  origin: computed
+  locator: packages/ui/styles/tokens.css#:space/2
+  method: derived from declared CSS token arithmetic or utility alpha
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+  basis: Tailwind spacing step 2.
+- id: evidence-token-space-2
+  kind: token
+  target: token/space.2
+  origin: computed
+  locator: packages/ui/components/ui/sidebar.tsx#lg:peer-data-[variant=inset]:m-2
+  method: Tailwind spacing step 2 resolved to 0.5rem
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+  basis: m-2 in the fixed source revision
+- id: evidence-token-space-chat-launcher-inset
+  kind: token
+  target: token/space.chat-launcher-inset
+  origin: source
+  locator: packages/ui/styles/tokens.css#:space/chat-launcher-inset
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-space-chat-launcher-size
+  kind: token
+  target: token/space.chat-launcher-size
+  origin: source
+  locator: packages/ui/styles/tokens.css#:space/chat-launcher-size
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-space-header-height
+  kind: token
+  target: token/space.header-height
+  origin: source
+  locator: packages/ui/styles/tokens.css#:space/header-height
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-token-space-header-height
+  kind: token
+  target: token/space.header-height
+  origin: source
+  locator: packages/views/layout/page-header.tsx#h-12
+  method: static class measurement at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: medium
+- id: evidence-layout-shell-canvas-chrome
+  kind: layout
+  target: route/shell
+  origin: source
+  locator: packages/ui/components/ui/sidebar.tsx#SidebarInset + packages/views/layout/page-header.tsx#PageHeader
+  method: static structure reading at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-layout-shell-sticky-header
+  kind: layout
+  target: primitive/page-header
+  origin: source
+  locator: packages/views/issues/components/list-view.tsx#group/header-sticky-top-0 + packages/views/agents/components/agents-page.tsx#sticky-header-pins-inside-scroller
+  method: static structure reading at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-primitive-button-contracts
+  kind: component
+  target: primitive/button
+  origin: source
+  locator: packages/ui/components/ui/button.tsx#buttonVariants-size-ladder
+  method: static class measurement at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-primitive-nav-item-icon
+  kind: component
+  target: primitive/nav-item
+  origin: source
+  locator: packages/ui/components/ui/sidebar.tsx#SidebarMenuButton + packages/views/layout/route-icon-components.tsx
+  method: static structure reading at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-primitive-dialog-fit
+  kind: component
+  target: primitive/dialog
+  origin: source
+  locator: packages/views/modals/create-issue-dialog.tsx#max-h-80dvh + packages/views/modals/quick-create-issue.tsx#body-overflow
+  method: static structure reading at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-token-typography-scale
+  kind: token
+  target: token/typography
+  origin: source
+  locator: packages/ui/styles/tokens.css#type-scale
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-token-shadow-menu
+  kind: token
+  target: token/shadow.menu
+  origin: source
+  locator: packages/ui/styles/tokens.css#menu-shadow
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-token-control-heights
+  kind: token
+  target: token/size.control-height-default
+  origin: source
+  locator: packages/ui/components/ui/button.tsx#h-8-h-7-h-6-h-9 + packages/ui/components/ui/select.tsx#h-8
+  method: static class measurement at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-token-color-pairs
+  kind: token
+  target: token/color.text-secondary
+  origin: source
+  locator: packages/ui/styles/tokens.css#muted-foreground-wcag-note
+  method: static CSS token extraction at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high
+- id: evidence-layout-toolbar-single-row
+  kind: layout
+  target: route/shell
+  origin: source
+  locator: packages/views/layout/page-header.tsx#PAGE_TOOLBAR-flex-h-12-shrink-0
+  method: static structure reading at fixed upstream revision
+  source_id: source-001
+  source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
+  confidence: high

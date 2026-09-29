@@ -1,0 +1,524 @@
+{
+  "base_url": "http://127.0.0.1:3100",
+  "build_identity": "oracle-multica-200dcb44-20260920",
+  "captured_at": "2026-09-20T15:07:08Z",
+  "measurements": [
+    {
+      "box": {
+        "height": 900,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      },
+      "dimension": "surface",
+      "id": "oracle-app-shell-surface",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "backgroundColor",
+      "route": "app-shell",
+      "selector": "[data-slot=\"sidebar-wrapper\"]",
+      "theme": "light",
+      "tolerance": "exact",
+      "unit": "css-color",
+      "value": "oklch(0.964435 0.001327 286.375)",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 48,
+        "width": 1176,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "structure",
+      "id": "oracle-app-shell-content-width",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "width",
+      "route": "app-shell",
+      "selector": "header",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "1176px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 48,
+        "width": 1176,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "spacing",
+      "id": "oracle-app-shell-header-height",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "height",
+      "route": "app-shell",
+      "selector": "header",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "48px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 20,
+        "width": 46,
+        "x": 296,
+        "y": 21.5
+      },
+      "dimension": "typography",
+      "id": "oracle-app-shell-title-size",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "fontSize",
+      "route": "app-shell",
+      "selector": "h1",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "14px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 48,
+        "width": 1176,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "border",
+      "id": "oracle-app-shell-header-border",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "borderBottomWidth",
+      "route": "app-shell",
+      "selector": "header",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "1px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 48,
+        "width": 1176,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "spacing",
+      "id": "oracle-workspace-board-header-height",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "height",
+      "route": "workspace-board",
+      "selector": "header",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "48px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 48,
+        "width": 1176,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "structure",
+      "id": "oracle-workspace-board-content-width",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "width",
+      "route": "workspace-board",
+      "selector": "header",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "1176px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 20,
+        "width": 46,
+        "x": 296,
+        "y": 21.5
+      },
+      "dimension": "typography",
+      "id": "oracle-workspace-board-title-size",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "fontSize",
+      "route": "workspace-board",
+      "selector": "h1",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "14px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 20,
+        "width": 46,
+        "x": 296,
+        "y": 21.5
+      },
+      "dimension": "color",
+      "id": "oracle-workspace-board-title-color",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "color",
+      "route": "workspace-board",
+      "selector": "h1",
+      "theme": "light",
+      "tolerance": "exact",
+      "unit": "css-color",
+      "value": "oklch(0.141 0.005 285.823)",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 48,
+        "width": 1176,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "border",
+      "id": "oracle-workspace-board-header-border",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "borderBottomWidth",
+      "route": "workspace-board",
+      "selector": "header",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "1px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 884,
+        "width": 240,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "spacing",
+      "id": "oracle-settings-nav-width",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "width",
+      "route": "settings-section-nav",
+      "selector": "aside",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "240px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 884,
+        "width": 240,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "structure",
+      "id": "oracle-settings-nav-structure-width",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "width",
+      "route": "settings-section-nav",
+      "selector": "aside",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "240px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 28,
+        "width": 70.40625,
+        "x": 276,
+        "y": 26
+      },
+      "dimension": "typography",
+      "id": "oracle-settings-title-size",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "fontSize",
+      "route": "settings-section-nav",
+      "selector": "h1",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "18px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 271,
+        "width": 816,
+        "x": 556,
+        "y": 160
+      },
+      "dimension": "surface",
+      "id": "oracle-settings-card-surface",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "backgroundColor",
+      "route": "settings-section-nav",
+      "selector": "[data-slot=\"card\"]",
+      "theme": "light",
+      "tolerance": "exact",
+      "unit": "css-color",
+      "value": "oklch(1 0 0)",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 884,
+        "width": 240,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "border",
+      "id": "oracle-settings-nav-border",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "borderRightWidth",
+      "route": "settings-section-nav",
+      "selector": "aside",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "1px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 884,
+        "width": 1176,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "structure",
+      "id": "oracle-master-detail-pane-split",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "width",
+      "route": "master-detail",
+      "selector": "main",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "1176px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 48,
+        "width": 856,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "spacing",
+      "id": "oracle-master-detail-header-height",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "height",
+      "route": "master-detail",
+      "selector": "header",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "48px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 24,
+        "width": 60,
+        "x": 298,
+        "y": 312.75
+      },
+      "dimension": "typography",
+      "id": "oracle-master-detail-activity-size",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "fontSize",
+      "route": "master-detail",
+      "selector": "h2",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "16px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 884,
+        "width": 856,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "color",
+      "id": "oracle-master-detail-text-color",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "color",
+      "route": "master-detail",
+      "selector": "[data-slot=\"resizable-panel\"]",
+      "theme": "light",
+      "tolerance": "exact",
+      "unit": "css-color",
+      "value": "oklch(0.141 0.005 285.823)",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 48,
+        "width": 856,
+        "x": 256,
+        "y": 8
+      },
+      "dimension": "border",
+      "id": "oracle-master-detail-header-border",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "borderBottomWidth",
+      "route": "master-detail",
+      "selector": "header",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "1px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 303,
+        "width": 576,
+        "x": 432,
+        "y": 298.5
+      },
+      "dimension": "surface",
+      "id": "oracle-overlay-dialog-shape",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "borderRadius",
+      "route": "overlay-dialog",
+      "selector": "[role=\"dialog\"]",
+      "theme": "light",
+      "tolerance": "exact",
+      "unit": "css-length",
+      "value": "14px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 303,
+        "width": 576,
+        "x": 432,
+        "y": 298.5
+      },
+      "dimension": "structure",
+      "id": "oracle-overlay-dialog-width",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "width",
+      "route": "overlay-dialog",
+      "selector": "[data-slot=\"dialog-content\"]",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "576px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 303,
+        "width": 576,
+        "x": 432,
+        "y": 298.5
+      },
+      "dimension": "spacing",
+      "id": "oracle-overlay-dialog-height",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "height",
+      "route": "overlay-dialog",
+      "selector": "[data-slot=\"dialog-content\"]",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "303px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 303,
+        "width": 576,
+        "x": 432,
+        "y": 298.5
+      },
+      "dimension": "typography",
+      "id": "oracle-overlay-dialog-text-size",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "fontSize",
+      "route": "overlay-dialog",
+      "selector": "[data-slot=\"dialog-content\"]",
+      "theme": "light",
+      "tolerance": "<=2px",
+      "unit": "px",
+      "value": "14px",
+      "viewport": "desktop"
+    },
+    {
+      "box": {
+        "height": 303,
+        "width": 576,
+        "x": 432,
+        "y": 298.5
+      },
+      "dimension": "border",
+      "id": "oracle-overlay-dialog-borderless",
+      "oracle_revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386",
+      "property": "borderBottomWidth",
+      "route": "overlay-dialog",
+      "selector": "[data-slot=\"dialog-content\"]",
+      "theme": "light",
+      "tolerance": "exact",
+      "unit": "px",
+      "value": "0px",
+      "viewport": "desktop"
+    }
+  ],
+  "oracle": {
+    "kind": "git-revision",
+    "revision": "200dcb44cc1527ef24a1c892e9c3e5508377b386"
+  },
+  "schema": "oracle-evidence/v1",
+  "screenshots": [
+    {
+      "path": "evidence/oracle-app-shell-desktop-light.png",
+      "route": "app-shell",
+      "sha256": "f1c8fbb6f22e402d93e2732d9636da4b06592f4096528c5fd526ac9113e09347",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/oracle-workspace-board-desktop-light.png",
+      "route": "workspace-board",
+      "sha256": "954d7d85881e836c4c63655d2fa21615960ee800e7eb73c88b14842324dd684a",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/oracle-settings-section-nav-desktop-light.png",
+      "route": "settings-section-nav",
+      "sha256": "3c6a971ad75abac0991176d56edf8a079ffc0a782ea3168a1b41d570ee42c771",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/oracle-master-detail-desktop-light.png",
+      "route": "master-detail",
+      "sha256": "00474a6ca5679730fe23b45d975644674ecb63949a354d35c2ad64724c861f06",
+      "theme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "path": "evidence/oracle-overlay-dialog-desktop-light.png",
+      "route": "overlay-dialog",
+      "sha256": "4eb10598fd9e0c2e1c44f2e52fd7c70e6ec71e2bf5086f02ba667f657763cfde",
+      "theme": "light",
+      "viewport": "desktop"
+    }
+  ]
+}
