@@ -1,7 +1,7 @@
 {
   "base_url": "http://127.0.0.1:3100",
-  "build_identity": "oracle-multica-200dcb44-20260920",
-  "captured_at": "2026-09-20T15:07:08Z",
+  "build_identity": "workbench-shell-cert-3.1.2-20260929093308",
+  "captured_at": "2026-09-29T01:46:01Z",
   "measurements": [
     {
       "box": {
@@ -495,7 +495,7 @@
     {
       "path": "evidence/oracle-workspace-board-desktop-light.png",
       "route": "workspace-board",
-      "sha256": "954d7d85881e836c4c63655d2fa21615960ee800e7eb73c88b14842324dd684a",
+      "sha256": "90d1d3d58efa011c5b8bbb8ebfe2460be59385a8840a210fb07aae9498a13b30",
       "theme": "light",
       "viewport": "desktop"
     },

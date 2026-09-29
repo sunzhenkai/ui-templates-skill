@@ -1,10 +1,10 @@
 schema: design-system-measured-expectations/v1
 package:
   id: workbench-shell
-  version: 3.1.1
+  version: 3.1.2
   digest:
     algorithm: sha256-canonical-json-v1
-    value: 49b59c17750496d69da5d04e5197a26f7fdaf0c7d1e2023d8ccf19f5ac6864df
+    value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
 oracle:
   kind: git-revision
   revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
@@ -12,7 +12,7 @@ oracle:
 prompts_digest:
   algorithm: sha256-tree-v1
   value: d3e423f5b69a73b9acd812b658319ab248d6127dfc56f64242746586b8726e29
-generated_at: '2026-09-20T16:22:11Z'
+generated_at: '2026-09-29T00:00:00Z'
 entries:
 - id: expectation-app-shell-surface
   pattern: pattern/app-shell

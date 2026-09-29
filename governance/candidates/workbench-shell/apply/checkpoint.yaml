@@ -1,0 +1,143 @@
+schema: design-system-apply-checkpoint/v1
+mode: bootstrap
+template:
+  name: workbench-shell
+  version: 3.1.2
+  origin: project
+  resolved_path: templates/workbench-shell
+  fidelity: repo-structural-v1
+  digest:
+    algorithm: sha256-canonical-json-v1
+    value: 3bc5b43ebb61377b7d33f7ff0300b82195cf05e1bc4552ede2988200e055ec18
+tokens_digest:
+  algorithm: sha256-canonical-json-v1
+  value: ff13aa0defafe6233fe17a8958aceb10804d643f78dc162a214cf7627f6e6904
+scope:
+  included:
+  - 收件箱
+  - 事件列表
+  - 事件详情
+  - 事件看板
+  - 服务目录
+  - 值班安排
+  - 交付分析
+  - 工作区设置
+  - 全局搜索
+  - 创建事件
+  - 操作反馈与确认
+  - 本地 mock 状态流转
+  - 键盘与 ARIA
+  - 路由恢复
+  - 构建与测试
+  deferred: []
+  excluded:
+  - 真实后端
+  - 真实通知
+  - 真实身份认证
+  - 真实附件上传
+  - 外部服务调用
+  - dark 主题
+  - 原版仓库或历史生成 web 作为实现参考
+source_identity: git:200dcb44cc1527ef24a1c892e9c3e5508377b386:clean
+build_identity: workbench-shell-cert-3.1.2-clean-20260929094936
+phases:
+- id: 0
+  status: complete
+  artifacts:
+  - path: 00-intake.md
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: 6d841eb20dec752c28491e473d181a62be6f27f6abe583e94c76c88022e4a475
+  - path: 00-architecture.yaml
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: 9c05d864e17540b9d729b2efae87f155b69b0bc1006fc0cf111a3a020285271a
+- id: 1
+  status: complete
+  artifacts:
+  - path: 01-design-direction.md
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: 5f9113e58024b39ddc9d472537e5f870f3b6248218586c00395b7a91d7c8c0ac
+  - path: 01-token-map.yaml
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: 6ba9baf51e90697e9e516b2498a6fe398f4c70923ca807a58b2de7c15b5025cd
+- id: 2
+  status: complete
+  artifacts:
+  - path: 02-routes.yaml
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: a13e15f6dd7bcc937acf1b6080f0ca4922ab546d576fcefd09edfea2b0e26b92
+- id: 3
+  status: complete
+  artifacts:
+  - path: 03-structure.md
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: 0d32f037a06f7dc23935f3df760ca786b78045be9440798e2017310b9ccfaa93
+- id: 4
+  status: complete
+  artifacts:
+  - path: 04-components.yaml
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: bc4fc0ec50ff0459e9c750565cfc110f25ac900f67888bb52278ecf56c056c76
+- id: 5
+  status: complete
+  artifacts:
+  - path: 05-07-progress.yaml
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: 23456cc943c57ef5030aea67d054ba46cfe13cffdf33dec499456473de0eaebd
+- id: 6
+  status: complete
+  artifacts:
+  - path: 05-07-progress.yaml
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: 23456cc943c57ef5030aea67d054ba46cfe13cffdf33dec499456473de0eaebd
+- id: 7
+  status: complete
+  artifacts:
+  - path: 05-07-progress.yaml
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: 23456cc943c57ef5030aea67d054ba46cfe13cffdf33dec499456473de0eaebd
+- id: 8
+  status: complete
+  artifacts:
+  - path: 08-verification.json
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: ec85a13fa7292ba4b4377cda8b540f1a785b80c7ad7223ffa26acd6ee0b23c02
+- id: 9
+  status: complete
+  artifacts:
+  - path: 09-review.md
+    digest:
+      algorithm: sha256-canonical-json-v1
+      value: efae974bcf80f7929ff78f07182c7994e853ec246a3f2286184d7ea936c8b9b8
+updated_at: '2026-09-29T01:58:02.279987Z'
+output_root: governance/candidates/workbench-shell-recapture/certification/clean-build-v2
+verification_contract: numeric-v1
+verification_inputs:
+  layout_digest:
+    algorithm: sha256-canonical-json-v1
+    value: f45e5a4b981d1a02d23ee66f575284d4d152f016535eff3a8e82754012290351
+  expectations_digest:
+    algorithm: sha256-canonical-json-v1
+    value: 3953901f8063ed1f4daf8f6a3e4622d1742828ac40c5f374434c8c4e58e0dc2f
+  primitives_digest:
+    algorithm: sha256-canonical-json-v1
+    value: 512381ed0704adf0926f65ce750f0fce3843ebd4876372738165f5a797509cf3
+contract:
+  id: workbench-shell
+  version: 3.1.2
+  digest:
+    algorithm: sha256-canonical-json-v1
+    value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
+binding_digest:
+  algorithm: sha256-canonical-json-v1
+  value: f99934c4025240731b85c33568de74dc1b4768d70e9b9d60bf47838e3a70d2e1

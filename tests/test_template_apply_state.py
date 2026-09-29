@@ -672,6 +672,7 @@ class ApplyStateTests(unittest.TestCase):
             template_value=self.template, tokens_value=self.tokens, scope=self.scope,
             source_identity=self.source, build_identity=self.build,
             fidelity_value=fidelity, primitives_value=old,
+            layout_value={"items": []}, expectations_value={"entries": []},
         )
         checkpoint["phases"] = self.checkpoint["phases"]
         findings = validate_checkpoint(
@@ -679,7 +680,7 @@ class ApplyStateTests(unittest.TestCase):
             tokens_value=self.tokens, scope=self.scope, source_identity=self.source,
             build_identity=self.build, known_rule_ids={"NN-001"},
             fidelity_value=fidelity, previous_fidelity=fidelity,
-            primitives_value=new,
+            primitives_value=new, layout_value={"items": []}, expectations_value={"entries": []},
         )
         self.assertIn("CHECKPOINT_FIDELITY_SCENARIO_DRIFT", {item.code for item in findings})
 
@@ -745,6 +746,163 @@ class ApplyStateTests(unittest.TestCase):
         forbidden["records"][0]["scenario_ids"] = ["phase8:demo:default"]
         findings = _schema_findings("verification", forbidden, "09.md", schema_dir=schema_dir, phase=9)
         self.assertTrue(any("scenario_ids" in item.message for item in findings))
+
+    def test_numeric_verification_requires_machine_measurements(self) -> None:
+        schema_dir = Path(__file__).resolve().parents[1] / "schemas/template/v2"
+        record = self._record("passed", "evidence/phase8.txt")
+        record["scenario_ids"] = ["phase8:demo:default"]
+        base = {
+            "schema_version": 2, "kind": "phase-8-verification", "verification_contract": "numeric-v1",
+            "template_digest": canonical_digest(self.template), "source_identity": self.source,
+            "build_identity": self.build, "browser_identity": "Chromium 128",
+            "records": [record], "created_at": NOW,
+        }
+        findings = validate_verification(base, path="08.json", apply_root=self.root, expected_kind="phase-8-verification", known_rule_ids={"NN-001"})
+        self.assertIn("VERIFICATION_MEASUREMENT_MISSING", [item.code for item in findings])
+
+        record["measurements"] = [{
+            "scenario_id": "phase8:demo:default", "method": "computed-style", "expected": "14px",
+            "observed": "16px", "passed": True, "evidence_ref": "evidence/phase8.txt",
+        }]
+        findings = validate_verification(base, path="08.json", apply_root=self.root, expected_kind="phase-8-verification", known_rule_ids={"NN-001"})
+        self.assertIn("VERIFICATION_MEASUREMENT_GATE_FAILED", [item.code for item in findings])
+
+        record["status"] = "waived"
+        record["measurements"][0]["passed"] = False
+        self.assertEqual([], validate_verification(base, path="08.json", apply_root=self.root, expected_kind="phase-8-verification", known_rule_ids={"NN-001"}))
+
+        record["status"] = "failed"
+        record["measurements"][0]["passed"] = True
+        findings = validate_verification(base, path="08.json", apply_root=self.root, expected_kind="phase-8-verification", known_rule_ids={"NN-001"})
+        self.assertIn("VERIFICATION_MEASUREMENT_GATE_FAILED", [item.code for item in findings])
+
+    def test_numeric_verification_binds_measured_expectation(self) -> None:
+        record = self._record("passed", "evidence/phase8.txt")
+        record["scenario_ids"] = ["phase8:expectation:body-size"]
+        record["measurements"] = [{
+            "scenario_id": "phase8:expectation:body-size", "method": "computed-style", "expected": "16px",
+            "observed": "16px", "passed": True, "evidence_ref": "evidence/phase8.txt",
+        }]
+        data = {
+            "schema_version": 2, "kind": "phase-8-verification", "verification_contract": "numeric-v1",
+            "template_digest": canonical_digest(self.template), "source_identity": self.source,
+            "build_identity": self.build, "browser_identity": "Chromium 128",
+            "records": [record], "created_at": NOW,
+        }
+        expectations = {"entries": [{"id": "body-size", "dimension": "typography", "expected": "14px"}]}
+        findings = validate_verification(data, path="08.json", apply_root=self.root, expected_kind="phase-8-verification", known_rule_ids={"NN-001"}, expectations_value=expectations)
+        self.assertIn("VERIFICATION_MEASUREMENT_EXPECTATION_DRIFT", [item.code for item in findings])
+        record["measurements"][0]["expected"] = "14px"
+        record["measurements"][0]["observed"] = "14px"
+        self.assertEqual([], validate_verification(data, path="08.json", apply_root=self.root, expected_kind="phase-8-verification", known_rule_ids={"NN-001"}, expectations_value=expectations))
+
+    def test_tailwind_numeric_checkpoint_requires_static_projection(self) -> None:
+        from scripts.template_apply_state.state import _token_projection_findings
+
+        checkpoint = {"verification_contract": "numeric-v1"}
+        (self.root / "00-architecture.yaml").write_text(yaml.safe_dump({
+            "schema_version": 2, "site": "greenfield", "output_root": ".",
+            "confirmed_by_user": True, "build_identity": self.build,
+            "layers": {"language": "typescript", "ui_framework": "react", "bundler": "vite",
+                       "routing": "react-router", "styling": "tailwind", "state": "zustand",
+                       "data": "mock", "unit_test": "vitest", "browser": "playwright",
+                       "package_manager": "pnpm", "repo_shape": "single-app-directory"},
+        }), encoding="utf-8")
+        (self.root / "01-token-map.yaml").write_text(yaml.safe_dump({
+            "schema_version": 2,
+            "projection": {"engine": "tailwind-v4", "theme_mode": "default"},
+            "mappings": [{"template_path": "tokens.wrong", "project_token": "--primary"}],
+        }), encoding="utf-8")
+        findings = _token_projection_findings(self.root, checkpoint, self.tokens)
+        self.assertIn("TOKEN_PROJECTION_TAILWIND_STATIC_REQUIRED", [item.code for item in findings])
+
+        (self.root / "01-token-map.yaml").write_text(yaml.safe_dump({
+            "schema_version": 2,
+            "projection": {"engine": "tailwind-v4", "theme_mode": "static"},
+            "mappings": [{"template_path": "tokens.wrong", "project_token": "--primary"}],
+        }), encoding="utf-8")
+        findings = _token_projection_findings(self.root, checkpoint, self.tokens)
+        finding = next(item for item in findings if item.code == "TOKEN_MAP_INCOMPLETE")
+        self.assertIn("tokens.themes.light.background", finding.details["missing"])
+
+        complete = {"schema_version": 2, "themes": {"light": {"color": {"primary": {"value": "#000"}}}}}
+        (self.root / "01-token-map.yaml").write_text(yaml.safe_dump({
+            "schema_version": 2,
+            "projection": {"engine": "tailwind-v4", "theme_mode": "static"},
+            "mappings": [{"template_path": "tokens.themes.light.color.primary", "project_token": "--primary"}],
+        }), encoding="utf-8")
+        self.assertEqual([], _token_projection_findings(self.root, checkpoint, complete))
+
+    def test_structural_checkpoint_binds_numeric_inputs(self) -> None:
+        from scripts.template_apply_state.state import build_checkpoint
+
+        fidelity = {"schema_version": 1, "profile": "repo-structural-v1", "conformance": "structural"}
+        layout = {"items": []}; expectations = {"entries": []}
+        primitives = {"items": []}
+        with self.assertRaisesRegex(ApplyStateError, "layout、expectations 和 primitives"):
+            build_checkpoint(
+                template_value=self.template, tokens_value=self.tokens, scope=self.scope,
+                source_identity=self.source, build_identity=self.build,
+                fidelity_value=fidelity, primitives_value=None,
+                layout_value=layout, expectations_value=expectations,
+            )
+        checkpoint = build_checkpoint(
+            template_value=self.template, tokens_value=self.tokens, scope=self.scope,
+            source_identity=self.source, build_identity=self.build,
+            fidelity_value=fidelity, primitives_value=primitives,
+            layout_value=layout, expectations_value=expectations,
+        )
+        self.assertEqual("numeric-v1", checkpoint["verification_contract"])
+        self.assertEqual([], validate_checkpoint(
+            checkpoint, apply_root=self.root, template_value=self.template,
+            tokens_value=self.tokens, scope=self.scope, source_identity=self.source,
+            build_identity=self.build, fidelity_value=fidelity,
+            primitives_value=primitives, layout_value=layout, expectations_value=expectations,
+        ))
+        checkpoint["verification_inputs"]["layout_digest"]["value"] = "0" * 64
+        findings = validate_checkpoint(
+            checkpoint, apply_root=self.root, template_value=self.template,
+            tokens_value=self.tokens, scope=self.scope, source_identity=self.source,
+            build_identity=self.build, fidelity_value=fidelity,
+            primitives_value=primitives, layout_value=layout, expectations_value=expectations,
+        )
+        self.assertIn("CHECKPOINT_NUMERIC_INPUT_DRIFT", [item.code for item in findings])
+
+    def test_checkpoint_scenario_gate_includes_layout_and_expectations(self) -> None:
+        record = self._record("passed", "evidence/phase8.txt")
+        record["scenario_ids"] = ["phase8:demo"]
+        record["measurements"] = [{
+            "scenario_id": "phase8:demo", "method": "logical-geometry", "expected": "1px",
+            "observed": "1px", "passed": True, "evidence_ref": "evidence/phase8.txt",
+        }]
+        (self.root / "08-verification.json").write_text(json.dumps({
+            "schema_version": 2, "kind": "phase-8-verification", "verification_contract": "numeric-v1",
+            "template_digest": canonical_digest(self.template), "source_identity": self.source,
+            "build_identity": self.build, "browser_identity": "Chromium 128",
+            "records": [record], "created_at": NOW,
+        }), encoding="utf-8")
+        artifact = self.root / "08-verification.json"
+        phases = self.checkpoint["phases"]
+        for phase in phases:
+            phase["artifacts"] = [
+                item if item.get("path") != "08-verification.json"
+                else {"path": "08-verification.json", "digest": canonical_digest(artifact_value(artifact))}
+                for item in phase.get("artifacts", [])
+            ]
+        layout = {"items": [{"id": "layout/main", "placement": {"regions": [
+            {"id": "region/child", "parent": "region/root"},
+        ], "geometry": [{"id": "geometry/size", "role": "size", "token": "token/size.md"}], "pattern_refs": ["pattern/main"], "scroll_domains": [{"id": "scroll/main", "axis": "block", "owner": "region/child"}]}}]}
+        expectations = {"entries": [{"id": "body", "dimension": "typography", "expected": "14px"}]}
+        fidelity = {"schema_version": 1, "profile": "repo-structural-v1", "conformance": "structural"}
+        findings = validate_checkpoint(
+            self.checkpoint, apply_root=self.root, template_value=self.template,
+            tokens_value=self.tokens, scope=self.scope, source_identity=self.source,
+            build_identity=self.build, known_rule_ids={"NN-001"}, fidelity_value=fidelity,
+            layout_value=layout, expectations_value=expectations,
+        )
+        missing = next(item for item in findings if item.code == "FIDELITY_SCENARIO_COVERAGE_MISSING")
+        self.assertIn("phase8:placement-geometry:layout/main:geometry/size:token/size.md", missing.details["missing"])
+        self.assertIn("phase8:expectation:body", missing.details["missing"])
 
     def test_bootstrap_site_flip_after_implementation_does_not_mismatch(self) -> None:
         from scripts.template_apply_state.state import _architecture_findings

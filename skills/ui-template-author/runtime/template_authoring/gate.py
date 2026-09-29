@@ -109,6 +109,7 @@ def run_authoring_gate(
     *, request_path: Path, source_root: Path, candidate_template: Path, candidate_index: Path,
     production_index: Path, validator: Path, eval_runner: Path, receipt_out: Path,
     promote_index: bool = False, removed: list[str] | None = None, cwd: Path | None = None,
+    graph_root: Path | None = None,
 ) -> dict[str, Any]:
     """Session-source staging gate only.
 
@@ -140,8 +141,8 @@ def run_authoring_gate(
     degradation: str | None = None
 
     try:
-        first = capture_from_files(request_path, source_root)
-        second = capture_from_files(request_path, source_root)
+        first = capture_from_files(request_path, source_root, graph_root)
+        second = capture_from_files(request_path, source_root, graph_root)
         capture_receipt = first
         capture_status = first.get("status", "failed")
         reproducibility = "passed" if canonical_json(first) == canonical_json(second) else "failed"
@@ -192,6 +193,7 @@ def run_authoring_gate(
                     source_roots={request["source_id"]: source_root.resolve()},
                     candidate_template=candidate_template,
                     capture_receipt=capture_receipt,
+                    graph_root=graph_root,
                 )
                 if request["conformance"] == "structural" and not _replay_passed(replay):
                     issues.append({"code": "STRUCTURAL_REPLAY_REQUIRED", "replay": replay})

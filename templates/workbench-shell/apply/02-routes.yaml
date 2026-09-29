@@ -1,0 +1,292 @@
+schema_version: 2
+structural_verification: available
+routes:
+  - id: route-home
+    path: "/"
+    title: "应用起点"
+    page_mode: shell
+    layout_ref: route/shell
+    page_type: page-type/app-shell
+    pattern_refs: [pattern/app-shell]
+    scroll_owner: region.shell.page-canvas
+    multi_pane: false
+    structural_verification: available
+    behavior: redirect-to-inbox
+    placement_plan:
+      page_job: "恢复默认工作区并进入收件箱。"
+      primary_information: ["当前工作区", "默认导航状态"]
+      primary_actions: ["进入收件箱"]
+      groups: ["shell chrome", "page canvas"]
+      reading_focus_order: ["workspace-switcher", "search", "compose", "nav-group", "pin-list", "rail", "page-canvas"]
+      action_order: ["进入收件箱"]
+      responsive_fallback: "compact 使用 overlay sheet 导航"
+      local_rule_refs: [LOCAL-PLACEMENT-001]
+      template_refs: [route/shell, primitive/app-sidebar, primitive/page-header, primitive/command-palette]
+    topology:
+      region.shell.page-canvas: [region.shell.page-header, region.shell.page-toolbar]
+    responsive_matrix:
+      desktop: "永久侧栏与内嵌画布"
+      compact: "导航折叠为 overlay sheet"
+
+  - id: route-inbox
+    path: "/inbox"
+    title: "收件箱"
+    page_mode: shell
+    layout_ref: route/shell
+    page_type: page-type/app-shell
+    pattern_refs: [pattern/app-shell]
+    scroll_owner: region.shell.page-canvas
+    multi_pane: false
+    structural_verification: available
+    entry_points: ["侧栏个人区", "全局搜索", "置顶事项"]
+    primary_actions: ["批量处理", "分派", "转为事件", "关闭"]
+    invalid_states: ["loading", "empty", "error", "detail-not-found"]
+    placement_plan:
+      page_job: "集中处理告警、分派与确认事项。"
+      primary_information: ["总量", "未处理数", "事项集合", "详情"]
+      primary_actions: ["批量标记已读", "批量分派", "批量关闭", "批量加入事件", "事项操作"]
+      groups: ["summary", "filters", "list", "detail"]
+      reading_focus_order: ["page-header", "page-toolbar", "filters", "list", "detail"]
+      action_order: ["筛选", "选择", "批量处理", "详情操作"]
+      responsive_fallback: "列表优先，详情进入上下文面板"
+      local_rule_refs: [LOCAL-PLACEMENT-001, LOCAL-INFORMATION-001]
+      template_refs: [route/shell, primitive/page-toolbar, primitive/data-table, primitive/detail-pane]
+    topology:
+      region.shell.page-canvas: [region.shell.page-header, region.shell.page-toolbar]
+    responsive_matrix:
+      desktop: "侧栏 + 内嵌画布"
+      compact: "overlay sheet + 单列画布"
+
+  - id: route-events
+    path: "/events"
+    title: "事件列表"
+    page_mode: shell
+    layout_ref: route/shell
+    page_type: page-type/app-shell
+    pattern_refs: [pattern/app-shell]
+    scroll_owner: region.shell.page-canvas
+    multi_pane: false
+    structural_verification: available
+    entry_points: ["侧栏运维区", "全局搜索", "看板下钻", "分析下钻"]
+    primary_actions: ["创建事件", "导出", "刷新", "批量处理"]
+    invalid_states: ["loading", "empty", "error"]
+    placement_plan:
+      page_job: "查询、维护和批量处理事件。"
+      primary_information: ["生效筛选", "统计", "事件表", "分页"]
+      primary_actions: ["创建事件", "刷新", "导出", "批量分派/状态/标签/归档/删除"]
+      groups: ["toolbar", "active filters", "table", "pagination"]
+      reading_focus_order: ["page-header", "page-toolbar", "active-filters", "table", "pagination"]
+      action_order: ["筛选", "选择", "主操作", "批量操作"]
+      responsive_fallback: "工具栏单行收缩，表格横向滚动"
+      local_rule_refs: [LOCAL-PLACEMENT-001, LOCAL-INFORMATION-001]
+      template_refs: [route/shell, primitive/page-header, primitive/page-toolbar, primitive/data-table]
+    topology:
+      region.shell.page-canvas: [region.shell.page-header, region.shell.page-toolbar]
+    responsive_matrix:
+      desktop: "完整表格与筛选工具栏"
+      compact: "工具栏收缩 + 表格横向滚动"
+
+  - id: route-event-detail
+    path: "/events/:eventId"
+    title: "事件详情"
+    page_mode: master-detail
+    layout_ref: route/master-detail
+    page_type: page-type/master-detail
+    pattern_refs: [pattern/master-detail]
+    scroll_owner: region.detail.master-pane
+    multi_pane: true
+    structural_verification: available
+    url_params: [eventId]
+    entry_points: ["事件列表", "看板", "全局搜索", "收件箱转事件"]
+    primary_actions: ["状态流转", "评论", "变更负责人", "关联变更", "标签"]
+    invalid_states: ["loading", "error", "not-found", "empty-timeline", "upload-error", "unsaved-guard"]
+    placement_plan:
+      page_job: "处理单个事件的上下文、时间线与操作。"
+      primary_information: ["摘要", "状态", "影响范围", "时间线", "上下文"]
+      primary_actions: ["确认", "开始处理", "等待外部", "解决", "重开", "归档", "评论"]
+      groups: ["event summary", "actions", "timeline", "context"]
+      reading_focus_order: ["master-pane", "detail-pane", "context-panel"]
+      action_order: ["状态操作", "字段/关联", "评论", "上下文跳转"]
+      responsive_fallback: "master 与 detail 分窗格滚动；compact 保持分栏"
+      local_rule_refs: [LOCAL-PLACEMENT-001, LOCAL-INFORMATION-001]
+      template_refs: [route/master-detail, primitive/page-header, primitive/detail-pane, primitive/button]
+    topology:
+      region.detail.root: [region.detail.master-pane, region.detail.detail-pane, region.detail.context-panel]
+    responsive_matrix:
+      desktop: "master / detail / context 独立滚动"
+      compact: "双窗格收缩，上下文折叠"
+
+  - id: route-board
+    path: "/board"
+    title: "事件看板"
+    page_mode: board
+    layout_ref: route/board
+    page_type: page-type/board
+    pattern_refs: [pattern/workspace-board]
+    scroll_owner: region.board.page-canvas
+    multi_pane: false
+    structural_verification: available
+    entry_points: ["侧栏运维区", "事件列表切换"]
+    primary_actions: ["创建事件", "拖拽改状态", "快捷操作"]
+    invalid_states: ["loading", "empty", "error", "status-change-failed"]
+    placement_plan:
+      page_job: "按状态推进事件并保持跨工作区一致。"
+      primary_information: ["范围筛选", "状态分组", "事件数量", "事件条目"]
+      primary_actions: ["创建事件", "变更状态", "打开详情", "分派", "标签", "归档"]
+      groups: ["toolbar", "board columns"]
+      reading_focus_order: ["page-header", "page-toolbar", "columns"]
+      action_order: ["筛选", "创建/变更", "快捷操作"]
+      responsive_fallback: "分组横向滚动，根不滚动"
+      local_rule_refs: [LOCAL-PLACEMENT-001, LOCAL-INFORMATION-001]
+      template_refs: [route/board, primitive/page-header, primitive/page-toolbar, primitive/data-table, primitive/button]
+    topology:
+      region.board.page-canvas: [region.board.page-header, region.board.page-toolbar]
+    responsive_matrix:
+      desktop: "画布内分组看板"
+      compact: "分组横向滚动 + toolbar 收缩"
+
+  - id: route-services
+    path: "/services"
+    title: "服务目录"
+    page_mode: master-detail
+    layout_ref: route/master-detail
+    page_type: page-type/master-detail
+    pattern_refs: [pattern/master-detail]
+    scroll_owner: region.detail.master-pane
+    multi_pane: true
+    structural_verification: available
+    entry_points: ["侧栏运维区", "事件详情关联服务", "全局搜索"]
+    primary_actions: ["新建服务", "编辑", "停用", "恢复", "编辑依赖"]
+    invalid_states: ["loading", "empty", "error", "not-found", "duplicate-key", "no-dependency", "health-check-failed"]
+    placement_plan:
+      page_job: "浏览、维护服务与依赖关系。"
+      primary_information: ["服务集合", "健康", "依赖关系", "详情"]
+      primary_actions: ["新建", "编辑", "停用/恢复", "保存依赖"]
+      groups: ["toolbar", "master list", "detail", "dependencies"]
+      reading_focus_order: ["master-pane", "detail-pane", "context-panel"]
+      action_order: ["筛选", "选择服务", "维护", "依赖保存"]
+      responsive_fallback: "master/detail 分窗格滚动"
+      local_rule_refs: [LOCAL-PLACEMENT-001, LOCAL-INFORMATION-001]
+      template_refs: [route/master-detail, primitive/detail-pane, primitive/data-table, primitive/button]
+    topology:
+      region.detail.root: [region.detail.master-pane, region.detail.detail-pane, region.detail.context-panel]
+    responsive_matrix:
+      desktop: "master / detail / context 独立滚动"
+      compact: "保留 master/detail，上下文折叠"
+
+  - id: route-oncall
+    path: "/oncall"
+    title: "值班安排"
+    page_mode: board
+    layout_ref: route/board
+    page_type: page-type/board
+    pattern_refs: [pattern/workspace-board]
+    scroll_owner: region.board.page-canvas
+    multi_pane: false
+    structural_verification: available
+    entry_points: ["侧栏运维区"]
+    primary_actions: ["创建班次", "编辑", "复制", "删除", "调整时间"]
+    invalid_states: ["loading", "empty", "error", "conflict", "invalid-time"]
+    placement_plan:
+      page_job: "安排值班班次并防止冲突。"
+      primary_information: ["周期", "班次", "事件数", "详情"]
+      primary_actions: ["创建/编辑/复制/删除", "强制保存冲突"]
+      groups: ["period controls", "filters", "schedule board"]
+      reading_focus_order: ["page-header", "page-toolbar", "schedule"]
+      action_order: ["切换周期", "筛选", "编辑班次", "确认冲突"]
+      responsive_fallback: "时段看板横向滚动"
+      local_rule_refs: [LOCAL-PLACEMENT-001, LOCAL-INFORMATION-001]
+      template_refs: [route/board, primitive/page-header, primitive/page-toolbar, primitive/button, primitive/data-table]
+    topology:
+      region.board.page-canvas: [region.board.page-header, region.board.page-toolbar]
+    responsive_matrix:
+      desktop: "月/周/日画布"
+      compact: "周期视图横向滚动"
+
+  - id: route-analytics
+    path: "/analytics"
+    title: "交付分析"
+    page_mode: board
+    layout_ref: route/board
+    page_type: page-type/board
+    pattern_refs: [pattern/workspace-board]
+    scroll_owner: region.board.page-canvas
+    multi_pane: false
+    structural_verification: available
+    entry_points: ["侧栏运维区"]
+    primary_actions: ["切换范围", "筛选", "下钻", "导出"]
+    invalid_states: ["loading", "empty", "error"]
+    placement_plan:
+      page_job: "解释事件效率、稳定性与交付风险。"
+      primary_information: ["指标", "趋势", "分布", "排行"]
+      primary_actions: ["时间范围", "筛选", "下钻事件列表", "导出"]
+      groups: ["toolbar", "metric cards", "trends", "ranking"]
+      reading_focus_order: ["page-header", "page-toolbar", "metrics", "trends", "ranking"]
+      action_order: ["范围/筛选", "读数", "下钻", "导出"]
+      responsive_fallback: "指标与图表纵向堆叠"
+      local_rule_refs: [LOCAL-PLACEMENT-001, LOCAL-INFORMATION-001]
+      template_refs: [route/board, primitive/page-header, primitive/page-toolbar, primitive/data-table]
+    topology:
+      region.board.page-canvas: [region.board.page-header, region.board.page-toolbar]
+    responsive_matrix:
+      desktop: "画布内指标与图表分区"
+      compact: "分区纵向堆叠"
+
+  - id: route-settings
+    path: "/settings"
+    title: "工作区设置"
+    page_mode: settings
+    layout_ref: route/settings
+    page_type: page-type/settings
+    pattern_refs: [pattern/settings-section-nav]
+    scroll_owner: region.settings.page-canvas
+    multi_pane: true
+    structural_verification: available
+    entry_points: ["侧栏配置区"]
+    primary_actions: ["保存", "取消", "邀请成员", "新建团队", "新建规则", "新增集成", "危险确认"]
+    invalid_states: ["loading", "empty", "error", "invalid-email", "unsaved-changes", "submitting", "submit-failed"]
+    placement_plan:
+      page_job: "维护工作区、成员、团队、通知、集成与个人偏好。"
+      primary_information: ["设置分区", "表单", "列表", "保存状态"]
+      primary_actions: ["保存/取消", "增删改", "测试连接", "危险确认"]
+      groups: ["section nav", "section canvas"]
+      reading_focus_order: ["section-nav", "page-canvas"]
+      action_order: ["选择分区", "编辑", "保存", "确认危险操作"]
+      responsive_fallback: "section nav 与 content 分窗格滚动"
+      local_rule_refs: [LOCAL-PLACEMENT-001, LOCAL-INFORMATION-001]
+      template_refs: [route/settings, primitive/settings-nav, primitive/nav-item, primitive/input, primitive/button]
+    topology:
+      region.settings.root: [region.settings.section-nav, region.settings.page-canvas]
+    responsive_matrix:
+      desktop: "左侧 section nav + 内容画布"
+      compact: "section nav 保持独立滚动"
+
+  - id: route-create-event-overlay
+    path: "overlay/create-event"
+    title: "创建事件"
+    page_mode: dialog
+    layout_ref: route/dialog
+    page_type: page-type/dialog
+    pattern_refs: [pattern/overlay-dialog]
+    scroll_owner: region.dialog.content
+    multi_pane: false
+    structural_verification: available
+    entry_points: ["全局快捷键 C", "事件列表", "看板", "收件箱转事件"]
+    primary_actions: ["提交", "重试", "清空", "取消"]
+    invalid_states: ["validation-error", "submitting", "submit-failed", "empty-options"]
+    placement_plan:
+      page_job: "收集并校验新事件。"
+      primary_information: ["必填字段", "服务/成员/变更选项", "校验错误"]
+      primary_actions: ["提交", "重试", "清空", "取消"]
+      groups: ["dialog header", "form body", "dialog footer"]
+      reading_focus_order: ["header", "body", "footer"]
+      action_order: ["取消", "清空", "提交"]
+      responsive_fallback: "body 内滚动，viewport 不裁切"
+      local_rule_refs: [LOCAL-PLACEMENT-001, LOCAL-INFORMATION-001]
+      template_refs: [route/dialog, primitive/dialog, primitive/input, primitive/button]
+    topology:
+      region.dialog.root: [region.dialog.overlay]
+      region.dialog.overlay: [region.dialog.content]
+    responsive_matrix:
+      desktop: "居中浮层"
+      compact: "浮层最大高度 80%"

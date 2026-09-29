@@ -25,7 +25,7 @@ python3 skills/ui-template-apply/runtime/adopt_package.py \
   --component-system shadcn
 ```
 
-Adoption is copy-only: never rewrite package semantic identity, stable IDs, core values, fidelity observations or gallery coverage. Copy an existing package `fidelity.yaml` unchanged when present. Project choices belong in `binding.yaml`.
+Adoption is copy-only: never rewrite package semantic identity, stable IDs, core values, fidelity observations, measured expectations or gallery coverage. Copy existing package `fidelity.yaml` and `measured-expectations.yaml` unchanged when present. Project choices belong in `binding.yaml`.
 
 ## Increment and recovery
 

@@ -1,0 +1,15 @@
+{
+  "name": "workbench-shell-certification-current",
+  "private": true,
+  "version": "3.1.2",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vite": "7.1.11"
+  }
+}

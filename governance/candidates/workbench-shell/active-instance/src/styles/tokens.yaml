@@ -1,4 +1,219 @@
-tokens:
-  color-primary: oklch(0.21 0.006 285.885)
-  color-surface: oklch(1 0 0)
-  space-4: 1rem
+- token: token/color.app-shell
+  native_key: :root.--wt-color-app-shell
+  value: oklch(0.964435 0.001327 286.375)
+- token: token/color.page-canvas
+  native_key: :root.--wt-color-page-canvas
+  value: oklch(0.988087 0 0)
+- token: token/color.surface
+  native_key: :root.--wt-color-surface
+  value: oklch(1 0 0)
+- token: token/color.surface-raised
+  native_key: :root.--wt-color-surface-raised
+  value: oklch(1 0 0)
+- token: token/color.secondary
+  native_key: :root.--wt-color-secondary
+  value: oklch(0.967 0.001 286.375)
+- token: token/color.secondary-foreground
+  native_key: :root.--wt-color-secondary-foreground
+  value: oklch(0.21 0.006 285.885)
+- token: token/color.secondary-hover
+  native_key: :root.--wt-color-secondary-hover
+  value: color-mix(in oklab, oklch(0.967 0.001 286.375) 80%, transparent)
+- token: token/color.primary-hover
+  native_key: :root.--wt-color-primary-hover
+  value: color-mix(in oklab, oklch(0.21 0.006 285.885) 80%, transparent)
+- token: token/color.brand-hover
+  native_key: :root.--wt-color-brand-hover
+  value: color-mix(in oklab, oklch(0.55 0.16 255) 90%, transparent)
+- token: token/color.status-danger-hover
+  native_key: :root.--wt-color-status-danger-hover
+  value: color-mix(in oklab, oklch(0.577 0.245 27.325) 20%, transparent)
+- token: token/color.ring
+  native_key: :root.--wt-color-ring
+  value: oklch(0.705 0.015 286.067)
+- token: token/color.ring-focus
+  native_key: :root.--wt-color-ring-focus
+  value: oklch(0.705 0.015 286.067 / 0.5)
+- token: token/color.sidebar-accent
+  native_key: :root.--wt-color-sidebar-accent
+  value: oklch(0.935 0.003 286.375)
+- token: token/color.sidebar-accent-foreground
+  native_key: :root.--wt-color-sidebar-accent-foreground
+  value: oklch(0.21 0.006 285.885)
+- token: token/color.sidebar-foreground
+  native_key: :root.--wt-color-sidebar-foreground
+  value: oklch(0.141 0.005 285.823)
+- token: token/color.surface-border
+  native_key: :root.--wt-color-surface-border
+  value: oklch(0.92 0.004 286.32)
+- token: token/color.surface-hover
+  native_key: :root.--wt-color-surface-hover
+  value: oklch(0.967 0.001 286.375)
+- token: token/color.surface-selected
+  native_key: :root.--wt-color-surface-selected
+  value: oklch(0.95 0.002 286.375)
+- token: token/color.divider
+  native_key: :root.--wt-color-divider
+  value: oklch(0.945 0.003 286.32)
+- token: token/color.text-primary
+  native_key: :root.--wt-color-text-primary
+  value: oklch(0.141 0.005 285.823)
+- token: token/color.text-secondary
+  native_key: :root.--wt-color-text-secondary
+  value: oklch(0.505 0.016 285.938)
+- token: token/color.text-muted
+  native_key: :root.--wt-color-text-muted
+  value: oklch(0.606 0.016 285.938)
+- token: token/color.text-disabled
+  native_key: :root.--wt-color-text-disabled
+  value: oklch(0.606 0.016 285.938)
+- token: token/color.text-on-primary
+  native_key: :root.--wt-color-text-on-primary
+  value: oklch(0.985 0 0)
+- token: token/color.link
+  native_key: :root.--wt-color-link
+  value: oklch(0.55 0.16 255)
+- token: token/color.brand-foreground
+  native_key: :root.--wt-color-brand-foreground
+  value: oklch(0.985 0 0)
+- token: token/color.primary
+  native_key: :root.--wt-color-primary
+  value: oklch(0.21 0.006 285.885)
+- token: token/color.status-success
+  native_key: :root.--wt-color-status-success
+  value: oklch(0.55 0.16 145)
+- token: token/color.status-warning
+  native_key: :root.--wt-color-status-warning
+  value: oklch(0.75 0.16 85)
+- token: token/color.status-danger
+  native_key: :root.--wt-color-status-danger
+  value: oklch(0.577 0.245 27.325)
+- token: token/color.status-info
+  native_key: :root.--wt-color-status-info
+  value: oklch(0.55 0.18 250)
+- token: token/color.chart-1
+  native_key: :root.--wt-color-chart-1
+  value: oklch(0.55 0.16 255)
+- token: token/color.chart-2
+  native_key: :root.--wt-color-chart-2
+  value: oklch(0.66 0.13 255)
+- token: token/color.chart-3
+  native_key: :root.--wt-color-chart-3
+  value: oklch(0.76 0.10 255)
+- token: token/color.chart-4
+  native_key: :root.--wt-color-chart-4
+  value: oklch(0.85 0.06 255)
+- token: token/color.chart-5
+  native_key: :root.--wt-color-chart-5
+  value: oklch(0.92 0.03 255)
+- token: token/font.weight.regular
+  native_key: :root.--wt-font-weight-regular
+  value: 400
+- token: token/font.weight.medium
+  native_key: :root.--wt-font-weight-medium
+  value: 500
+- token: token/font.weight.semibold
+  native_key: :root.--wt-font-weight-semibold
+  value: 600
+- token: token/radius.sm
+  native_key: :root.--wt-radius-sm
+  value: 0.375
+- token: token/radius.md
+  native_key: :root.--wt-radius-md
+  value: 0.5
+- token: token/radius.lg
+  native_key: :root.--wt-radius-lg
+  value: 0.625
+- token: token/radius.xl
+  native_key: :root.--wt-radius-xl
+  value: 0.875
+- token: token/radius.2xl
+  native_key: :root.--wt-radius-2xl
+  value: 1.125
+- token: token/radius.3xl
+  native_key: :root.--wt-radius-3xl
+  value: 1.375
+- token: token/radius.4xl
+  native_key: :root.--wt-radius-4xl
+  value: 1.625
+- token: token/shadow.floating
+  native_key: :root.--wt-shadow-floating
+  value: 0 16px 40px rgb(15 23 42 / 0.14), 0 3px 10px rgb(15 23 42 / 0.08)
+- token: token/shadow.menu
+  native_key: :root.--wt-shadow-menu
+  value: 0 8px 24px rgb(15 23 42 / 0.08), 0 2px 6px rgb(15 23 42 / 0.05)
+- token: token/shadow.surface
+  native_key: :root.--wt-shadow-surface
+  value: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 1px rgb(15 23 42 / 0.03)
+- token: token/size.control-height-xs
+  native_key: :root.--wt-size-control-height-xs
+  value: 24
+- token: token/size.control-height-sm
+  native_key: :root.--wt-size-control-height-sm
+  value: 28
+- token: token/size.control-height-default
+  native_key: :root.--wt-size-control-height-default
+  value: 32
+- token: token/size.control-height-lg
+  native_key: :root.--wt-size-control-height-lg
+  value: 36
+- token: token/size.icon-default
+  native_key: :root.--wt-size-icon-default
+  value: 16
+- token: token/size.icon-compact
+  native_key: :root.--wt-size-icon-compact
+  value: 12
+- token: token/size.icon-sm
+  native_key: :root.--wt-size-icon-sm
+  value: 14
+- token: token/size.dialog-max-height
+  native_key: :root.--wt-size-dialog-max-height
+  value: 80
+- token: token/size.section-nav-default
+  native_key: :root.--wt-size-section-nav-default
+  value: 15
+- token: token/size.sidebar-default
+  native_key: :root.--wt-size-sidebar-default
+  value: 256
+- token: token/space.2
+  native_key: :root.--wt-space-2
+  value: 0.5
+- token: token/space.chat-launcher-inset
+  native_key: :root.--wt-space-chat-launcher-inset
+  value: 0.5
+- token: token/space.chat-launcher-size
+  native_key: :root.--wt-space-chat-launcher-size
+  value: 2.5
+- token: token/space.header-height
+  native_key: :root.--wt-space-header-height
+  value: 3
+- token: token/typography.micro
+  native_key: :root.--wt-typography-micro
+  value: 11
+- token: token/typography.secondary
+  native_key: :root.--wt-typography-secondary
+  value: 12
+- token: token/typography.label
+  native_key: :root.--wt-typography-label
+  value: 13
+- token: token/typography.body
+  native_key: :root.--wt-typography-body
+  value: 14
+- token: token/typography.body-lg
+  native_key: :root.--wt-typography-body-lg
+  value: 15
+- token: token/typography.title-sm
+  native_key: :root.--wt-typography-title-sm
+  value: 16
+- token: token/typography.heading
+  native_key: :root.--wt-typography-heading
+  value: 18
+- token: token/typography.title-lg
+  native_key: :root.--wt-typography-title-lg
+  value: 20
+- token: token/typography.display-sm
+  native_key: :root.--wt-typography-display-sm
+  value: 24
+- token: token/typography.display
+  native_key: :root.--wt-typography-display
+  value: 36

@@ -311,6 +311,7 @@ def validate_verification(
     known_rule_ids: set[str] | None = None,
     phase8_records: list[dict[str, Any]] | None = None,
     closed_phase8_record_ids: set[str] | None = None,
+    expectations_value: dict[str, Any] | None = None,
     schema_dir: Path | None = None,
 ) -> list[Finding]:
     phase = 8 if expected_kind == "phase-8-verification" else 9
@@ -349,6 +350,63 @@ def validate_verification(
         rule_id = record.get("rule_id")
         if known_rule_ids is not None and rule_id not in known_rule_ids:
             findings.append(Finding("VERIFICATION_RULE_DANGLING", record_path, "验证记录引用未知 rule ID", phase, {"rule_id": rule_id}))
+
+        if phase == 8 and data.get("verification_contract") == "numeric-v1":
+            scenario_ids = record.get("scenario_ids") if isinstance(record.get("scenario_ids"), list) else []
+            measurements = record.get("measurements") if isinstance(record.get("measurements"), list) else []
+            measurement_ids: list[str] = []
+            for measurement_index, measurement in enumerate(measurements):
+                if not isinstance(measurement, dict):
+                    findings.append(Finding("VERIFICATION_MEASUREMENT_INVALID", f"{record_path}.measurements.{measurement_index}", "measurement 必须是对象", phase))
+                    continue
+                measurement_path = f"{record_path}.measurements.{measurement_index}"
+                scenario_id = measurement.get("scenario_id")
+                if not isinstance(scenario_id, str) or not scenario_id:
+                    findings.append(Finding("VERIFICATION_MEASUREMENT_INVALID", f"{measurement_path}.scenario_id", "measurement 必须绑定 scenario_id", phase))
+                    continue
+                measurement_ids.append(scenario_id)
+                if scenario_id not in scenario_ids:
+                    findings.append(Finding("VERIFICATION_MEASUREMENT_SCENARIO_DANGLING", f"{measurement_path}.scenario_id", "measurement 引用的 scenario 不在当前记录", phase, {"scenario_id": scenario_id}))
+                observed = measurement.get("observed")
+                if not isinstance(observed, (str, int, float)) or isinstance(observed, bool) or str(observed).strip() == "":
+                    findings.append(Finding("VERIFICATION_MEASUREMENT_INVALID", f"{measurement_path}.observed", "measurement 必须携带非空 observed 值", phase, {"scenario_id": scenario_id}))
+                evidence_ref = measurement.get("evidence_ref")
+                evidence_path = _safe_relative(apply_root, str(evidence_ref or ""))
+                if evidence_path is None or not evidence_path.is_file():
+                    findings.append(Finding("VERIFICATION_MEASUREMENT_EVIDENCE_MISSING", f"{measurement_path}.evidence_ref", "measurement evidence_ref 不存在或越界", phase, {"scenario_id": scenario_id, "evidence_ref": evidence_ref}))
+                expected_value = measurement.get("expected")
+                if isinstance(expectations_value, dict) and isinstance(scenario_id, str) and scenario_id.startswith("phase8:expectation:"):
+                    expectation_id = scenario_id.removeprefix("phase8:expectation:")
+                    entry = next((item for item in expectations_value.get("entries") or [] if isinstance(item, dict) and item.get("id") == expectation_id), None)
+                    if entry is None:
+                        findings.append(Finding("VERIFICATION_MEASUREMENT_EXPECTATION_DANGLING", f"{measurement_path}.scenario_id", "measurement 引用未知 measured expectation", phase, {"scenario_id": scenario_id}))
+                    elif str(measurement.get("expected")) != str(entry.get("expected")):
+                        findings.append(Finding("VERIFICATION_MEASUREMENT_EXPECTATION_DRIFT", f"{measurement_path}.expected", "measurement expected 与 measured expectation 不一致", phase, {"scenario_id": scenario_id, "expected": entry.get("expected"), "actual": measurement.get("expected")}))
+                expected_text = str(measurement.get("expected"))
+                observed_text = str(observed)
+                if measurement.get("passed") is True and expected_text != observed_text:
+                    tolerance = measurement.get("tolerance")
+                    matched = False
+                    if isinstance(tolerance, str):
+                        tolerance_match = re.fullmatch(r"(?:<=|≤)\s*([0-9]+(?:\.[0-9]+)?)px", tolerance.strip())
+                        expected_match = re.fullmatch(r"([0-9]+(?:\.[0-9]+)?)px", expected_text.strip())
+                        observed_match = re.fullmatch(r"([0-9]+(?:\.[0-9]+)?)px", observed_text.strip())
+                        if tolerance_match and expected_match and observed_match:
+                            matched = abs(float(observed_match.group(1)) - float(expected_match.group(1))) <= float(tolerance_match.group(1))
+                    if not matched:
+                        findings.append(Finding("VERIFICATION_MEASUREMENT_GATE_FAILED", measurement_path, "observed 与 expected 不一致且未被声明 tolerance 接受", phase, {"scenario_id": scenario_id, "expected": expected_text, "observed": observed_text, "tolerance": tolerance}))
+                passed = measurement.get("passed")
+                if not isinstance(passed, bool):
+                    findings.append(Finding("VERIFICATION_MEASUREMENT_INVALID", f"{measurement_path}.passed", "measurement passed 必须是布尔值", phase, {"scenario_id": scenario_id}))
+                elif status == "passed" and not passed:
+                    findings.append(Finding("VERIFICATION_MEASUREMENT_GATE_FAILED", measurement_path, "record passed 但存在 failed measurement", phase, {"scenario_id": scenario_id}))
+                elif status == "failed" and passed:
+                    findings.append(Finding("VERIFICATION_MEASUREMENT_GATE_FAILED", measurement_path, "record failed 但存在 passed measurement", phase, {"scenario_id": scenario_id}))
+            if len(measurement_ids) != len(set(measurement_ids)):
+                findings.append(Finding("VERIFICATION_MEASUREMENT_DUPLICATE", f"{record_path}.measurements", "同一 record 内 scenario measurement 重复", phase))
+            missing_measurements = sorted(set(str(item) for item in scenario_ids if isinstance(item, str)) - set(measurement_ids))
+            if missing_measurements:
+                findings.append(Finding("VERIFICATION_MEASUREMENT_MISSING", f"{record_path}.measurements", "每个 scenario 必须有结构化 computed/geometry measurement", phase, {"missing": missing_measurements}))
 
         if phase == 9:
             linked_id = record.get("phase8_record_id")
@@ -447,6 +505,80 @@ def _template_identity(template_value: Any) -> dict[str, Any]:
     }
 
 
+def _token_projection_findings(apply_root: Path, checkpoint: dict[str, Any], tokens_value: Any) -> list[Finding]:
+    """Fail closed on Tailwind v4 token maps that rely on tree-shaken @theme vars."""
+    if checkpoint.get("verification_contract") != "numeric-v1":
+        return []
+    architecture_path = apply_root / "00-architecture.yaml"
+    styling = ""
+    if architecture_path.is_file():
+        try:
+            architecture = load_structured(architecture_path)
+            styling = str(architecture.get("layers", {}).get("styling", "")) if isinstance(architecture, dict) else ""
+        except ApplyStateError:
+            return [Finding("TOKEN_PROJECTION_INVALID", "00-architecture.yaml", "architecture artifact 无法解析", 1)]
+    if styling != "tailwind":
+        return []
+    path = apply_root / "01-token-map.yaml"
+    if not path.is_file():
+        return [Finding("TOKEN_MAP_MISSING", "01-token-map.yaml", "numeric Tailwind checkpoint 必须绑定完整 token map", 1)]
+    try:
+        token_map = load_structured(path)
+    except ApplyStateError as exc:
+        return [Finding("TOKEN_PROJECTION_INVALID", "01-token-map.yaml", str(exc), 1)]
+    if not isinstance(token_map, dict):
+        return [Finding("TOKEN_PROJECTION_INVALID", "01-token-map.yaml", "token map root 必须是 object", 1)]
+    projection = token_map.get("projection") if isinstance(token_map.get("projection"), dict) else {}
+    if projection.get("engine") != "tailwind-v4" or projection.get("theme_mode") != "static":
+        return [Finding(
+            "TOKEN_PROJECTION_TAILWIND_STATIC_REQUIRED",
+            "01-token-map.yaml#projection",
+            "Tailwind v4 numeric checkpoint 必须声明 engine=tailwind-v4 与 theme_mode=static",
+            1,
+            {"actual": projection},
+        )]
+
+    def leaf_paths(value: Any, prefix: tuple[str, ...]) -> list[str]:
+        result: list[str] = []
+        if isinstance(value, dict):
+            if "value" in value:
+                return ["tokens." + ".".join(prefix)]
+            for key, child in value.items():
+                result.extend(leaf_paths(child, (*prefix, str(key))))
+        return result
+
+    expected_root = tokens_value.get("tokens") if isinstance(tokens_value,dict) and "tokens" in tokens_value else tokens_value
+    expected_paths = set(leaf_paths(expected_root, ()))
+    mappings = token_map.get("mappings") if isinstance(token_map.get("mappings"), list) else []
+    mapped_paths: set[str] = set()
+    mapped_tokens: set[str] = set()
+    for index, mapping in enumerate(mappings):
+        if not isinstance(mapping, dict):
+            continue
+        template_path = mapping.get("template_path")
+        project_token = mapping.get("project_token")
+        if not isinstance(template_path, str) or not template_path:
+            continue
+        mapped_paths.add(template_path)
+        if isinstance(project_token, str) and project_token.startswith("--"):
+            mapped_tokens.add(project_token)
+        else:
+            return [Finding("TOKEN_PROJECTION_INVALID", f"01-token-map.yaml#mappings.{index}.project_token", "project_token 必须是 -- 开头的 CSS variable", 1, {"template_path": template_path, "project_token": project_token})]
+    missing = sorted(expected_paths - mapped_paths)
+    extra = sorted(mapped_paths - expected_paths)
+    if missing or extra:
+        return [Finding(
+            "TOKEN_MAP_INCOMPLETE",
+            "01-token-map.yaml#mappings",
+            "token map 必须逐条覆盖 template tokens，且不得引入未声明 template path",
+            1,
+            {"missing": missing, "extra": extra},
+        )]
+    if len(mapped_tokens) != len(mappings):
+        return [Finding("TOKEN_PROJECTION_INVALID", "01-token-map.yaml#mappings", "project_token 必须唯一", 1)]
+    return []
+
+
 def validate_checkpoint(
     checkpoint: dict[str, Any],
     *,
@@ -463,6 +595,8 @@ def validate_checkpoint(
     active_layers: dict[str, set[str]] | None = None,
     placement_context: dict[str, Any] | None = None,
     primitives_value: dict[str, Any] | None = None,
+    layout_value: dict[str, Any] | None = None,
+    expectations_value: dict[str, Any] | None = None,
 ) -> list[Finding]:
     root = apply_root.resolve()
     findings = _schema_findings("checkpoint", checkpoint, "checkpoint.yaml", schema_dir)
@@ -509,6 +643,24 @@ def validate_checkpoint(
     phases = checkpoint.get("phases", []) if isinstance(checkpoint.get("phases"), list) else []
     by_id = {phase.get("id"): phase for phase in phases if isinstance(phase, dict) and isinstance(phase.get("id"), int)}
     findings.extend(_architecture_findings(root, by_id, schema_dir))
+    numeric = checkpoint.get("verification_contract") == "numeric-v1"
+    if numeric:
+        inputs = checkpoint.get("verification_inputs")
+        if not isinstance(inputs, dict):
+            findings.append(Finding("CHECKPOINT_NUMERIC_INPUTS_MISSING", "checkpoint.yaml#verification_inputs", "numeric checkpoint 必须绑定 layout/expectations/primitives digests", 0))
+        else:
+            current_inputs = {
+                "layout_digest": canonical_digest(layout_value) if layout_value is not None else None,
+                "expectations_digest": canonical_digest(expectations_value) if expectations_value is not None else None,
+                "primitives_digest": canonical_digest(primitives_value) if primitives_value is not None else None,
+            }
+            for name, expected in current_inputs.items():
+                actual = inputs.get(name)
+                if expected is None:
+                    findings.append(Finding("CHECKPOINT_NUMERIC_INPUT_MISSING", f"checkpoint.yaml#verification_inputs.{name}", "CLI 未提供对应 numeric input", 0, {"input": name}))
+                elif actual != expected:
+                    findings.append(Finding("CHECKPOINT_NUMERIC_INPUT_DRIFT", f"checkpoint.yaml#verification_inputs.{name}", "numeric input digest 已变化", 0, {"expected": expected, "actual": actual}))
+    findings.extend(_token_projection_findings(root, checkpoint, tokens_value))
     structural_available = (
         checkpoint_template.get("fidelity") == "repo-structural-v1"
         or (isinstance(fidelity_value, dict) and fidelity_value.get("profile") == "repo-structural-v1" and fidelity_value.get("conformance") == "structural")
@@ -573,7 +725,12 @@ def validate_checkpoint(
             phase8_data = loaded
             if fidelity_value is not None:
                 from .fidelity import derive_scenario_ids
-                expected_scenarios = set(derive_scenario_ids(fidelity_value, primitives=primitives_value))
+                expected_scenarios = set(derive_scenario_ids(
+                    fidelity_value,
+                    layout=layout_value,
+                    expectations=expectations_value,
+                    primitives=primitives_value,
+                ))
                 covered_scenarios: set[str] = set()
                 for record in phase8_data.get("records", []):
                     if isinstance(record, dict) and isinstance(record.get("scenario_ids"), list):
@@ -631,6 +788,7 @@ def validate_checkpoint(
             build_identity=build_identity,
             known_rule_ids=known_rule_ids,
             closed_phase8_record_ids=closed_phase8_ids,
+            expectations_value=expectations_value,
             schema_dir=schema_dir,
         ))
     return _sorted_findings(findings)
@@ -977,6 +1135,8 @@ def build_checkpoint(
     change_set: list[str] | None = None,
     now: str | None = None,
     primitives_value: dict[str, Any] | None = None,
+    layout_value: dict[str, Any] | None = None,
+    expectations_value: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """生成与 validate_checkpoint 口径一致、可零 findings 通过校验的 checkpoint。
 
@@ -1002,6 +1162,16 @@ def build_checkpoint(
     if resolved_path != expected_path:
         raise ApplyStateError(f"resolved_path 与 origin/name 不一致: 期望 {expected_path}")
     fidelity_profile = fidelity_value.get("profile") if isinstance(fidelity_value, dict) else None
+    structural = isinstance(fidelity_value, dict) and fidelity_value.get("conformance") == "structural"
+    numeric_inputs: dict[str, Any] | None = None
+    if structural:
+        if layout_value is None or expectations_value is None or primitives_value is None:
+            raise ApplyStateError("structural fidelity checkpoint 必须提供 layout、expectations 和 primitives 输入")
+        numeric_inputs = {
+            "layout_digest": canonical_digest(layout_value),
+            "expectations_digest": canonical_digest(expectations_value),
+            "primitives_digest": canonical_digest(primitives_value),
+        }
     checkpoint: dict[str, Any] = {
         "schema": "design-system-apply-checkpoint/v1",
         "mode": mode,
@@ -1022,6 +1192,9 @@ def build_checkpoint(
     }
     if output_root is not None:
         checkpoint["output_root"] = output_root
+    if numeric_inputs is not None:
+        checkpoint["verification_contract"] = "numeric-v1"
+        checkpoint["verification_inputs"] = numeric_inputs
     if contract is not None:
         checkpoint["contract"] = contract
     if binding_digest is not None:

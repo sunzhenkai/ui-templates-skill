@@ -1,14 +1,14 @@
 schema: design-system-binding/v1
 contract_id: workbench-shell
-contract_version: 3.0.1
-output_root: example/workbench-shell/web
+contract_version: 3.1.2
+output_root: /tmp/workbench-cert-current
 stack:
   language: typescript
   ui_framework: react
+  styling: tailwind
+  component_system: custom
   bundler: vite
   routing: react-router
-  styling: tailwind
-  component_system: shadcn
   package_manager: pnpm
 primitive_paths: {}
 projections:
@@ -16,16 +16,156 @@ projections:
   target: src/styles/tokens.yaml
   mechanism: css-variables
   mappings:
-  - token: token/color.primary
-    native_key: :root.--color-primary
+  - token: token/color.app-shell
+    native_key: :root.--wt-color-app-shell
+  - token: token/color.page-canvas
+    native_key: :root.--wt-color-page-canvas
   - token: token/color.surface
-    native_key: :root.--color-surface
-  - token: token/space.4
-    native_key: :root.--space-4
+    native_key: :root.--wt-color-surface
+  - token: token/color.surface-raised
+    native_key: :root.--wt-color-surface-raised
+  - token: token/color.secondary
+    native_key: :root.--wt-color-secondary
+  - token: token/color.secondary-foreground
+    native_key: :root.--wt-color-secondary-foreground
+  - token: token/color.secondary-hover
+    native_key: :root.--wt-color-secondary-hover
+  - token: token/color.primary-hover
+    native_key: :root.--wt-color-primary-hover
+  - token: token/color.brand-hover
+    native_key: :root.--wt-color-brand-hover
+  - token: token/color.status-danger-hover
+    native_key: :root.--wt-color-status-danger-hover
+  - token: token/color.ring
+    native_key: :root.--wt-color-ring
+  - token: token/color.ring-focus
+    native_key: :root.--wt-color-ring-focus
+  - token: token/color.sidebar-accent
+    native_key: :root.--wt-color-sidebar-accent
+  - token: token/color.sidebar-accent-foreground
+    native_key: :root.--wt-color-sidebar-accent-foreground
+  - token: token/color.sidebar-foreground
+    native_key: :root.--wt-color-sidebar-foreground
+  - token: token/color.surface-border
+    native_key: :root.--wt-color-surface-border
+  - token: token/color.surface-hover
+    native_key: :root.--wt-color-surface-hover
+  - token: token/color.surface-selected
+    native_key: :root.--wt-color-surface-selected
+  - token: token/color.divider
+    native_key: :root.--wt-color-divider
+  - token: token/color.text-primary
+    native_key: :root.--wt-color-text-primary
+  - token: token/color.text-secondary
+    native_key: :root.--wt-color-text-secondary
+  - token: token/color.text-muted
+    native_key: :root.--wt-color-text-muted
+  - token: token/color.text-disabled
+    native_key: :root.--wt-color-text-disabled
+  - token: token/color.text-on-primary
+    native_key: :root.--wt-color-text-on-primary
+  - token: token/color.link
+    native_key: :root.--wt-color-link
+  - token: token/color.brand-foreground
+    native_key: :root.--wt-color-brand-foreground
+  - token: token/color.primary
+    native_key: :root.--wt-color-primary
+  - token: token/color.status-success
+    native_key: :root.--wt-color-status-success
+  - token: token/color.status-warning
+    native_key: :root.--wt-color-status-warning
+  - token: token/color.status-danger
+    native_key: :root.--wt-color-status-danger
+  - token: token/color.status-info
+    native_key: :root.--wt-color-status-info
+  - token: token/color.chart-1
+    native_key: :root.--wt-color-chart-1
+  - token: token/color.chart-2
+    native_key: :root.--wt-color-chart-2
+  - token: token/color.chart-3
+    native_key: :root.--wt-color-chart-3
+  - token: token/color.chart-4
+    native_key: :root.--wt-color-chart-4
+  - token: token/color.chart-5
+    native_key: :root.--wt-color-chart-5
+  - token: token/font.weight.regular
+    native_key: :root.--wt-font-weight-regular
+  - token: token/font.weight.medium
+    native_key: :root.--wt-font-weight-medium
+  - token: token/font.weight.semibold
+    native_key: :root.--wt-font-weight-semibold
+  - token: token/radius.sm
+    native_key: :root.--wt-radius-sm
+  - token: token/radius.md
+    native_key: :root.--wt-radius-md
+  - token: token/radius.lg
+    native_key: :root.--wt-radius-lg
+  - token: token/radius.xl
+    native_key: :root.--wt-radius-xl
+  - token: token/radius.2xl
+    native_key: :root.--wt-radius-2xl
+  - token: token/radius.3xl
+    native_key: :root.--wt-radius-3xl
+  - token: token/radius.4xl
+    native_key: :root.--wt-radius-4xl
+  - token: token/shadow.floating
+    native_key: :root.--wt-shadow-floating
+  - token: token/shadow.menu
+    native_key: :root.--wt-shadow-menu
+  - token: token/shadow.surface
+    native_key: :root.--wt-shadow-surface
+  - token: token/size.control-height-xs
+    native_key: :root.--wt-size-control-height-xs
+  - token: token/size.control-height-sm
+    native_key: :root.--wt-size-control-height-sm
+  - token: token/size.control-height-default
+    native_key: :root.--wt-size-control-height-default
+  - token: token/size.control-height-lg
+    native_key: :root.--wt-size-control-height-lg
+  - token: token/size.icon-default
+    native_key: :root.--wt-size-icon-default
+  - token: token/size.icon-compact
+    native_key: :root.--wt-size-icon-compact
+  - token: token/size.icon-sm
+    native_key: :root.--wt-size-icon-sm
+  - token: token/size.dialog-max-height
+    native_key: :root.--wt-size-dialog-max-height
+  - token: token/size.section-nav-default
+    native_key: :root.--wt-size-section-nav-default
+  - token: token/size.sidebar-default
+    native_key: :root.--wt-size-sidebar-default
+  - token: token/space.2
+    native_key: :root.--wt-space-2
+  - token: token/space.chat-launcher-inset
+    native_key: :root.--wt-space-chat-launcher-inset
+  - token: token/space.chat-launcher-size
+    native_key: :root.--wt-space-chat-launcher-size
+  - token: token/space.header-height
+    native_key: :root.--wt-space-header-height
+  - token: token/typography.micro
+    native_key: :root.--wt-typography-micro
+  - token: token/typography.secondary
+    native_key: :root.--wt-typography-secondary
+  - token: token/typography.label
+    native_key: :root.--wt-typography-label
+  - token: token/typography.body
+    native_key: :root.--wt-typography-body
+  - token: token/typography.body-lg
+    native_key: :root.--wt-typography-body-lg
+  - token: token/typography.title-sm
+    native_key: :root.--wt-typography-title-sm
+  - token: token/typography.heading
+    native_key: :root.--wt-typography-heading
+  - token: token/typography.title-lg
+    native_key: :root.--wt-typography-title-lg
+  - token: token/typography.display-sm
+    native_key: :root.--wt-typography-display-sm
+  - token: token/typography.display
+    native_key: :root.--wt-typography-display
   digest:
     algorithm: sha256-canonical-json-v1
-    value: 8793cde5f8e73ac4a40c4cd9a585f9a20a01d294ace89634e1eb3956093ba180
-updated_at: '2026-09-19T03:45:00Z'
+    value: dd9b586cbbc0a7e6501f3217e12f0bc2fe29b5db177aad770c10a54018104cb9
+updated_at: '2026-09-29T00:00:00Z'
 binding_digest:
   algorithm: sha256-canonical-json-v1
-  value: 32424bf70b4f6084fb6f060957b173081fe9f4442540f08f5ac7c58340265db9
+  value: f99934c4025240731b85c33568de74dc1b4768d70e9b9d60bf47838e3a70d2e1

@@ -1,0 +1,132 @@
+schema_version: 2
+updated_at: '2026-09-28T15:23:05Z'
+phase_5_representative_slice:
+  status: complete
+  route: route-events
+  evidence_scope:
+  - shell topology
+  - page header
+  - toolbar
+  - table
+  - filters
+  - empty
+  - error
+  - retry
+  implementation:
+  - AppShell 内嵌画布与 chrome slot 顺序。
+  - 事件列表筛选、URL 恢复、排序、批量操作、导出、刷新。
+  - 状态文本 + 状态色；键盘与 ARIA label。
+phase_6_complete_modes:
+  status: complete
+  routes:
+  - route: route-inbox
+    modes:
+    - shell
+    - master-detail
+    states:
+    - loading
+    - success
+    - empty
+    - error
+    - submitting
+  - route: route-events
+    modes:
+    - shell
+    states:
+    - loading
+    - success
+    - empty
+    - error
+    - submitting
+  - route: route-event-detail
+    modes:
+    - master-detail
+    states:
+    - loading
+    - success
+    - empty
+    - error
+    - not-found
+    - submitting
+  - route: route-board
+    modes:
+    - board
+    states:
+    - loading
+    - success
+    - empty
+    - error
+    - conflict
+  - route: route-services
+    modes:
+    - master-detail
+    states:
+    - loading
+    - success
+    - empty
+    - error
+    - not-found
+    - submitting
+  - route: route-oncall
+    modes:
+    - board
+    states:
+    - loading
+    - success
+    - empty
+    - error
+    - conflict
+    - submitting
+  - route: route-analytics
+    modes:
+    - board
+    states:
+    - loading
+    - success
+    - empty
+    - error
+  - route: route-settings
+    modes:
+    - settings
+    states:
+    - loading
+    - success
+    - empty
+    - error
+    - invalid
+    - submitting
+    - unsaved
+  - route: route-create-event-overlay
+    modes:
+    - dialog
+    states:
+    - loading
+    - success
+    - empty
+    - error
+    - invalid
+    - submitting
+  cross_workspace_sync:
+  - 创建事件同步事件列表、看板状态集合、收件箱计数和服务事件统计。
+  - 事件状态同步详情时间线、看板分组和事件列表。
+  - 筛选与选中状态跨导航保留；事件 query/status 可通过 URL 恢复。
+phase_7_global_systems:
+  status: complete
+  systems:
+  - 全局工作区切换、语义导航分组、未读/待处理计数、置顶事项和帮助入口。
+  - 全局搜索、创建事件、危险确认、上下文补充和快捷键帮助。
+  - loading/success/empty/error/submitting 反馈；失败保留输入并可重试。
+  - 焦点进入/退出浮层、Esc 关闭、可见状态文本和 ARIA 标签。
+  - Tailwind v4 @theme 消费模板 token；无第二套精确值。
+  commands:
+    typecheck: pnpm typecheck
+    lint: pnpm lint
+    unit: pnpm test
+    build: pnpm build
+    e2e: pnpm test:e2e
+  command_results:
+    typecheck: passed
+    lint: passed
+    unit: 7 passed
+    build: passed
+    e2e: 3 passed

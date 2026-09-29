@@ -1,0 +1,1726 @@
+{
+  "schema_version": 2,
+  "kind": "phase-8-verification",
+  "verification_contract": "numeric-v1",
+  "template_digest": {
+    "algorithm": "sha256-canonical-json-v1",
+    "value": "3bc5b43ebb61377b7d33f7ff0300b82195cf05e1bc4552ede2988200e055ec18"
+  },
+  "source_identity": "git:200dcb44cc1527ef24a1c892e9c3e5508377b386:clean",
+  "build_identity": "workbench-shell-cert-3.1.2-clean-20260929094936",
+  "browser_identity": "Chromium 153.0.8010.12 / Playwright 1.63.0",
+  "records": [
+    {
+      "id": "959d5a4c-6cdf-5b42-9b50-77f623f0034f",
+      "rule_id": "LAYOUT-101",
+      "status": "passed",
+      "expected": "All derived template scenarios are implemented and measured in the clean certification build.",
+      "actual": "All derived scenarios have structured current-build measurements; 25 oracle-anchored numeric expectations match exactly or declared tolerance.",
+      "route": "all included routes",
+      "viewport": "desktop 1440x900",
+      "theme": "light",
+      "state": "current-build",
+      "scenario_ids": [
+        "phase8:anatomy:primitive/button:icon:1",
+        "phase8:anatomy:primitive/button:label:2",
+        "phase8:anatomy:primitive/nav-item:icon:1",
+        "phase8:anatomy:primitive/nav-item:label:2",
+        "phase8:anatomy:primitive/nav-item:trailing:3",
+        "phase8:anchor:chat-fab→region.shell.chat-fab",
+        "phase8:anchor:header-trigger→region.shell.header-trigger",
+        "phase8:containment:scene.shell:region.shell.page-header:in:region.shell.page-canvas",
+        "phase8:containment:scene.shell:region.shell.page-toolbar:in:region.shell.page-canvas",
+        "phase8:expectation:expectation-app-shell-border",
+        "phase8:expectation:expectation-app-shell-spacing",
+        "phase8:expectation:expectation-app-shell-structure",
+        "phase8:expectation:expectation-app-shell-surface",
+        "phase8:expectation:expectation-app-shell-typography",
+        "phase8:expectation:expectation-master-detail-border",
+        "phase8:expectation:expectation-master-detail-color",
+        "phase8:expectation:expectation-master-detail-spacing",
+        "phase8:expectation:expectation-master-detail-structure",
+        "phase8:expectation:expectation-master-detail-typography",
+        "phase8:expectation:expectation-overlay-dialog-border",
+        "phase8:expectation:expectation-overlay-dialog-spacing",
+        "phase8:expectation:expectation-overlay-dialog-structure",
+        "phase8:expectation:expectation-overlay-dialog-surface",
+        "phase8:expectation:expectation-overlay-dialog-typography",
+        "phase8:expectation:expectation-settings-section-nav-border",
+        "phase8:expectation:expectation-settings-section-nav-spacing",
+        "phase8:expectation:expectation-settings-section-nav-structure",
+        "phase8:expectation:expectation-settings-section-nav-surface",
+        "phase8:expectation:expectation-settings-section-nav-typography",
+        "phase8:expectation:expectation-workspace-board-border",
+        "phase8:expectation:expectation-workspace-board-color",
+        "phase8:expectation:expectation-workspace-board-spacing",
+        "phase8:expectation:expectation-workspace-board-structure",
+        "phase8:expectation:expectation-workspace-board-typography",
+        "phase8:geometry-negative:shell:page-canvas:padding_inline_start:zero",
+        "phase8:geometry:app-sidebar:nav-group:size:token-ref:size.sidebar-default",
+        "phase8:geometry:button:control:radius:token-ref:radius.lg",
+        "phase8:geometry:chat-fab:chat-fab:inset_block_end:token-ref:space.chat-launcher-inset",
+        "phase8:geometry:chat-fab:chat-fab:inset_inline_end:token-ref:space.chat-launcher-inset",
+        "phase8:geometry:chat-fab:chat-fab:size:token-ref:space.chat-launcher-size",
+        "phase8:geometry:data-table:columns:gap:token-ref:space.4",
+        "phase8:geometry:data-table:columns:size:token-ref:size.board-column",
+        "phase8:geometry:dialog:content:padding_block_end:token-ref:space.4",
+        "phase8:geometry:dialog:content:padding_block_start:token-ref:space.4",
+        "phase8:geometry:dialog:content:padding_inline_end:token-ref:space.4",
+        "phase8:geometry:dialog:content:padding_inline_start:token-ref:space.4",
+        "phase8:geometry:dialog:content:radius:token-ref:radius.xl",
+        "phase8:geometry:dialog:content:shadow:token-ref:shadow.floating",
+        "phase8:geometry:input:field:radius:token-ref:radius.lg",
+        "phase8:geometry:page-header:page-header:size:token-ref:space.header-height",
+        "phase8:geometry:page-header:page-toolbar:size:token-ref:space.header-height",
+        "phase8:geometry:page-toolbar:page-toolbar:size:token-ref:space.header-height",
+        "phase8:geometry:shell:page-canvas:border:token-ref:color.surface-border",
+        "phase8:geometry:shell:page-canvas:padding_block_end:token-ref:space.2",
+        "phase8:geometry:shell:page-canvas:padding_block_start:token-ref:space.2",
+        "phase8:geometry:shell:page-canvas:padding_inline_end:token-ref:space.2",
+        "phase8:geometry:shell:page-canvas:padding_inline_start:semantic:zero",
+        "phase8:geometry:shell:page-canvas:radius:token-ref:radius.xl",
+        "phase8:geometry:shell:page-canvas:shadow:token-ref:shadow.surface",
+        "phase8:layout-negative:scene.board:shrink:non-shrink",
+        "phase8:layout-negative:scene.board:wrap:non-wrap",
+        "phase8:layout-negative:scene.settings:root_scroll:none",
+        "phase8:layout-negative:scene.shell:border:none",
+        "phase8:layout-negative:scene.shell:root_scroll:none",
+        "phase8:overlay:scene.dialog:overlay.dialog:viewport:region.dialog.root",
+        "phase8:overlay:scene.master-detail:overlay.master-detail:region:region.master-detail.root",
+        "phase8:pattern-presence:route/board:pattern/workspace-board",
+        "phase8:pattern-presence:route/dialog:pattern/overlay-dialog",
+        "phase8:pattern-presence:route/master-detail:pattern/master-detail",
+        "phase8:pattern-presence:route/settings:pattern/settings-section-nav",
+        "phase8:pattern-presence:route/shell:pattern/app-shell",
+        "phase8:placement-containment:route/board:region.board.page-canvas:in:region.board.root",
+        "phase8:placement-containment:route/board:region.board.page-header:in:region.board.page-canvas",
+        "phase8:placement-containment:route/board:region.board.page-toolbar:in:region.board.page-canvas",
+        "phase8:placement-containment:route/dialog:region.dialog.content:in:region.dialog.overlay",
+        "phase8:placement-containment:route/dialog:region.dialog.overlay:in:region.dialog.root",
+        "phase8:placement-containment:route/master-detail:region.detail.context-panel:in:region.detail.root",
+        "phase8:placement-containment:route/master-detail:region.detail.detail-pane:in:region.detail.root",
+        "phase8:placement-containment:route/master-detail:region.detail.master-pane:in:region.detail.root",
+        "phase8:placement-containment:route/settings:region.settings.page-canvas:in:region.settings.root",
+        "phase8:placement-containment:route/settings:region.settings.section-nav:in:region.settings.root",
+        "phase8:placement-containment:route/shell:region.shell.chat-fab:in:region.shell.root",
+        "phase8:placement-containment:route/shell:region.shell.compose:in:region.shell.root",
+        "phase8:placement-containment:route/shell:region.shell.footer-utility:in:region.shell.root",
+        "phase8:placement-containment:route/shell:region.shell.header-trigger:in:region.shell.root",
+        "phase8:placement-containment:route/shell:region.shell.nav-group:in:region.shell.root",
+        "phase8:placement-containment:route/shell:region.shell.page-canvas:in:region.shell.root",
+        "phase8:placement-containment:route/shell:region.shell.page-header:in:region.shell.page-canvas",
+        "phase8:placement-containment:route/shell:region.shell.page-toolbar:in:region.shell.page-canvas",
+        "phase8:placement-containment:route/shell:region.shell.pin-list:in:region.shell.root",
+        "phase8:placement-containment:route/shell:region.shell.rail:in:region.shell.root",
+        "phase8:placement-containment:route/shell:region.shell.search:in:region.shell.root",
+        "phase8:placement-containment:route/shell:region.shell.workspace-switcher:in:region.shell.root",
+        "phase8:placement-geometry:route/board:geometry.board.page-header.size:token/space.header-height",
+        "phase8:placement-geometry:route/board:geometry.board.page-toolbar.size:token/space.header-height",
+        "phase8:placement-geometry:route/dialog:geometry.dialog.content.max-block-size:token/size.dialog-max-height",
+        "phase8:placement-geometry:route/dialog:geometry.dialog.overlay.shadow:token/shadow.floating",
+        "phase8:placement-geometry:route/master-detail:geometry.detail.page-header.size:token/space.header-height",
+        "phase8:placement-geometry:route/settings:geometry.settings.section-nav.border:token/color.surface-border",
+        "phase8:placement-geometry:route/settings:geometry.settings.section-nav.width:token/size.section-nav-default",
+        "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-bottom:token/space.2",
+        "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-end:token/space.2",
+        "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-start:token/space.2",
+        "phase8:placement-geometry:route/shell:geometry.shell.canvas.radius:token/radius.xl",
+        "phase8:placement-geometry:route/shell:geometry.shell.chat-fab.size:token/space.chat-launcher-size",
+        "phase8:placement-geometry:route/shell:geometry.shell.nav-group.width:token/size.sidebar-default",
+        "phase8:scroll-domain:route/board:block:region.board.page-canvas",
+        "phase8:scroll-domain:route/dialog:block:region.dialog.content",
+        "phase8:scroll-domain:route/master-detail:block:region.detail.detail-pane",
+        "phase8:scroll-domain:route/master-detail:block:region.detail.master-pane",
+        "phase8:scroll-domain:route/settings:block:region.settings.page-canvas",
+        "phase8:scroll-domain:route/settings:block:region.settings.section-nav",
+        "phase8:scroll-domain:route/shell:block:region.shell.page-canvas",
+        "phase8:scroll:scene.board:scroll.board.inline:inline:region.board.columns",
+        "phase8:scroll:scene.board:scroll.board.page-canvas:block:region.board.page-canvas",
+        "phase8:scroll:scene.master-detail:scroll.master-detail.detail-pane:block:region.master-detail.detail-pane",
+        "phase8:scroll:scene.master-detail:scroll.master-detail.master-pane:block:region.master-detail.master-pane",
+        "phase8:scroll:scene.settings:scroll.settings.page-canvas:block:region.settings.page-canvas",
+        "phase8:scroll:scene.settings:scroll.settings.section-nav:block:region.settings.section-nav",
+        "phase8:shell_variant:scene.shell:inset",
+        "phase8:slot:chat-fab:12",
+        "phase8:slot:compose:3",
+        "phase8:slot:footer-utility:11",
+        "phase8:slot:header-trigger:7",
+        "phase8:slot:nav-group:4",
+        "phase8:slot:page-canvas:10",
+        "phase8:slot:page-header:8",
+        "phase8:slot:page-toolbar:9",
+        "phase8:slot:pin-list:5",
+        "phase8:slot:rail:6",
+        "phase8:slot:search:2",
+        "phase8:slot:workspace-switcher:1",
+        "phase8:state:app-sidebar:navigation-link:active:item",
+        "phase8:state:app-sidebar:navigation-link:active:item:background:token-ref:color.sidebar-accent",
+        "phase8:state:app-sidebar:navigation-link:active:item:negative:text_decoration:none",
+        "phase8:state:app-sidebar:navigation-link:active:item:text_decoration:none",
+        "phase8:state:app-sidebar:navigation-link:active:item:visibility:visible",
+        "phase8:state:app-sidebar:navigation-link:hover:item",
+        "phase8:state:app-sidebar:navigation-link:hover:item:background:token-ref:color.sidebar-accent",
+        "phase8:state:app-sidebar:navigation-link:hover:item:negative:text_decoration:none",
+        "phase8:state:app-sidebar:navigation-link:hover:item:text_decoration:none",
+        "phase8:state:app-sidebar:navigation-link:hover:item:visibility:visible",
+        "phase8:state:board:navigation-link:default:section-nav",
+        "phase8:state:board:navigation-link:default:section-nav:negative:text_decoration:none",
+        "phase8:state:board:navigation-link:default:section-nav:text_decoration:none",
+        "phase8:state:board:navigation-link:default:section-nav:visibility:visible",
+        "phase8:state:button:action-trigger:focus-visible:control",
+        "phase8:state:button:action-trigger:focus-visible:control:border:token-ref:color.ring-focus",
+        "phase8:state:button:action-trigger:focus-visible:control:negative:text_decoration:none",
+        "phase8:state:button:action-trigger:focus-visible:control:text_decoration:none",
+        "phase8:state:button:action-trigger:focus-visible:control:visibility:visible",
+        "phase8:state:button:action-trigger:hover:control",
+        "phase8:state:button:action-trigger:hover:control:background:token-ref:color.primary-hover",
+        "phase8:state:button:action-trigger:hover:control:negative:text_decoration:none",
+        "phase8:state:button:action-trigger:hover:control:text_decoration:none",
+        "phase8:state:button:action-trigger:hover:control:visibility:visible",
+        "phase8:state:dialog:overlay-surface:open:overlay",
+        "phase8:state:dialog:overlay-surface:open:overlay:negative:text_decoration:none",
+        "phase8:state:dialog:overlay-surface:open:overlay:text_decoration:none",
+        "phase8:state:dialog:overlay-surface:open:overlay:visibility:visible",
+        "phase8:state:input:action-trigger:focus-visible:field",
+        "phase8:state:input:action-trigger:focus-visible:field:border:token-ref:color.ring",
+        "phase8:state:input:action-trigger:focus-visible:field:negative:text_decoration:none",
+        "phase8:state:input:action-trigger:focus-visible:field:text_decoration:none",
+        "phase8:state:input:action-trigger:focus-visible:field:visibility:visible",
+        "phase8:state:settings-nav:navigation-link:focus-visible:item",
+        "phase8:state:settings-nav:navigation-link:focus-visible:item:border:token-ref:color.ring",
+        "phase8:state:settings-nav:navigation-link:focus-visible:item:negative:text_decoration:none",
+        "phase8:state:settings-nav:navigation-link:focus-visible:item:text_decoration:none",
+        "phase8:state:settings-nav:navigation-link:focus-visible:item:visibility:visible",
+        "phase8:state:settings:navigation-link:hover:section-nav",
+        "phase8:state:settings:navigation-link:hover:section-nav:background:token-ref:color.surface-hover",
+        "phase8:state:settings:navigation-link:hover:section-nav:background:token-ref:color.surface-selected",
+        "phase8:state:settings:navigation-link:hover:section-nav:negative:text_decoration:none",
+        "phase8:state:settings:navigation-link:hover:section-nav:text_decoration:none",
+        "phase8:state:settings:navigation-link:hover:section-nav:visibility:visible",
+        "phase8:variant:primitive/button:brand",
+        "phase8:variant:primitive/button:brand-subtle",
+        "phase8:variant:primitive/button:default",
+        "phase8:variant:primitive/button:destructive",
+        "phase8:variant:primitive/button:ghost",
+        "phase8:variant:primitive/button:link",
+        "phase8:variant:primitive/button:outline",
+        "phase8:variant:primitive/button:secondary",
+        "phase8:variant:primitive/nav-item:active",
+        "phase8:variant:primitive/nav-item:default"
+      ],
+      "measurements": [
+        {
+          "scenario_id": "phase8:anatomy:primitive/button:icon:1",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:anatomy:primitive/button:label:2",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:anatomy:primitive/nav-item:icon:1",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:anatomy:primitive/nav-item:label:2",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:anatomy:primitive/nav-item:trailing:3",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:anchor:chat-fab→region.shell.chat-fab",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:anchor:header-trigger→region.shell.header-trigger",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:containment:scene.shell:region.shell.page-header:in:region.shell.page-canvas",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:containment:scene.shell:region.shell.page-toolbar:in:region.shell.page-canvas",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-app-shell-border",
+          "method": "computed-style",
+          "expected": "1px",
+          "observed": "1px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-app-shell-spacing",
+          "method": "computed-style",
+          "expected": "48px",
+          "observed": "48px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-app-shell-structure",
+          "method": "computed-style",
+          "expected": "1176px",
+          "observed": "1176px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-app-shell-surface",
+          "method": "computed-style",
+          "expected": "oklch(0.964435 0.001327 286.375)",
+          "observed": "oklch(0.964435 0.001327 286.375)",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-app-shell-typography",
+          "method": "computed-style",
+          "expected": "14px",
+          "observed": "14px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-master-detail-border",
+          "method": "computed-style",
+          "expected": "1px",
+          "observed": "1px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-master-detail-color",
+          "method": "computed-style",
+          "expected": "oklch(0.141 0.005 285.823)",
+          "observed": "oklch(0.141 0.005 285.823)",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-master-detail-spacing",
+          "method": "computed-style",
+          "expected": "48px",
+          "observed": "48px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-master-detail-structure",
+          "method": "computed-style",
+          "expected": "1176px",
+          "observed": "1176px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-master-detail-typography",
+          "method": "computed-style",
+          "expected": "16px",
+          "observed": "16px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-overlay-dialog-border",
+          "method": "computed-style",
+          "expected": "0px",
+          "observed": "0px",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-overlay-dialog-spacing",
+          "method": "computed-style",
+          "expected": "303px",
+          "observed": "303px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-overlay-dialog-structure",
+          "method": "computed-style",
+          "expected": "576px",
+          "observed": "576px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-overlay-dialog-surface",
+          "method": "computed-style",
+          "expected": "14px",
+          "observed": "14px",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-overlay-dialog-typography",
+          "method": "computed-style",
+          "expected": "14px",
+          "observed": "14px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-settings-section-nav-border",
+          "method": "computed-style",
+          "expected": "1px",
+          "observed": "1px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-settings-section-nav-spacing",
+          "method": "computed-style",
+          "expected": "240px",
+          "observed": "240px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-settings-section-nav-structure",
+          "method": "computed-style",
+          "expected": "240px",
+          "observed": "240px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-settings-section-nav-surface",
+          "method": "computed-style",
+          "expected": "oklch(1 0 0)",
+          "observed": "oklch(1 0 0)",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-settings-section-nav-typography",
+          "method": "computed-style",
+          "expected": "18px",
+          "observed": "18px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-workspace-board-border",
+          "method": "computed-style",
+          "expected": "1px",
+          "observed": "1px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-workspace-board-color",
+          "method": "computed-style",
+          "expected": "oklch(0.141 0.005 285.823)",
+          "observed": "oklch(0.141 0.005 285.823)",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-workspace-board-spacing",
+          "method": "computed-style",
+          "expected": "48px",
+          "observed": "48px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-workspace-board-structure",
+          "method": "computed-style",
+          "expected": "1176px",
+          "observed": "1176px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:expectation:expectation-workspace-board-typography",
+          "method": "computed-style",
+          "expected": "14px",
+          "observed": "14px",
+          "passed": true,
+          "tolerance": "<=2px",
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry-negative:shell:page-canvas:padding_inline_start:zero",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:app-sidebar:nav-group:size:token-ref:size.sidebar-default",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:button:control:radius:token-ref:radius.lg",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:chat-fab:chat-fab:inset_block_end:token-ref:space.chat-launcher-inset",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:chat-fab:chat-fab:inset_inline_end:token-ref:space.chat-launcher-inset",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:chat-fab:chat-fab:size:token-ref:space.chat-launcher-size",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:data-table:columns:gap:token-ref:space.4",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:data-table:columns:size:token-ref:size.board-column",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:dialog:content:padding_block_end:token-ref:space.4",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:dialog:content:padding_block_start:token-ref:space.4",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:dialog:content:padding_inline_end:token-ref:space.4",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:dialog:content:padding_inline_start:token-ref:space.4",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:dialog:content:radius:token-ref:radius.xl",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:dialog:content:shadow:token-ref:shadow.floating",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:input:field:radius:token-ref:radius.lg",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:page-header:page-header:size:token-ref:space.header-height",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:page-header:page-toolbar:size:token-ref:space.header-height",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:page-toolbar:page-toolbar:size:token-ref:space.header-height",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:shell:page-canvas:border:token-ref:color.surface-border",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:shell:page-canvas:padding_block_end:token-ref:space.2",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:shell:page-canvas:padding_block_start:token-ref:space.2",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:shell:page-canvas:padding_inline_end:token-ref:space.2",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:shell:page-canvas:padding_inline_start:semantic:zero",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:shell:page-canvas:radius:token-ref:radius.xl",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:geometry:shell:page-canvas:shadow:token-ref:shadow.surface",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:layout-negative:scene.board:shrink:non-shrink",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:layout-negative:scene.board:wrap:non-wrap",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:layout-negative:scene.settings:root_scroll:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:layout-negative:scene.shell:border:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:layout-negative:scene.shell:root_scroll:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:overlay:scene.dialog:overlay.dialog:viewport:region.dialog.root",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:overlay:scene.master-detail:overlay.master-detail:region:region.master-detail.root",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:pattern-presence:route/board:pattern/workspace-board",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:pattern-presence:route/dialog:pattern/overlay-dialog",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:pattern-presence:route/master-detail:pattern/master-detail",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:pattern-presence:route/settings:pattern/settings-section-nav",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:pattern-presence:route/shell:pattern/app-shell",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/board:region.board.page-canvas:in:region.board.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/board:region.board.page-header:in:region.board.page-canvas",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/board:region.board.page-toolbar:in:region.board.page-canvas",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/dialog:region.dialog.content:in:region.dialog.overlay",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/dialog:region.dialog.overlay:in:region.dialog.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/master-detail:region.detail.context-panel:in:region.detail.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/master-detail:region.detail.detail-pane:in:region.detail.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/master-detail:region.detail.master-pane:in:region.detail.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/settings:region.settings.page-canvas:in:region.settings.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/settings:region.settings.section-nav:in:region.settings.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.chat-fab:in:region.shell.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.compose:in:region.shell.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.footer-utility:in:region.shell.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.header-trigger:in:region.shell.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.nav-group:in:region.shell.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.page-canvas:in:region.shell.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.page-header:in:region.shell.page-canvas",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.page-toolbar:in:region.shell.page-canvas",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.pin-list:in:region.shell.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.rail:in:region.shell.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.search:in:region.shell.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-containment:route/shell:region.shell.workspace-switcher:in:region.shell.root",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/board:geometry.board.page-header.size:token/space.header-height",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/board:geometry.board.page-toolbar.size:token/space.header-height",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/dialog:geometry.dialog.content.max-block-size:token/size.dialog-max-height",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/dialog:geometry.dialog.overlay.shadow:token/shadow.floating",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/master-detail:geometry.detail.page-header.size:token/space.header-height",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/settings:geometry.settings.section-nav.border:token/color.surface-border",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/settings:geometry.settings.section-nav.width:token/size.section-nav-default",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-bottom:token/space.2",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-end:token/space.2",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.canvas.padding-start:token/space.2",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.canvas.radius:token/radius.xl",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.chat-fab.size:token/space.chat-launcher-size",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:placement-geometry:route/shell:geometry.shell.nav-group.width:token/size.sidebar-default",
+          "method": "logical-geometry",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll-domain:route/board:block:region.board.page-canvas",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll-domain:route/dialog:block:region.dialog.content",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll-domain:route/master-detail:block:region.detail.detail-pane",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll-domain:route/master-detail:block:region.detail.master-pane",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll-domain:route/settings:block:region.settings.page-canvas",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll-domain:route/settings:block:region.settings.section-nav",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll-domain:route/shell:block:region.shell.page-canvas",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll:scene.board:scroll.board.inline:inline:region.board.columns",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll:scene.board:scroll.board.page-canvas:block:region.board.page-canvas",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll:scene.master-detail:scroll.master-detail.detail-pane:block:region.master-detail.detail-pane",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll:scene.master-detail:scroll.master-detail.master-pane:block:region.master-detail.master-pane",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll:scene.settings:scroll.settings.page-canvas:block:region.settings.page-canvas",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:scroll:scene.settings:scroll.settings.section-nav:block:region.settings.section-nav",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:shell_variant:scene.shell:inset",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:chat-fab:12",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:compose:3",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:footer-utility:11",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:header-trigger:7",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:nav-group:4",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:page-canvas:10",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:page-header:8",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:page-toolbar:9",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:pin-list:5",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:rail:6",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:search:2",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:slot:workspace-switcher:1",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:app-sidebar:navigation-link:active:item",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:app-sidebar:navigation-link:active:item:background:token-ref:color.sidebar-accent",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:app-sidebar:navigation-link:active:item:negative:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:app-sidebar:navigation-link:active:item:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:app-sidebar:navigation-link:active:item:visibility:visible",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:app-sidebar:navigation-link:hover:item",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:app-sidebar:navigation-link:hover:item:background:token-ref:color.sidebar-accent",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:app-sidebar:navigation-link:hover:item:negative:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:app-sidebar:navigation-link:hover:item:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:app-sidebar:navigation-link:hover:item:visibility:visible",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:board:navigation-link:default:section-nav",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:board:navigation-link:default:section-nav:negative:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:board:navigation-link:default:section-nav:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:board:navigation-link:default:section-nav:visibility:visible",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:button:action-trigger:focus-visible:control",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:button:action-trigger:focus-visible:control:border:token-ref:color.ring-focus",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:button:action-trigger:focus-visible:control:negative:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:button:action-trigger:focus-visible:control:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:button:action-trigger:focus-visible:control:visibility:visible",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:button:action-trigger:hover:control",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:button:action-trigger:hover:control:background:token-ref:color.primary-hover",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:button:action-trigger:hover:control:negative:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:button:action-trigger:hover:control:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:button:action-trigger:hover:control:visibility:visible",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:dialog:overlay-surface:open:overlay",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:dialog:overlay-surface:open:overlay:negative:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:dialog:overlay-surface:open:overlay:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:dialog:overlay-surface:open:overlay:visibility:visible",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:input:action-trigger:focus-visible:field",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:input:action-trigger:focus-visible:field:border:token-ref:color.ring",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:input:action-trigger:focus-visible:field:negative:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:input:action-trigger:focus-visible:field:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:input:action-trigger:focus-visible:field:visibility:visible",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings-nav:navigation-link:focus-visible:item",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings-nav:navigation-link:focus-visible:item:border:token-ref:color.ring",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings-nav:navigation-link:focus-visible:item:negative:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings-nav:navigation-link:focus-visible:item:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings-nav:navigation-link:focus-visible:item:visibility:visible",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav:background:token-ref:color.surface-hover",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav:background:token-ref:color.surface-selected",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav:negative:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav:text_decoration:none",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:state:settings:navigation-link:hover:section-nav:visibility:visible",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:variant:primitive/button:brand",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:variant:primitive/button:brand-subtle",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:variant:primitive/button:default",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:variant:primitive/button:destructive",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:variant:primitive/button:ghost",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:variant:primitive/button:link",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:variant:primitive/button:outline",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:variant:primitive/button:secondary",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:variant:primitive/nav-item:active",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        },
+        {
+          "scenario_id": "phase8:variant:primitive/nav-item:default",
+          "method": "interaction-probe",
+          "expected": "present",
+          "observed": "present",
+          "passed": true,
+          "evidence_ref": "evidence/current-build-evidence.json"
+        }
+      ],
+      "evidence_refs": [
+        "evidence/current-build-evidence.json"
+      ]
+    }
+  ],
+  "created_at": "2026-09-29T02:00:00Z"
+}
