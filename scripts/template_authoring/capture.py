@@ -28,7 +28,7 @@ FACT_PROPERTIES = {
     "padding_block_end", "padding_inline_start", "gap", "inset_block_start",
     "inset_inline_end", "inset_block_end", "inset_inline_start", "size", "radius",
     "surface", "border", "shadow", "background", "text", "text_decoration",
-    "visibility", "container_presentation", "anatomy", "container_role",
+    "visibility", "container_presentation", "anatomy", "container_role", "slot_inventory", "interaction_inventory", "theme_set",
     *CHROME_FACT_PROPERTIES,
 }
 # Semantic fact values are an instance-declared open vocabulary (slot roles,
@@ -145,6 +145,17 @@ def _validate_fact(raw: Any, where: str) -> dict[str, Any]:
     _id(fact["rule_id"], f"{where}.rule_id")
     if fact["facet"] not in FACT_FACETS or fact["property"] not in FACT_PROPERTIES:
         raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where} has unsupported facet/property")
+    if fact["property"] == "slot_inventory":
+        from .chrome import parse_slot_inventory
+
+        if parse_slot_inventory(fact.get("value")) is None:
+            raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where} slot_inventory must be a comma list of known content slots")
+    if fact["property"] in {"interaction_inventory", "theme_set"}:
+        from .chrome import INTERACTION_VOCABULARY, parse_comma_set
+
+        vocabulary = INTERACTION_VOCABULARY if fact["property"] == "interaction_inventory" else None
+        if parse_comma_set(fact.get("value"), vocabulary) is None:
+            raise CaptureError("SOURCE_GRAPH_SCHEMA", f"{where} {fact['property']} must be a comma list" + (" of known interaction kinds or none" if vocabulary else ""))
     for key in ("context", "slot", "state"):
         if fact[key] is not None:
             _id(fact[key], f"{where}.{key}")

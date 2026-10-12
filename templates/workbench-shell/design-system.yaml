@@ -1,6 +1,6 @@
 schema: design-system/v1
 id: workbench-shell
-version: 3.1.2
+version: 3.4.1
 status: frozen
 capability: page-system
 layers:
@@ -12,14 +12,14 @@ layers:
   rules: core/rules.yaml
   evidence: core/evidence.yaml
 created_at: '2026-09-15'
-updated_at: '2026-09-28T06:00:00Z'
+updated_at: '2026-10-12T10:50:00Z'
 layer_digests:
   tokens:
     algorithm: sha256-canonical-json-v1
-    value: ff13aa0defafe6233fe17a8958aceb10804d643f78dc162a214cf7627f6e6904
+    value: ab8d574f2c1a72bda16faf1be618677b9ecfb114d5ed5427854940f621b7f1ff
   primitives:
     algorithm: sha256-canonical-json-v1
-    value: 512381ed0704adf0926f65ce750f0fce3843ebd4876372738165f5a797509cf3
+    value: 1efe4f669ce46837d91a732b5288a0f67ebf612c8b1deaed5611e0dee4dfdf6d
   patterns:
     algorithm: sha256-canonical-json-v1
     value: 964274515bb1cf821384d945c8f06e0d64ec169283bb3cfaa5ff051a6243bc1c
@@ -34,7 +34,7 @@ layer_digests:
     value: 767d055c2db973fee7ec37ccab3c12fe1132db4cdb55470052e2773c3000dead
   evidence:
     algorithm: sha256-canonical-json-v1
-    value: b2274b9c0a07a6f03a2bea5e8bbce81f3488dd2354a0793e8b85847cb6f52484
+    value: da7706f4d2f7d93dd1c546695a8eb9c07ad492eabbd67a9bdfc625b685dcea6d
 contract_digest:
   algorithm: sha256-canonical-json-v1
-  value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
+  value: e2f04e82734e9151b6c24d8c7da67d448176b655dd5bd59b9a0ed8763a855e6e

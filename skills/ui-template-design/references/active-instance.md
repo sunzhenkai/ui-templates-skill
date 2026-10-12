@@ -37,8 +37,10 @@ source_origin:
 
 ## Gate
 
+命令均以本 skill 根目录为当前目录。冻结判据：`design-system.yaml` 的 `status: frozen` 且下列校验通过；`freeze.yaml` 只是旧项目迁移输入。
+
 ```bash
-python3 skills/ui-template-design/runtime/check_active_instance.py validate .ui-template-design --kind active --json
+python3 runtime/check_active_instance.py validate .ui-template-design --kind active --json
 ```
 
 Design-only 安装没有仓库 `scripts/` 或 Author 时，使用本 skill `runtime/shared_validate_design_system.py`。禁止把 `check_active_instance.py` 或其它 discovery wrapper 写入 `UI_DESIGN_SYSTEM_VALIDATOR`；命中则 `VALIDATOR_SELF_INVOCATION`，不得 freeze。
@@ -48,7 +50,7 @@ Freeze 前还需 Gallery/浏览器证据和规则扫描。`migration receipt` �
 ## Package adoption
 
 ```bash
-python3 skills/ui-template-design/runtime/adopt_package.py \
+python3 runtime/adopt_package.py \
   --package /path/to/package \
   --design-root .ui-template-design \
   --output-root app \
@@ -59,7 +61,7 @@ python3 skills/ui-template-design/runtime/adopt_package.py \
 ## Legacy migration
 
 ```bash
-python3 skills/ui-template-design/runtime/migrate_legacy_freeze.py \
+python3 runtime/migrate_legacy_freeze.py \
   --freeze .ui-template-design/freeze.yaml \
   --target-kind active-instance \
   --target-root .ui-template-design \

@@ -545,3 +545,39 @@ items:
   source_id: source-001
   source_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   confidence: high
+- id: evidence-token-font-family-sans
+  kind: token
+  target: token/font.family.sans
+  origin: source
+  locator: apps/web/app/globals.css#:root --font-sans + apps/web/app/layout.tsx#Inter(variable --font-inter)
+  method: static read of CSS custom property and next/font declaration in session source snapshot
+  source_id: source-003
+  source_revision: 66c9b72064aca1da8b740077a78e650c679172ed
+  confidence: high
+- id: evidence-token-font-family-mono
+  kind: token
+  target: token/font.family.mono
+  origin: source
+  locator: apps/web/app/layout.tsx#Geist_Mono(fallback)
+  method: static read of next/font fallback list
+  source_id: source-003
+  source_revision: 66c9b72064aca1da8b740077a78e650c679172ed
+  confidence: high
+- id: evidence-token-control-sizes
+  kind: token
+  target: token/size.control.md
+  origin: source
+  locator: packages/ui/components/ui/button.tsx#size.sm=h-7,default=h-8,lg=h-9 + packages/ui/components/ui/input.tsx#h-8 + packages/ui/components/ui/select.tsx#data-[size=sm]:h-7,data-[size=default]:h-8
+  method: static class measurement (Tailwind spacing 0.25rem*n at 16px root)
+  source_id: source-003
+  source_revision: 66c9b72064aca1da8b740077a78e650c679172ed
+  confidence: high
+- id: evidence-token-touch-min
+  kind: token
+  target: token/size.touch-min
+  origin: computed
+  locator: 'apps/web/features/landing/components/landing-header.tsx#min-h-11 + packages/ui/styles/base.css#@media (max-width: 767px), (pointer: coarse)'
+  method: 'computed: min-h-11 = 44px is the source touch-sized control; coarse/mobile media query boundary from base.css'
+  source_id: source-003
+  source_revision: 66c9b72064aca1da8b740077a78e650c679172ed
+  confidence: medium

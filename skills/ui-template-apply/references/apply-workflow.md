@@ -7,7 +7,7 @@
 1. Active truth 与 apply mode
 2. 标准目录
 3. Phase 0 — Intake
-4. Phase 1 — Design direction & token freeze
+4. Phase 1 — Design direction & token mapping/projection（只读）
 5. Phase 2 — IA/layout/routes
 6. Phase 3 — Project structure
 7. Phase 4 — Component inventory
@@ -93,7 +93,9 @@ layers: {language: typescript, ui_framework: react, bundler: vite, routing: reac
 
 greenfield 必须有 `confirmed_by_user: true` 与预声明 `build_identity`，可记录拟用 `init_command` 与 `observed_constraints`；existing 必须记录 `observed_stack`。greenfield 未确认前只允许写 `.ui-template-apply/`，不得写依赖清单、工程配置或应用源码；后续任何 phase 不得 complete。
 
-## Phase 1 — Design direction & token freeze
+## Phase 1 — Design direction & token mapping/projection（只读）
+
+存在有效 Active Instance 时，`core/tokens.yaml` 是精确值唯一权威：Phase 1 只做映射/投影，**禁止新增或改写任何精确值**（色、字体族与字阶、间距、控件高度、半径、阴影、运动）。`01-token-map.yaml` 每条映射必须指回 Active Instance token path；缺 token 或需要偏离时停止该项，按 feedback（`ownership: package | binding`）或移交 `ui-template-design` iterate 处理，不得在 Apply 内“冻结” token。`design_rules[]` 只能引用已有 token path，不能引入新值。
 
 - `01-design-direction.md`：mood、anti-pattern、主题、密度、边界/动效及外部查询记录；还必须记录页面单一职责、design thesis、信息词汇表、安静元素、模板兼容的视觉重点、禁止的默认套路和实现前自我批判。`frontend-design` 驱动代表页的实现与修订（two-pass：先定 color / type / layout / signature，再写页面并按页面改源码）。`01-design-direction.md` 记录已经落在页面上的 thesis、signature、反默认取舍与安静元素。缺该 vendor 时手写同等实现与记录。共享精确值回写 token map。
 - `01-token-map.yaml`：`schema_version: 2`、template/token digest、每个 template token 到项目 token 的映射；Tailwind v4 numeric checkpoint 必须在 token map 声明 `projection: {engine: tailwind-v4, theme_mode: static}`，并使用 `@theme static`（或等价 `:root` 保留层）输出全部映射变量；`TOKEN_PROJECTION_TAILWIND_STATIC_REQUIRED` / `TOKEN_MAP_INCOMPLETE` 会拦截默认 tree-shaking。默认 `@theme` 会被未使用 utility 树剔除，导致 14px/32px/颜色 token 静默丢失；偏离含 rule ID、理由、确认。同时定义 `design_rules[]`，每条必须有 `id`、`kind: style | information | placement`、decision、适用 route/component、`token_paths[]`、`template_rule_ids[]`、候选方案与理由；用户确认的偏离必须记录 confirmation。IDs 使用闭集 `LOCAL-STYLE-###`、`LOCAL-INFORMATION-###`、`LOCAL-PLACEMENT-###`。
@@ -111,7 +113,7 @@ Gate：Phase 0 architecture 已确认且当前 styling 层仍一致；所有可�
 
 ## Phase 4 — Component inventory（`04-components.yaml`）
 
-每项记录 semantic element、variants/sizes/states、keyboard/AT、source 与 template rule IDs，并增加 `semantic_decision`：用户任务、信息角色、候选语义元素、最终 primitive、选择理由、文案契约、风格角色、放置组、`LOCAL-*-###` 与 template rule IDs。placement-sensitive 使用（例如 shell/content region、section navigation、toolbar、overlay、master/detail、floating surface）必须额外声明 `route_refs`、`placement_role` 和授权它的 `placement_pattern`；该 Pattern 必须在对应 route 的 `pattern_refs` closure 内。选择类控件（select/combobox/dropdown）必须按模板 component anatomy 事实实现触发器结构：`whole-trigger` 表示整行触发器是唯一命中控件、尾随 affordance 图标是其内部装饰（命中区必须覆盖图标位置）；`split-trigger` 表示 affordance 独立可点。模板未声明触发器解剖时不得默认发明，进入 unresolved。链接类 semantic element 的静息 text-decoration 必须消费模板对应 context 的 default 态 state presentation（含 `none` negative facts），不得以浏览器或组件库默认下划线状态实现。状态、比较数据、元数据和操作入口按用户任务选择语义 primitive；不得因装饰便利、组件库默认值或视觉热点选错元素。将 included component/slot geometry 和 subject/context/state presentation 纳入 inventory/token map；保留 `none`、不对称 padding 等 negative facts，禁止组件库默认值覆盖 profile expected。Gate：included route 的交互全覆盖；semantic decision 无悬空 local rule；无嵌套交互；icon-only、浮层焦点和非颜色状态明确。
+每项记录 semantic element、variants/sizes/states、keyboard/AT、source 与 template rule IDs，并增加 `semantic_decision`：用户任务、信息角色、候选语义元素、最终 primitive、选择理由、文案契约、风格角色、放置组、`LOCAL-*-###` 与 template rule IDs。placement-sensitive 使用（例如 shell/content region、section navigation、toolbar、overlay、master/detail、floating surface）必须额外声明 `route_refs`、`placement_role` 和授权它的 `placement_pattern`；该 Pattern 必须在对应 route 的 `pattern_refs` closure 内。选择类控件（select/combobox/dropdown）必须按模板 component anatomy 事实实现触发器结构：`whole-trigger` 表示整行触发器是唯一命中控件、尾随 affordance 图标是其内部装饰（命中区必须覆盖图标位置）；`split-trigger` 表示 affordance 独立可点。模板未声明触发器解剖时不得默认发明，进入 unresolved。链接类 semantic element 的静息 text-decoration 必须消费模板对应 context 的 default 态 state presentation（含 `none` negative facts），不得以浏览器或组件库默认下划线状态实现。状态、比较数据、元数据和操作入口按用户任务选择语义 primitive；不得因装饰便利、组件库默认值或视觉热点选错元素。将 included component/slot geometry 和 subject/context/state presentation 纳入 inventory/token map；保留 `none`、不对称 padding 等 negative facts，禁止组件库默认值覆盖 profile expected。**槽位→实现映射**：每个用到的 primitive 必须在 inventory 中逐槽位写出实现（例 `icon → <IconLib.Inbox size=icon.size.default stroke=icon.stroke-width>`、`count → Badge`、`shortcut → Kbd`），图标来自模板 `icon.library`，尺寸/描边取 `icon.*` token；不得以「先不放图标/头像」简化。Gate：included route 的交互全覆盖；每个 anatomy 槽位有实现映射；每个 `interaction` primitive 有触发/关闭/焦点实现映射；`tokens.themes` 每个主题有切换实现；semantic decision 无悬空 local rule；无嵌套交互；icon-only、浮层焦点和非颜色状态明确。
 
 ## Phase 5–7 — 实现进度（`05-07-progress.yaml`）
 
@@ -137,6 +139,8 @@ python3 skills/ui-template-apply/runtime/check_template_apply_state.py scenarios
 ```
 
 输出是采集全集（profile 布局/几何/状态 + placement geometry/pattern 闭包 + measured expectations + Primitive variant/anatomy contracts 四类来源）。覆盖口径按同一 `derive_scenario_ids` 闭合：checkpoint 校验传入 `--primitives`（或 `--active-instance`）时，fidelity、layout、expectations 和 Primitive contracts 全部进入 fail-closed 覆盖集；禁止只传 fidelity 来缩小验收面。每个声明 variant 必须生成 `phase8:variant:<primitive>:<variant>`，每个 anatomy slot 必须生成 `phase8:anatomy:<primitive>:<slot>:<order>`；缺样式/槽位存在证据即 failed，禁止用组件库默认形态替代契约。**按全集采集**——只按 fidelity 子集采集会在 checkpoint 门禁才暴露缺口；每条 verification record 的 `scenario_ids[]` 声明其覆盖项。record UUID 逐条唯一：同一 scenario 在不同 viewport/theme/state 轮次各生成独立 UUID（uuid5 输入须含 viewport/theme/state 维度），复用 scenario 级 UUID 即 `VERIFICATION_RECORD_DUPLICATE`。chrome composition scenario 只从 structural sidecar 已声明的 variant/slot/anchor 派生；无 sidecar 时这些 scenario unavailable，且不得标 profile-verified。通用 skill 不要求 `chat-fab`、A–E 或 Board。每条 UUID record 必含：rule ID、profile record ID（若有）、`scenario_ids[]`、`passed | failed | waived`、expected/actual、route、viewport、theme、state、evidence refs。所有派生 scenario IDs 的并集必须完整覆盖；校验器对 missing scenario fail closed。required evidence 为 computed style、logical bounding geometry、scroll owner/overflow、state transition、overlay scope 与 Accessibility tree；截图只作辅助。console、AX、computed style、URL 恢复、交互与声明状态均须有相关 rule 证据。failed 未复验通过时 Phase 8 不 complete。不同框架/DOM 只要同一 scenario ID 通过即可，不要求源码同构。
+
+**Anatomy 机检（轻量，必跑）**：无论是否走完整 checkpoint，Phase 8 都必须对 current build 运行 `runtime/check_anatomy_conformance.py --instance .ui-template-design --url <route> [--viewport WxH] [--action click:<css>]`（对每个 included route、至少最小与最大 viewport；浮层用 `--action` 打开），结果作为 `phase8:anatomy:*` 的 evidence。实现须以 `data-primitive` / `data-slot` 标注；无标注即 `ANATOMY_CONTRACT_MISSING`，按 failed 处理。同时运行 `runtime/check_state_matrix.py`（全部主题、overlay 用 `--open`）作为状态矩阵 evidence。
 
 ## Phase 9 — Review & feedback（`09-review.md`, `feedback/`）
 

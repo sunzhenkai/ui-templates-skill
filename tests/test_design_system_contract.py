@@ -175,6 +175,8 @@ class DesignSystemContractTests(unittest.TestCase):
                     "line_height_unit": "px",
                     "origin": "source",
                 }
+            # Role closure only; keep the required color pair resolvable at a neutral ratio.
+            tokens["color_pairs"] = [{"foreground": "token/color.text-primary", "background": "token/color.surface", "min_ratio": 1}]
             (target / "core/tokens.yaml").write_text(yaml.safe_dump(tokens, sort_keys=False), encoding="utf-8")
             meta = yaml.safe_load((target / "meta.yaml").read_text(encoding="utf-8"))
             declared = {
@@ -290,6 +292,38 @@ class DesignSystemContractTests(unittest.TestCase):
         second = subprocess.run([sys.executable, str(VALIDATOR), "compute-digest", str(manifest)], cwd=ROOT, text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(first.stdout), json.loads(second.stdout))
         self.assertIn("sha256-canonical-json-v1", first.stdout)
+
+
+    def test_ui_capability_requires_foundation_tokens(self) -> None:
+        mutations = {
+            "FONT_FAMILY_MISSING": lambda t: t["tokens"]["font"].pop("family"),
+            "FONT_CJK_FALLBACK_MISSING": lambda t: t["tokens"]["font"]["family"]["sans"].update(value="Inter, sans-serif"),
+            "FONT_FALLBACK_MISSING": lambda t: t["tokens"]["font"]["family"]["sans"].update(value="PingFang SC"),
+            "CONTROL_SIZE_MISSING": lambda t: t["tokens"]["size"]["control"].pop("lg"),
+            "TOUCH_TARGET_TOO_SMALL": lambda t: t["tokens"]["size"]["touch-min"].update(value=40),
+            "TOUCH_TARGET_MISSING": lambda t: t["tokens"]["size"].pop("touch-min"),
+            "COLOR_PAIRS_MISSING": lambda t: t.pop("color_pairs"),
+        }
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from validate_design_system import canonical_digest, load_document
+
+        for code, mutate in mutations.items():
+            with self.subTest(code=code), tempfile.TemporaryDirectory() as temp:
+                target = Path(temp) / "package"
+                shutil.copytree(FIXTURES / "packages/ui-kit-fixture", target)
+                tokens_path = target / "core/tokens.yaml"
+                tokens = yaml.safe_load(tokens_path.read_text(encoding="utf-8"))
+                mutate(tokens)
+                tokens_path.write_text(yaml.safe_dump(tokens, sort_keys=False, allow_unicode=True), encoding="utf-8")
+                manifest_path = target / "design-system.yaml"
+                manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+                manifest["layer_digests"]["tokens"]["value"] = canonical_digest(load_document(tokens_path))
+                manifest.pop("contract_digest", None)
+                manifest["contract_digest"] = {"algorithm": "sha256-canonical-json-v1", "value": canonical_digest(manifest)}
+                manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
+                code_out, report = self.run_validator(target, "package")
+                self.assertNotEqual(0, code_out)
+                self.assertIn(code, {item["code"] for item in report["errors"]}, report["errors"])
 
 
 if __name__ == "__main__":

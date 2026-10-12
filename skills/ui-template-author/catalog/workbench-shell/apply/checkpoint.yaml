@@ -11,7 +11,7 @@ template:
     value: 3bc5b43ebb61377b7d33f7ff0300b82195cf05e1bc4552ede2988200e055ec18
 tokens_digest:
   algorithm: sha256-canonical-json-v1
-  value: ff13aa0defafe6233fe17a8958aceb10804d643f78dc162a214cf7627f6e6904
+  value: 0bfd7f54fb62a999469a66f50d6622d0316f683429c5214e277b06bb56194d4e
 scope:
   included:
   - 收件箱
@@ -131,13 +131,13 @@ verification_inputs:
     value: 3953901f8063ed1f4daf8f6a3e4622d1742828ac40c5f374434c8c4e58e0dc2f
   primitives_digest:
     algorithm: sha256-canonical-json-v1
-    value: 512381ed0704adf0926f65ce750f0fce3843ebd4876372738165f5a797509cf3
+    value: 0227ad2c7b545e505df909543a8083d73fe58409a9c9ce3ab62e517e2871dddc
 contract:
   id: workbench-shell
   version: 3.1.2
   digest:
     algorithm: sha256-canonical-json-v1
-    value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
+    value: 30ae7e9dd669a8d7a91031c8638da5b42713ce1236ffe4a60d89c4d06feeff0b
 binding_digest:
   algorithm: sha256-canonical-json-v1
   value: f99934c4025240731b85c33568de74dc1b4768d70e9b9d60bf47838e3a70d2e1

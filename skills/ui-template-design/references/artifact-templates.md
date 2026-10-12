@@ -26,7 +26,9 @@ decision_gates:
     consequence: "多一个 Pattern 与 Gallery 状态，但业务页不再各自补空态"
 ```
 
-## 02-tokens-freeze.yaml
+## 02-tokens-freeze.yaml（legacy，仅迁移输入）
+
+> 旧 freeze 体系产物，仅在 `legacy-freeze-migration` 时作为迁移输入出现；新 Active Instance 的 token 只写 `core/tokens.yaml`（`design-system-tokens/v1`），ui-kit/page-system 必须含 `font.family.sans`（含 CJK 回退与通用族）、`size.control.{sm,md,lg}`、`size.touch-min`（≥44px）与非空 `color_pairs`。
 
 ```yaml
 schema: design-tokens/v1
@@ -42,7 +44,7 @@ spacing:
   space-2: "8px"
   space-4: "16px"
 typography:
-  font-body: "Inter, sans-serif"
+  font-body: "Inter, \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans CJK SC\", sans-serif"
   font-mono: "JetBrains Mono, monospace"
 radius:
   radius-sm: "4px"
@@ -156,7 +158,9 @@ layer_digests:
 contract_digest: {algorithm: sha256-canonical-json-v1, value: <contract-digest>}
 ```
 
-## freeze.yaml
+## freeze.yaml（legacy，仅迁移输入）
+
+> 不再新写。冻结判据是 `design-system.yaml` 的 `status: frozen` + active 校验通过；本段只用于识别和迁移旧项目。
 
 ```yaml
 schema: design-freeze/v1
@@ -177,8 +181,10 @@ output_root: .
 updated_at: "2026-09-07T00:00:00Z"
 ```
 
-用 `compute-digest` 子命令算 digest：
+旧 freeze 仅在迁移前核对时用（命令相对本 skill 根目录）：
 
 ```bash
-python3 skills/ui-template-design/runtime/check_design_freeze.py compute-digest --freeze-path .ui-template-design/freeze.yaml --json
+python3 runtime/check_design_freeze.py compute-digest --freeze-path <project-root>/.ui-template-design/freeze.yaml --json
 ```
+
+Active Instance 的 digest 一律用 `python3 runtime/check_active_instance.py compute-digest <project-root>/.ui-template-design/design-system.yaml`。

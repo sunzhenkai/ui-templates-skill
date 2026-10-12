@@ -162,6 +162,15 @@ tokens:
         unit: unitless
         origin: source
         description: Weight for page titles and strong headings.
+    family:
+      sans:
+        value: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif
+        origin: default
+        description: 'Body/UI font stack: Latin face, CJK fallbacks (macOS/Windows/Linux), generic family last.'
+      mono:
+        value: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK SC", monospace'
+        origin: default
+        description: Monospace stack with CJK-capable fallback.
   radius:
     sm:
       value: 0.375
@@ -262,6 +271,27 @@ tokens:
       unit: px
       origin: source
       description: Default desktop sidebar width.
+    control:
+      sm:
+        value: 28
+        unit: px
+        origin: computed
+        description: Control height sm; alias of size.control-height-sm.
+      md:
+        value: 32
+        unit: px
+        origin: computed
+        description: Control height md; alias of size.control-height-default.
+      lg:
+        value: 36
+        unit: px
+        origin: computed
+        description: Control height lg; alias of size.control-height-lg.
+    touch-min:
+      value: 44
+      unit: px
+      origin: default
+      description: Minimum touch/hit target on coarse pointers (WCAG 2.5.5 / platform HIG).
   space:
     '2':
       value: 0.5
@@ -354,6 +384,30 @@ tokens:
       line_height_unit: px
       origin: source
       description: Hero numbers and empty-state headlines.
+  icon:
+    library:
+      value: lucide
+      origin: source
+      description: Icon library (stroke icon set).
+    stroke-width:
+      value: 2
+      unit: unitless
+      origin: default
+      description: Library default stroke width.
+    size:
+      default:
+        value: 16
+        unit: px
+        origin: source
+        description: Default inline icon size.
+      sm:
+        value: 14
+        unit: px
+        origin: source
+      xs:
+        value: 12
+        unit: px
+        origin: source
 color_pairs:
 - foreground: token/color.text-primary
   background: token/color.page-canvas

@@ -105,6 +105,52 @@ def _atomic_copy(source: Path, destination: Path) -> None:
             os.unlink(temporary)
 
 
+# interaction kinds that must be realised by a declared overlay/disclosure primitive
+COVERABLE_INTERACTIONS = frozenset({
+    "tooltip", "dropdown-menu", "context-menu", "popover", "hover-card", "collapsible", "rail-collapse", "command", "toast",
+})
+
+
+def captured_surface_closure(receipt: dict[str, Any], candidate_template: Path, manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    """Captured themes and interaction kinds must be carried by the package.
+
+    Capture records what the source ships (round 5: theme_set, interaction_inventory);
+    a package that silently keeps one theme or drops menus/tooltips/rail collapse
+    would otherwise pass every token check.
+    """
+    from .chrome import parse_comma_set
+
+    themes: set[str] = set()
+    interactions: set[str] = set()
+    for fact in receipt.get("facts") or []:
+        if not isinstance(fact, dict) or fact.get("status") not in (None, "observed"):
+            continue
+        values = parse_comma_set(fact.get("value")) or []
+        if fact.get("property") == "theme_set":
+            themes.update(values)
+        elif fact.get("property") == "interaction_inventory":
+            interactions.update(value for value in values if value != "none")
+    layers = manifest.get("layers") or {}
+    tokens_doc = load_document(candidate_template / layers["tokens"]) if layers.get("tokens") else {}
+    primitives_doc = load_document(candidate_template / layers["primitives"]) if layers.get("primitives") else {}
+    issues: list[dict[str, Any]] = []
+    if len(themes) > 1:
+        theme_block = (tokens_doc or {}).get("themes") or {}
+        declared = {theme_block.get("default")} | set((theme_block.get("variants") or {}).keys())
+        missing = sorted(themes - declared)
+        if missing:
+            issues.append({"code": "THEME_COVERAGE_REQUIRED", "details": {"captured": sorted(themes), "missing": missing}})
+    covered: set[str] = set()
+    for item in (primitives_doc or {}).get("items") or []:
+        interaction = item.get("interaction") if isinstance(item, dict) else None
+        if isinstance(interaction, dict):
+            covered.update(interaction.get("covers") or [])
+    uncovered = sorted((interactions & COVERABLE_INTERACTIONS) - covered)
+    if uncovered:
+        issues.append({"code": "INTERACTION_INVENTORY_UNCOVERED", "details": {"uncovered": uncovered}})
+    return issues
+
+
 def run_authoring_gate(
     *, request_path: Path, source_root: Path, candidate_template: Path, candidate_index: Path,
     production_index: Path, validator: Path, eval_runner: Path, receipt_out: Path,
@@ -210,6 +256,9 @@ def run_authoring_gate(
                     issues.append({"code": "CONFORMANCE_MISMATCH"})
                 elif profile.get("conformance") == "structural" and profile.get("unresolved"):
                     issues.append({"code": "STRUCTURAL_UNRESOLVED"})
+
+        if capture_status == "captured" and capture_receipt is not None:
+            issues.extend(captured_surface_closure(capture_receipt, candidate_template, manifest))
 
         validator_command = _command(
             validator,

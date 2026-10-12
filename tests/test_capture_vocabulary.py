@@ -75,6 +75,8 @@ def custom_vocabulary_graph() -> dict:
         _fact("f.account.order", "shell", slot="account-menu", property="slot_order", value=_semantic("1")),
         _fact("f.account.container", "shell", slot="account-menu", property="container_role", value=_semantic("root")),
         _fact("f.account.border", "shell", slot="account-menu", property="border", value=_semantic("none"), negative=True),
+        _fact("f.shell.interactions", "shell", slot="root", property="interaction_inventory", value=_semantic("dropdown-menu")),
+        _fact("f.shell.themes", "shell", slot="root", property="theme_set", value=_semantic("light")),
     ]
     console_facts = [
         _fact("f.console.root", "console", slot=None, property="root_scroll", value=_semantic("none"), negative=True),
@@ -85,6 +87,7 @@ def custom_vocabulary_graph() -> dict:
         _fact("f.rail.bg", "console", slot="rail-menu", state="selected", property="background",
               value=_token("color.stage-raised"), facet="state_presentations"),
         _fact("f.stream.scroll", "console", slot="stream", property="scroll_block", value=_semantic("vertical")),
+        _fact("f.console.interactions", "console", slot="root", property="interaction_inventory", value=_semantic("none"), negative=True),
         _fact("f.legal.deco", "link", slot="legal", property="text_decoration", value=_semantic("underline"),
               facet="state_presentations", context="footer-legal-link"),
     ]

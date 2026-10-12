@@ -26,6 +26,22 @@
 
 选择类控件（select/combobox/dropdown）的交互验证必须覆盖 affordance 命中区：点击尾随 chevron 图标中心必须激活触发器（`whole-trigger`）或其独立控件（`split-trigger`），图标中心落在触发控件 bounding box 之外即 failed（AX/交互证据）。链接类元素在 default 态的 computed `text-decoration-line` 必须等于模板对应 context 的 state presentation 记录值（含 `none` negative facts）；静息下划线/hover 消失等与记录相反的模式即 failed。
 
+### 组件解剖（Anatomy）
+
+逐 primitive 核对模板 `anatomy[]`：每个 `required` 槽位在每个实例中渲染；icon 槽位含真实图形（svg/img/role=img），来自模板 `icon.library`，尺寸与描边等于 `icon.size.*` / `icon.stroke-width` 的 computed 值；槽位顺序与声明一致；条件槽位（count/shortcut/action 等）至少在一个状态中被演示。由 `check_anatomy_conformance.py` 机检并截图佐证；`ANATOMY_*` 任一出现即 failed。仅几何/token 达标而缺图标、头像、计数、快捷键、状态指示的实现不得判 passed。
+
+### 状态矩阵
+
+对每个 primitive 按 `states[]` × variant 生成矩阵（default/hover/focus-visible/active/selected/disabled/loading/empty/error 中适用者），逐格给出 computed 证据；含 transition 的状态需记录 motion token。矩阵缺格即 unresolved，不得以 default 截图代替。用 `runtime/check_state_matrix.py`（`--themes` 覆盖模板 `tokens.themes` 的全部主题，`--open` 打开每个 overlay primitive）自动采集并截图，其 `state-matrix.json` 与 `index.html` 作为 evidence；`STATE_NO_VISUAL_CHANGE` / `STATE_NOT_DEMONSTRATED` / `PRIMITIVE_NOT_RENDERED` 即 failed。
+
+### 渲染质量（check_ui_quality）
+
+每个主题 × 最小/中/最大 viewport × 关键 view（对话框、抽屉、菜单、折叠栏）运行 `runtime/check_ui_quality.py`：页面横向溢出、未处理文字溢出、`[data-control]` 高度与 `size.control.*` 不符、触屏命中区 < `size.touch-min` 任一出现即 failed。约定见 `implementation-conventions.md`。
+
+### 交互面与主题
+
+模板 primitives 中带 `interaction` 的每个 overlay/disclosure 必须实现为真实交互（不得用原生 `title` 代替 tooltip、不得用静态外观代替下拉/右键菜单、不得省略折叠图标栏），按声明的 trigger 打开、按 dismiss 关闭（含 Escape），焦点进入与归还正确。模板声明多主题时必须提供主题切换（按 `themes.selector`），ui_checks、anatomy、state matrix 与对比度在每个主题 × 最小/中/最大 viewport 下都要有记录。
+
 ### Tokens 与 computed style
 
 从 `01-token-map.yaml` 取得 expected，在当前 build 读取 body、标题、导航、文本、按钮、输入、容器、表格/指标、浮层等适用元素的 computed color/type/spacing/radius/border/shadow/motion。双主题按 coverage 验证角色一致和对比度。arbitrary/new-token 必须已有 rule ID、理由与确认。记录 `TOKEN-###`/`NN-###`。

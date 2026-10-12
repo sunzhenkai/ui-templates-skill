@@ -48,3 +48,4 @@ items:
   - token/color.primary
   rule_refs:
   - rule/NN-001
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'

@@ -3,7 +3,7 @@ gate:
   package:
     digest:
       algorithm: sha256-canonical-json-v1
-      value: 63dc64bd98f9227e983a7b6c4d81fd1846882611fbaae89d06f919bdaed3dc05
+      value: a92b7ce00c41e3bf35bb37b51fb476875dec8ae4d18e6bf2141cd2cd895a9dba
     id: workbench-shell
     version: 3.1.0
   oracle:
@@ -23,7 +23,7 @@ gate:
       value: 1436d5883740291dc2021f8bae88f7c0a5518de51ac266df5c164f61c7a30391
     contract_digest:
       algorithm: sha256-canonical-json-v1
-      value: 63dc64bd98f9227e983a7b6c4d81fd1846882611fbaae89d06f919bdaed3dc05
+      value: a92b7ce00c41e3bf35bb37b51fb476875dec8ae4d18e6bf2141cd2cd895a9dba
     projection_digest:
       algorithm: sha256-canonical-json-v1
       value: aeeeaf3ca670f6b38aaddd53603c9d2c0b9e1afdd607690503366b2b2dcea242
@@ -36,7 +36,7 @@ records:
   pattern: pattern/app-shell
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 63dc64bd98f9227e983a7b6c4d81fd1846882611fbaae89d06f919bdaed3dc05
+    value: a92b7ce00c41e3bf35bb37b51fb476875dec8ae4d18e6bf2141cd2cd895a9dba
   build_identity: workbench-shell-contracts-20260927-23
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues
@@ -130,7 +130,7 @@ records:
   pattern: pattern/workspace-board
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 63dc64bd98f9227e983a7b6c4d81fd1846882611fbaae89d06f919bdaed3dc05
+    value: a92b7ce00c41e3bf35bb37b51fb476875dec8ae4d18e6bf2141cd2cd895a9dba
   build_identity: workbench-shell-contracts-20260927-23
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues
@@ -223,7 +223,7 @@ records:
   pattern: pattern/settings-section-nav
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 63dc64bd98f9227e983a7b6c4d81fd1846882611fbaae89d06f919bdaed3dc05
+    value: a92b7ce00c41e3bf35bb37b51fb476875dec8ae4d18e6bf2141cd2cd895a9dba
   build_identity: workbench-shell-contracts-20260927-23
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/settings
@@ -314,7 +314,7 @@ records:
   pattern: pattern/master-detail
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 63dc64bd98f9227e983a7b6c4d81fd1846882611fbaae89d06f919bdaed3dc05
+    value: a92b7ce00c41e3bf35bb37b51fb476875dec8ae4d18e6bf2141cd2cd895a9dba
   build_identity: workbench-shell-contracts-20260927-23
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues/DEMO-1
@@ -405,7 +405,7 @@ records:
   pattern: pattern/overlay-dialog
   package_digest:
     algorithm: sha256-canonical-json-v1
-    value: 63dc64bd98f9227e983a7b6c4d81fd1846882611fbaae89d06f919bdaed3dc05
+    value: a92b7ce00c41e3bf35bb37b51fb476875dec8ae4d18e6bf2141cd2cd895a9dba
   build_identity: workbench-shell-contracts-20260927-23
   oracle_revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
   route: /demo/issues?__oracle_action=open-new-issue

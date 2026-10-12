@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ui-templates-skill.local/schemas/design-system/v1/tokens.schema.json",
   "title": "Design System tokens v1",
+  "description": "Capability ui-kit/page-system additionally requires (enforced by validate_design_system.py validate_foundation_tokens): tokens.font.family.sans with fallbacks ending in a generic family and at least one CJK family; tokens.size.control.{sm,md,lg} as px/rem numbers; tokens.size.touch-min >= 44px; non-empty color_pairs. When any primitive anatomy slot carries an icon, tokens.icon.library (string), tokens.icon.stroke-width (unitless number) and tokens.icon.size.default (px/rem) are required (validate_icon_foundation). When the source ships more than one theme, tokens.themes must declare every non-default theme: each variant overrides every color token (or lists it in shared) and has its own color_pairs entries tagged theme: <name> (validate_theme_coverage).",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -19,6 +20,58 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/colorPair"
+      }
+    },
+    "themes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default",
+        "variants"
+      ],
+      "description": "Multi-theme tokens. Base tokens are the default theme; each variant overrides token paths for that theme.",
+      "properties": {
+        "default": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selector": {
+          "type": "string",
+          "description": "How the implementation activates a variant, e.g. a root class name or media query."
+        },
+        "variants": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "overrides"
+            ],
+            "properties": {
+              "selector": {
+                "type": "string"
+              },
+              "overrides": {
+                "type": "object",
+                "propertyNames": {
+                  "pattern": "^[A-Za-z0-9_.-]+$"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/tokenRecord"
+                }
+              },
+              "shared": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_.-]+$"
+                },
+                "description": "Color token paths intentionally identical across themes."
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -47,7 +100,11 @@
             "s",
             "deg",
             "ratio",
-            "unitless"
+            "unitless",
+            "dvh",
+            "vh",
+            "dvw",
+            "vw"
           ]
         },
         "line_height": {
@@ -135,6 +192,11 @@
         },
         "reason": {
           "type": "string"
+        },
+        "theme": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Theme variant this pair is evaluated in (values resolved through themes.variants.<name>.overrides). Omitted = default theme."
         }
       }
     },

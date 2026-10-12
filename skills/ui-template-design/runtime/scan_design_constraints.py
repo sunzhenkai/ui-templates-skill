@@ -1,4 +1,4 @@
-"""Scan output roots for raw palette, hex, and illegal imports."""
+"""Scan output roots for raw palette, hex, raw spacing/size/type values, and illegal imports."""
 from __future__ import annotations
 
 import argparse
@@ -26,6 +26,25 @@ RAW_SPACING_ARBITRARY = re.compile(r"\b[pm][trblxy]?-\[[\d.]+(?:px|rem|em|vh|vw)
 RAW_SPACING_CSS = re.compile(
     r"(?:padding|margin|gap|row-gap|column-gap)\s*:\s*[\d.]+(?:px|rem|em)\b"
 )
+RAW_SIZE_ARBITRARY = re.compile(
+    r"(?<![\w-])(?:min-h|max-h|min-w|max-w|h|w|size)-\[[\d.]+(?:px|rem|em|vh|vw|dvh|svh|%)\]"
+)
+RAW_TYPE_ARBITRARY = re.compile(r"(?<![\w-])(?:text|leading)-\[[\d.]+(?:px|rem|em|%)?\]")
+# Literal (non-var) CSS declarations; `var(...)`, inherit/initial/unset are allowed.
+RAW_TYPE_CSS = re.compile(
+    r"(?<![\w-])(?:font-size|line-height)\s*:\s*[\d.]+(?:px|rem|em|%)?\s*(?:!important)?\s*[;}\n]"
+)
+RAW_FONT_FAMILY_CSS = re.compile(
+    r"(?<![\w-])font-family\s*:\s*(?!\s*(?:var\(|inherit|initial|unset|revert))[^;}\n]+"
+)
+RAW_HEIGHT_CSS = re.compile(r"(?<![\w-])(?:min-|max-)?height\s*:\s*[\d.]+(?:px|rem|em)\b")
+# CSS-in-JS / inline style objects.
+RAW_TYPE_JS = re.compile(
+    r"\b(?:fontSize|lineHeight|height|minHeight|maxHeight)\s*:\s*['\"`]?[\d.]+(?:px|rem|em)?\b"
+)
+RAW_FONT_FAMILY_JS = re.compile(r"\bfontFamily\s*:\s*['\"`](?!\s*var\()")
+# Token projection carriers (theme/tokens stylesheets) may hold literal values.
+PROJECTION_NAME_MARKERS = ("token", "theme")
 RAW_TRANSITION_ALL = re.compile(r"\btransition-all\b")
 RAW_KEYFRAMES = re.compile(r"@keyframes\b")
 DOMAIN_IMPORT = re.compile(
@@ -65,6 +84,18 @@ def scan(root: Path) -> dict[str, object]:
             findings.append({"code": "RAW_SPACING", "path": relative})
         if path.suffix.lower() in NON_CSS_SUFFIXES and RAW_SPACING_CSS.search(text):
             findings.append({"code": "RAW_SPACING", "path": relative})
+        suffix = path.suffix.lower()
+        is_projection = any(marker in path.name.lower() for marker in PROJECTION_NAME_MARKERS)
+        if RAW_SIZE_ARBITRARY.search(text):
+            findings.append({"code": "RAW_SIZE", "path": relative})
+        if RAW_TYPE_ARBITRARY.search(text):
+            findings.append({"code": "RAW_TYPOGRAPHY", "path": relative})
+        if not is_projection and (RAW_TYPE_CSS.search(text) or RAW_FONT_FAMILY_CSS.search(text)):
+            findings.append({"code": "RAW_TYPOGRAPHY", "path": relative})
+        if not is_projection and RAW_HEIGHT_CSS.search(text):
+            findings.append({"code": "RAW_SIZE", "path": relative})
+        if suffix in NON_CSS_SUFFIXES and (RAW_TYPE_JS.search(text) or RAW_FONT_FAMILY_JS.search(text)):
+            findings.append({"code": "RAW_TYPOGRAPHY_OR_SIZE", "path": relative})
         if RAW_TRANSITION_ALL.search(text):
             findings.append({"code": "RAW_MOTION", "path": relative})
         if RAW_KEYFRAMES.search(text) and any(m in relative for m in APP_PATH_MARKERS):
@@ -77,7 +108,7 @@ def scan(root: Path) -> dict[str, object]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="扫描 raw token 与跨层 import")
+    parser = argparse.ArgumentParser(description="扫描 raw token（色/间距/尺寸/字体）与跨层 import")
     parser.add_argument("output_root", type=Path)
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)

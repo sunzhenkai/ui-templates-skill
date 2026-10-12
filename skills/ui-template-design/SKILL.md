@@ -19,6 +19,7 @@ description: 在消费项目创建、领养、重构、迭代并冻结 `design-s
 
 - 可在未安装 Author/Apply、没有模板的环境执行到完成态。
 - 后一层不得重新决定前一层的精确值或结构。仅有 Primitive 或只安装第三方组件库不算完成；复用组件体系组件不豁免 Primitive 注册。
+- 冻结判据唯一：`.ui-template-design/design-system.yaml` 的 `status: frozen`，且 `runtime/check_active_instance.py validate --kind active` 通过（layer/contract/binding digest 一致）。`freeze.yaml` 只是 `legacy-freeze-migration` 的输入，不作为冻结或 iterate 判据，也不再新写。
 - `core/tokens.yaml` 是 token 精确值唯一权威；原生 theming 是合法载体形态，但在统一契约中只是 `binding.yaml` 声明的 Token Projection，不得双向同步或手改绕过。禁止未映射调色板、hex、任意 spacing。
 - 页面只组装已登记 Page Type 与 Pattern，禁止为单页私造页头、间距或空状态。
 - 约束靠 Agent 会加载的规则文件和扫描，不靠自觉。禁止默默覆盖项目根 `AGENTS.md`。
@@ -41,24 +42,22 @@ description: 在消费项目创建、领养、重构、迭代并冻结 `design-s
 8. Visual loop → `08-verification.json` + `evidence/`。真实浏览器；自愈最多 3 轮。无浏览器则停止。
 9. Freeze & Report → `design-system.yaml` 的 `status: frozen`。contract、binding、projection、Gallery 和 browser evidence digest 绑定当前本体。全站其余页面未实现仍可完成；blank bootstrap 与含视觉的 refactor 须已有代表页及其修订。
 
-Validate/Freeze 前运行 runtime。本 skill 可单独安装：`check_active_instance.py` 是 discovery wrapper，会启动同目录 `shared_validate_design_system.py`。`UI_DESIGN_SYSTEM_VALIDATOR` 只能指向该共享实现；指向本 wrapper 或 Author wrapper 会以 `VALIDATOR_SELF_INVOCATION` 失败，不得 freeze。
+Validate/Freeze 前运行 runtime。以下命令都以**本 skill 根目录**为当前目录（仓库内即 `skills/ui-template-design/`，安装态即安装目录），不依赖仓库 `scripts/` 或 Author。本 skill 可单独安装：`check_active_instance.py` 是 discovery wrapper，会启动同目录 `shared_validate_design_system.py`。`UI_DESIGN_SYSTEM_VALIDATOR` 只能指向该共享实现；指向本 wrapper 或 Author wrapper 会以 `VALIDATOR_SELF_INVOCATION` 失败，不得 freeze。
 
 ```bash
-python3 skills/ui-template-design/runtime/check_active_instance.py validate .ui-template-design --kind active --json
-python3 skills/ui-template-design/runtime/check_design_freeze.py gate --design-root .ui-template-design --project-root . --json  # legacy-freeze migration only
-python3 skills/ui-template-design/runtime/scan_design_constraints.py <output-root> --json
+python3 runtime/check_active_instance.py validate <project-root>/.ui-template-design --kind active --json
+python3 runtime/scan_design_constraints.py <output-root> --json
+python3 runtime/project_tokens.py --instance <project-root>/.ui-template-design --out <styles>/tokens.css  # Token Projection（唯一来源，--check 防漂移）
+python3 runtime/check_ui_quality.py --instance <project-root>/.ui-template-design --url <url> --themes light,dark --theme-class dark --out <dir>  # 溢出/控件高度/触控尺寸
+python3 runtime/check_anatomy_conformance.py --instance <project-root>/.ui-template-design --url <gallery-or-page-url> --require-all  # 内容槽位机检（data-primitive/data-slot）
+python3 runtime/check_state_matrix.py --instance <project-root>/.ui-template-design --url <url> --themes light,dark --theme-class dark --out <dir>  # 状态矩阵截图证据
+python3 runtime/check_design_freeze.py gate --design-root <project-root>/.ui-template-design --project-root <project-root> --json  # legacy-freeze migration only
 ```
 
-安装态（无仓库 `scripts/`、无 Author）同样调用：
+仅有 Constitution、规则未落地、扫描失败或 digest 不一致不得 freeze。digest 算法为 `sha256-canonical-json-v1`；**唯一** digest 入口是本 skill runtime 的 `compute-digest`，写入 `design-system.yaml` 的 `layer_digests` / `contract_digest`（freeze 与 iterate 刷新同用）：
 
 ```bash
-python3 runtime/check_active_instance.py validate .ui-template-design --kind active --json
-```
-
-仅有 Constitution、规则未落地、扫描失败或 digest 不一致不得 freeze。digest 算法为 `sha256-canonical-json-v1`；写 freeze.yaml 前用 `compute-digest` 子命令计算：
-
-```bash
-python3 scripts/validate_design_system.py compute-digest .ui-template-design/design-system.yaml --json
+python3 runtime/check_active_instance.py compute-digest <project-root>/.ui-template-design/design-system.yaml
 ```
 
 ## 完成定义

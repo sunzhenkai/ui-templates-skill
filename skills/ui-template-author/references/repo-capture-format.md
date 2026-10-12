@@ -60,3 +60,22 @@ closure 只证明 scope 内问题已闭合；本节问题由机器强制，沉�
 4. **选择类控件触发器解剖**：scope 内名称命中 `select | combobox | dropdown | dropdown-menu` 的组件必须携带 `anatomy` 事实（component_geometry facet，闭集语义 `whole-trigger | split-trigger`）：`whole-trigger` 表示整行触发器是单一命中控件、尾随 affordance 图标只是其内部装饰（图标命中区属于触发器）；`split-trigger` 表示 affordance 是独立可点控件。该事实投影进 component geometry，Apply 不得发明与解剖相反的命中结构。
 
 作答方式与前两轮一致：facts 或指向目标 definition（scene/component/context）的显式 exclusions；`fidelity.yaml` 的 `mandatory_answers` 覆盖以上全部条目。
+
+## Mandatory question matrix — round 4（close-content-slot-blind-spots）
+
+几何/token 事实无法表达「控件里有什么」：一个丢了图标、头像、计数或快捷键的导航项，高度、圆角、颜色仍然全部达标。第四轮把**内容槽位清单**变成必答题（gaps 标签 `slot-inventory:`）。
+
+- 触发：scope 内每个交互控件组件（`button | icon-button | input | textarea | select | combobox | checkbox | switch | nav-item | menu-item | tabs | pagination`，以及名字以 `-nav` / `-nav-item` 结尾的组件）。
+- 作答：component definition 或其 usage 上一条 `property: slot_inventory` 事实，值为逗号分隔、按视觉顺序排列、来自闭集词汇的槽位列表：`icon, label, badge, shortcut, trailing, avatar, count, status, chevron, checkbox, description, media, action, indicator`（例 `icon,label,count`）。未知槽位名或重复槽位视为未作答。或使用指向该 component 的显式 exclusion。
+- 盘点方法（通用）：对每个控件读其渲染树，列出**每个**子元素的角色：图标组件/内联 svg → `icon`；文本 → `label`/`description`；数字气泡 → `count`；状态点/环 → `status`/`indicator`；`<kbd>` → `shortcut`；头像 → `avatar`；展开箭头 → `chevron`；悬停出现的操作 → `action`。条件渲染的槽位同样记录（在 primitives anatomy 中标 `required: false`）。
+- 同时盘点**图标系统**：图标库（包名）、默认描边宽度、默认尺寸与各语境尺寸（如 `[&_svg]:size-4` → 16px），作为 tokens `icon.*` 的事实来源。
+- 投影：slot_inventory 映射为 primitives 的 `anatomy[]`（slot/order/required/content/size_ref）；任何含 `icon` 槽位的包必须携带 `icon.library`、`icon.stroke-width`、`icon.size.default`（validator `ICON_FOUNDATION_MISSING`）。
+
+## Mandatory question matrix — round 5（close-interaction-and-theme-blind-spots）
+
+静态渲染与 token 只能看到「静止态」：tooltip、下拉菜单、右键菜单、可折叠图标栏、暗色主题都只在交互或切换后出现，前四轮都问不到。第五轮补两问（gaps 标签 `interaction-inventory:` / `theme-set:`）：
+
+1. **交互面清单**：每个 included scene 必须携带 `interaction_inventory` 事实，值为逗号列表，闭集 `tooltip, dropdown-menu, context-menu, popover, hover-card, dialog, drawer, command, toast, collapsible, rail-collapse, accordion, tabs`，或 `none`（`negative: true`）。盘点方法：在源码中检索 overlay/disclosure 组件的导入与挂载点（含包裹整行的右键菜单、`title`/悬停提示、侧栏折叠控制器、快捷键触发）。
+2. **主题集合**：shell scene（无 shell 时取第一个 included scene）必须携带 `theme_set` 事实（如 `light,dark`）。盘点方法：检索根选择器/媒体查询下的 token 重定义块（例如 `.dark`、`[data-theme=…]`、`prefers-color-scheme`）。
+
+Gate 闭合（`captured_surface_closure`）：`theme_set` 多于一个主题时，包的 `tokens.themes` 必须声明全部主题（`THEME_COVERAGE_REQUIRED`）；`interaction_inventory` 中的 overlay/disclosure 类必须被某个 primitive 的 `interaction.covers` 覆盖（`INTERACTION_INVENTORY_UNCOVERED`）。

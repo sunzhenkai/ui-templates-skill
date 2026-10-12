@@ -254,6 +254,47 @@ TRIGGER_ANATOMY_VALUES = frozenset({"whole-trigger", "split-trigger"})
 # Matched by structural naming ("link" in the declared context name), not by a
 # fixed context list, so newly declared link contexts are covered.
 LINK_CONTEXT_MARKER = "link"
+# Round 4: closed slot vocabulary for per-component content inventories.
+# Every included interactive control must state which content slots it
+# renders (icon, label, count, shortcut, ...), so icon-less or badge-less
+# reproductions cannot pass silently. Mirrors primitives anatomy slots.
+SLOT_VOCABULARY = frozenset({
+    "icon", "label", "badge", "shortcut", "trailing", "avatar", "count",
+    "status", "chevron", "checkbox", "description", "media", "action", "indicator",
+    "progress", "activity",
+})
+
+
+# Round 5: interaction (overlay / disclosure) vocabulary. Token and anatomy facts
+# cannot reveal hover tooltips, menus, context menus or a collapsible rail: those
+# only exist after an interaction, so they must be inventoried explicitly.
+INTERACTION_VOCABULARY = frozenset({
+    "tooltip", "dropdown-menu", "context-menu", "popover", "hover-card", "dialog",
+    "drawer", "command", "toast", "collapsible", "rail-collapse", "accordion", "tabs",
+})
+
+
+def parse_comma_set(value: Any, vocabulary: frozenset[str] | None = None) -> list[str] | None:
+    raw = value.get("value") if isinstance(value, dict) else None
+    if not isinstance(raw, str) or not raw.strip():
+        return None
+    items = [part.strip() for part in raw.split(",") if part.strip()]
+    if not items or len(set(items)) != len(items):
+        return None
+    if vocabulary is not None and items != ["none"] and any(item not in vocabulary for item in items):
+        return None
+    return items
+
+
+def parse_slot_inventory(value: Any) -> list[str] | None:
+    """Return the ordered slot list of a ``slot_inventory`` fact, or None if invalid."""
+    raw = value.get("value") if isinstance(value, dict) else None
+    if not isinstance(raw, str) or not raw.strip():
+        return None
+    slots = [part.strip() for part in raw.split(",") if part.strip()]
+    if not slots or any(slot not in SLOT_VOCABULARY for slot in slots) or len(set(slots)) != len(slots):
+        return None
+    return slots
 
 
 def _scene_definitions(graph: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -307,7 +348,12 @@ def _nav_column_slots(facts: list[dict[str, Any]]) -> set[Any]:
         if not isinstance(item, dict) or not item.get("slot"):
             continue
         slot = item.get("slot")
-        if item.get("property") == "anatomy":
+        if item.get("property") == "anatomy" and not (
+            isinstance(item.get("value"), dict)
+            and item.get("value", {}).get("value") in TRIGGER_ANATOMY_VALUES
+        ):
+            # Trigger anatomy (select-like controls) is a component fact, not
+            # evidence of an in-card navigation column.
             anatomy_slots.add(slot)
         if item.get("property") in COLUMN_PROPERTIES:
             column_slots.add(slot)
@@ -562,6 +608,53 @@ def _matrix_questions(
         states[f"trigger-anatomy:{name}"] = (
             ("excluded" if component_excluded else "observed" if anatomy_facts else "unresolved"),
             "component",
+        )
+
+    # ---- round 4: content slot inventory for interactive controls ----
+    for name in sorted(components):
+        if not _is_interactive_control(name):
+            continue
+        component = components[name]
+        component_excluded = component.get("id") in excluded_ids
+        inventory_facts = [
+            item
+            for item in (component.get("facts") or []) + [
+                fact
+                for usage in usages
+                if usage.get("component") == name
+                for fact in (usage.get("facts") or [])
+            ]
+            if isinstance(item, dict)
+            and item.get("property") == "slot_inventory"
+            and parse_slot_inventory(item.get("value")) is not None
+        ]
+        states[f"slot-inventory:{name}"] = (
+            ("excluded" if component_excluded else "observed" if inventory_facts else "unresolved"),
+            "component",
+        )
+
+    # ---- round 5: interaction inventory per scene + source theme set ----
+    def _answered(facts: list[dict[str, Any]], prop: str, vocabulary: frozenset[str] | None) -> bool:
+        return any(
+            item.get("property") == prop and parse_comma_set(item.get("value"), vocabulary) is not None
+            for item in facts
+        )
+
+    included = [name for name in scene_names if name in scenes]
+    for name in included:
+        scene_excluded = scenes[name].get("id") in excluded_ids
+        states[f"interaction-inventory:{name}"] = (
+            "excluded" if scene_excluded else
+            "observed" if _answered(scene_facts(name), "interaction_inventory", INTERACTION_VOCABULARY) else "unresolved",
+            "scene",
+        )
+    theme_owners = [name for name in included if scene_kind_for(name) == "shell"] or included[:1]
+    for name in theme_owners:
+        scene_excluded = scenes[name].get("id") in excluded_ids
+        states[f"theme-set:{name}"] = (
+            "excluded" if scene_excluded else
+            "observed" if _answered(scene_facts(name), "theme_set", None) else "unresolved",
+            "scene",
         )
 
     # ---- round 3: default-state link decoration per declared context ----

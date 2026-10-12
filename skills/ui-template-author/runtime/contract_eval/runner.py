@@ -982,9 +982,26 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
                     },
                 },
                 "radius": {"control": {"value": 10, "unit": "px", "origin": "source"}},
-                "size": {"control-md": {"value": 32, "unit": "px", "origin": "source"}},
+                "icon": {
+                    "library": {"value": "fixture-icons", "origin": "default"},
+                    "stroke-width": {"value": 2, "unit": "unitless", "origin": "default"},
+                    "size": {"default": {"value": 16, "unit": "px", "origin": "default"}},
+                },
+                "size": {
+                    "control-md": {"value": 32, "unit": "px", "origin": "source"},
+                    "control": {
+                        "sm": {"value": 28, "unit": "px", "origin": "default"},
+                        "md": {"value": 32, "unit": "px", "origin": "default"},
+                        "lg": {"value": 40, "unit": "px", "origin": "default"},
+                    },
+                    "touch-min": {"value": 44, "unit": "px", "origin": "default"},
+                },
+                "font": {"family": {"sans": {"value": "Inter, \"PingFang SC\", \"Noto Sans CJK SC\", sans-serif", "origin": "default"}}},
                 "typography": {"body": {"value": 14, "unit": "px", "line_height": 20, "line_height_unit": "px", "origin": "source"}},
             },
+            "color_pairs": [
+                {"foreground": "token/color.light.foreground", "background": "token/color.light.background", "min_ratio": 4.5},
+            ],
         }
         rules = {
             "schema": "design-system-rules/v1",

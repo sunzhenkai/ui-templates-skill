@@ -5,11 +5,12 @@ Intake 用可观察信号判定 `bootstrap | refactor | iterate`，写入 `00-in
 ## 判定顺序
 
 1. 用户明确「推倒重来」→ `bootstrap`（输出根空）或 `refactor`（输出根已有代码）；须用户确认。
-2. `.ui-template-design/freeze.yaml` 为 `frozen` 且 digest 与当前本体一致、用户未要求重建 → `iterate`。
-3. freeze digest 不匹配 → 停止。用户选择重新 freeze（转 `bootstrap`/`refactor`）或确认忽略过期 freeze 后走 `iterate`；不得静默混用。
-4. 无可用 freeze，输出根空 → `bootstrap`。
-5. 无可用 freeze，输出根已有依赖清单或实质源码 → `refactor`。
-6. 「优化一下 UI」且范围未声明 → 停止询问，或只允许不改未声明层的更便宜路径。
+2. `.ui-template-design/design-system.yaml` 为 `status: frozen`，且 `runtime/check_active_instance.py validate --kind active` 通过（digest 与当前本体一致）、用户未要求重建 → `iterate`。
+3. `design-system.yaml` 存在但 digest 不匹配或校验失败 → 停止。用户选择重新冻结（转 `bootstrap`/`refactor`）或先修复后重跑校验；不得静默混用。
+4. 只有旧 `.ui-template-design/freeze.yaml`、没有 `design-system.yaml` → `refactor` + `source_origin.kind: legacy-freeze-migration`（先迁移，见 active-instance.md）。旧 freeze 不是 iterate 判据。
+5. 无 Active Instance，输出根空 → `bootstrap`。
+6. 无 Active Instance，输出根已有依赖清单或实质源码 → `refactor`。
+7. 「优化一下 UI」且范围未声明 → 停止询问，或只允许不改未声明层的更便宜路径。
 
 ## 必读 / 禁止预加载
 

@@ -4,7 +4,7 @@ package:
   version: 3.1.2
   digest:
     algorithm: sha256-canonical-json-v1
-    value: e0ccee9fadfe07d1f9fa56357c74d01a2db1964daaf5888dce2acf36b56ab91a
+    value: 30ae7e9dd669a8d7a91031c8638da5b42713ce1236ffe4a60d89c4d06feeff0b
 oracle:
   kind: git-revision
   revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386

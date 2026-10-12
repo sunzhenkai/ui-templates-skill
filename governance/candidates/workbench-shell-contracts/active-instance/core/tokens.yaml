@@ -141,6 +141,27 @@ tokens:
       unit: px
       origin: source
       description: Default control height (h-8).
+    control:
+      sm:
+        value: 28
+        unit: px
+        origin: default
+        description: Control height sm (button/input/select).
+      md:
+        value: 32
+        unit: px
+        origin: default
+        description: Control height md (button/input/select).
+      lg:
+        value: 40
+        unit: px
+        origin: default
+        description: Control height lg (button/input/select).
+    touch-min:
+      value: 44
+      unit: px
+      origin: default
+      description: Minimum touch/hit target on coarse pointers (WCAG 2.5.5 / platform HIG).
   space:
     '2':
       value: 0.5
@@ -175,3 +196,41 @@ tokens:
       value: 12px
       origin: source
       description: --text-caption 12px / line-height 16px.
+  font:
+    family:
+      sans:
+        value: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif
+        origin: default
+        description: 'Body/UI font stack: Latin face, CJK fallbacks (macOS/Windows/Linux), generic family last.'
+      mono:
+        value: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK SC", monospace'
+        origin: default
+        description: Monospace stack with CJK-capable fallback.
+  icon:
+    library:
+      value: lucide
+      origin: source
+      description: Icon library (stroke icon set).
+    stroke-width:
+      value: 2
+      unit: unitless
+      origin: default
+      description: Library default stroke width.
+    size:
+      default:
+        value: 16
+        unit: px
+        origin: source
+        description: Default inline icon size.
+      sm:
+        value: 14
+        unit: px
+        origin: source
+      xs:
+        value: 12
+        unit: px
+        origin: source
+color_pairs:
+- foreground: token/color.text-primary
+  background: token/color.surface
+  min_ratio: 4.5

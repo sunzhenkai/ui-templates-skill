@@ -73,7 +73,21 @@ manifest 里的 `layers` 只能声明 capability 范围内文件。缺层是 cap
 
 ## Primitive contracts
 
-来源里能按 API 或调用点区分 `variant` / `size` 的交互控件，Author 不得把它们压平成一个 anonymous primitive。Primitives 层必须保留完整变体闭集；每个声明 variant 都要有 `variant_contracts` 条目，字段至少包含 `presentation`（`filled | outline | ghost | plain` 等闭集）、`radius` token、`control_height` token 和 focus 处理引用。hover / active 可用时也必须绑定 token。`button`、`nav-item`、`menu-item`、`tabs` 等可包含内容条目的 primitive 必须声明 anatomy slots（至少区分 icon 与 label；badge、shortcut、trailing 按来源补齐）与次序。缺失 contract、contract 指向未知 token/rule，或声明 variant 没有契约，都会在 Validate fail closed（`PRIMITIVE_CONTRACT_INVALID`）。`ui-kit`/`page-system` 下 `button`、`nav-item`、`menu-item`、`tabs` 完全沉默（无 `variant_contracts` 或无 icon/label `anatomy`）直接失败：`PRIMITIVE_CONTRACT_MISSING` / `PRIMITIVE_ANATOMY_MISSING`——沉默不是可移植契约，禁止用组件库默认样式填补 contract 沉默。
+来源里能按 API 或调用点区分 `variant` / `size` 的交互控件，Author 不得把它们压平成一个 anonymous primitive。Primitives 层必须保留完整变体闭集；每个声明 variant 都要有 `variant_contracts` 条目，字段至少包含 `presentation`（`filled | outline | ghost | plain` 等闭集）、`radius` token、`control_height` token 和 focus 处理引用。hover / active 可用时也必须绑定 token。静止颜色同样是契约：`filled` 需 `background`+`foreground`，`outline` 需 `foreground`+`border`，`ghost`/`plain` 需 `foreground`（token 引用，可写 `token/color.x@10%` 表示透明度混合；某主题需不同 alpha 时写 `theme_overrides.<theme>`）；缺失报 `PRIMITIVE_CONTRACT_COLORS_MISSING`（warning，认证前必须补齐），否则各实现会各自猜测填充/描边。`button`、`nav-item`、`menu-item`、`tabs` 等可包含内容条目的 primitive 必须声明 anatomy slots（至少区分 icon 与 label；badge、shortcut、trailing 按来源补齐）与次序。缺失 contract、contract 指向未知 token/rule，或声明 variant 没有契约，都会在 Validate fail closed（`PRIMITIVE_CONTRACT_INVALID`）。`ui-kit`/`page-system` 下 `button`、`nav-item`、`menu-item`、`tabs` 完全沉默（无 `variant_contracts` 或无 icon/label `anatomy`）直接失败：`PRIMITIVE_CONTRACT_MISSING` / `PRIMITIVE_ANATOMY_MISSING`——沉默不是可移植契约，禁止用组件库默认样式填补 contract 沉默。
+
+## Anatomy 闭合与图标基础层
+
+`ui-kit` / `page-system` 包内**每个** primitive 必须声明 `anatomy[]`，或用 `anatomy_exempt: <理由>` 说明其为纯布局/容器（validator `PRIMITIVE_ANATOMY_UNDECLARED`；两者同时出现为 `PRIMITIVE_ANATOMY_CONFLICT`）。不再依赖固定名单——任何渲染内容的控件都要回答「里面有哪些槽位」。
+
+- slot 词汇：`icon, label, badge, shortcut, trailing, avatar, count, status, chevron, checkbox, description, media, action, indicator`；`order` 唯一；`required`（默认 true）区分恒在与条件槽位；`content` ∈ `icon | text | image | number | kbd | indicator | control`；`size_ref` 指向 token（悬空即 `PRIMITIVE_ANATOMY_SIZE_DANGLING`）。
+- 图标是基础层：任一槽位为 icon 时 tokens 必须有 `icon.library`（字符串）、`icon.stroke-width`（unitless）、`icon.size.default`（px/rem），可再加 `icon.size.sm` 等（`ICON_FOUNDATION_MISSING`）。
+- DOM 约定：实现以 `data-primitive="<slug>"` 标 primitive 根、`data-slot="<slot>"` 标槽位，供 `check_anatomy_conformance.py` 机检。
+
+## 多主题与交互 primitive
+
+- **多主题**：`tokens.themes = {default, selector?, variants: {<name>: {selector?, overrides: {<token-path>: record}, shared?: [path]}}}`。基础 tokens 即默认主题；每个 variant 必须对**每个** `color.*` 给出 override 或列入 `shared`（`THEME_COVERAGE_INCOMPLETE`），override 路径必须存在（`THEME_OVERRIDE_DANGLING`），并有自己的 `color_pairs`（`theme: <name>`，按该主题值计算对比度；缺失即 `THEME_PAIRS_MISSING`）。源码自身未达标的对比度如实记录并在 reason 中标注，不得改源值。
+- **交互 primitive**：overlay/disclosure 用 `interaction: {kind, trigger[], dismiss[], placement?, covers[]}` 声明打开/关闭方式；overlay 必须可 `escape` 关闭、states 含 `open`（`INTERACTION_*`）；`covers` 对应采集的 `interaction_inventory`。
+- 槽位词汇新增 `progress`（进度环/条）与 `activity`（运行中/实时活动指示）。
 
 ## Tokens：结构化字阶、字重与对比度配对
 

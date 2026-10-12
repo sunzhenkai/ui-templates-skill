@@ -83,6 +83,32 @@ class DesignFreezeTests(unittest.TestCase):
             self.assertFalse(result["ok"])
             self.assertTrue(any(item["code"] == "RAW_PALETTE" for item in result["findings"]))
 
+    def test_scan_flags_raw_size_and_typography(self) -> None:
+        cases = {
+            "Btn.tsx": ('export const B = () => <button className="h-[37px] px-2">x</button>;\n', "RAW_SIZE"),
+            "Min.tsx": ('export const B = () => <div className="min-h-[52px]">x</div>;\n', "RAW_SIZE"),
+            "Txt.tsx": ('export const T = () => <p className="text-[13px] leading-[18px]">x</p>;\n', "RAW_TYPOGRAPHY"),
+            "Inline.tsx": ('export const T = () => <p style={{ fontSize: 13 }}>x</p>;\n', "RAW_TYPOGRAPHY_OR_SIZE"),
+            "card.css": (".card { font-size: 13px; }\n", "RAW_TYPOGRAPHY"),
+            "font.css": (".card { font-family: Arial, sans-serif; }\n", "RAW_TYPOGRAPHY"),
+            "row.css": (".row { height: 40px; }\n", "RAW_SIZE"),
+        }
+        for name, (body, code) in cases.items():
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                (root / name).write_text(body, encoding="utf-8")
+                result = scan.scan(root)
+                self.assertIn(code, {item["code"] for item in result["findings"]}, result)
+
+    def test_scan_allows_token_based_size_and_typography(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "Ok.tsx").write_text('export const B = () => <button className="h-control-md text-body">x</button>;\n', encoding="utf-8")
+            (root / "base.css").write_text("body { font-family: var(--font-sans); font-size: var(--text-body); }\n", encoding="utf-8")
+            (root / "theme.css").write_text(":root { --font-sans: Inter, sans-serif; } body { font-family: Inter, sans-serif; }\n", encoding="utf-8")
+            result = scan.scan(root)
+            self.assertTrue(result["ok"], result)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -28,28 +28,124 @@ definitions:
   locator: ui-source-graph.yaml#/definitions/scene.shell
   exports:
   - shell-scene
-  facts: []
+  facts:
+  - id: fact.shell.interaction-inventory
+    facet: layout_scenes
+    subject: shell
+    context: null
+    slot: root
+    state: default
+    property: interaction_inventory
+    value:
+      kind: semantic
+      value: none
+    negative: true
+    rule_id: LAYOUT-001
+  - id: fact.shell.theme-set
+    facet: layout_scenes
+    subject: shell
+    context: null
+    slot: root
+    state: default
+    property: theme_set
+    value:
+      kind: semantic
+      value: light
+    negative: false
+    rule_id: LAYOUT-001
 - id: scene.board
   kind: scene
   name: board
   locator: ui-source-graph.yaml#/definitions/scene.board
   exports:
   - board-scene
-  facts: []
+  facts:
+  - id: fact.board.interaction-inventory
+    facet: layout_scenes
+    subject: board
+    context: null
+    slot: root
+    state: default
+    property: interaction_inventory
+    value:
+      kind: semantic
+      value: none
+    negative: true
+    rule_id: LAYOUT-001
+  - id: fact.board.theme-set
+    facet: layout_scenes
+    subject: board
+    context: null
+    slot: root
+    state: default
+    property: theme_set
+    value:
+      kind: semantic
+      value: light
+    negative: false
+    rule_id: LAYOUT-001
 - id: scene.master-detail
   kind: scene
   name: master-detail
   locator: ui-source-graph.yaml#/definitions/scene.master-detail
   exports:
   - master-detail-scene
-  facts: []
+  facts:
+  - id: fact.master-detail.interaction-inventory
+    facet: layout_scenes
+    subject: master-detail
+    context: null
+    slot: root
+    state: default
+    property: interaction_inventory
+    value:
+      kind: semantic
+      value: none
+    negative: true
+    rule_id: LAYOUT-001
+  - id: fact.master-detail.theme-set
+    facet: layout_scenes
+    subject: master-detail
+    context: null
+    slot: root
+    state: default
+    property: theme_set
+    value:
+      kind: semantic
+      value: light
+    negative: false
+    rule_id: LAYOUT-001
 - id: scene.dialog
   kind: scene
   name: dialog
   locator: ui-source-graph.yaml#/definitions/scene.dialog
   exports:
   - dialog-scene
-  facts: []
+  facts:
+  - id: fact.dialog.interaction-inventory
+    facet: layout_scenes
+    subject: dialog
+    context: null
+    slot: root
+    state: default
+    property: interaction_inventory
+    value:
+      kind: semantic
+      value: none
+    negative: true
+    rule_id: LAYOUT-001
+  - id: fact.dialog.theme-set
+    facet: layout_scenes
+    subject: dialog
+    context: null
+    slot: root
+    state: default
+    property: theme_set
+    value:
+      kind: semantic
+      value: light
+    negative: false
+    rule_id: LAYOUT-001
 - id: component.dialog
   kind: component
   name: dialog

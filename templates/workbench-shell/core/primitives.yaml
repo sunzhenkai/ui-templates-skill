@@ -3,18 +3,31 @@ items:
 - id: primitive/app-sidebar
   name: App sidebar
   states:
-  - default
-  - hover
   - active
-  - selected
+  - default
   - focus-visible
+  - hover
+  - open
+  - selected
   token_refs:
   - token/color.sidebar-accent
   - token/size.sidebar-default
+  - token/size.sidebar-rail
   rule_refs:
   - rule/LAYOUT-103
   - rule/QUALITY-101
   - rule/QUALITY-103
+  anatomy_exempt: 'layout container: composes nav-item/button/list-row primitives; owns no content slots of its own'
+  interaction:
+    kind: disclosure
+    trigger:
+    - click
+    - keyboard
+    dismiss: []
+    placement: collapses to an icon rail (token size.sidebar-rail) on desktop; drawer below the desktop breakpoint
+    covers:
+    - collapsible
+    - rail-collapse
 - id: primitive/page-header
   name: Page header
   states:
@@ -26,6 +39,20 @@ items:
   rule_refs:
   - rule/LAYOUT-106
   - rule/LAYOUT-110
+  anatomy:
+  - slot: icon
+    order: 1
+    required: false
+    content: icon
+    size_ref: token/icon.size.default
+  - slot: label
+    order: 2
+    required: true
+    content: text
+  - slot: action
+    order: 3
+    required: false
+    content: control
 - id: primitive/page-toolbar
   name: Page toolbar
   states:
@@ -39,6 +66,7 @@ items:
   rule_refs:
   - rule/LAYOUT-106
   - rule/AX-101
+  anatomy_exempt: 'layout container: composes nav-item/button/list-row primitives; owns no content slots of its own'
 - id: primitive/chat-fab
   name: Chat launcher
   states:
@@ -56,6 +84,16 @@ items:
   - rule/LAYOUT-104
   - rule/QUALITY-102
   - rule/QUALITY-104
+  anatomy:
+  - slot: icon
+    order: 1
+    required: true
+    content: icon
+    size_ref: token/icon.size.default
+  - slot: indicator
+    order: 2
+    required: false
+    content: indicator
 - id: primitive/data-table
   name: Data table
   states:
@@ -67,6 +105,7 @@ items:
   - token/color.surface-selected
   rule_refs:
   - rule/QUALITY-103
+  anatomy_exempt: 'layout container: composes nav-item/button/list-row primitives; owns no content slots of its own'
 - id: primitive/dialog
   name: Dialog
   states:
@@ -82,19 +121,57 @@ items:
   - rule/LAYOUT-108
   - rule/QUALITY-102
   - rule/AX-104
+  anatomy:
+  - slot: label
+    order: 1
+    required: true
+    content: text
+  - slot: description
+    order: 2
+    required: false
+    content: text
+  - slot: action
+    order: 3
+    required: true
+    content: control
 - id: primitive/command-palette
   name: Command palette
   states:
   - closed
-  - open
-  - hover
   - focus-visible
+  - hover
+  - open
   token_refs:
   - token/shadow.floating
   - token/color.ring-focus
   rule_refs:
   - rule/QUALITY-102
   - rule/QUALITY-104
+  anatomy:
+  - slot: icon
+    order: 1
+    required: true
+    content: icon
+    size_ref: token/icon.size.default
+  - slot: label
+    order: 2
+    required: true
+    content: text
+  - slot: shortcut
+    order: 3
+    required: false
+    content: kbd
+  interaction:
+    kind: overlay
+    trigger:
+    - keyboard
+    - click
+    dismiss:
+    - escape
+    - outside-click
+    - select
+    covers:
+    - command
 - id: primitive/input
   name: Input
   sizes:
@@ -115,6 +192,15 @@ items:
   - rule/QUALITY-101
   - rule/QUALITY-104
   - rule/QUALITY-105
+  anatomy:
+  - slot: icon
+    order: 1
+    required: false
+    content: icon
+    size_ref: token/icon.size.default
+  - slot: trailing
+    order: 2
+    required: false
 - id: primitive/button
   name: Button
   variants:
@@ -138,8 +224,13 @@ items:
   anatomy:
   - slot: icon
     order: 1
+    required: false
+    content: icon
+    size_ref: token/icon.size.default
   - slot: label
     order: 2
+    required: false
+    content: text
   states:
   - default
   - hover
@@ -175,48 +266,75 @@ items:
       control_height: token/size.control-height-default
       hover: token/color.primary-hover
       focus_ref: rule/QUALITY-104
+      background: token/color.primary
+      foreground: token/color.text-on-primary
     outline:
       presentation: outline
       radius: token/radius.lg
       control_height: token/size.control-height-default
       hover: token/color.surface-hover
       focus_ref: rule/QUALITY-104
+      background: token/color.surface
+      foreground: token/color.text-primary
+      border: token/color.surface-border
     brand:
       presentation: filled
       radius: token/radius.lg
       control_height: token/size.control-height-default
       hover: token/color.brand-hover
       focus_ref: rule/QUALITY-104
+      background: token/color.link
+      foreground: token/color.brand-foreground
+      border: token/color.link
     brand-subtle:
       presentation: outline
       radius: token/radius.lg
       control_height: token/size.control-height-default
-      hover: token/color.surface-hover
+      hover: token/color.link@12%
       focus_ref: rule/QUALITY-104
+      background: token/color.link@7%
+      foreground: token/color.text-primary
+      border: token/color.link@28%
+      theme_overrides:
+        dark:
+          background: token/color.link@12%
+          border: token/color.link@45%
+          hover: token/color.link@18%
     secondary:
       presentation: filled
       radius: token/radius.lg
       control_height: token/size.control-height-default
       hover: token/color.secondary-hover
       focus_ref: rule/QUALITY-104
+      background: token/color.secondary
+      foreground: token/color.secondary-foreground
     ghost:
       presentation: ghost
       radius: token/radius.lg
       control_height: token/size.control-height-default
       hover: token/color.surface-hover
       focus_ref: rule/QUALITY-104
+      foreground: token/color.text-primary
     destructive:
       presentation: outline
       radius: token/radius.lg
       control_height: token/size.control-height-default
-      hover: token/color.status-danger-hover
+      hover: token/color.status-danger@20%
       focus_ref: rule/QUALITY-104
+      background: token/color.status-danger@10%
+      foreground: token/color.status-danger
+      border: token/color.status-danger@10%
+      theme_overrides:
+        dark:
+          background: token/color.status-danger@20%
+          hover: token/color.status-danger@30%
     link:
       presentation: plain
       radius: token/radius.lg
       control_height: token/size.control-height-default
       hover: token/color.primary-hover
       focus_ref: rule/QUALITY-104
+      foreground: token/color.primary
 - id: primitive/settings-nav
   name: Settings navigation
   states:
@@ -234,6 +352,7 @@ items:
   - rule/LAYOUT-107
   - rule/QUALITY-103
   - rule/QUALITY-104
+  anatomy_exempt: 'layout container: composes nav-item/button/list-row primitives; owns no content slots of its own'
 - id: primitive/nav-item
   name: Navigation item
   variants:
@@ -244,10 +363,21 @@ items:
   anatomy:
   - slot: icon
     order: 1
+    required: true
+    content: icon
+    size_ref: token/icon.size.default
   - slot: label
     order: 2
-  - slot: trailing
+    required: true
+    content: text
+  - slot: count
     order: 3
+    required: false
+    content: number
+  - slot: trailing
+    order: 4
+    required: false
+    content: icon
   states:
   - default
   - hover
@@ -275,12 +405,15 @@ items:
       control_height: token/size.control-height-default
       hover: token/color.sidebar-accent
       focus_ref: rule/QUALITY-104
+      foreground: token/color.sidebar-foreground
     active:
       presentation: plain
       radius: token/radius.md
       control_height: token/size.control-height-default
       hover: token/color.sidebar-accent
       focus_ref: rule/QUALITY-104
+      foreground: token/color.sidebar-foreground
+      background: token/color.sidebar-accent
   context_bindings:
     navigation-link:
       selected: token/color.sidebar-accent
@@ -294,3 +427,308 @@ items:
   - token/color.surface-border
   rule_refs:
   - rule/LAYOUT-105
+  anatomy_exempt: 'layout container: composes nav-item/button/list-row primitives; owns no content slots of its own'
+- id: primitive/list-row
+  name: List row
+  states:
+  - default
+  - hover
+  - selected
+  - focus-visible
+  token_refs:
+  - token/color.surface-hover
+  - token/color.surface-selected
+  - token/typography.body
+  - token/icon.size.sm
+  rule_refs:
+  - rule/QUALITY-103
+  anatomy:
+  - slot: checkbox
+    order: 1
+    required: false
+    content: control
+  - slot: indicator
+    order: 2
+    required: true
+    content: icon
+    size_ref: token/icon.size.sm
+  - slot: description
+    order: 3
+    required: true
+    content: text
+  - slot: status
+    order: 4
+    required: true
+    content: icon
+    size_ref: token/icon.size.sm
+  - slot: label
+    order: 5
+    required: true
+    content: text
+  - slot: activity
+    order: 6
+    required: false
+    content: indicator
+  - slot: badge
+    order: 7
+    required: false
+    content: text
+  - slot: progress
+    order: 8
+    required: false
+    content: indicator
+    size_ref: token/icon.size.sm
+  - slot: avatar
+    order: 9
+    required: false
+    content: image
+- id: primitive/badge
+  name: Badge
+  states:
+  - default
+  token_refs:
+  - token/typography.micro
+  - token/radius.4xl
+  rule_refs:
+  - rule/QUALITY-103
+  anatomy:
+  - slot: icon
+    order: 1
+    required: false
+    content: icon
+    size_ref: token/icon.size.xs
+  - slot: label
+    order: 2
+    required: true
+    content: text
+- id: primitive/kbd
+  name: Keyboard shortcut
+  states:
+  - default
+  token_refs:
+  - token/typography.micro
+  - token/radius.sm
+  rule_refs:
+  - rule/QUALITY-103
+  anatomy:
+  - slot: shortcut
+    order: 1
+    required: true
+    content: kbd
+- id: primitive/avatar
+  name: Avatar
+  states:
+  - default
+  token_refs:
+  - token/radius.4xl
+  rule_refs:
+  - rule/QUALITY-103
+  anatomy:
+  - slot: avatar
+    order: 1
+    required: true
+    content: image
+- id: primitive/empty-state
+  name: Empty state
+  states:
+  - default
+  token_refs:
+  - token/radius.lg
+  - token/icon.size.default
+  - token/color.text-muted
+  rule_refs:
+  - rule/QUALITY-103
+  anatomy:
+  - slot: media
+    order: 1
+    required: true
+    content: icon
+    size_ref: token/icon.size.default
+  - slot: label
+    order: 2
+    required: true
+    content: text
+  - slot: description
+    order: 3
+    required: false
+    content: text
+  - slot: action
+    order: 4
+    required: false
+    content: control
+- id: primitive/nav-section-label
+  name: Navigation section label
+  states:
+  - default
+  token_refs:
+  - token/typography.micro
+  - token/color.text-muted
+  rule_refs:
+  - rule/QUALITY-103
+  anatomy:
+  - slot: label
+    order: 1
+    required: true
+    content: text
+  - slot: chevron
+    order: 2
+    required: false
+    content: icon
+    size_ref: token/icon.size.sm
+  - slot: action
+    order: 3
+    required: false
+    content: control
+- id: primitive/select
+  name: Select trigger
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/size.control-height-default
+  - token/radius.lg
+  - token/color.ring-focus
+  - token/icon.size.sm
+  rule_refs:
+  - rule/QUALITY-104
+  anatomy:
+  - slot: icon
+    order: 1
+    required: false
+    content: icon
+    size_ref: token/icon.size.default
+  - slot: label
+    order: 2
+    required: true
+    content: text
+  - slot: chevron
+    order: 3
+    required: true
+    content: icon
+    size_ref: token/icon.size.sm
+- id: primitive/tooltip
+  name: Tooltip
+  states:
+  - open
+  token_refs:
+  - token/color.surface-raised
+  - token/color.surface-border
+  - token/typography.micro
+  - token/radius.lg
+  rule_refs:
+  - rule/QUALITY-102
+  anatomy:
+  - slot: label
+    order: 1
+    required: true
+    content: text
+  - slot: shortcut
+    order: 2
+    required: false
+    content: kbd
+  interaction:
+    kind: overlay
+    trigger:
+    - hover
+    - focus
+    dismiss:
+    - escape
+    - pointer-leave
+    - blur
+    placement: side of trigger, collision-aware
+    covers:
+    - tooltip
+- id: primitive/dropdown-menu
+  name: Dropdown menu
+  states:
+  - open
+  token_refs:
+  - token/color.surface-raised
+  - token/shadow.menu
+  - token/radius.lg
+  rule_refs:
+  - rule/QUALITY-102
+  - rule/QUALITY-104
+  anatomy_exempt: 'overlay container: composes menu-item primitives'
+  interaction:
+    kind: overlay
+    trigger:
+    - click
+    - keyboard
+    dismiss:
+    - escape
+    - outside-click
+    - select
+    placement: below trigger, start aligned
+    covers:
+    - dropdown-menu
+- id: primitive/context-menu
+  name: Context menu
+  states:
+  - open
+  token_refs:
+  - token/color.surface-raised
+  - token/shadow.menu
+  - token/radius.lg
+  rule_refs:
+  - rule/QUALITY-102
+  - rule/QUALITY-104
+  anatomy_exempt: 'overlay container: composes menu-item primitives'
+  interaction:
+    kind: overlay
+    trigger:
+    - contextmenu
+    - long-press
+    - keyboard
+    dismiss:
+    - escape
+    - outside-click
+    - select
+    placement: at pointer
+    covers:
+    - context-menu
+- id: primitive/menu-item
+  name: Menu item
+  states:
+  - default
+  - hover
+  - focus-visible
+  - disabled
+  token_refs:
+  - token/color.sidebar-accent
+  - token/typography.body
+  - token/radius.md
+  - token/icon.size.default
+  rule_refs:
+  - rule/QUALITY-104
+  anatomy:
+  - slot: icon
+    order: 1
+    required: false
+    content: icon
+    size_ref: token/icon.size.default
+  - slot: label
+    order: 2
+    required: true
+    content: text
+  - slot: shortcut
+    order: 3
+    required: false
+    content: kbd
+  - slot: chevron
+    order: 4
+    required: false
+    content: icon
+    size_ref: token/icon.size.sm
+  variants:
+  - default
+  variant_contracts:
+    default:
+      presentation: plain
+      radius: token/radius.md
+      control_height: token/size.control-height-default
+      hover: token/color.sidebar-accent
+      focus_ref: rule/QUALITY-104
+      foreground: token/color.text-primary

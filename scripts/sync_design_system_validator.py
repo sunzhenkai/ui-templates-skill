@@ -37,8 +37,14 @@ def sync(root: Path = ROOT) -> list[Path]:
         targets = (
             (script, runtime / "shared_validate_design_system.py"),
             (helper, runtime / "validator_discovery.py"),
+            (root / "scripts/check_anatomy_conformance.py", runtime / "check_anatomy_conformance.py"),
+            (root / "scripts/check_state_matrix.py", runtime / "check_state_matrix.py"),
+            (root / "scripts/check_ui_quality.py", runtime / "check_ui_quality.py"),
+            (root / "scripts/project_tokens.py", runtime / "project_tokens.py"),
         )
         for source, destination in targets:
+            if not source.is_file():
+                continue
             shutil.copyfile(source, destination)
             written.append(destination)
         dest_schema = runtime / "schemas/design-system/v1"
@@ -76,6 +82,11 @@ def check(root: Path = ROOT) -> list[Path]:
         "template/fidelity/v1": sorted((root / "schemas/template/fidelity/v1").glob("*.schema.json")),
     }
     for skill in SKILLS:
+        for name in ("check_anatomy_conformance.py", "check_state_matrix.py", "check_ui_quality.py", "project_tokens.py"):
+            canonical_script = root / "scripts" / name
+            copy = root / "skills" / skill / "runtime" / name
+            if canonical_script.is_file() and (not copy.is_file() or not filecmp.cmp(canonical_script, copy, shallow=False)):
+                drifted.append(copy)
         for sub, sources in by_dir.items():
             if sub == "template/fidelity/v1" and skill not in FIDELITY_SKILLS:
                 continue

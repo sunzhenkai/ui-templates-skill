@@ -76,8 +76,9 @@ cases:
         path: skills/ui-template-apply/SKILL.md
         all:
           - design freeze
-          - 没有 freeze
-          - 现行 Phase 0–9
+          - 入口决策表
+          - adopt-only
+          - 除上表外没有
         none:
           - 必须先运行 ui-template-design
       - type: file_contains

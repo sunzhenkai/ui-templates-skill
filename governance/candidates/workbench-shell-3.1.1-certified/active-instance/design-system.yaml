@@ -13,16 +13,16 @@ layers:
   evidence: core/evidence.yaml
 contract_digest:
   algorithm: sha256-canonical-json-v1
-  value: 4cf93e3afd601a872a5e385dfd09b15b101455738d35fbf2cd522109979a89a0
+  value: d40b448c2de7940d1b3d85a1997ddc97b245b5c7ecb369ea2c6183d3fbcdad2d
 created_at: '2026-09-19'
 updated_at: '2026-09-19T02:28:00Z'
 layer_digests:
   tokens:
     algorithm: sha256-canonical-json-v1
-    value: 0aad42adb2884eea70d0ad40116483780e0055f8cf38708e95990f9473996202
+    value: 8a2bd13e1e7741870303dfcfe27a333a5407cee60dd9015a36b32b6cc56f770f
   primitives:
     algorithm: sha256-canonical-json-v1
-    value: 32a3ab6b22cef4440142f32419bdf6702d8453c6988b91b61710b1db493e3dc5
+    value: 927a0b848ed210be872003fd08b02ba7cf0402d44322348a3da134a586388d51
   patterns:
     algorithm: sha256-canonical-json-v1
     value: 441bd750b8e18dc61b6e9d711fc8895075f80271d76fceb6d30d8dc20c8bc446

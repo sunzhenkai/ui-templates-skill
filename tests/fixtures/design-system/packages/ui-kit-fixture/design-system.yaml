@@ -11,7 +11,7 @@ layers:
 layer_digests:
   tokens:
     algorithm: sha256-canonical-json-v1
-    value: 7b3b4757eb53d811020add0ce161cb3824caac595978836208fc41e4fb910fef
+    value: 7b6a556ed32535a65bbfb0da5001e92529d91600ad6c9732fc885bcba521b683
   rules:
     algorithm: sha256-canonical-json-v1
     value: f0c6ede91b7792b5c4a58f22ad6fd1c17c59502276c0c0480a266b29c876d7fe
@@ -25,4 +25,4 @@ created_at: '2026-09-08'
 updated_at: '2026-09-08T00:00:00Z'
 contract_digest:
   algorithm: sha256-canonical-json-v1
-  value: c633f0e0e8e960559bfe3c0aa561de6dcbe40c6fb07a69b29a10c8b03cfa62ca
+  value: c9e340500273ebf05e46c85c9aec7b2bcf06ec81a58552ec7d439b639dfab059

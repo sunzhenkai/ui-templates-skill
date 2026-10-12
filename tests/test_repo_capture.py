@@ -18,8 +18,8 @@ from template_authoring.capture import CaptureError, capture_from_files, load_do
 from template_authoring.gate import run_authoring_gate
 
 FIXTURE = ROOT / "tests/fixtures/repo-capture"
-FIXED_REVISION = "3d1d1ade5d6dab2a6c8ebb66bd297f9b73d4b827"
-FIXED_CLOSURE_DIGEST = "sha256:ff847b79cbf7dc1707f8d7e69f5f96f643048fb709b0f7fade95b075cb5a9976"
+FIXED_REVISION = "9569b6eb9488c5091554b38811e6e41ced69b759"
+FIXED_CLOSURE_DIGEST = "sha256:e01fbbb50922ececa18dfdc2f00b651cecd5e1139eba0848d214c36982cb1f99"
 
 
 class RepoCaptureTests(unittest.TestCase):
@@ -66,7 +66,7 @@ class RepoCaptureTests(unittest.TestCase):
             self.assertFalse(first["unresolved"])
             self.assertGreaterEqual(first["summary"]["definitions"], 12)
             self.assertEqual(12, first["summary"]["usages"])
-            self.assertEqual(13, first["summary"]["negative_facts"])
+            self.assertEqual(17, first["summary"]["negative_facts"])
             identities = [(item["id"], item["status"]) for item in first["facts"]]
             self.assertEqual(identities, [(item["id"], item["status"]) for item in second["facts"]])
             replayed = replay(load_document(request_path), source, first)

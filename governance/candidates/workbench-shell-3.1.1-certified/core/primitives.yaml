@@ -15,6 +15,7 @@ items:
   - rule/LAYOUT-103
   - rule/QUALITY-101
   - rule/QUALITY-103
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/page-header
   name: Page header
   states:
@@ -23,6 +24,7 @@ items:
   - token/space.header-height
   rule_refs:
   - rule/LAYOUT-106
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/page-toolbar
   name: Page toolbar
   states:
@@ -36,6 +38,7 @@ items:
   rule_refs:
   - rule/LAYOUT-106
   - rule/AX-101
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/chat-fab
   name: Chat launcher
   states:
@@ -53,6 +56,7 @@ items:
   - rule/LAYOUT-104
   - rule/QUALITY-102
   - rule/QUALITY-104
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/data-table
   name: Data table
   states:
@@ -64,6 +68,7 @@ items:
   - token/color.surface-selected
   rule_refs:
   - rule/QUALITY-103
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/dialog
   name: Dialog
   states:
@@ -75,6 +80,7 @@ items:
   - rule/LAYOUT-105
   - rule/QUALITY-102
   - rule/AX-104
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/command-palette
   name: Command palette
   states:
@@ -88,6 +94,7 @@ items:
   rule_refs:
   - rule/QUALITY-102
   - rule/QUALITY-104
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/input
   name: Input
   states:
@@ -101,6 +108,7 @@ items:
   rule_refs:
   - rule/QUALITY-101
   - rule/QUALITY-104
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/button
   name: Button
   states:
@@ -118,6 +126,7 @@ items:
   - rule/QUALITY-101
   - rule/QUALITY-104
   - rule/AX-101
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/settings-nav
   name: Settings navigation
   states:
@@ -135,6 +144,7 @@ items:
   - rule/LAYOUT-107
   - rule/QUALITY-103
   - rule/QUALITY-104
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/nav-item
   name: Navigation item
   states:
@@ -155,6 +165,7 @@ items:
     navigation-link:
       selected: token/color.sidebar-accent
       hover: token/color.sidebar-accent
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'
 - id: primitive/detail-pane
   name: Detail pane
   states:
@@ -164,3 +175,4 @@ items:
   - token/color.surface-border
   rule_refs:
   - rule/LAYOUT-105
+  anatomy_exempt: 'container/layout primitive: composes other primitives, renders no own content slots'

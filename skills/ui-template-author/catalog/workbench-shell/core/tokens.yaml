@@ -162,6 +162,15 @@ tokens:
         unit: unitless
         origin: source
         description: Weight for page titles and strong headings.
+    family:
+      sans:
+        value: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", sans-serif
+        origin: source
+        description: 'UI font stack: Inter (next/font --font-inter) for Latin, platform system faces, Chinese CJK before Korean, generic last. ja locale promotes a Japanese-first CJK chain (see evidence).'
+      mono:
+        value: '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace'
+        origin: source
+        description: Code/mono stack; intentionally no CJK fallback (CJK cannot align to a mono grid; browser default handles mixed text).
   radius:
     sm:
       value: 0.375
@@ -249,7 +258,7 @@ tokens:
       description: Small icon size for small controls.
     dialog-max-height:
       value: 80
-      unit: '%'
+      unit: dvh
       origin: source
       description: Overlay dialogs cap their block size at 80 percent of the dynamic viewport height.
     section-nav-default:
@@ -262,6 +271,32 @@ tokens:
       unit: px
       origin: source
       description: Default desktop sidebar width.
+    control:
+      sm:
+        value: 28
+        unit: px
+        origin: source
+        description: 'Control height sm: Button/Select/Input h-7 (28px); equals size.control-height-sm.'
+      md:
+        value: 32
+        unit: px
+        origin: source
+        description: 'Control height md: Button/Select/Input h-8 (32px); equals size.control-height-default.'
+      lg:
+        value: 36
+        unit: px
+        origin: source
+        description: 'Control height lg: Button/Select/Input h-9 (36px); equals size.control-height-lg.'
+    touch-min:
+      value: 44
+      unit: px
+      origin: computed
+      description: 'Minimum hit target for coarse-pointer / mobile layouts: the only touch-sized control in source is the mobile landing menu item min-h-11 (44px); desktop dense controls (28-36px) must grow to this on (pointer: coarse) or max-width 767px.'
+    sidebar-rail:
+      value: 48
+      unit: px
+      origin: source
+      description: Collapsed icon-rail sidebar width (3rem).
   space:
     '2':
       value: 0.5
@@ -354,6 +389,30 @@ tokens:
       line_height_unit: px
       origin: source
       description: Hero numbers and empty-state headlines.
+  icon:
+    library:
+      value: lucide
+      origin: source
+      description: Icon library (stroke icon set).
+    stroke-width:
+      value: 2
+      unit: unitless
+      origin: default
+      description: Library default stroke width.
+    size:
+      default:
+        value: 16
+        unit: px
+        origin: source
+        description: Default inline icon size.
+      sm:
+        value: 14
+        unit: px
+        origin: source
+      xs:
+        value: 12
+        unit: px
+        origin: source
 color_pairs:
 - foreground: token/color.text-primary
   background: token/color.page-canvas
@@ -407,3 +466,231 @@ color_pairs:
   background: token/color.surface
   min_ratio: 3.0
   reason: Success status marks on surfaces.
+- foreground: token/color.text-primary
+  background: token/color.page-canvas
+  min_ratio: 4.5
+  reason: 'Dark theme: Body text on the page canvas.'
+  theme: dark
+- foreground: token/color.text-primary
+  background: token/color.app-shell
+  min_ratio: 4.5
+  reason: 'Dark theme: Body text on the app-shell frame.'
+  theme: dark
+- foreground: token/color.text-primary
+  background: token/color.surface
+  min_ratio: 4.5
+  reason: 'Dark theme: Body text on cards and bounded surfaces.'
+  theme: dark
+- foreground: token/color.text-primary
+  background: token/color.surface-selected
+  min_ratio: 4.5
+  reason: 'Dark theme: Body text on selected rows.'
+  theme: dark
+- foreground: token/color.text-primary
+  background: token/color.surface-hover
+  min_ratio: 4.5
+  reason: 'Dark theme: Body text on hovered rows.'
+  theme: dark
+- foreground: token/color.text-secondary
+  background: token/color.page-canvas
+  min_ratio: 4.5
+  reason: 'Dark theme: Secondary text on the page canvas.'
+  theme: dark
+- foreground: token/color.text-secondary
+  background: token/color.surface
+  min_ratio: 4.5
+  reason: 'Dark theme: Secondary text on cards and bounded surfaces.'
+  theme: dark
+- foreground: token/color.text-secondary
+  background: token/color.sidebar-accent
+  min_ratio: 4.5
+  reason: 'Dark theme: Secondary text on the darkest light surface (nav hover); the binding constraint that pins the text-secondary lightness.'
+  theme: dark
+- foreground: token/color.text-on-primary
+  background: token/color.primary
+  min_ratio: 4.5
+  reason: 'Dark theme: Label on the primary filled control.'
+  theme: dark
+- foreground: token/color.secondary-foreground
+  background: token/color.secondary
+  min_ratio: 4.5
+  reason: 'Dark theme: Label on the secondary filled control.'
+  theme: dark
+- foreground: token/color.brand-foreground
+  background: token/color.link
+  min_ratio: 3.0
+  reason: 'Dark theme: label on the brand fill. The source dark brand fill only clears 3:1 (UI/large-text level), not 4.5:1; recorded as a source fact, flagged for the brand owner.'
+  theme: dark
+- foreground: token/color.status-danger
+  background: token/color.surface
+  min_ratio: 3.0
+  reason: 'Dark theme: Destructive accent text and tinted control labels on surfaces.'
+  theme: dark
+- foreground: token/color.status-success
+  background: token/color.surface
+  min_ratio: 3.0
+  reason: 'Dark theme: Success status marks on surfaces.'
+  theme: dark
+themes:
+  default: light
+  selector: root class
+  variants:
+    dark:
+      selector: .dark
+      overrides:
+        color.app-shell:
+          value: oklch(0.155 0.005 285.823)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.page-canvas:
+          value: oklch(0.18 0.005 285.823)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.surface:
+          value: oklch(0.21 0.006 285.885)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.surface-raised:
+          value: oklch(0.235 0.007 285.885)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.secondary:
+          value: oklch(0.274 0.006 286.033)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.secondary-foreground:
+          value: oklch(0.985 0 0)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.ring:
+          value: oklch(0.552 0.016 285.938)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.sidebar-accent:
+          value: oklch(0.274 0.006 286.033)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.sidebar-accent-foreground:
+          value: oklch(0.985 0 0)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.sidebar-foreground:
+          value: oklch(0.985 0 0)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.surface-border:
+          value: oklch(1 0 0 / 10%)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.surface-hover:
+          value: oklch(0.274 0.006 286.033)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.surface-selected:
+          value: oklch(0.3 0.006 286.033)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.divider:
+          value: oklch(1 0 0 / 6%)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.text-primary:
+          value: oklch(0.985 0 0)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.text-secondary:
+          value: oklch(0.705 0.015 286.067)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.text-muted:
+          value: oklch(0.60 0.015 286.067)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.text-disabled:
+          value: oklch(0.60 0.015 286.067)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.text-on-primary:
+          value: oklch(0.21 0.006 285.885)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.link:
+          value: oklch(0.65 0.16 255)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.brand-foreground:
+          value: oklch(0.985 0 0)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.primary:
+          value: oklch(0.92 0.004 286.32)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.status-success:
+          value: oklch(0.65 0.15 145)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.status-warning:
+          value: oklch(0.70 0.16 85)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.status-danger:
+          value: oklch(0.704 0.191 22.216)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.status-info:
+          value: oklch(0.65 0.18 250)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.chart-1:
+          value: oklch(0.72 0.16 255)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.chart-2:
+          value: oklch(0.62 0.13 255)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.chart-3:
+          value: oklch(0.52 0.10 255)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.chart-4:
+          value: oklch(0.42 0.06 255)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.chart-5:
+          value: oklch(0.32 0.03 255)
+          origin: source
+          description: Dark theme (.dark root class) value from the source token sheet.
+        color.secondary-hover:
+          value: color-mix(in oklab, oklch(0.274 0.006 286.033) 80%, transparent)
+          origin: computed
+          description: Dark theme value derived with the same rule as the light token.
+        color.primary-hover:
+          value: color-mix(in oklab, oklch(0.92 0.004 286.32) 80%, transparent)
+          origin: computed
+          description: Dark theme value derived with the same rule as the light token.
+        color.brand-hover:
+          value: color-mix(in oklab, oklch(0.65 0.16 255) 90%, transparent)
+          origin: computed
+          description: Dark theme value derived with the same rule as the light token.
+        color.status-danger-hover:
+          value: color-mix(in oklab, oklch(0.704 0.191 22.216) 20%, transparent)
+          origin: computed
+          description: Dark theme value derived with the same rule as the light token.
+        color.ring-focus:
+          value: oklch(0.552 0.016 285.938 / 0.5)
+          origin: computed
+          description: Dark theme value derived with the same rule as the light token.
+        shadow.surface:
+          value: 0 1px 2px rgb(0 0 0 / 0.2), 0 1px 1px rgb(0 0 0 / 0.16)
+          origin: source
+          description: Dark theme shadow from the source token sheet.
+        shadow.floating:
+          value: 0 20px 48px rgb(0 0 0 / 0.46), 0 4px 12px rgb(0 0 0 / 0.28)
+          origin: source
+          description: Dark theme shadow from the source token sheet.
+        shadow.menu:
+          value: 0 10px 28px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.18)
+          origin: source
+          description: Dark theme shadow from the source token sheet.

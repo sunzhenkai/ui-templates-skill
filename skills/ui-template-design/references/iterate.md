@@ -1,15 +1,15 @@
 # 迭代更新
 
-仅当任务类是 `iterate`：已有 `frozen` freeze，且本次只改已声明层。不要重开完整阶段 0–9，不要做全量 inventory。
+仅当任务类是 `iterate`：`design-system.yaml` 为 `status: frozen` 且 active 校验通过，且本次只改已声明层。不要重开完整阶段 0–9，不要做全量 inventory。
 
 ## 顺序
 
-1. 读 freeze 身份与 digest。不匹配则停止，回到 [task-classes.md](task-classes.md)。
+1. 读 `design-system.yaml` 身份与 digest，运行 `python3 runtime/check_active_instance.py validate <project-root>/.ui-template-design --kind active --json`。不匹配则停止，回到 [task-classes.md](task-classes.md)。
 2. 写入变更集合：层（token / primitive / pattern / rules / gallery）与相对输出根的路径。
 3. 只改点名层。后一层不得重写前一层精确值。
-4. 跑 `scan_design_constraints.py` 与 `check_design_freeze.py gate`。扫描失败不得 freeze。
+4. 跑 `runtime/scan_design_constraints.py`。扫描失败不得 freeze。（`check_design_freeze.py gate` 只用于 legacy-freeze 迁移。）
 5. 视觉变更才跑 [visual-loop.md](visual-loop.md)；自愈仍最多 3 轮。
-6. 刷新 `freeze.yaml` digest，绑定当前本体。未声明路径保持原字节。
+6. 用 `python3 runtime/check_active_instance.py compute-digest <project-root>/.ui-template-design/design-system.yaml` 刷新 `layer_digests` / `contract_digest`（及 binding/projection digest），再跑 active 校验。未声明路径保持原字节。
 
 ## 禁止
 

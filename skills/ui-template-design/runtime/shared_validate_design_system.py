@@ -208,11 +208,15 @@ def validate_color_pairs(documents: dict[str, Any], report: Report) -> None:
     if not isinstance(pairs, list):
         report.add("COLOR_PAIRS_INVALID", "layers.tokens.color_pairs", "color_pairs must be a list")
         return
-    records = _token_records(tokens_doc.get("tokens", {}))
+    base_records = _token_records(tokens_doc.get("tokens", {}))
     for index, pair in enumerate(pairs):
         where = f"layers.tokens.color_pairs[{index}]"
         if not isinstance(pair, dict):
             report.add("COLOR_PAIRS_INVALID", where, "color pair must be a mapping")
+            continue
+        records = theme_records(tokens_doc, pair.get("theme"))
+        if records is None:
+            report.add("THEME_UNKNOWN", where, f"color pair theme is not a declared variant: {pair.get('theme')}")
             continue
         fg_path = str(pair.get("foreground", "")).removeprefix("token/")
         bg_path = str(pair.get("background", "")).removeprefix("token/")
@@ -236,6 +240,73 @@ def validate_color_pairs(documents: dict[str, Any], report: Report) -> None:
             report.add("COLOR_CONTRAST_TOO_LOW", where, "declared color pair does not meet min_ratio", pair=f"{pair.get('foreground')}-on-{pair.get('background')}", ratio=round(ratio, 4), min_ratio=min_ratio)
 
 
+def theme_records(tokens_doc: dict[str, Any], theme: Any) -> dict[str, dict[str, Any]] | None:
+    """Token records as resolved in ``theme`` (None/default = base tokens)."""
+    records = dict(_token_records(tokens_doc.get("tokens", {})))
+    themes = tokens_doc.get("themes") if isinstance(tokens_doc.get("themes"), dict) else {}
+    if theme is None or theme == themes.get("default"):
+        return records
+    variant = (themes.get("variants") or {}).get(theme)
+    if not isinstance(variant, dict):
+        return None
+    for path, record in (variant.get("overrides") or {}).items():
+        if isinstance(record, dict):
+            records[path] = record
+    return records
+
+
+def validate_theme_coverage(documents: dict[str, Any], report: Report) -> None:
+    """Every declared theme variant is a complete color theme with its own contrast pairs.
+
+    A source that ships light and dark but a package that only captures one theme
+    silently drops half the visual contract; variants must cover every color token
+    (or mark it shared) and carry their own color_pairs.
+    """
+    tokens_doc = documents.get("tokens")
+    if not isinstance(tokens_doc, dict) or not isinstance(tokens_doc.get("themes"), dict):
+        return
+    themes = tokens_doc["themes"]
+    base = _token_records(tokens_doc.get("tokens", {}))
+    colors = sorted(path for path in base if path.startswith("color."))
+    pairs = tokens_doc.get("color_pairs") if isinstance(tokens_doc.get("color_pairs"), list) else []
+    for name, variant in sorted((themes.get("variants") or {}).items()):
+        where = f"layers.tokens.themes.variants.{name}"
+        if name == themes.get("default"):
+            report.add("THEME_VARIANT_IS_DEFAULT", where, "the default theme is the base token set; do not redeclare it as a variant")
+            continue
+        overrides = (variant or {}).get("overrides") or {}
+        shared = set((variant or {}).get("shared") or [])
+        for path in sorted(set(overrides) | shared):
+            if path not in base:
+                report.add("THEME_OVERRIDE_DANGLING", f"{where}.overrides.{path}", "theme override/shared path is not a base token")
+        missing = [path for path in colors if path not in overrides and path not in shared]
+        if missing:
+            report.add("THEME_COVERAGE_INCOMPLETE", where, f"theme {name} leaves {len(missing)} color tokens undecided (override or list in shared): " + ", ".join(missing[:8]))
+        if not any(isinstance(pair, dict) and pair.get("theme") == name for pair in pairs):
+            report.add("THEME_PAIRS_MISSING", where, f"theme {name} has no color_pairs tagged theme: {name}")
+
+
+INTERACTION_KINDS_REQUIRING_TRIGGER = frozenset({"overlay", "disclosure"})
+
+
+def validate_interaction_primitives(documents: dict[str, Any], report: Report) -> None:
+    """Overlay/disclosure primitives must state how they open and close."""
+    primitives = documents.get("primitives")
+    if not isinstance(primitives, dict):
+        return
+    for item in primitives.get("items", []):
+        if not isinstance(item, dict) or not isinstance(item.get("interaction"), dict):
+            continue
+        interaction = item["interaction"]
+        where = f"layers.primitives.{item.get('id')}.interaction"
+        if interaction.get("kind") in INTERACTION_KINDS_REQUIRING_TRIGGER and not interaction.get("trigger"):
+            report.add("INTERACTION_TRIGGER_MISSING", where, "overlay/disclosure primitive must declare trigger")
+        if interaction.get("kind") == "overlay" and "escape" not in (interaction.get("dismiss") or []):
+            report.add("INTERACTION_DISMISS_MISSING", where, "overlay primitive must be dismissible with escape")
+        if interaction.get("kind") in INTERACTION_KINDS_REQUIRING_TRIGGER and "open" not in (item.get("states") or []):
+            report.add("INTERACTION_STATE_MISSING", where, "overlay/disclosure primitive must list the open state for the state matrix")
+
+
 def validate_typography_scale(documents: dict[str, Any], capability: str | None, report: Report) -> None:
     """ui-kit/page-system typography steps must carry structured line-height."""
     if capability not in UI_CAPABILITIES:
@@ -251,6 +322,144 @@ def validate_typography_scale(documents: dict[str, Any], capability: str | None,
             report.add("TYPOGRAPHY_STEP_INCOMPLETE", where, "typography step must declare structured line_height")
         elif "line_height_unit" not in record:
             report.add("TYPOGRAPHY_STEP_INCOMPLETE", where, "typography step must declare line_height_unit")
+
+
+CJK_FONT_FAMILIES = (
+    "pingfang sc", "pingfang tc", "hiragino sans gb", "hiragino sans", "microsoft yahei",
+    "microsoft jhenghei", "noto sans cjk", "noto sans sc", "noto sans tc", "noto sans jp",
+    "noto serif cjk", "source han sans", "source han serif", "wenquanyi", "sarasa",
+    "yu gothic", "meiryo", "malgun gothic", "apple sd gothic neo", "simsun", "simhei",
+)
+GENERIC_FONT_FAMILIES = ("sans-serif", "serif", "monospace", "system-ui", "ui-sans-serif", "ui-serif", "ui-monospace", "cursive", "fantasy")
+CONTROL_SIZES = ("sm", "md", "lg")
+TOUCH_MIN_PX = 44.0
+
+
+def _font_stack(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip().strip("'\"").lower() for item in value if str(item).strip()]
+    if isinstance(value, str):
+        return [item.strip().strip("'\"").lower() for item in value.split(",") if item.strip()]
+    return []
+
+
+def _length_px(record: dict[str, Any]) -> float | None:
+    value = record.get("value")
+    unit = record.get("unit")
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    if unit == "px":
+        return float(value)
+    if unit == "rem":
+        return float(value) * 16.0
+    return None
+
+
+def validate_foundation_tokens(documents: dict[str, Any], capability: str | None, report: Report) -> None:
+    """ui-kit/page-system must freeze font stacks, control heights, touch target and contrast pairs."""
+    if capability not in UI_CAPABILITIES:
+        return
+    tokens_doc = documents.get("tokens")
+    if not isinstance(tokens_doc, dict):
+        return
+    tokens = tokens_doc.get("tokens", {}) if isinstance(tokens_doc.get("tokens"), dict) else {}
+    records = _token_records(tokens)
+    family = records.get("font.family.sans")
+    where = "layers.tokens.tokens.font.family.sans"
+    if family is None:
+        report.add("FONT_FAMILY_MISSING", where, f"capability {capability} requires font.family.sans")
+    else:
+        stack = _font_stack(family.get("value"))
+        if len(stack) < 2 or not any(item in GENERIC_FONT_FAMILIES for item in stack):
+            report.add("FONT_FALLBACK_MISSING", where, "font stack must list fallbacks ending in a generic family")
+        if not any(any(cjk in item for cjk in CJK_FONT_FAMILIES) for item in stack):
+            report.add("FONT_CJK_FALLBACK_MISSING", where, "font stack must include at least one CJK family")
+    mono = records.get("font.family.mono")
+    if mono is not None:
+        stack = _font_stack(mono.get("value"))
+        if len(stack) < 2 or not any(item in GENERIC_FONT_FAMILIES for item in stack):
+            report.add("FONT_FALLBACK_MISSING", "layers.tokens.tokens.font.family.mono", "font stack must list fallbacks ending in a generic family")
+    for size in CONTROL_SIZES:
+        path = f"size.control.{size}"
+        record = records.get(path)
+        if record is None:
+            report.add("CONTROL_SIZE_MISSING", f"layers.tokens.tokens.{path}", f"capability {capability} requires {path}")
+        elif _length_px(record) is None:
+            report.add("CONTROL_SIZE_INVALID", f"layers.tokens.tokens.{path}", "control size must be a px/rem number")
+    touch = records.get("size.touch-min")
+    if touch is None:
+        report.add("TOUCH_TARGET_MISSING", "layers.tokens.tokens.size.touch-min", f"capability {capability} requires size.touch-min")
+    else:
+        px = _length_px(touch)
+        if px is None or px + 1e-9 < TOUCH_MIN_PX:
+            report.add("TOUCH_TARGET_TOO_SMALL", "layers.tokens.tokens.size.touch-min", f"size.touch-min must be >= {int(TOUCH_MIN_PX)}px", value=touch.get("value"), unit=touch.get("unit"))
+    pairs = tokens_doc.get("color_pairs")
+    if not isinstance(pairs, list) or not pairs:
+        report.add("COLOR_PAIRS_MISSING", "layers.tokens.color_pairs", f"capability {capability} requires at least one declared color pair")
+
+
+ICON_CONTENT_SLOTS = frozenset({"icon"})
+
+
+def _anatomy_entries(item: dict[str, Any]) -> list[dict[str, Any]]:
+    anatomy = item.get("anatomy")
+    return [entry for entry in anatomy if isinstance(entry, dict)] if isinstance(anatomy, list) else []
+
+
+def validate_anatomy_closure(documents: dict[str, Any], capability: str | None, report: Report) -> None:
+    """ui-kit/page-system: every primitive states its content slots or why it has none.
+
+    Token/geometry contracts alone let reproductions drop icons, avatars, counts or
+    shortcuts while still matching every measured value. Anatomy is therefore a
+    closed, fail-closed inventory per primitive (generic, not a fixed name list),
+    and any icon-bearing slot makes the icon system a required foundation.
+    """
+    primitives = documents.get("primitives")
+    if not isinstance(primitives, dict):
+        return
+    tokens_doc = documents.get("tokens") if isinstance(documents.get("tokens"), dict) else {}
+    records = _token_records((tokens_doc or {}).get("tokens", {}))
+    icon_bearing: list[str] = []
+    for item in primitives.get("items", []):
+        if not isinstance(item, dict):
+            continue
+        pid = item.get("id", "<primitive>")
+        entries = _anatomy_entries(item)
+        exempt = item.get("anatomy_exempt")
+        where = f"layers.primitives.{pid}.anatomy"
+        if capability in UI_CAPABILITIES and not entries and not (isinstance(exempt, str) and exempt.strip()):
+            report.add("PRIMITIVE_ANATOMY_UNDECLARED", where, "primitive must declare content slots (anatomy) or an anatomy_exempt reason")
+        if entries and isinstance(exempt, str) and exempt.strip():
+            report.add("PRIMITIVE_ANATOMY_CONFLICT", where, "primitive declares both anatomy and anatomy_exempt")
+        orders = [entry.get("order") for entry in entries]
+        slots = [entry.get("slot") for entry in entries]
+        if len(set(slots)) != len(slots):
+            report.add("PRIMITIVE_ANATOMY_DUPLICATE_SLOT", where, "each anatomy slot may appear once")
+        if len(set(orders)) != len(orders):
+            report.add("PRIMITIVE_ANATOMY_DUPLICATE_ORDER", where, "anatomy slot orders must be unique")
+        for entry in entries:
+            ref = entry.get("size_ref")
+            if isinstance(ref, str) and ref.removeprefix("token/") not in records:
+                report.add("PRIMITIVE_ANATOMY_SIZE_DANGLING", f"{where}.{entry.get('slot')}.size_ref", f"token path is dangling: {ref}")
+            if entry.get("slot") in ICON_CONTENT_SLOTS or entry.get("content") == "icon":
+                icon_bearing.append(str(pid))
+    if icon_bearing:
+        missing = []
+        library = records.get("icon.library")
+        if library is None or not isinstance(library.get("value"), str) or not library["value"].strip():
+            missing.append("icon.library")
+        stroke = records.get("icon.stroke-width")
+        if stroke is None or isinstance(stroke.get("value"), bool) or not isinstance(stroke.get("value"), (int, float)):
+            missing.append("icon.stroke-width")
+        size = records.get("icon.size.default")
+        if size is None or _length_px(size) is None:
+            missing.append("icon.size.default")
+        if missing:
+            report.add(
+                "ICON_FOUNDATION_MISSING",
+                "layers.tokens.tokens.icon",
+                "icon-bearing anatomy (" + ", ".join(sorted(set(icon_bearing))[:5]) + ") requires icon foundation tokens: " + ", ".join(missing),
+            )
 
 
 def load_yaml(path: Path) -> Any:
@@ -303,8 +512,8 @@ class Report:
         self.inventory_patterns: list[str] | None = None
         self.inventory_expected_primitives: dict[str, int] = {}
 
-    def add(self, code: str, path: str, message: str) -> None:
-        self.errors.append({"code": code, "path": path, "message": message})
+    def add(self, code: str, path: str, message: str, **details: Any) -> None:
+        self.errors.append({"code": code, "path": path, "message": message, **details})
 
     def warn(self, code: str, path: str, message: str) -> None:
         self.warnings.append({"code": code, "path": path, "message": message})
@@ -857,9 +1066,26 @@ def validate_primitive_contracts(
                     where,
                     "variant contract is missing required fields: " + ", ".join(missing),
                 )
+            presentation = contract.get("presentation")
+            needs = {"filled": ("background", "foreground"), "outline": ("foreground", "border"), "ghost": ("foreground",), "plain": ("foreground",)}.get(presentation, ())
+            absent = [field for field in needs if field not in contract]
+            if absent:
+                # Without resting colors every implementation guesses fill/text/border per
+                # variant (e.g. a tinted destructive rendered as a solid one).
+                report.warn(
+                    "PRIMITIVE_CONTRACT_COLORS_MISSING",
+                    where,
+                    f"{presentation} variant contract should declare resting colors: " + ", ".join(absent),
+                )
+            overrides = contract.get("theme_overrides") if isinstance(contract.get("theme_overrides"), dict) else {}
+            color_refs = [(f, contract.get(f)) for f in ("background", "foreground", "border")]
+            color_refs += [(f"theme_overrides.{t}.{f}", v) for t, o in overrides.items() if isinstance(o, dict) for f, v in o.items()]
+            for field, ref in color_refs:
+                if isinstance(ref, str) and ref.removeprefix("token/").split("@", 1)[0] not in token_paths:
+                    report.add("PRIMITIVE_CONTRACT_INVALID", f"{where}.{field}", f"token path is dangling: {ref}")
             for field in ("radius", "control_height", "hover", "active"):
                 ref = contract.get(field)
-                if isinstance(ref, str) and ref.removeprefix("token/") not in token_paths:
+                if isinstance(ref, str) and ref.removeprefix("token/").split("@", 1)[0] not in token_paths:
                     report.add("PRIMITIVE_CONTRACT_INVALID", f"{where}.{field}", f"token path is dangling: {ref}")
             focus = contract.get("focus_ref")
             if isinstance(focus, str) and focus.startswith("rule/") and focus not in rule_ids:
@@ -1676,6 +1902,10 @@ def validate_target(
     validate_primitive_contracts(layers, documents, report, capability=manifest.get("capability"))
     validate_color_pairs(documents, report)
     validate_typography_scale(documents, manifest.get("capability"), report)
+    validate_foundation_tokens(documents, manifest.get("capability"), report)
+    validate_anatomy_closure(documents, manifest.get("capability"), report)
+    validate_theme_coverage(documents, report)
+    validate_interaction_primitives(documents, report)
     validate_placement(manifest, layers, ids, documents, report)
     validate_fidelity_sidecar(target, report)
     report.component_family = derive_component_family(manifest, layers, ids)
