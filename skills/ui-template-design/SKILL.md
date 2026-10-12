@@ -5,7 +5,7 @@ description: 在消费项目创建、领养、重构、迭代并冻结 `design-s
 
 # ui-template-design
 
-把前端从「Agent 直接生成页面」变成「在 Active Design System 约束下组装页面」。本 skill 创建并冻结 `design-system/v1` Active Instance：portable core + `binding.yaml` + Token Projection + Stable Entity IDs；不发布 package，不实现全站业务页。缺少 Author、Apply、catalog 或项目 `templates/` 不是失败。
+空白表面先实现一条主流程代表页，再把共享的色、字、间距和 Pattern 抽成 Active Design System；其后的页面在该系统下组装。本 skill 创建并冻结 `design-system/v1` Active Instance：portable core + `binding.yaml` + Token Projection + Stable Entity IDs；不发布 package，不实现全站业务页。缺少 Author、Apply、catalog 或项目 `templates/` 不是失败。
 
 ## 路由
 
@@ -33,13 +33,13 @@ description: 在消费项目创建、领养、重构、迭代并冻结 `design-s
 0. Intake → `00-intake.md`：任务类 `bootstrap | refactor | iterate`、source origin `blank | template-package | legacy-freeze-migration`、站点 `greenfield | existing`、输出根、变更集合、decision gates 账本。Active digest 不匹配则停止。`iterate` 不重开完整 0–9。
 1. Stack / binding → `00-architecture.yaml` 与 `binding.yaml`：greenfield 按选型引导逐层列出候选（分层建议语义 + 官方 CLI 优先，见 greenfield.md）并由用户选择；existing 确认保持或另行拆分迁移。未确认不得写应用源码。
 2. UX Model & Inventory → `01-ux-model.md`、`01-inventory.yaml`。`refactor` 必做；`iterate` 禁止全量 inventory。
-3. Token Freeze / Projection → `core/tokens.yaml` 与 binding projections；existing 含 `02-legacy-mapping.yaml`。精确值只在 `core/tokens.yaml`。
+3. Token Freeze / Projection → `core/tokens.yaml` 与 binding projections；existing 含 `02-legacy-mapping.yaml`。精确值只在 `core/tokens.yaml`。`bootstrap` 且 `source_origin.kind: blank`，或 `refactor` 且变更集合含视觉方向或页面组合：在写入共享精确值之前，先实现一条主流程代表页（含 empty 与 failure）。已安装 Apply 时读 `ui-template-apply/references/vendor/frontend-design/SKILL.md` 做 two-pass（color / type / layout / signature，然后写页面并修订）；未安装时按同样两步手写。在真实浏览器里改过该页源码至少一轮后，把要共享的精确值抽进 `core/tokens.yaml`。`template-package` 领养已有 core，不在此重做代表页。`iterate` 只动点名层。
 4. Primitives → `core/primitives.yaml` + binding `primitive_paths`。Stable Entity ID 状态表闭合，只消费 token。
 5. Patterns & Page Types → `core/patterns.yaml`、`core/page-types.yaml`、`core/layout.yaml`。含 Data-State、断点、运动白名单、禁止组合。
 6. Constitution & rules → `05-rules-receipt.md`。写入 `AGENTS.design.md` 与 `.cursor/rules/ui-design-system.mdc`（或等价可加载片段）。
 7. Gallery → `07-gallery.yaml`。应用内 `/dev/design-system` 或等价；Storybook 可选。
 8. Visual loop → `08-verification.json` + `evidence/`。真实浏览器；自愈最多 3 轮。无浏览器则停止。
-9. Freeze & Report → `design-system.yaml` 的 `status: frozen`。contract、binding、projection、Gallery 和 browser evidence digest 绑定当前本体。未迁完业务页仍可完成。
+9. Freeze & Report → `design-system.yaml` 的 `status: frozen`。contract、binding、projection、Gallery 和 browser evidence digest 绑定当前本体。全站其余页面未实现仍可完成；blank bootstrap 与含视觉的 refactor 须已有代表页及其修订。
 
 Validate/Freeze 前运行 runtime。本 skill 可单独安装：`check_active_instance.py` 是 discovery wrapper，会启动同目录 `shared_validate_design_system.py`。`UI_DESIGN_SYSTEM_VALIDATOR` 只能指向该共享实现；指向本 wrapper 或 Author wrapper 会以 `VALIDATOR_SELF_INVOCATION` 失败，不得 freeze。
 
@@ -63,7 +63,7 @@ python3 scripts/validate_design_system.py compute-digest .ui-template-design/des
 
 ## 完成定义
 
-可以声明完成，当且仅当：decision gates 均已选择或获得明确授权；UX Model 无 unresolved；`core/tokens.yaml` 已冻结且 projection 一致；Primitive/binding 路径闭合；声明的 Pattern/Page Type/layout 引用闭合；可执行规则已写入且本次扫描通过；Gallery 覆盖 stable IDs 且有 current-build 截图；视觉 loop 通过或 3 轮后升级人类；`design-system.yaml` 为 `frozen` 且 contract digest 一致，binding/projection digest 一致。高保真 Apply/Certification 只能消费这个 frozen Active Instance，并在认证 gate 记录三个 digest。`iterate` 另须：变更集合已声明、只动点名层、未声明路径保持原字节、扫描通过、freeze digest 已刷新。不得称为完成：只有 Markdown、只有 shadcn 初始化、只改了一个业务页、截图身份过期。全站未迁完不是失败。未装 Author/Apply、未用模板不是失败。
+可以声明完成，当且仅当：decision gates 均已选择或获得明确授权；UX Model 无 unresolved；`core/tokens.yaml` 已冻结且 projection 一致；Primitive/binding 路径闭合；声明的 Pattern/Page Type/layout 引用闭合；可执行规则已写入且本次扫描通过；Gallery 覆盖 stable IDs 且有 current-build 截图；视觉 loop 通过或 3 轮后升级人类；`design-system.yaml` 为 `frozen` 且 contract digest 一致，binding/projection digest 一致。高保真 Apply/Certification 只能消费这个 frozen Active Instance，并在认证 gate 记录三个 digest。`iterate` 另须：变更集合已声明、只动点名层、未声明路径保持原字节、扫描通过、freeze digest 已刷新。不得称为完成：只有 Markdown、只有 shadcn 初始化、只有页面而没有从该页抽出并冻结的系统、截图身份过期。blank bootstrap 与含视觉的 refactor 还须代表页已在浏览器中跑通，且该页源码在初稿之后有过修订。全站其余页面未实现不是失败。未装 Author/Apply、未用模板不是失败。
 
 ## 汇报
 
