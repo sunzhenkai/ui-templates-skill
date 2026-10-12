@@ -579,7 +579,7 @@ class ApplyStateTests(unittest.TestCase):
             (repo / "apps" / "legacy").mkdir(parents=True)
             (repo / "package.json").write_text("{}\n", encoding="utf-8")
             (repo / "apps" / "legacy" / "main.ts").write_text("export {}\n", encoding="utf-8")
-            app = repo / "apps" / "agent-web"
+            app = repo / "apps" / "web"
             app.mkdir(parents=True)
             (app / "src").mkdir()
             self.assertEqual("existing", detect_architecture_site(repo))
@@ -594,7 +594,7 @@ class ApplyStateTests(unittest.TestCase):
             (apply_root / "00-architecture.yaml").write_text(yaml.safe_dump({
                 "schema_version": 2,
                 "site": "existing",
-                "output_root": "apps/agent-web",
+                "output_root": "apps/web",
                 "confirmed_by_user": True,
                 "observed_stack": "repo package.json",
                 "layers": layers,

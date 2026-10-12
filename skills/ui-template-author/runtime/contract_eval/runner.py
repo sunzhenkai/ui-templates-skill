@@ -691,7 +691,7 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             (mono / "package.json").write_text("{}\n", encoding="utf-8")
             (mono / "apps" / "legacy" / "package.json").write_text("{}\n", encoding="utf-8")
             (mono / "apps" / "legacy" / "main.ts").write_text("export {}\n", encoding="utf-8")
-            nested = mono / "apps" / "agent-web"
+            nested = mono / "apps" / "web"
             nested.mkdir(parents=True)
             (nested / "src").mkdir()
             nested_empty = detect_architecture_site(nested)
@@ -701,7 +701,7 @@ def python_operation(root: Path, assertion: dict[str, Any]) -> dict[str, Any]:
             mono_apply.mkdir()
             (mono_apply / "00-architecture.yaml").write_text(
                 yaml.safe_dump(
-                    {**existing_arch, "output_root": "apps/agent-web"},
+                    {**existing_arch, "output_root": "apps/web"},
                     allow_unicode=True,
                     sort_keys=False,
                 ),

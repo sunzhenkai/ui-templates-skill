@@ -8,7 +8,7 @@ skill: ui-template-apply
 
 ## Context
 
-消费仓已有 workspace 与其他应用。用户要求按模板实现全新前端输出根（`agent-web`）。
+消费仓已有 workspace 与其他应用。用户要求按模板实现全新前端输出根（如 `apps/web`）。
 
 ## What happened
 

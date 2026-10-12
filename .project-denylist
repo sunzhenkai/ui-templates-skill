@@ -1,0 +1,14 @@
+# 禁止出现在 skills/** 中的具体项目名（大小写不敏感，按词边界匹配）。
+# 每行一个词；# 开头为注释。确需提及的行可加内联标记：project-name-allow
+# 检查脚本：scripts/check_no_project_names.py
+agent-web
+agentweb
+sage
+llmwiki
+misthub
+zilta
+willow
+data-heart
+solo-studio
+uder
+iship

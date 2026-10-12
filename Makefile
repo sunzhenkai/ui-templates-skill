@@ -5,7 +5,7 @@ REPORT_DIR ?= governance-reports
 DIST_DIR ?= dist
 PROMOTE_NAME ?= workbench-shell
 
-.PHONY: bootstrap validate test eval bundle promote
+.PHONY: bootstrap validate test eval bundle promote check-names
 
 bootstrap:
 	$(PYTHON) -m venv "$(GOVERNANCE_VENV)"
@@ -26,7 +26,11 @@ eval:
 	"$(GOVERNANCE_PYTHON)" scripts/run_design_system_evals.py \
 		--json-out "$(REPORT_DIR)/design-system-eval.json"
 
-bundle:
+# 具体项目名泄漏门禁（skills/**）；bundle 前置。
+check-names:
+	"$(GOVERNANCE_PYTHON)" scripts/check_no_project_names.py
+
+bundle: check-names
 	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py build --output-dir "$(DIST_DIR)"
 
 # candidate → templates → author catalog 晋级链；catalog --write 自带认证门禁。

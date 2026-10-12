@@ -85,7 +85,7 @@ python3 skills/ui-template-apply/runtime/check_template_apply_state.py artifact-
 ```yaml
 schema_version: 2
 site: greenfield
-output_root: apps/agent-web
+output_root: apps/web
 confirmed_by_user: true
 build_identity: build:<sha>
 layers: {language: typescript, ui_framework: react, bundler: vite, routing: react-router, styling: tailwind, state: zustand, data: tanstack-query, unit_test: vitest, browser: playwright, package_manager: pnpm, repo_shape: monorepo-app}
@@ -165,7 +165,7 @@ python3 scripts/check_template_apply_state.py checkpoint-init \
   [--fidelity <template/fidelity.yaml>] [--primitives <template/primitives.yaml>] \
   [--layout <template/layout.yaml>] [--expectations <template/measured-expectations.yaml>] \
   [--mode bootstrap] [--origin catalog] \
-  [--output-root apps/agent-web] [--contract-id <id> --contract-version <semver> --contract-digest <sha256>] \
+  [--output-root apps/web] [--contract-id <id> --contract-version <semver> --contract-digest <sha256>] \
   --source-identity <revision> --build-identity <build-id>
 python3 scripts/check_template_apply_state.py digest <yaml-or-json-or-md>
 python3 scripts/check_template_apply_state.py source-identity <project-root>
