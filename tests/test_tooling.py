@@ -30,6 +30,12 @@ class CheckRendered(unittest.TestCase):
             codes = {code for view in json.loads(out.read_text()) for code, _ in view["findings"]}
             return result.returncode, codes
 
+    def check_out(self, name: str) -> tuple[int, str]:
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "r.json"
+            result = run(APPLY / "scripts/check_rendered.py", (FIX / name).as_uri(), "--widths", "800", "--themes", "light", "--json", out, "--wait", "load")
+            return result.returncode, json.dumps(json.loads(out.read_text()), ensure_ascii=False)
+
     def test_bad_page(self):
         code, codes = self.check("rendered-bad.html")
         self.assertEqual(code, 1)
@@ -43,6 +49,28 @@ class CheckRendered(unittest.TestCase):
     def test_behavior_invariants(self):
         _, codes = self.check("rendered-behavior-bad.html")
         self.assertTrue({"R15", "R16"} <= codes, codes)
+
+    def test_collection_invariants(self):
+        code, out = self.check_out("rendered-collection-bad.html")
+        self.assertEqual(code, 1)
+        for needle in ["not sticky", "region top", "not opaque", "no load-more", "loaded 2 / total 8814"]:
+            self.assertIn(needle, out)
+
+    def test_unbounded_rows(self):
+        _, codes = self.check("rendered-rows-bad.html")
+        self.assertIn("R19", codes)
+
+    def test_reports_more(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("cr", APPLY / "scripts/check_rendered.py")
+        cr = importlib.util.module_from_spec(spec); spec.loader.exec_module(cr)
+        class R:
+            def __init__(self, url, body): self.url, self.body, self.headers = url, body, {"content-type": "application/json"}
+            def json(self): return self.body
+        self.assertEqual(cr.reports_more(R("/m?limit=50", {"items": [1] * 50, "nextCursor": "c"})), [50])
+        self.assertEqual(cr.reports_more(R("/t?limit=100", {"tasks": [1] * 100})), [100])
+        self.assertEqual(cr.reports_more(R("/t?limit=100", {"tasks": [1] * 7})), [])
+        self.assertEqual(cr.reports_more(R("/a", {"apps": [1, 2]})), [])
 
     def test_prose_tables_are_content(self):
         _, codes = self.check("rendered-prose.html")

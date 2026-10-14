@@ -1,7 +1,7 @@
 /**
- * AppShell — sidebar + inset canvas. The document is the single scroll owner: pages never set
- * their own viewport heights; PageHeader sticks to the top of the inset. The inset is the `frame` surface:
- * radius-xl + border, `overflow: clip` so headers and full-bleed children follow its corners.
+ * AppShell — sidebar + inset canvas, exactly one viewport high (h-dvh, overflow hidden): the document, body and
+ * canvas never scroll, so the canvas border, margin and radius are always visible. Scrolling happens only in the
+ * ScrollRegions that surfaces declare inside the canvas (see blocks/surfaces). The inset is the `frame` surface.
  * Collapses to icons on desktop, to a sheet on mobile (shadcn Sidebar behavior).
  */
 import * as React from "react"
@@ -37,7 +37,7 @@ export function AppShell({ brand, nav, footer, children }: {
   children: React.ReactNode
 }) {
   return (
-    <SidebarProvider className="bg-app-shell">
+    <SidebarProvider className="h-dvh overflow-hidden bg-app-shell">
       <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader>{brand}</SidebarHeader>
         <SidebarContent>
@@ -53,7 +53,7 @@ export function AppShell({ brand, nav, footer, children }: {
         {footer !== undefined ? <SidebarFooter>{footer}</SidebarFooter> : null}
         <SidebarRail />
       </Sidebar>
-      <SidebarInset data-surface="frame" className="min-w-0 overflow-clip [--frame-h:100svh] md:border md:[--frame-h:calc(100svh-1rem-2px)]">{children}</SidebarInset>
+      <SidebarInset data-surface="frame" className="min-h-0 min-w-0 overflow-hidden md:border">{children}</SidebarInset>
     </SidebarProvider>
   )
 }

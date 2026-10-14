@@ -7,7 +7,7 @@ python3 <skill>/scripts/review_visual.py compose --base http://localhost:5173 --
 ```
 
 - 每个 `pages:` 路由至少一个 URL；原型从 `ui-decisions.yaml → pages` 的 pattern 推出，或写 `路径=原型`。
-- 每个路由 4 张：1280 浅/深、768 浅，以及 `1280-light-end`（所有滚动区滚到底：看吸顶/吸底、谁在滚、最后一条是否完整）。
+- 每个路由 4 张：1280 浅/深、768 浅，以及 `1280-light-end`（所有滚动区滚到底：PageHeader/输入框不动、只有声明区域在滚、最后一条完整，**画布四周边框、圆角、外边距仍完整可见**）。
 - 产物：`.ui-review/<路由>-<视图>.png`（左：实现，右：参考），`.impl.png` 为实现原图；`ui-review.md` 每个路由一节。
   `.ui-review/` 加入 .gitignore，`ui-review.md` 提交。
 

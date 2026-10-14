@@ -37,8 +37,9 @@ description: 用 ui-template 风格包 + shadcn/ui 组件库 + 通用 blocks 和
 - **从原型开始**：复制 reference 页面，不从规则重新排版。
 - **组合优先**：先找 block，再找 shadcn 组件，最后才写新组件；不 fork shadcn 文件。
 - **语义而非数值**：列写 `kind/priority`，颜色写角色，状态写词表；具体数值只在 theme.css。
-- **滚动归属按原型**：文档页（列表、详情、表单、设置）由文档滚动；视口页（对话、主从）`Page layout="viewport"`，
-  文档和画布不滚动，只有声明的 `ScrollRegion` / 列表窗格滚动（check_rendered R15 用长内容压测）。
+- **单一滚动模型**：html/body 与画布（`frame`）永不滚动，画布边框、外边距、圆角始终可见；只有表面声明的
+  `data-scroll-region` 滚动——文档页 = 固定 PageHeader 下一个 main 区；设置 = 导航 + 内容两区；主从 = 列表 + 详情。
+  页面不写高度、不加 overflow 容器；区域是 `relative`，绝对定位后代（Radix 隐藏表单控件等）只撑区域不撑画布（check_rendered R15 对每个路由注入 3000px 压测）。
 - **默认即决定**：未被需求点名的决策用默认值，不逐条问用户。
 - **修在共享层**：同类问题出现两次，就改 block / pattern / theme，而不是第三次逐页修补。
 

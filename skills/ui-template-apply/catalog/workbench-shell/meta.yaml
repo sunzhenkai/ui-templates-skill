@@ -1,6 +1,6 @@
 schema: ui-template/v4
 name: workbench-shell
-version: 5.0.1
+version: 5.0.4
 summary: Neutral gray workbench with a restrained blue accent; sidebar shell, dense lists, quiet chrome.
 fits:
   - internal tools, admin consoles, operator / agent workbenches

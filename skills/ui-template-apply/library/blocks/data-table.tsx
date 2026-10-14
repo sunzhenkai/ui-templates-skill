@@ -6,7 +6,17 @@
  * - `meta.kind` decides alignment, font and truncation; `meta.priority` hides columns by the
  *   CONTAINER width (not the viewport); below `stackBelow` px the table becomes a two-line list;
  * - rows navigate through a real anchor (RowLink) or select with aria-selected — never <tr onClick>;
- * - the footer always tells how many rows are shown and offers "load more" when there are more;
+ * - `paging` is required: every collection declares whether the API returned all of it ("complete") or a
+ *   page. The footer never presents the loaded count as the total: it shows the server total, or
+ *   "loaded X / total Y", or "loaded X, more"; when there are more it renders a load-more button and an
+ *   auto-loading sentinel (IntersectionObserver) at the end of the rows;
+ * - more than VIRTUALIZE_ABOVE rows render windowed (TanStack Virtual over the enclosing [data-scroll-region]):
+ *   only visible rows (+overscan) are in the DOM, gaps become spacer rows, the focused row stays mounted,
+ *   rows keep aria-rowindex; `virtualize` overrides the threshold; scroll anchoring is off for windowed rows
+ *   (spacer changes would otherwise make the browser re-anchor and jump);
+ * - the header row is sticky inside the scroll region (opaque band, bottom rule drawn as a shadow so it
+ *   survives border-collapse); the table container clips horizontally instead of scrolling so the
+ *   region stays the only scroller;
  * - `frame="bordered"` (default) draws the region: outer border, radius, header band, row rules.
  *   Use `frame="flush"` only when the table already sits inside a bordered surface (Card, Sheet) — never both.
  */
@@ -15,6 +25,7 @@ import {
   flexRender, getCoreRowModel, getSortedRowModel, useReactTable,
   type ColumnDef, type Row, type RowData, type SortingState,
 } from "@tanstack/react-table"
+import { defaultRangeExtractor, useVirtualizer, type Range } from "@tanstack/react-virtual"
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react"
 import { cn } from "cn"
 import { Button } from "@/components/ui/button"
@@ -47,6 +58,76 @@ const kindClass: Record<ColumnKind, string> = {
 }
 const priorityClass = { 1: "", 2: "hidden @2xl/table:table-cell", 3: "hidden @4xl/table:table-cell" } as const
 
+export type Paging = "complete" | {
+  /** Server total when the API reports one. */
+  total?: number | undefined
+  /** The API reported more (a next cursor, or a full page at the requested limit). */
+  hasMore: boolean
+  loadingMore?: boolean | undefined
+  onLoadMore: () => void
+  /** No more can be loaded but the API capped the result (full page at its maximum limit). */
+  capped?: boolean | undefined
+}
+
+/** Limit-based paging for APIs without a cursor: a full page at the requested limit means "more". */
+export function useLimitPaging(step: number, max: number) {
+  const [limit, setLimit] = React.useState(step)
+  return {
+    limit,
+    paging: (loaded: number, loading = false): Paging => ({
+      hasMore: loaded >= limit && limit < max, capped: loaded >= max, loadingMore: loading,
+      onLoadMore: () => setLimit((value) => Math.min(value + step, max)),
+    }),
+  }
+}
+
+/** Row count above which DataTable windows its rows (proposal rule: > 200 rows virtualize). */
+export const VIRTUALIZE_ABOVE = 200
+
+/** Window `count` rows inside the enclosing scroll region. Returns the slices to render with the gap before each. */
+function useRowWindow(count: number, enabled: boolean, estimate: number, anchor: React.RefObject<HTMLElement | null>) {
+  const [region, setRegion] = React.useState<HTMLElement | null>(null)
+  const [margin, setMargin] = React.useState(0)
+  const focused = React.useRef<number | null>(null)
+  React.useLayoutEffect(() => {
+    const el = anchor.current
+    const scroller = el?.closest<HTMLElement>("[data-scroll-region]") ?? null
+    setRegion(scroller)
+    if (el && scroller) setMargin(el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop)
+  }, [anchor, enabled, count])
+  const virtualizer = useVirtualizer({
+    count, enabled: enabled && region !== null, estimateSize: () => estimate, overscan: 8, scrollMargin: margin,
+    getScrollElement: () => region,
+    rangeExtractor: (range: Range) => {
+      const out = defaultRangeExtractor(range)
+      const f = focused.current
+      return f !== null && f < count && !out.includes(f) ? [...out, f].sort((a, b) => a - b) : out
+    },
+  })
+  if (!enabled || region === null) return null
+  const items = virtualizer.getVirtualItems()
+  let end = margin
+  const slices = items.map((item) => { const gap = item.start - end; end = item.end; return { index: item.index, gap } })
+  return {
+    slices, after: virtualizer.getTotalSize() + margin - end, measure: virtualizer.measureElement,
+    onFocusRow: (index: number) => { focused.current = index },
+  }
+}
+
+function LoadMoreSentinel({ onLoadMore, disabled }: { onLoadMore: () => void; disabled: boolean }) {
+  const ref = React.useRef<HTMLDivElement>(null)
+  const latest = React.useRef(onLoadMore)
+  latest.current = onLoadMore
+  React.useEffect(() => {
+    const node = ref.current
+    if (node === null || disabled || typeof IntersectionObserver === "undefined") return
+    const observer = new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) latest.current() }, { rootMargin: "200px" })
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [disabled])
+  return <div ref={ref} data-load-more="sentinel" aria-hidden="true" className="h-px" />
+}
+
 export type DataTableProps<T> = {
   /** Accessible name of the table (rendered as an sr-only caption). */
   label: string
@@ -60,11 +141,8 @@ export type DataTableProps<T> = {
   /** Master-detail selection instead of navigation. */
   selectedId?: string | undefined
   onSelect?: ((row: T) => void) | undefined
-  /** Server total when known; shown as "shown / total". */
-  total?: number | undefined
-  hasMore?: boolean | undefined
-  loadingMore?: boolean | undefined
-  onLoadMore?: (() => void) | undefined
+  /** How much of the collection is loaded. "complete" only when the API returned the whole collection. */
+  paging: Paging
   /**
    * Server/URL-owned sort. When `sorting` is passed the table is controlled and does not reorder rows
    * (the server returns them sorted); omit it and sorting is client-side over the loaded rows.
@@ -75,12 +153,14 @@ export type DataTableProps<T> = {
   frame?: "bordered" | "flush" | undefined
   /** Container width (px) under which rows render as a two-line list. */
   stackBelow?: number | undefined
+  /** Window the rows; default: on when more than VIRTUALIZE_ABOVE rows. */
+  virtualize?: boolean | undefined
   className?: string | undefined
 }
 
 export function DataTable<T>({
   label, columns, data, getRowId, rowHref, rowLabel, selectedId, onSelect,
-  total, hasMore = false, loadingMore = false, onLoadMore, sorting: controlled, onSortingChange, frame = "bordered", stackBelow = 480, className,
+  paging, sorting: controlled, onSortingChange, frame = "bordered", stackBelow = 480, virtualize, className,
 }: DataTableProps<T>) {
   const [local, setLocal] = React.useState<SortingState>([])
   const sorting = controlled ?? local
@@ -97,14 +177,22 @@ export function DataTable<T>({
   const [ref, width] = useContainerWidth<HTMLDivElement>()
   const stacked = width > 0 && width < stackBelow
   const rows = table.getRowModel().rows
+  const bodyRef = React.useRef<HTMLElement | null>(null)
+  const win = useRowWindow(rows.length, virtualize ?? rows.length > VIRTUALIZE_ABOVE, stacked ? 52 : 40, bodyRef)
+  /** Rows to render, each with the spacer height before it (all rows, no spacers, when not windowed). */
+  const visible: { row: Row<T>; pos: number; gap: number }[] = win === null ? rows.map((row, pos) => ({ row, pos, gap: 0 }))
+    : win.slices.flatMap(({ index, gap }) => (rows[index] ? [{ row: rows[index], pos: index, gap }] : []))
+  const after = win?.after ?? 0
 
-  const rowProps = (row: Row<T>) => {
+  const rowProps = (row: Row<T>, pos: number) => {
     const selected = selectedId !== undefined && row.id === selectedId
     return {
       "data-state": selected ? "selected" : undefined,
       // rows (table) support aria-selected; list items do not, so the stacked list uses aria-current
       ...(onSelect === undefined ? {} : stacked ? { "aria-current": selected ? ("true" as const) : undefined } : { "aria-selected": selected }),
       tabIndex: onSelect !== undefined ? 0 : undefined,
+      "data-index": pos, ref: win?.measure,
+      onFocus: win === null ? undefined : () => win.onFocusRow(pos),
       onKeyDown: onSelect !== undefined ? (event: React.KeyboardEvent) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onSelect(row.original) } } : undefined,
       onClick: onSelect !== undefined ? () => onSelect(row.original) : undefined,
       className: cn("relative", (rowHref !== undefined || onSelect !== undefined) && "cursor-pointer", onSelect !== undefined && "focus-visible:bg-muted/50 focus-visible:outline-none"),
@@ -118,19 +206,23 @@ export function DataTable<T>({
   }
 
   const bordered = frame === "bordered"
+  const more = paging === "complete" ? null : paging
+  const total = paging === "complete" ? data.length : paging.total
   return (
     <div ref={ref} data-surface={bordered ? "panel" : undefined} className={cn("@container/table min-w-0", bordered && "overflow-clip rounded-lg border bg-card", className)}>
       {stacked ? (
-        <ul aria-label={label} className={cn("divide-y", !bordered && "border-y")}>
-          {rows.map((row) => {
+        <ul ref={(el) => { bodyRef.current = el }} aria-label={label} className={cn("divide-y", !bordered && "border-y", win !== null && "[overflow-anchor:none]")}>
+          {visible.map(({ row, pos, gap }) => {
             const cells = row.getVisibleCells()
             const primary = cells.find((cell) => cell.column.columnDef.meta?.kind === "primary") ?? cells[0]
             if (primary === undefined) return null
             const actions = cells.find((cell) => cell.column.columnDef.meta?.kind === "actions")
             const meta = cells.filter((cell) => cell !== primary && cell !== actions && (cell.column.columnDef.meta?.priority ?? 1) === 1)
-            const props = rowProps(row)
+            const props = rowProps(row, pos)
             return (
-              <li key={row.id} {...props} className={cn(props.className, "flex items-center gap-3 px-3 py-2 hover:bg-muted/50 data-[state=selected]:bg-muted")}>
+              <React.Fragment key={row.id}>
+              {gap > 0 ? <li aria-hidden="true" data-spacer="" style={{ height: gap }} /> : null}
+              <li {...props} className={cn(props.className, "flex items-center gap-3 px-3 py-2 hover:bg-muted/50 data-[state=selected]:bg-muted")}>
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-medium">{flexRender(primary.column.columnDef.cell, primary.getContext())}</div>
                   {meta.length > 0 ? (
@@ -142,13 +234,15 @@ export function DataTable<T>({
                 {actions !== undefined ? <div className="relative z-10 shrink-0">{flexRender(actions.column.columnDef.cell, actions.getContext())}</div> : null}
                 {linkFor(row)}
               </li>
+              </React.Fragment>
             )
           })}
+          {after > 0 ? <li aria-hidden="true" data-spacer="" style={{ height: after }} /> : null}
         </ul>
       ) : (
-        <Table>
+        <Table containerClassName="overflow-x-clip" aria-rowcount={rows.length + 1}>
           <caption className="sr-only">{label}</caption>
-          <TableHeader>
+          <TableHeader data-sticky="header" className="sticky top-0 z-20 bg-card [&_tr]:border-b-0">
             {table.getHeaderGroups().map((group) => (
               <TableRow key={group.id} className={cn("hover:bg-transparent", bordered && "bg-muted/50")}>
                 {group.headers.map((header) => {
@@ -157,7 +251,7 @@ export function DataTable<T>({
                   const sorted = header.column.getIsSorted()
                   return (
                     <TableHead key={header.id} aria-sort={sorted === "asc" ? "ascending" : sorted === "desc" ? "descending" : undefined}
-                      className={cn("h-9 text-xs font-medium text-muted-foreground", (kind === "number" || kind === "time" || kind === "actions") && "text-right", priorityClass[meta?.priority ?? 1])}>
+                      className={cn("h-9 text-xs font-medium text-muted-foreground shadow-[inset_0_-1px_0_var(--border)]", (kind === "number" || kind === "time" || kind === "actions") && "text-right", priorityClass[meta?.priority ?? 1])}>
                       {header.isPlaceholder ? null : header.column.getCanSort() ? (
                         <button type="button" onClick={header.column.getToggleSortingHandler()} className="-mx-1 inline-flex items-center gap-1 rounded-sm px-1 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none">
                           {flexRender(header.column.columnDef.header, header.getContext())}
@@ -170,9 +264,11 @@ export function DataTable<T>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id} {...rowProps(row)}>
+          <TableBody ref={(el) => { bodyRef.current = el }} className={cn(win !== null && "[overflow-anchor:none]")}>
+            {visible.map(({ row, pos, gap }) => (
+              <React.Fragment key={row.id}>
+              {gap > 0 ? <tr aria-hidden="true" data-spacer="" style={{ height: gap }} /> : null}
+              <TableRow aria-rowindex={pos + 2} {...rowProps(row, pos)}>
                 {row.getVisibleCells().map((cell, index) => {
                   const meta = cell.column.columnDef.meta
                   const kind = meta?.kind ?? "text"
@@ -184,14 +280,19 @@ export function DataTable<T>({
                   )
                 })}
               </TableRow>
+              </React.Fragment>
             ))}
+            {after > 0 ? <tr aria-hidden="true" data-spacer="" style={{ height: after }} /> : null}
           </TableBody>
         </Table>
       )}
-      <div className={cn("flex items-center justify-between gap-3 px-3 py-2 text-xs text-muted-foreground", bordered && "border-t")}>
-        <span role="status">{vocab.copy.count(rows.length, total)}</span>
-        {hasMore && onLoadMore !== undefined ? (
-          <Button variant="ghost" size="sm" onClick={onLoadMore} disabled={loadingMore}>{vocab.copy.loadMore}</Button>
+      {more !== null && more.hasMore ? <LoadMoreSentinel onLoadMore={more.onLoadMore} disabled={more.loadingMore === true} /> : null}
+      <div data-slot="collection-footer" data-loaded={rows.length} data-total={total} data-has-more={more?.hasMore === true ? "true" : undefined}
+        data-capped={more?.capped === true ? "true" : undefined}
+        className={cn("flex items-center justify-between gap-3 px-3 py-2 text-xs text-muted-foreground", bordered && "border-t")}>
+        <span role="status">{vocab.copy.count(rows.length, { total, more: more?.hasMore === true, capped: more?.capped === true })}</span>
+        {more !== null && more.hasMore ? (
+          <Button data-load-more="button" variant="ghost" size="sm" onClick={more.onLoadMore} disabled={more.loadingMore === true}>{more.loadingMore === true ? vocab.copy.loadingMore : vocab.copy.loadMore}</Button>
         ) : null}
       </div>
     </div>

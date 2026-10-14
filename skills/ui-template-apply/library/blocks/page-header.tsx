@@ -37,7 +37,7 @@ export function PageHeader({
   const inline = wide ? safe.slice(0, 2) : []
   const overflow = [...safe.slice(inline.length), ...actions.filter((action) => action.destructive)]
   return (
-    <header ref={ref} className={cn("@container/header sticky top-0 z-20 flex h-12 shrink-0 items-center gap-2 border-b bg-background/95 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/80", className)}>
+    <header ref={ref} className={cn("@container/header flex h-12 shrink-0 items-center gap-2 border-b bg-background px-3", className)}>
       {sidebarTrigger ? <SidebarTrigger className="-ml-1" /> : null}
       {leading}
       <Breadcrumb className="min-w-0 flex-1">

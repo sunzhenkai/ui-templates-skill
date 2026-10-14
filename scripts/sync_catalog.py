@@ -18,6 +18,11 @@ DST = ROOT / "skills/ui-template-apply/catalog"
 FILES = ("meta.yaml", "theme.css", "CHANGELOG.md")
 
 
+def files(pkg: Path) -> list[str]:
+    """Shipped files: FILES plus reference screenshots."""
+    return [n for n in FILES if (pkg / n).is_file()] + sorted(f"reference/{p.name}" for p in (pkg / "reference").glob("*.png"))
+
+
 def packages() -> list[Path]:
     return sorted(p for p in SRC.iterdir() if (p / "meta.yaml").is_file())
 
@@ -26,10 +31,13 @@ def diff() -> list[str]:
     out = []
     names = {p.name for p in packages()}
     for pkg in packages():
-        for name in FILES:
+        want = files(pkg)
+        for name in want:
             a, b = pkg / name, DST / pkg.name / name
-            if a.is_file() and (not b.is_file() or not filecmp.cmp(a, b, shallow=False)):
+            if not b.is_file() or not filecmp.cmp(a, b, shallow=False):
                 out.append(f"{pkg.name}/{name}")
+        have = (DST / pkg.name / "reference").glob("*.png") if (DST / pkg.name).is_dir() else []
+        out += [f"{pkg.name}/reference/{p.name} (not in templates)" for p in have if f"reference/{p.name}" not in want]
     for extra in (p for p in DST.iterdir() if p.is_dir() and p.name not in names) if DST.is_dir() else []:
         out.append(f"{extra.name}/ (not in templates)")
     return out
@@ -48,10 +56,9 @@ def main(argv: list[str] | None = None) -> int:
     if DST.is_dir():
         shutil.rmtree(DST)
     for pkg in packages():
-        (DST / pkg.name).mkdir(parents=True)
-        for name in FILES:
-            if (pkg / name).is_file():
-                shutil.copy2(pkg / name, DST / pkg.name / name)
+        for name in files(pkg):
+            (DST / pkg.name / name).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(pkg / name, DST / pkg.name / name)
     print(f"synced {len(packages())} package(s) into {DST.relative_to(ROOT)}")
     return 0
 

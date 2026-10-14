@@ -26,7 +26,7 @@
         {
           "path": "blocks/app-errors.tsx",
           "target": "src/components/blocks/app-errors.tsx",
-          "sha256": "eadc8180c399c92d311e930707f2b835de4cc00e70c61b235a12474e8f7a9557"
+          "sha256": "f358545efb509d97c4c95323e09f3567cc70245b0764be5b7bde97c293cd8f3a"
         }
       ],
       "dependencies": [
@@ -36,6 +36,7 @@
       "registryDependencies": [
         "blocks/router",
         "blocks/state-boundary",
+        "blocks/surfaces",
         "ui/button",
         "ui/empty",
         "vocab"
@@ -47,7 +48,7 @@
         {
           "path": "blocks/app-shell.tsx",
           "target": "src/components/blocks/app-shell.tsx",
-          "sha256": "476f35a448a11e90ad1f0079730fa8f44a28782f267dd1e5c03b59bf6122733d"
+          "sha256": "efb1a007d697bb87c9bfa53e64762c68bc80e89198143e237d60a375339d51b4"
         }
       ],
       "dependencies": [
@@ -98,7 +99,7 @@
         {
           "path": "blocks/conversation.tsx",
           "target": "src/components/blocks/conversation.tsx",
-          "sha256": "a81c17a22fd844ed9222895a50e4b7e91d129c8e1b76b41cd9e0ac1f180653e0"
+          "sha256": "ea8bac191cd84c5d4a92dea5f6b27854fdf7987de9808c87855ac63fb42cec65"
         }
       ],
       "dependencies": [
@@ -115,11 +116,12 @@
         {
           "path": "blocks/data-table.tsx",
           "target": "src/components/blocks/data-table.tsx",
-          "sha256": "90a04e5ec3918d1561f87cbf64c65c9affab0920a7e5c669315b41edf52e1a87"
+          "sha256": "528c1ab2774bd93f6a7253b1c721e0ee7402439efa896c9931d4b87912409c41"
         }
       ],
       "dependencies": [
         "@tanstack/react-table@^8",
+        "@tanstack/react-virtual@^3",
         "cn@^0.4",
         "lucide-react@^1"
       ],
@@ -154,7 +156,7 @@
         {
           "path": "blocks/list-detail.tsx",
           "target": "src/components/blocks/list-detail.tsx",
-          "sha256": "2e17335f66bbb2abe20026e19b6122a109966497f60a82c6f684a264591c792e"
+          "sha256": "bf185113d3049d94488018b815d37bd6b645b4d42e337ad5c366c5f62483de7b"
         }
       ],
       "dependencies": [
@@ -230,7 +232,7 @@
         {
           "path": "blocks/page-header.tsx",
           "target": "src/components/blocks/page-header.tsx",
-          "sha256": "1f0cc824dc9ca8e399c316f51befade2c1f63b6888b6496ef79857dff6a3ec12"
+          "sha256": "869b0ce684b67a908c3744dc6314b1ed4b8012ce22e68f8587de39b8d3af9945"
         }
       ],
       "dependencies": [
@@ -281,7 +283,7 @@
         {
           "path": "blocks/section-nav.tsx",
           "target": "src/components/blocks/section-nav.tsx",
-          "sha256": "c97c639e4e0348093ccc90519e2a1945913c3d1b4a20c7f2741e14e099c4f9ae"
+          "sha256": "89068547f63524d3fec46668db3e0802774331f4ddc58f043a663f7b9d30ee3e"
         }
       ],
       "dependencies": [
@@ -335,7 +337,7 @@
         {
           "path": "blocks/surfaces.tsx",
           "target": "src/components/blocks/surfaces.tsx",
-          "sha256": "ea2953f2a3996162db5389be344e30788629559d548c117e4f2a5dec3cb45d1e"
+          "sha256": "880d5068532570f3e2dadab40f193088fc82b7dc09c13973c06b66fd268ea29b"
         }
       ],
       "dependencies": [
@@ -395,7 +397,7 @@
         {
           "path": "blocks/vocab.ts",
           "target": "src/lib/vocab.ts",
-          "sha256": "a8ead46ad62a5fb6dbe4643334dcfc86d0f39af7fcd48d869d5fb39f1910d69d"
+          "sha256": "254fb4bd75b1c86d266ce612e5bb3860335f4168bf622fde6f17a489c414c909"
         }
       ],
       "dependencies": [],
@@ -407,7 +409,7 @@
         {
           "path": "lint/ui-template.mjs",
           "target": "eslint/ui-template.mjs",
-          "sha256": "3c5d6f00f41d6511a5c96237f77e5c50566f81cb2c5272d6b5396320aef0e0fa"
+          "sha256": "63db50c1f84f86857599aeeb0c6b3af9279f455f870a1dba7d6490fba9cb7997"
         }
       ],
       "dependencies": [],
@@ -975,7 +977,7 @@
         {
           "path": "shadcn/ui/table.tsx",
           "target": "src/components/ui/table.tsx",
-          "sha256": "749b0501e97591f8d7c9ef81366d636e4b47857a15a28e6cf3b87841232e74bf"
+          "sha256": "9e3f07b92f8799bedaa57e6c3c248b58c9659f6040012e975a8723b9b40e5e8f"
         }
       ],
       "dependencies": [

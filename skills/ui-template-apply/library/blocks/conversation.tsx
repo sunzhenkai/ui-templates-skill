@@ -73,7 +73,7 @@ export function TranscriptEmpty({ children }: { children: React.ReactNode }) {
   return <li className="py-12 text-center text-sm text-muted-foreground">{children}</li>
 }
 
-/** Composer dock: last child of a viewport Page, below the ScrollRegion; same width as the transcript. */
+/** Composer dock: last child of a `fill` Page, below the transcript ScrollRegion; same width as the transcript. */
 export function ComposerDock({ width = "reading", children }: { width?: "reading" | "form" | undefined; children: React.ReactNode }) {
   return (
     <div className="shrink-0 bg-background px-4 pt-2 pb-4">

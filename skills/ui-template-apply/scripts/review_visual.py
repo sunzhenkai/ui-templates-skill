@@ -30,7 +30,7 @@ PATTERN_TO_ARCHETYPE = {
     "conversation": "list-detail", "list-detail": "list-detail", "log-viewer": "detail", "empty": "empty", "state": "empty",
 }
 # (width, theme, state): "end" = every scroller (document and [data-scroll-region]) scrolled to the bottom —
-# catches what a top-of-page shot cannot: sticky/dock behaviour, who scrolls, the last row/message.
+# catches what a top-of-page shot cannot: header/dock stay put, only declared regions scroll, canvas border still intact, the last row/message.
 VIEWS = [(1280, "light", "top"), (1280, "dark", "top"), (768, "light", "top"), (1280, "light", "end")]
 HEIGHT = 800
 CHECKLIST = [
@@ -42,7 +42,8 @@ CHECKLIST = [
     "density: row height, control size and font size match reference",
     "contrast: borders, separators and muted text visible in light and dark",
     "truncation: nothing clipped or overflowing; long text truncates with ellipsis",
-    "scroll (-end shot): header and dock stay put, only the declared region moved, last item fully visible",
+    "scroll (-end shot): header and dock stay put, only the declared region moved, last item fully visible, canvas border/radius/margin intact on all four sides, table header stuck to the region top",
+    "collection footer: the count is the server total or 'loaded n / total m', never the loaded count posing as the total",
     "controls: typed text is foreground colour, placeholder readable, only disabled controls are dimmed",
 ]
 
@@ -52,6 +53,8 @@ def shoot(page, url: str, width: int, theme: str, out: Path, state: str = "top")
     page.goto(url, wait_until="networkidle")
     page.evaluate(f"document.documentElement.classList.toggle('dark', {'true' if theme == 'dark' else 'false'})")
     if state == "end":
+        # detach auto-load sentinels first so the shot shows the real footer (count + load more), not an endless feed
+        page.evaluate("document.querySelectorAll('[data-load-more=sentinel]').forEach((el) => el.remove())")
         page.evaluate("for (const el of [document.scrollingElement, ...document.querySelectorAll('[data-scroll-region]')]) el.scrollTop = el.scrollHeight")
     page.wait_for_timeout(250)
     page.screenshot(path=str(out))

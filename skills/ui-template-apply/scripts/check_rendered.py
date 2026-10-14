@@ -17,12 +17,21 @@ Codes (error unless noted):
   R13 seam gap: a split side column does not span its split, or the split does not reach the frame bottom
       / start right under the page header (dividers must meet the edges they separate)
   R14 sibling panels in one column do not share left/right edges
-  R15 scroll ownership: on a viewport page ([data-layout=viewport]) the document or frame scrolls, or a
-      [data-scroll-region] grows instead of scrolling when stressed with long content
+  R15 single scroll model (every page): with 3000px injected into every [data-scroll-region], the document,
+      body or canvas frame is scrollable, any undeclared scroller scrolls, the frame leaves the viewport, or a
+      region grows instead of scrolling
   R16 form control: enabled input text < 4.5 (counting ancestor opacity) or placeholder < 3.0
+  R17 sticky table header: a table header inside a [data-scroll-region] is not sticky, or, with the table
+      longer than the region and scrolled past its top, the header leaves a gap under the region top, is not
+      opaque, or rows show through it (checked per theme)
+  R19 row window: a collection footer reports more than 200 loaded rows but more than 200 rows are in the DOM
+      (DataTable must virtualize; spacer rows [data-spacer] do not count)
+  R18 collection count: a collection footer ([data-slot=collection-footer]) that reports more rows has no
+      load-more control or sentinel, or knows a server total different from the loaded count but does not show both; or an API response on the page reports
+      more (nextCursor / hasMore, or a full page at the requested `limit`) while the footer showing that page claims it is complete
 R08 ignores HTTP 404 resource errors on pages that render the not-found state ([data-state=not-found]).
 Theme is switched by toggling the `dark` class on <html> (blocks/theme contract).
-Elements inside [role=log], [role=dialog], pre, textarea, [data-scroll-region] or [data-scroll-ok] may scroll.
+Declared [data-scroll-region] elements scroll; elements inside [role=log], [role=dialog], pre, textarea or [data-scroll-ok] may too.
 """
 from __future__ import annotations
 
@@ -43,13 +52,13 @@ PROBE = r"""
     return `${el.tagName.toLowerCase()}${id}${cls}${text ? ` "${text}"` : ''}`
   }
   const visible = (el) => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' }
-  const exempt = (el) => el.closest('[role=log],[role=dialog],[role=alertdialog],[role=listbox],[role=menu],pre,textarea,[data-scroll-ok],[data-scroll-region],[data-sidebar=content],[data-radix-popper-content-wrapper]')
+  const exempt = (el) => el.closest('[role=log],[role=dialog],[role=alertdialog],[role=listbox],[role=menu],pre,textarea,[data-scroll-ok],[data-sidebar=content],[data-radix-popper-content-wrapper]')
   const doc = document.documentElement
   if (doc.scrollWidth > doc.clientWidth + 1) out.push(['R01', `document scrollWidth ${doc.scrollWidth} > ${doc.clientWidth}`])
   const all = Array.from(document.body.querySelectorAll('*'))
   for (const el of all) {
     const s = getComputedStyle(el)
-    if ((s.overflowY === 'auto' || s.overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 1 && !exempt(el) && visible(el))
+    if ((s.overflowY === 'auto' || s.overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 1 && !el.hasAttribute('data-scroll-region') && !exempt(el) && visible(el))
       out.push(['R02', desc(el)])
   }
   for (const el of all) {
@@ -166,18 +175,25 @@ PROBE = r"""
     const stacked = rs.filter((q) => rs.every((o) => o === q || Math.abs(o.left - q.left) < q.width / 2))
     if (stacked.length > 1 && stacked.some((q) => Math.abs(q.left - stacked[0].left) > 1 || Math.abs(q.right - stacked[0].right) > 1)) out.push(['R14', `${stacked.length} stacked panels with different edges`])
   }
-  // R15 scroll ownership: a viewport page never scrolls the document or the frame; its declared regions do,
-  // even with long content (stress: 3000px appended to every region).
-  const vframe = document.querySelector('[data-surface=frame]')
-  if (document.querySelector('[data-layout=viewport]')) {
+  // R15 single scroll model: html/body and the canvas frame never scroll; only [data-scroll-region] elements do.
+  // Stress: 3000px appended to every region, then every scroller pushed to the bottom.
+  {
     const regions = Array.from(document.querySelectorAll('[data-scroll-region]')).filter(visible)
+    if (regions.length === 0) out.push(['R15', 'no [data-scroll-region] on the page'])
     const fill = regions.map((r) => { const d = document.createElement('div'); d.style.height = '3000px'; d.style.flexShrink = '0'; r.appendChild(d); return d })
-    const se = document.scrollingElement
-    if (se.scrollHeight > innerHeight + 1) out.push(['R15', `viewport page: document scrolls (${se.scrollHeight} > ${innerHeight}) under long content`])
-    if (vframe && vframe.scrollHeight > vframe.clientHeight + 1 && getComputedStyle(vframe).overflowY !== 'visible') out.push(['R15', 'viewport page: frame scrolls'])
-    for (const r of regions) if (r.scrollHeight <= r.clientHeight + 1) out.push(['R15', `region ${r.dataset.scrollRegion} does not scroll its long content (grows instead)`])
+    const vframe = document.querySelector('[data-surface=frame]')
+    const fixed = [document.scrollingElement, document.body, ...(vframe ? [vframe] : [])]
+    for (const el of fixed) if (el.scrollHeight > el.clientHeight) out.push(['R15', `${el === vframe ? 'canvas frame' : el.tagName.toLowerCase()} is scrollable (${el.scrollHeight} > ${el.clientHeight})`])
+    const scrollers = [document.scrollingElement, ...Array.from(document.querySelectorAll('*')).filter((el) => /(auto|scroll)/.test(getComputedStyle(el).overflowY) || el === vframe || el === document.body)]
+    for (const el of scrollers) el.scrollTop = 1e6
+    for (const el of scrollers) {
+      if (el.scrollTop <= 0 || el.hasAttribute('data-scroll-region') || (el !== document.scrollingElement && exempt(el))) continue
+      out.push(['R15', `undeclared scroller ${el === document.scrollingElement ? 'document' : desc(el).slice(0, 60)} scrolled ${Math.round(el.scrollTop)}px`])
+    }
+    if (vframe) { const r = vframe.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight + 0.5) out.push(['R15', `canvas frame not inside the viewport after scrolling (${Math.round(r.top)}..${Math.round(r.bottom)} of ${innerHeight})`]) }
+    for (const el of regions) if (el.scrollHeight <= el.clientHeight + 1) out.push(['R15', `region ${el.dataset.scrollRegion} grows instead of scrolling`])
+    for (const el of scrollers) el.scrollTop = 0
     fill.forEach((d) => d.remove())
-    if (regions.length === 0) out.push(['R15', 'viewport page without [data-scroll-region]'])
   }
   // R16 form-control colours: typed text >= 4.5 against the control background including every ancestor's
   // opacity (an enabled control must never be dimmed); placeholder >= 3.0 (a hint, but readable).
@@ -189,10 +205,61 @@ PROBE = r"""
     if (v < 4.5) out.push(['R16', `${desc(el)} text ${v.toFixed(2)} < 4.5 (opacity ${opacityOf(el).toFixed(2)})`])
     if (el.placeholder) { const ph = ratioOf(getComputedStyle(el, '::placeholder').color, el, bg); if (ph < 3) out.push(['R16', `${desc(el)} placeholder ${ph.toFixed(2)} < 3`]) }
   }
+  // R17 sticky header: stress with 60 cloned rows, scroll the region past the table top.
+  for (const thead of document.querySelectorAll('[data-scroll-region] table thead')) {
+    if (!visible(thead) || thead.closest('[data-prose]')) continue
+    const region = thead.closest('[data-scroll-region]')
+    if (getComputedStyle(thead).position !== 'sticky') { out.push(['R17', `table header in region ${region.dataset.scrollRegion} is not sticky`]); continue }
+    const body = thead.parentElement.querySelector('tbody'); const row = body && body.querySelector('tr')
+    if (!row) continue
+    const clones = Array.from({ length: 60 }, () => body.appendChild(row.cloneNode(true)))
+    const before = region.scrollTop
+    region.scrollTop += thead.parentElement.getBoundingClientRect().top - region.getBoundingClientRect().top + 300
+    const h = thead.getBoundingClientRect(), rt = region.getBoundingClientRect()
+    if (Math.abs(h.top - rt.top) > 1) out.push(['R17', `stuck header is ${Math.round(h.top - rt.top)}px from the region top`])
+    let clear = 1
+    for (let n = thead.querySelector('th'); n && n !== region; n = n.parentElement) { clear *= 1 - parseAlpha(getComputedStyle(n).backgroundColor); if (n === thead.parentElement.parentElement) break }
+    if (clear > 0.01) out.push(['R17', `stuck header background is not opaque (${((1 - clear) * 100).toFixed(0)}%)`])
+    const hit = document.elementFromPoint(h.left + h.width / 2, h.top + h.height / 2)
+    if (hit && !thead.contains(hit)) out.push(['R17', `rows show over the stuck header (${desc(hit).slice(0, 50)})`])
+    clones.forEach((c) => c.remove()); region.scrollTop = before
+  }
+  // R18 collection footers
+  for (const f of document.querySelectorAll('[data-slot=collection-footer]')) {
+    const loaded = f.dataset.loaded, total = f.dataset.total, text = f.textContent || ''
+    const root = f.closest('[data-surface=panel]') || f.parentElement
+    if (f.dataset.hasMore === 'true' && !root.querySelector('[data-load-more]')) out.push(['R18', 'footer reports more rows but no load-more control or sentinel'])
+    if (total !== undefined && total !== loaded && !(text.includes(loaded) && text.includes(total))) out.push(['R18', `footer "${text.trim()}" must show loaded ${loaded} / total ${total}`])
+  }
+  // R19 bounded DOM rows for large collections
+  for (const f of document.querySelectorAll('[data-slot=collection-footer]')) {
+    const root = f.closest('[data-surface=panel]') || f.parentElement
+    const dom = root.querySelectorAll('tbody > tr:not([data-spacer]), ul > li:not([data-spacer])').length
+    if (Number(f.dataset.loaded) > 200 && dom > 200) out.push(['R19', `${dom} rows in the DOM for ${f.dataset.loaded} loaded (virtualize above 200)`])
+  }
   return out
 }
 """
 WARN = {"R09", "R11"}
+
+
+def reports_more(response) -> list[int]:
+    """Lengths of the item arrays in an API JSON response that says the collection continues
+    (nextCursor / hasMore, or a full page at the requested `limit`); [] otherwise."""
+    from urllib.parse import parse_qs, urlparse
+    try:
+        if "json" not in (response.headers.get("content-type") or ""):
+            return []
+        body = response.json()
+    except Exception:
+        return []
+    if not isinstance(body, dict):
+        return []
+    lengths = [len(v) for v in body.values() if isinstance(v, list) and v]
+    if body.get("nextCursor") or body.get("next_cursor") or body.get("hasMore") is True:
+        return lengths
+    limit = parse_qs(urlparse(response.url).query).get("limit", [None])[0]
+    return [n for n in lengths if limit and limit.isdigit() and n == int(limit)]
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -215,6 +282,8 @@ def main(argv: list[str] | None = None) -> int:
                     errors: list[str] = []
                     page.on("console", lambda m, errors=errors: errors.append(m.text) if m.type == "error" else None)
                     page.on("pageerror", lambda e, errors=errors: errors.append(str(e)))
+                    responses: list = []  # read after the probe: never call back into playwright from an event handler
+                    page.on("response", lambda r, responses=responses: responses.append(r) if r.request.resource_type in ("fetch", "xhr") else None)
                     page.add_init_script(f"try{{localStorage.setItem('ui-theme','{theme}')}}catch(e){{}}")
                     page.goto(url, wait_until=args.wait)
                     page.evaluate(f"document.documentElement.classList.toggle('dark', {'true' if theme == 'dark' else 'false'})")
@@ -223,6 +292,14 @@ def main(argv: list[str] | None = None) -> int:
                     if page.evaluate("!!document.querySelector('[data-state=not-found]')"):
                         errors = [e for e in errors if "status of 404" not in e]
                     findings += [["R08", e[:200]] for e in errors]
+                    # a footer showing exactly a page that the API said continues must say "more" (previews such as
+                    # "5 recent" are not collections and have no footer, so they never match)
+                    complete = {int(n) for n in page.eval_on_selector_all("[data-slot=collection-footer]:not([data-has-more=true]):not([data-capped=true])", "els => els.map(e => e.dataset.loaded)") if n}
+                    paged = [(r.url, n) for r in responses for n in reports_more(r)]
+                    for api_url, n in paged:
+                        if n in complete:
+                            findings.append(["R18", f"collection shows {n} rows as complete but the API reports more ({api_url[:120]})"])
+                            break
                     if args.shots is not None:
                         args.shots.mkdir(parents=True, exist_ok=True)
                         slug = url.split("://", 1)[-1].split("/", 1)[-1].replace("/", "_").replace("?", "_") or "root"

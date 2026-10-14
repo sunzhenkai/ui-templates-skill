@@ -47,7 +47,7 @@ export function DetailPage() {
           </Section>
         </TabsContent>
         <TabsContent value="runs">
-          <DataTable label="运行" columns={jobColumns} data={jobs.slice(1, 9)} getRowId={(row) => row.id} />
+          <DataTable label="运行" columns={jobColumns} data={jobs.slice(1, 9)} getRowId={(row) => row.id} paging="complete" />
         </TabsContent>
       </Tabs>
     </Page>

@@ -27,7 +27,7 @@ self_review:
 
 document 布局：每条消息是一段文档，角色用小标题区分，而不是左右气泡；适合长回复和代码。
 
-`<Page layout="viewport">` → `<ScrollRegion follow>`（唯一滚动区，流式增长时贴底，用户上翻则不打扰）→ `<Body width="reading"><Transcript>` 每轮 `Turn` 内 `Message`（meta = 角色 + 时间）、`Steps`/`Step`（工具调用折叠）、`AttachmentChip`；
+`<Page layout="fill">` → `<ScrollRegion follow>`（唯一滚动区，流式增长时贴底，用户上翻则不打扰）→ `<Body width="reading"><Transcript>` 每轮 `Turn` 内 `Message`（meta = 角色 + 时间）、`Steps`/`Step`（工具调用折叠）、`AttachmentChip`；
 输入框放 `<ComposerDock>`（ScrollRegion 之后的固定区，不随内容滚动）。输入框用 InputGroup：发送按钮禁用不会让输入文字变灰（只有控件本身 disabled 才淡化）。全部来自 `blocks/conversation`。
 
 规则

@@ -4,7 +4,7 @@ const NAMES = ["同步订单表", "导出报表", "重建索引", "清理缓存"
 const STATUSES: Job["status"][] = ["running", "succeeded", "failed", "queued", "succeeded", "canceled", "succeeded"]
 const OWNERS = ["林晓", "陈默", "王一", "赵青", "孙禾"]
 const BASE = Date.UTC(2026, 9, 13, 0, 0, 0)
-export const jobs: Job[] = Array.from({ length: 220 }, (_, i) => ({
+export const jobs: Job[] = Array.from({ length: 2400 }, (_, i) => ({
   id: `job_${(48271 * (i + 7)).toString(16).padStart(6, "0")}`,
   name: `${NAMES[i % NAMES.length]} #${String(i + 1).padStart(3, "0")}`,
   status: STATUSES[(i * 5) % STATUSES.length] ?? "queued",

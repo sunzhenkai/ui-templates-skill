@@ -24,7 +24,7 @@ self_review:
 | surface | 用途 | 几何 |
 |---|---|---|
 | `AppShell` 画布（frame） | 整个内容区 | 唯一的 radius-xl，裁剪子元素 |
-| `Page` | 一个路由 | PageHeader（48px，底线）+ Body；`layout="fill"` 给 Split / SectionLayout；`layout="viewport"` 高度钉在画布，只有 `ScrollRegion` 滚动（对话） |
+| `Page` | 一个路由 | PageHeader（48px，底线）+ Body；默认 `padded` 把 Body 放进 main `ScrollRegion`；`layout="fill"` 由子表面声明滚动区（Split / SectionLayout / 对话 `ScrollRegion` + ComposerDock） |
 | `Body` | 内容列 | 内边距与宽度 `reading / form / full` |
 | `Split` / `SectionLayout` / `ListDetailLayout` | 侧栏 + 内容 | 分割线由容器画：从页头底线一直到画布底边 |
 | `Panel` / DataTable / LogView | 有边框的区域 | radius-lg，内部平铺子元素无圆角 |

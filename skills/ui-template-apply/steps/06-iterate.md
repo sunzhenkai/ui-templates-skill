@@ -18,7 +18,7 @@
 feedback:
   - said: "设置页左侧导航跟着内容一起滚走了"
     layer: block
-    change: SectionLayout 宽容器下 sticky；窄容器单行横向滚动
+    change: SectionLayout 宽容器下导航与内容各自滚动；窄容器单行横向滚动
     verified: [/settings/general, /settings/keys]
 ```
 

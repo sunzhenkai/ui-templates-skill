@@ -140,7 +140,7 @@ const rules = {
 }
 
 const plugin = {
-  meta: { name: "ui-template", version: "5.2.0" },
+  meta: { name: "ui-template", version: "5.3.2" },
   rules,
   configs: { recommended: { rules: Object.fromEntries(Object.keys(rules).map((name) => [`ui-template/${name}`, "error"])) } },
 }

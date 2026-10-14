@@ -33,7 +33,7 @@ export function ListDetailLayout({ pane, label, children, breakpoint = 900 }: {
   const state = React.useMemo(() => ({ collapsed, label, open: () => setSheet(true) }), [collapsed, label])
   return (
     <PaneContext.Provider value={state}>
-      <div ref={ref} data-surface="split" data-layout="viewport" className={cn("flex h-(--frame-h) min-h-0 min-w-0 flex-col", !collapsed && "grid grid-cols-[16rem_minmax(0,1fr)]")}>
+      <div ref={ref} data-surface="split" className={cn("flex min-h-0 min-w-0 flex-1 flex-col", !collapsed && "grid grid-cols-[16rem_minmax(0,1fr)]")}>
         {collapsed ? (
           <Sheet open={sheet} onOpenChange={setSheet}>
             <SheetContent side="left" className="w-72 gap-0 p-0">
@@ -42,11 +42,11 @@ export function ListDetailLayout({ pane, label, children, breakpoint = 900 }: {
             </SheetContent>
           </Sheet>
         ) : (
-          <aside aria-label={label} data-scroll-region="pane" data-surface="split-side" className="flex min-h-0 flex-col overflow-y-auto border-r">
+          <aside aria-label={label} data-scroll-region="pane" data-surface="split-side" className="flex min-h-0 flex-col relative overflow-y-auto border-r">
             {pane}
           </aside>
         )}
-        <div data-scroll-region="detail" className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">{children}</div>
+        <div data-scroll-region="detail" className="flex min-h-0 min-w-0 flex-1 flex-col relative overflow-y-auto">{children}</div>
       </div>
     </PaneContext.Provider>
   )

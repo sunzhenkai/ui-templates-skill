@@ -26,3 +26,6 @@ listed in `registry.json`. `router.tsx` is the single router adapter.
 ## lint/
 
 `ui-template.mjs`: flat-config ESLint plugin, 10 rules, no dependencies.
+
+- `ui/table.tsx` (local patch, 5.4): `Table` takes `containerClassName`. DataTable passes `overflow-x-clip` so the
+  container is not a scroll container (an `overflow-x: auto` box also scrolls vertically and breaks the sticky header).

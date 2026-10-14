@@ -1,6 +1,6 @@
 /**
  * SectionNav — secondary navigation inside a page (settings sections, detail sub-pages).
- * Wide container: a sticky vertical list beside the content. Narrow: a single horizontally
+ * Wide container: a vertical list beside the content (its own scroll region). Narrow: a single horizontally
  * scrolling row above it. The nav never scrolls separately from the page.
  */
 import * as React from "react"
@@ -24,7 +24,7 @@ function Entry({ item, vertical }: { item: SectionNavItem; vertical: boolean }) 
 
 /**
  * SectionLayout — Split with the section nav as side column and a padded Body as content.
- * Put it in `<Page layout="fill">` so the divider runs from the header rule to the frame bottom.
+ * Put it in `<Page layout="fill">`: nav and content are two scroll regions; the divider runs header rule → frame bottom.
  */
 export function SectionLayout({ items, label, width = "form", children, breakpoint = 720 }: {
   items: SectionNavItem[]; label: string; width?: "reading" | "form" | "full" | undefined; children: React.ReactNode; breakpoint?: number | undefined
@@ -32,7 +32,7 @@ export function SectionLayout({ items, label, width = "form", children, breakpoi
   const [ref, measured] = useContainerWidth<HTMLDivElement>()
   const vertical = measured === 0 || measured >= breakpoint
   return (
-    <div ref={ref} className="flex min-w-0 flex-1 flex-col">
+    <div ref={ref} className="flex min-h-0 min-w-0 flex-1 flex-col">
       <Split sideLabel={label} sideWidth="sm" collapseBelow={breakpoint} side={
         <nav aria-label={label} className={cn(vertical ? "flex flex-col gap-0.5" : "-mx-1 flex gap-1 overflow-x-auto px-1 [scrollbar-width:none]")}>
           {items.map((item) => <Entry key={item.to} item={item} vertical={vertical} />)}

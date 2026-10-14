@@ -21,8 +21,15 @@ export const vocab = {
     unknown: { label: "未知", tone: "neutral" },
   } satisfies Record<string, StatusEntry> as Record<string, StatusEntry>,
   copy: {
-    count: (shown: number, total?: number) => (total === undefined || total === shown ? `共 ${shown} 项` : `已显示 ${shown} / 共 ${total} 项`),
+    /** Never presents the loaded count as the total. */
+    count: (loaded: number, { total, more = false, capped = false }: { total?: number | undefined; more?: boolean; capped?: boolean } = {}) =>
+      total !== undefined && total > loaded ? `已加载 ${loaded} / 共 ${total} 项`
+      : total !== undefined ? `共 ${total} 项`
+      : more ? `已加载 ${loaded} 项，还有更多`
+      : capped ? `已加载 ${loaded} 项（已达接口上限，请筛选）`
+      : `共 ${loaded} 项`,
     loadMore: "加载更多",
+    loadingMore: "加载中…",
     retry: "重试",
     errorTitle: "加载失败",
     emptyTitle: "暂无数据",

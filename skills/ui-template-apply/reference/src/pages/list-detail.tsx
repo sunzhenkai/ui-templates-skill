@@ -46,7 +46,7 @@ export function ThreadPage() {
   const { id } = useParams()
   const thread = threads.find((t) => t.id === id) ?? threads[0]!
   return (
-    <Page title={thread.title} leading={<ListPaneTrigger />} layout="viewport" primary={<StatusBadge status="succeeded" />}>
+    <Page title={thread.title} leading={<ListPaneTrigger />} layout="fill" primary={<StatusBadge status="succeeded" />}>
       <ScrollRegion label="对话时间线" follow>
         <Body width="reading">
           <Transcript label="对话时间线">

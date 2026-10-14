@@ -1,5 +1,14 @@
 # workbench-shell
 
+## 5.0.4
+- Reference screenshots retaken: collection archetype now 2400 rows (windowed).
+
+## 5.0.3
+- Reference screenshots retaken: sticky table header, collection footer wording.
+
+## 5.0.2
+- Reference screenshots retaken under the 5.3 single scroll model (canvas fixed to the viewport; -end shots keep the border intact).
+
 ## 5.0.1
 - theme.css header carries the package version again (was stale at 4.0.2).
 

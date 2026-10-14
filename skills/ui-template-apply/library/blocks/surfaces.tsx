@@ -3,7 +3,11 @@
  * them and never write those classes (lint: ui-template/no-layout-classes).
  *
  * Geometry contract (two radius levels, seams owned by containers):
- *   frame  — the AppShell canvas: radius-xl, clips its children (overflow: clip keeps sticky headers working).
+ *   frame  — the AppShell canvas: radius-xl, fixed to the viewport (border, margin and radius always visible).
+ *   scroll — html/body and the frame never scroll. The only scrollers are ScrollRegions declared by surfaces:
+ *            Page (padded) = header + one main region; Split / SectionLayout = side + main; ListDetailLayout =
+ *            pane + detail. Pages never add their own scroll containers. Regions are `relative` so absolutely
+ *            positioned descendants (Radix hidden form inputs, popper anchors) overflow the region, not the frame.
  *   panel  — bordered region inside a page (Panel, DataTable frame, LogView): radius-lg. Nothing else is rounded
  *            except controls (shadcn). Flush children of a panel have no radius and no border of their own.
  *   seams  — a split draws its divider on the container edge, so it always runs from the header rule to the
@@ -26,9 +30,9 @@ export function Body({ width = "full", gap = "lg", align = "center", children }:
 }
 
 /**
- * Page — header + body. `layout="fill"` gives the body to a full-bleed child (Split, SectionLayout,
- * conversation) that reaches the frame edges; `padded` (default) wraps children in Body; `viewport` pins the page to the
- * frame height — the document never scrolls, only a ScrollRegion child does (conversation, full-height tools).
+ * Page — fixed header + content. `padded` (default): one main ScrollRegion around a Body. `fill`: the content is a
+ * full-bleed surface that declares its own regions (Split, SectionLayout, ListDetailLayout) or a conversation
+ * (ScrollRegion + ComposerDock).
  */
 export function Page({ title, breadcrumbs, primary, actions, leading, width = "full", gap = "lg", layout = "padded", children }: {
   title: string
@@ -38,23 +42,26 @@ export function Page({ title, breadcrumbs, primary, actions, leading, width = "f
   leading?: React.ReactNode | undefined
   width?: Width | undefined
   gap?: Gap | undefined
-  layout?: "padded" | "fill" | "viewport" | undefined
+  layout?: "padded" | "fill" | undefined
   children: React.ReactNode
 }) {
-  const viewport = layout === "viewport"
   return (
-    <div data-surface="page" data-layout={layout} className={cn("flex min-w-0 flex-col", viewport ? "h-(--frame-h) min-h-0 shrink-0" : "min-h-full flex-1")}>
+    <div data-surface="page" className="flex min-h-0 min-w-0 flex-1 flex-col">
       <PageHeader title={title} breadcrumbs={breadcrumbs} primary={primary} actions={actions} leading={leading} />
-      {layout === "padded" ? <Body width={width} gap={gap}>{children}</Body> : <div className={cn("flex min-w-0 flex-1 flex-col", viewport && "min-h-0")}>{children}</div>}
+      {layout === "padded"
+        ? <ScrollRegion><Body width={width} gap={gap}>{children}</Body></ScrollRegion>
+        : <div className="flex min-h-0 min-w-0 flex-1 flex-col">{children}</div>}
     </div>
   )
 }
 
 /**
- * ScrollRegion — the one scroller of a viewport page (transcript, board, editor). `follow` keeps the view pinned
- * to the bottom while content grows (streaming) unless the user scrolled up.
+ * ScrollRegion — a declared scroller (the only kind there is). `follow` keeps the view pinned to the bottom while
+ * content grows (streaming) unless the user scrolled up.
  */
-export function ScrollRegion({ label, follow = false, children }: { label: string; follow?: boolean | undefined; children: React.ReactNode }) {
+export function ScrollRegion({ name = "main", label, follow = false, children }: {
+  name?: string | undefined; label?: string | undefined; follow?: boolean | undefined; children: React.ReactNode
+}) {
   const ref = React.useRef<HTMLDivElement>(null)
   const pinned = React.useRef(true)
   React.useEffect(() => {
@@ -68,26 +75,31 @@ export function ScrollRegion({ label, follow = false, children }: { label: strin
     el.addEventListener("scroll", onScroll, { passive: true })
     return () => { observer.disconnect(); el.removeEventListener("scroll", onScroll) }
   }, [follow])
-  return <div ref={ref} role="region" aria-label={label} tabIndex={0} data-scroll-region="main" className="flex min-h-0 flex-1 flex-col overflow-y-auto outline-none focus-visible:ring-2 focus-visible:ring-ring/50">{children}</div>
+  return (
+    <div ref={ref} data-scroll-region={name} {...(label !== undefined ? { role: "region", "aria-label": label, tabIndex: 0 } : {})}
+      className="flex min-h-0 min-w-0 flex-1 flex-col relative overflow-y-auto outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-inset">
+      {children}
+    </div>
+  )
 }
 
 /**
- * Split — side column + main column with the divider drawn by the container (full height, meets the
- * header rule above and the frame edge below). Below `collapseBelow` px it stacks with a rule under the side.
+ * Split — side column + main column, each its own scroll region, divider drawn by the container (full height,
+ * meets the header rule above and the frame edge below). Below `collapseBelow` px it stacks: side on top, main scrolls.
  */
-export function Split({ side, sideLabel, sideWidth = "md", sticky = true, collapseBelow = 720, children }: {
-  side: React.ReactNode; sideLabel: string; sideWidth?: "sm" | "md" | "lg" | undefined; sticky?: boolean | undefined
+export function Split({ side, sideLabel, sideWidth = "md", collapseBelow = 720, children }: {
+  side: React.ReactNode; sideLabel: string; sideWidth?: "sm" | "md" | "lg" | undefined
   collapseBelow?: number | undefined; children: React.ReactNode
 }) {
   const [ref, width] = useContainerWidth<HTMLDivElement>()
   const stacked = width > 0 && width < collapseBelow
   const cols = { sm: "grid-cols-[12rem_minmax(0,1fr)]", md: "grid-cols-[14rem_minmax(0,1fr)]", lg: "grid-cols-[18rem_minmax(0,1fr)]" }[sideWidth]
   return (
-    <div ref={ref} data-surface="split" className={cn("flex min-w-0 flex-1", stacked ? "flex-col divide-y" : cn("grid divide-x", cols))}>
-      <div data-surface="split-side" aria-label={sideLabel} role="region" className="min-w-0">
-        <div className={cn("p-3", !stacked && sticky && "sticky top-12")}>{side}</div>
+    <div ref={ref} data-surface="split" className={cn("flex min-h-0 min-w-0 flex-1", stacked ? "flex-col divide-y" : cn("grid divide-x", cols))}>
+      <div data-surface="split-side" data-scroll-region="side" aria-label={sideLabel} role="region" className={cn("min-w-0 relative overflow-y-auto", stacked ? "max-h-[40%] shrink-0" : "min-h-0")}>
+        <div className="p-3">{side}</div>
       </div>
-      <div data-surface="split-main" className="flex min-w-0 flex-col">{children}</div>
+      <div data-surface="split-main" data-scroll-region="main" className="flex min-h-0 min-w-0 flex-1 flex-col relative overflow-y-auto">{children}</div>
     </div>
   )
 }

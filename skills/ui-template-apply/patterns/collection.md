@@ -50,14 +50,23 @@ const jobs = useInfiniteQuery({
 <StateBoundary query={jobs} isEmpty={(page) => page.items.length === 0} empty={{ title: "还没有任务", action: <Button size="sm">新建任务</Button> }}>
   {(page) => (
     <DataTable label="任务" columns={columns} data={page.items} getRowId={(j) => j.id}
-      rowHref={(j) => `/jobs/${j.id}`} total={page.total}
-      hasMore={jobs.hasNextPage} loadingMore={jobs.isFetchingNextPage} onLoadMore={() => jobs.fetchNextPage()} />
+      rowHref={(j) => `/jobs/${j.id}`}
+      paging={{ total: page.total, hasMore: jobs.hasNextPage, loadingMore: jobs.isFetchingNextPage, onLoadMore: () => jobs.fetchNextPage() }} />
   )}
 </StateBoundary>
 ```
 
 规则
-- 分页默认 load_more（游标/useInfiniteQuery）；底部始终显示「已显示 n / 共 m 项」。
+- `paging` 必填，按接口如实声明：
+  - 接口一次返回整个集合（无 limit、无游标）→ `paging="complete"`；
+  - 有游标 → useInfiniteQuery，`total` 用接口给的总数（列表接口没有时用同一数据源的计数接口，筛选后拿不到就不传）；
+  - 只有 `limit` 没有游标 → `useLimitPaging(step, max)`：满页即“还有更多”，加载更多 = 加大 limit，到接口上限显示“已达上限，请筛选”。
+- 底部永远不把已加载数当总数：`共 m 项` / `已加载 n / 共 m 项` / `已加载 n 项，还有更多`；有更多时同时有「加载更多」按钮和滚到底自动加载的哨兵。
+- 表头在滚动区里吸顶（DataTable 内建，不透明、无缝）；表格容器不横向滚动（列按优先级隐藏）。
+- 超过 200 行（`VIRTUALIZE_ABOVE`）DataTable 自动窗口化：TanStack Virtual，滚动元素是外层 `data-scroll-region`，DOM 里只有可见行 + overscan，
+  空隙用 `[data-spacer]` 占位行；吸顶表头、RowLink、焦点行（保持挂载）、aria-rowindex、加载更多哨兵都照常。`virtualize` 可强制开/关；
+  行高固定（表格 40px），不要在行里放会改变高度的内容。check_rendered R19：已加载 >200 行时 DOM 行数必须 ≤200。
+- check_rendered R17（吸顶表头）、R18（页脚计数 / 接口报告还有更多时必须有加载更多）兜底。
 - 排序：只给真正有用的列开 `enableSorting`。排序归属二选一，不混用：
   - 数据全部在内存（或只排已加载行可以接受）→ 不传 `sorting`，DataTable 客户端排序。
   - 数据在客户端但分批显示（mock / 已全量拉取，只是 load more 展示）→ 先对完整数组排序再切片：

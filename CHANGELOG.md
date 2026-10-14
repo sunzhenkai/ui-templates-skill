@@ -1,5 +1,43 @@
 # Changelog
 
+## 5.3.2 — 2026-10-14
+
+### Added
+- DataTable 行窗口化（提案规则：>200 行虚拟化）：超过 `VIRTUALIZE_ABOVE`（200）自动启用，`virtualize` 可强制开关。TanStack Virtual，滚动元素为外层 `data-scroll-region`（scrollMargin 自动测量），空隙用 `[data-spacer]` 占位行/项；吸顶表头、RowLink、aria-rowindex / aria-rowcount、加载更多哨兵不变；获得焦点的行保持挂载（Tab 继续在行内移动）；窗口化时关闭 scroll anchoring（否则占位行变化会让浏览器重新锚定、滚动跳变）。表格与窄屏列表两种形态都窗口化。
+- check_rendered R19：页脚已加载 >200 行而 DOM 行数 >200 即报错；测试夹具 2000 行。
+- 参考 collection 原型改为 2400 条、每页 500（直接走窗口化路径）；参考截图重拍（workbench-shell 5.0.4）。
+
+## 5.3.1 — 2026-10-14
+
+反馈：模型目录页脚写「共 50 项」而目录实际 8814 个模型；滚动后表头跟着滚走。
+
+**根因**：DataTable 的 `total / hasMore / onLoadMore` 都是可选的，页面不传时页脚默认把已加载行数当总数写成「共 n 项」——静默截断没有任何地方会报错；
+表格容器是 shadcn 的 `overflow-x-auto`，它同时也是纵向滚动容器，表头就算 sticky 也只相对它吸附。
+
+### Changed
+- DataTable `paging` 改为必填：`"complete"`（接口返回整个集合）或 `{ total?, hasMore, loadingMore?, onLoadMore, capped? }`。页脚只会是 `共 m 项` / `已加载 n / 共 m 项` / `已加载 n 项，还有更多` / `已达接口上限`；有更多时同时渲染「加载更多」按钮和滚到底自动加载的哨兵（IntersectionObserver）。新增 `useLimitPaging(step, max)` 给只有 limit 没有游标的接口。页脚带 `data-loaded / data-total / data-has-more / data-capped`。
+- DataTable 表头在滚动区内吸顶（不透明底、底线用 inset shadow，深浅色一致）；表格容器 `overflow-x-clip`（`ui/table` 本地补丁加 `containerClassName`，记入 SOURCE.md）。
+- check_rendered R17（吸顶表头：非 sticky、贴顶有缝、不透明、行透出）与 R18（页脚有更多却无加载更多、知道总数却不显示 n / m；接口返回 nextCursor / hasMore / 满 limit 页而页面没有“还有更多”页脚）。
+- collection pattern 写明三种分页声明；review 清单加表头吸顶与页脚计数；参考截图重拍（workbench-shell 5.0.3）。
+
+## 5.3.0 — 2026-10-14
+
+反馈：设置→模型目录列表很长时，画布外层仍会滚动一点（画布边框随内容滚走）。
+
+**根因**：5.2 保留了两套滚动模型——文档页（列表/详情/表单/设置）让整个文档滚动，画布的外边距、边框、圆角随之滚走；
+只有 `layout="viewport"` 的页面钉住画布，且靠 `100svh-1rem-2px` 硬算高度。R15 与 -end 截图验收也只覆盖视口页，所以缺口没被发现。
+
+### Changed（单一滚动模型）
+- AppShell 恰好一屏高（`h-dvh overflow-hidden`），画布（`frame`）是 `flex min-h-0 overflow-hidden`：html/body/画布永不滚动，画布边框始终完整。
+- 只有表面声明的 `data-scroll-region` 滚动：`Page`（默认 padded）= 固定 PageHeader 下一个 main 区；Split / SectionLayout = 导航 + 内容两区（窄屏堆叠时导航最多 40% 高）；ListDetailLayout = 列表 + 详情；NotFound / RouteError 自带区域。区域都是 `relative`：Radix Select/Checkbox 的隐藏原生控件是绝对定位的，否则会以画布为包含块把画布撑出可滚动高度（新建调度页实测 329px）。
+- PageHeader 不再 sticky / 毛玻璃，是区域之上的固定条。
+- check_rendered R15 对**每个路由**生效：每个区域注入 3000px 并全部滚到底后，document/body/画布不得可滚动、scrollTop 必须为 0，只有声明区域可滚，画布仍完整在视口内；页面没有任何区域也报错。区域内部的嵌套滚动不再被豁免（R02/R03 照常检查）。
+- review 清单：-end 截图必须看到画布四周边框/圆角/外边距完整。
+- 参考截图重拍（workbench-shell 5.0.2）。
+
+### Removed
+- `Page layout="viewport"`（对话改用 `layout="fill"` + `ScrollRegion` + ComposerDock）、画布 `--frame-h` 变量与 `100svh-1rem-2px` 硬算高度、ListDetailLayout 的 `h-(--frame-h)` / `data-layout`、Split 的 `sticky` 选项、R15 的视口页特判。
+
 ## 5.2.0 — 2026-10-14
 
 两条反馈（对话页整页滚动、输入框文字浅灰）的机制级根因与同类修复。
