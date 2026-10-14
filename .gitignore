@@ -27,10 +27,12 @@ coverage/
 trace.zip
 
 # Browser debug captures (Playwright MCP / local screenshots)
-# also keeps archived OpenSpec evidence PNGs out of git: immutable_history is classified by
-# readability, so a tracked binary under openspec/changes/archive/** fails the gate
+# Screenshots never enter git: reference shots are rendered on demand (review_visual.py compose
+# --reference-base); archived OpenSpec evidence PNGs would fail the immutable_history readability gate
 page-*.png
 *screenshot*.png
+templates/*/reference/*.png
+skills/*/catalog/*/reference/*.png
 
 # Governance command output (still passed via REPORT_DIR / --json-out)
 governance-reports/

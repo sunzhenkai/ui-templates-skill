@@ -24,9 +24,9 @@ description: 从参考来源（使用 shadcn/CSS 变量的仓库、网站、设�
 3. **校正**：`validate_package.py package` 报的对比度问题按「调 L 不改角色」修。来源本身不达标时以可访问性为准，
    并在 CHANGELOG 写明偏离。删去仅对来源产品有意义的变量（不会被 blocks 使用）。
 4. **默认决策**：对照来源的列表/详情/表单，写 `meta.yaml → defaults`（只写与通用默认不同的）；`fits / not_for` 各 2–4 条。
-5. **参考截图**（发布必需）：把 `<apply>/reference/src` 放进装了该包的临时 Vite 应用（见 reference/README.md），
-   `review_visual.py capture-reference --base <url> --out templates/<pkg>/reference`，逐张看：画布层次、边框强度、选中态、强调色用量、与来源是否一致；
-   差异只通过数值修正。这些截图就是 apply 第 07 步对照的参考。
+5. **参考截图目检**：把 `<apply>/reference/src` 放进装了该包的临时 Vite 应用（见 reference/README.md），
+   `review_visual.py capture-reference --base <url> --out /tmp/ref-shots`，逐张看：画布层次、边框强度、选中态、强调色用量、与来源是否一致；
+   差异只通过数值修正。截图只落在 /tmp 目检，**不提交**——仓库不含二进制图片，apply 第 07 步用 `compose --reference-base` 现拍现比。
 6. **发布**（`references/package-format.md`「发布」）：版本号、CHANGELOG、放入 `templates/<pkg>/`，同步 catalog、跑测试。
 
 ## 规则

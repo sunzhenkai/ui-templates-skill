@@ -206,11 +206,9 @@ def cmd_package(path: Path) -> int:
         report.error("P10", f"{theme.name} missing")
     else:
         check_theme(theme.read_text(encoding="utf-8"), report, theme.name)
-    shots = {p.name for p in (path / "reference").glob("*.png")} if (path / "reference").is_dir() else set()
-    missing = [f"{k}-{v}.png" for k in ["collection", "detail", "form", "settings", "list-detail", "empty"]
-               for v in ["1280-light", "1280-dark", "768-light", "1280-light-end"] if f"{k}-{v}.png" not in shots]
-    if missing:
-        report.warn("C10", f"reference screenshots missing ({len(missing)}, e.g. {missing[0]}): review_visual.py capture-reference --out {path}/reference")
+    blobs = [p for p in sorted(path.rglob("*")) if p.is_file() and p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp", ".gif"}]
+    if blobs:
+        report.error("P11", f"{path.name}: binary images are not shipped ({len(blobs)}, e.g. {blobs[0].relative_to(path)}); reference/ keeps only src/ — render screenshots on demand")
     return report.finish(f"package {path.name}")
 
 

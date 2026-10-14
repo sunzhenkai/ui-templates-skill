@@ -12,11 +12,11 @@ copying the closest archetype from `src/pages/`, then replace the mock data — 
 | list-detail | pages/list-detail.tsx | conversations / inbox: pane + transcript + composer |
 | empty | pages/empty.tsx | collection with nothing in it yet |
 
-`../catalog/<package>/reference/<archetype>-<width>-<theme>.png` are screenshots of these pages under the
-package theme; `scripts/review_visual.py` puts your page next to them for the visual review (step 07).
+Screenshots of these pages are **not shipped in the repo** (they would bloat git history). Render them
+on demand: `scripts/review_visual.py compose --reference-base <url>` screenshots the running reference
+app and composes your page next to it (step 07); `capture-reference --out /tmp/ref-shots` writes a set
+for eyeballing while authoring a package.
 
-Rebuild the screenshots after changing a surface or the theme:
+Render the reference app (scratch Vite app with the library installed, step 02; copy `src/` over it):
 
-    # in a scratch Vite app with the library installed (step 02), copy src/ over it, then
     npm run dev -- --port 5180 &
-    python3 <skill>/scripts/review_visual.py capture-reference --base http://localhost:5180 --package workbench-shell

@@ -116,7 +116,7 @@
         {
           "path": "blocks/data-table.tsx",
           "target": "src/components/blocks/data-table.tsx",
-          "sha256": "528c1ab2774bd93f6a7253b1c721e0ee7402439efa896c9931d4b87912409c41"
+          "sha256": "defd108ca8c457382eb2bfc24edf2501c997c17a49e6faf3e0ecf1a1215845a5"
         }
       ],
       "dependencies": [
@@ -129,6 +129,7 @@
         "blocks/row-link",
         "blocks/use-container-width",
         "ui/button",
+        "ui/select",
         "ui/table",
         "vocab"
       ]
@@ -397,7 +398,7 @@
         {
           "path": "blocks/vocab.ts",
           "target": "src/lib/vocab.ts",
-          "sha256": "254fb4bd75b1c86d266ce612e5bb3860335f4168bf622fde6f17a489c414c909"
+          "sha256": "65a2a037b9b8b8a0b76abb60b6339d897a46de9050f8b4cb73f54e9a40128dfe"
         }
       ],
       "dependencies": [],

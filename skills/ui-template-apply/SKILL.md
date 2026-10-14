@@ -29,7 +29,7 @@ description: 用 ui-template 风格包 + shadcn/ui 组件库 + 通用 blocks 和
 4. `steps/04-pages.md` — 逐页从 reference 原型复制，按 pattern 补齐
 5. `steps/05-verify.md` — tsc、eslint、validate project、check_rendered
 6. `steps/06-iterate.md` — 反馈分诊、升级
-7. `steps/07-review.md` — 与参考截图逐页对比，零未结问题才交付（每次交付前都做）
+7. `steps/07-review.md` — 与参考原型逐页对比，零未结问题才交付（每次交付前都做）
 
 ## 原则
 

@@ -27,9 +27,9 @@ description: 为项目确定视觉风格并产出 ui-template 风格包（theme.
    参数含义与取值建议见 `references/brand.md`。
 3. **补 meta**：`summary / fits / not_for / defaults`（`references/instance-format.md`）。defaults 只写与通用默认不同的决策。
 4. **校验**：`python3 <apply>/scripts/validate_package.py package <dir>/<pkg>` —— 契约、对比度。
-5. **参考截图**（发布必需）：把 `<apply>/reference/src` 放进装了该包的临时 Vite 应用（见 reference/README.md），
-   `review_visual.py capture-reference --base <url> --out templates/<pkg>/reference`，逐张看：画布层次、边框强度、选中态、强调色用量；
-   差异只通过数值修正。这些截图就是 apply 第 07 步对照的参考。
+5. **参考截图目检**：把 `<apply>/reference/src` 放进装了该包的临时 Vite 应用（见 reference/README.md），
+   `review_visual.py capture-reference --base <url> --out /tmp/ref-shots`，逐张看：画布层次、边框强度、选中态、强调色用量；
+   差异只通过数值修正。截图只落在 /tmp 目检，**不提交**——仓库不含二进制图片，apply 第 07 步用 `compose --reference-base` 现拍现比。
 6. **调整**：只改数值（L/C/H、radius），不新增变量。新变量意味着 blocks 不认识它——那属于 skill 库的改动，不是风格。
 
 ## 原则

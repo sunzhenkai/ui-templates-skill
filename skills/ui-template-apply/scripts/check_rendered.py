@@ -27,8 +27,11 @@ Codes (error unless noted):
   R19 row window: a collection footer reports more than 200 loaded rows but more than 200 rows are in the DOM
       (DataTable must virtualize; spacer rows [data-spacer] do not count)
   R18 collection count: a collection footer ([data-slot=collection-footer]) that reports more rows has no
-      load-more control or sentinel, or knows a server total different from the loaded count but does not show both; or an API response on the page reports
-      more (nextCursor / hasMore, or a full page at the requested `limit`) while the footer showing that page claims it is complete
+      load-more control or sentinel (a [data-paging=pages] footer instead needs an enabled next-page control);
+      a load-more footer that knows a server total different from the loaded count does not show both; a pages
+      footer does not show the total; or an API response on the page reports more (nextCursor / hasMore, a full
+      page at the requested `limit`, or `offset`/`page` + items < `total`) while the footer showing that page
+      claims it is complete
 R08 ignores HTTP 404 resource errors on pages that render the not-found state ([data-state=not-found]).
 Theme is switched by toggling the `dark` class on <html> (blocks/theme contract).
 Declared [data-scroll-region] elements scroll; elements inside [role=log], [role=dialog], pre, textarea or [data-scroll-ok] may too.
@@ -228,8 +231,15 @@ PROBE = r"""
   for (const f of document.querySelectorAll('[data-slot=collection-footer]')) {
     const loaded = f.dataset.loaded, total = f.dataset.total, text = f.textContent || ''
     const root = f.closest('[data-surface=panel]') || f.parentElement
-    if (f.dataset.hasMore === 'true' && !root.querySelector('[data-load-more]')) out.push(['R18', 'footer reports more rows but no load-more control or sentinel'])
-    if (total !== undefined && total !== loaded && !(text.includes(loaded) && text.includes(total))) out.push(['R18', `footer "${text.trim()}" must show loaded ${loaded} / total ${total}`])
+    const pages = f.dataset.paging === 'pages'
+    if (f.dataset.hasMore === 'true' && !root.querySelector(pages ? '[data-page=next]:not([disabled])' : '[data-load-more]')) {
+      out.push(['R18', pages ? 'pages footer reports more pages but no enabled next-page control' : 'footer reports more rows but no load-more control or sentinel'])
+    }
+    if (pages) {
+      if (total !== undefined && !text.includes(total)) out.push(['R18', `pages footer "${text.trim()}" must show the total ${total}`])
+    } else if (total !== undefined && total !== loaded && !(text.includes(loaded) && text.includes(total))) {
+      out.push(['R18', `footer "${text.trim()}" must show loaded ${loaded} / total ${total}`])
+    }
   }
   // R19 bounded DOM rows for large collections
   for (const f of document.querySelectorAll('[data-slot=collection-footer]')) {
@@ -245,7 +255,7 @@ WARN = {"R09", "R11"}
 
 def reports_more(response) -> list[int]:
     """Lengths of the item arrays in an API JSON response that says the collection continues
-    (nextCursor / hasMore, or a full page at the requested `limit`); [] otherwise."""
+    (nextCursor / hasMore, `offset`/`page` + items < `total`, or a full page at the requested `limit`); [] otherwise."""
     from urllib.parse import parse_qs, urlparse
     try:
         if "json" not in (response.headers.get("content-type") or ""):
@@ -258,7 +268,14 @@ def reports_more(response) -> list[int]:
     lengths = [len(v) for v in body.values() if isinstance(v, list) and v]
     if body.get("nextCursor") or body.get("next_cursor") or body.get("hasMore") is True:
         return lengths
-    limit = parse_qs(urlparse(response.url).query).get("limit", [None])[0]
+    query = parse_qs(urlparse(response.url).query)
+    limit, offset, page = query.get("limit", [None])[0], query.get("offset", [None])[0], query.get("page", [None])[0]
+    total = body.get("total")
+    if isinstance(total, int) and offset is not None and offset.isdigit():
+        # page API that reports the filtered total: the collection continues iff this page is not the last one
+        return [n for n in lengths if int(offset) + n < total]
+    if isinstance(total, int) and page is not None and page.isdigit() and limit and limit.isdigit():
+        return [n for n in lengths if int(page) * int(limit) < total]
     return [n for n in lengths if limit and limit.isdigit() and n == int(limit)]
 
 

@@ -60,8 +60,19 @@ const jobs = useInfiniteQuery({
 - `paging` 必填，按接口如实声明：
   - 接口一次返回整个集合（无 limit、无游标）→ `paging="complete"`；
   - 有游标 → useInfiniteQuery，`total` 用接口给的总数（列表接口没有时用同一数据源的计数接口，筛选后拿不到就不传）；
-  - 只有 `limit` 没有游标 → `useLimitPaging(step, max)`：满页即“还有更多”，加载更多 = 加大 limit，到接口上限显示“已达上限，请筛选”。
-- 底部永远不把已加载数当总数：`共 m 项` / `已加载 n / 共 m 项` / `已加载 n 项，还有更多`；有更多时同时有「加载更多」按钮和滚到底自动加载的哨兵。
+  - 只有 `limit` 没有游标 → `useLimitPaging(step, max)`：满页即“还有更多”，加载更多 = 加大 limit，到接口上限显示“已达上限，请筛选”；
+  - 接口按 `offset`（或 `page`）取页并返回筛选后总数 → `paging={{ mode: "pages", page, pageSize, total, onPage }}`：页脚显示真实总数 +
+    `第 n / 共 P 页` + 上一页/下一页（可选 `pageSizeOptions` 每页选择）；`total` 必须是接口返回的总数（不许用已加载行数）；
+    页码与筛选都进 URL，筛选变化回第 1 页；请求进行中传 `loading`（翻页按钮禁用）。
+- 底部永远不把已加载数当总数：`共 m 项` / `已加载 n / 共 m 项` / `已加载 n 项，还有更多`；有更多时同时有「加载更多」按钮和滚到底自动加载的哨兵；
+  pages 模式的页脚写接口给的总数，`data-has-more` 由 `page < pageCount` 得出。
+
+```tsx
+// pages 模式（接口：GET /jobs?offset=&limit=&status=… → { items, total }）
+const jobs = useQuery({ queryKey: ["jobs", { status, page }], queryFn: () => api.listJobs({ status, offset: (page - 1) * 100, limit: 100 }), placeholderData: keepPreviousData })
+<DataTable label="任务" columns={columns} data={[...jobs.data.items]} getRowId={(j) => j.id} rowHref={(j) => `/jobs/${j.id}`}
+  paging={{ mode: "pages", page, pageSize: 100, total: jobs.data.total, loading: jobs.isFetching, onPage: (next) => setPage(String(next)) }} />
+```
 - 表头在滚动区里吸顶（DataTable 内建，不透明、无缝）；表格容器不横向滚动（列按优先级隐藏）。
 - 超过 200 行（`VIRTUALIZE_ABOVE`）DataTable 自动窗口化：TanStack Virtual，滚动元素是外层 `data-scroll-region`，DOM 里只有可见行 + overscan，
   空隙用 `[data-spacer]` 占位行；吸顶表头、RowLink、焦点行（保持挂载）、aria-rowindex、加载更多哨兵都照常。`virtualize` 可强制开/关；

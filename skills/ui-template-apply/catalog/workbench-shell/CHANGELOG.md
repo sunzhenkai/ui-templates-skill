@@ -1,5 +1,9 @@
 # workbench-shell
 
+## 5.0.5
+- No longer ships reference screenshots: the repo keeps no binary images (git size); step 07 composes
+  the reference live via `review_visual.py compose --reference-base`. `reference/` now holds only `src/`.
+
 ## 5.0.4
 - Reference screenshots retaken: collection archetype now 2400 rows (windowed).
 
@@ -13,7 +17,7 @@
 - theme.css header carries the package version again (was stale at 4.0.2).
 
 ## 5.0.0
-- Ships reference screenshots (`reference/<archetype>-<1280|768>-<light|dark>.png`) of the six reference archetypes under this theme; `review_visual.py` composes them next to the implementation.
+- Reference archetypes rebuilt as finished pages under `reference/src` (collection, detail, form, settings, list-detail, empty); pattern layout code moves there, 04-pages becomes "copy the archetype, swap the data".
 - Requires the 5.0 library (surfaces; `PageBody` removed).
 
 ## 4.0.2

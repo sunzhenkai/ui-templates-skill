@@ -56,6 +56,12 @@ class CheckRendered(unittest.TestCase):
         for needle in ["not sticky", "region top", "not opaque", "no load-more", "loaded 2 / total 8814"]:
             self.assertIn(needle, out)
 
+    def test_pages_footer_invariants(self):
+        code, out = self.check_out("rendered-pages-bad.html")
+        self.assertEqual(code, 1)
+        for needle in ["no enabled next-page control", "must show the total 8832"]:
+            self.assertIn(needle, out)
+
     def test_unbounded_rows(self):
         _, codes = self.check("rendered-rows-bad.html")
         self.assertIn("R19", codes)
@@ -71,6 +77,11 @@ class CheckRendered(unittest.TestCase):
         self.assertEqual(cr.reports_more(R("/t?limit=100", {"tasks": [1] * 100})), [100])
         self.assertEqual(cr.reports_more(R("/t?limit=100", {"tasks": [1] * 7})), [])
         self.assertEqual(cr.reports_more(R("/a", {"apps": [1, 2]})), [])
+        self.assertEqual(cr.reports_more(R("/m?limit=100&offset=0", {"items": [1] * 100, "total": 8832})), [100])
+        self.assertEqual(cr.reports_more(R("/m?limit=100&offset=8732", {"items": [1] * 100, "total": 8832})), [])
+        self.assertEqual(cr.reports_more(R("/m?limit=100&offset=8800", {"items": [1] * 32, "total": 8832})), [])
+        self.assertEqual(cr.reports_more(R("/m?limit=50&page=1", {"items": [1] * 50, "total": 120})), [50])
+        self.assertEqual(cr.reports_more(R("/m?limit=50&page=3", {"items": [1] * 20, "total": 120})), [])
 
     def test_prose_tables_are_content(self):
         _, codes = self.check("rendered-prose.html")
@@ -128,10 +139,7 @@ class VisualReview(unittest.TestCase):
         self.assertEqual(rv.archetype_for("/empty", ordered), "empty")
 
     def test_references_shipped(self):
-        names = {p.name for p in (APPLY / "catalog/workbench-shell/reference").glob("*.png")}
-        for kind in ["collection", "detail", "form", "settings", "list-detail", "empty"]:
-            for view in ["1280-light", "1280-dark", "768-light", "1280-light-end"]:
-                self.assertIn(f"{kind}-{view}.png", names)
+        self.assertEqual(list((APPLY / "catalog/workbench-shell").rglob("*.png")), [])  # no binary images ship
         for page in ["collection", "detail", "form", "settings", "list-detail", "empty"]:
             self.assertTrue((APPLY / f"reference/src/pages/{page}.tsx").is_file(), page)
 

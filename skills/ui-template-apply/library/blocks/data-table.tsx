@@ -6,10 +6,12 @@
  * - `meta.kind` decides alignment, font and truncation; `meta.priority` hides columns by the
  *   CONTAINER width (not the viewport); below `stackBelow` px the table becomes a two-line list;
  * - rows navigate through a real anchor (RowLink) or select with aria-selected — never <tr onClick>;
- * - `paging` is required: every collection declares whether the API returned all of it ("complete") or a
- *   page. The footer never presents the loaded count as the total: it shows the server total, or
- *   "loaded X / total Y", or "loaded X, more"; when there are more it renders a load-more button and an
- *   auto-loading sentinel (IntersectionObserver) at the end of the rows;
+ * - `paging` is required: every collection declares whether the API returned all of it ("complete"), a page it
+ *   keeps extending (load more), or a page-numbered collection ({ mode: "pages", page, pageSize, total, onPage }).
+ *   The footer never presents the loaded count as the total: load-more footers show the server total, or
+ *   "loaded X / total Y", or "loaded X, more"; when there are more they render a load-more button and an
+ *   auto-loading sentinel (IntersectionObserver) at the end of the rows; pages footers show the exact server
+ *   total, the page position and 上一页 / 下一页 (optional page-size select), never a guessed total;
  * - more than VIRTUALIZE_ABOVE rows render windowed (TanStack Virtual over the enclosing [data-scroll-region]):
  *   only visible rows (+overscan) are in the DOM, gaps become spacer rows, the focused row stays mounted,
  *   rows keep aria-rowindex; `virtualize` overrides the threshold; scroll anchoring is off for windowed rows
@@ -29,6 +31,7 @@ import { defaultRangeExtractor, useVirtualizer, type Range } from "@tanstack/rea
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react"
 import { cn } from "cn"
 import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { RowLink } from "@/components/blocks/row-link"
 import { useContainerWidth } from "@/components/blocks/use-container-width"
@@ -58,7 +61,7 @@ const kindClass: Record<ColumnKind, string> = {
 }
 const priorityClass = { 1: "", 2: "hidden @2xl/table:table-cell", 3: "hidden @4xl/table:table-cell" } as const
 
-export type Paging = "complete" | {
+export type LoadMorePaging = {
   /** Server total when the API reports one. */
   total?: number | undefined
   /** The API reported more (a next cursor, or a full page at the requested limit). */
@@ -68,6 +71,23 @@ export type Paging = "complete" | {
   /** No more can be loaded but the API capped the result (full page at its maximum limit). */
   capped?: boolean | undefined
 }
+
+export type PagesPaging = {
+  mode: "pages"
+  /** 1-based page. */
+  page: number
+  pageSize: number
+  /** Exact total of the filtered collection as reported by the API — the footer never guesses. */
+  total: number
+  onPage: (page: number) => void
+  /** The current page request is in flight (the pager stays disabled). */
+  loading?: boolean | undefined
+  /** Optional page-size control in the footer. */
+  pageSizeOptions?: readonly number[] | undefined
+  onPageSize?: ((size: number) => void) | undefined
+}
+
+export type Paging = "complete" | LoadMorePaging | PagesPaging
 
 /** Limit-based paging for APIs without a cursor: a full page at the requested limit means "more". */
 export function useLimitPaging(step: number, max: number) {
@@ -126,6 +146,26 @@ function LoadMoreSentinel({ onLoadMore, disabled }: { onLoadMore: () => void; di
     return () => observer.disconnect()
   }, [disabled])
   return <div ref={ref} data-load-more="sentinel" aria-hidden="true" className="h-px" />
+}
+
+/** Page-number controls for `{ mode: "pages" }`: 上一页 / 第 n / 共 P 页 / 下一页 (+ optional page-size select). */
+function PageControls({ paging, pageCount }: { paging: PagesPaging; pageCount: number }) {
+  return (
+    <div className="flex items-center gap-2">
+      {paging.pageSizeOptions !== undefined && paging.onPageSize !== undefined ? (
+        <div className="flex items-center gap-1.5">
+          <span>{vocab.copy.pageSize}</span>
+          <Select value={String(paging.pageSize)} onValueChange={(value) => paging.onPageSize?.(Number(value))}>
+            <SelectTrigger size="sm" aria-label={vocab.copy.pageSize} className="w-16"><SelectValue /></SelectTrigger>
+            <SelectContent>{paging.pageSizeOptions.map((size) => <SelectItem key={size} value={String(size)}>{size}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+      ) : null}
+      <span className="tabular-nums">{vocab.copy.pageOf(paging.page, pageCount)}</span>
+      <Button data-page="prev" variant="outline" size="sm" disabled={paging.page <= 1 || paging.loading === true} onClick={() => paging.onPage(paging.page - 1)}>{vocab.copy.previousPage}</Button>
+      <Button data-page="next" variant="outline" size="sm" disabled={paging.page >= pageCount || paging.loading === true} onClick={() => paging.onPage(paging.page + 1)}>{vocab.copy.nextPage}</Button>
+    </div>
+  )
 }
 
 export type DataTableProps<T> = {
@@ -206,8 +246,11 @@ export function DataTable<T>({
   }
 
   const bordered = frame === "bordered"
-  const more = paging === "complete" ? null : paging
-  const total = paging === "complete" ? data.length : paging.total
+  const complete = paging === "complete"
+  const pages = !complete && "mode" in paging ? paging : null
+  const more = !complete && "onLoadMore" in paging ? paging : null
+  const total = complete ? data.length : pages !== null ? pages.total : more?.total
+  const pageCount = pages === null ? 0 : Math.max(1, Math.ceil(pages.total / pages.pageSize))
   return (
     <div ref={ref} data-surface={bordered ? "panel" : undefined} className={cn("@container/table min-w-0", bordered && "overflow-clip rounded-lg border bg-card", className)}>
       {stacked ? (
@@ -287,10 +330,13 @@ export function DataTable<T>({
         </Table>
       )}
       {more !== null && more.hasMore ? <LoadMoreSentinel onLoadMore={more.onLoadMore} disabled={more.loadingMore === true} /> : null}
-      <div data-slot="collection-footer" data-loaded={rows.length} data-total={total} data-has-more={more?.hasMore === true ? "true" : undefined}
+      <div data-slot="collection-footer" data-loaded={rows.length} data-total={total}
+        data-paging={pages === null ? undefined : "pages"}
+        data-has-more={pages !== null ? (pages.page < pageCount ? "true" : undefined) : more?.hasMore === true ? "true" : undefined}
         data-capped={more?.capped === true ? "true" : undefined}
         className={cn("flex items-center justify-between gap-3 px-3 py-2 text-xs text-muted-foreground", bordered && "border-t")}>
-        <span role="status">{vocab.copy.count(rows.length, { total, more: more?.hasMore === true, capped: more?.capped === true })}</span>
+        <span role="status">{pages !== null ? vocab.copy.totalItems(pages.total) : vocab.copy.count(rows.length, { total, more: more?.hasMore === true, capped: more?.capped === true })}</span>
+        {pages !== null ? <PageControls paging={pages} pageCount={pageCount} /> : null}
         {more !== null && more.hasMore ? (
           <Button data-load-more="button" variant="ghost" size="sm" onClick={more.onLoadMore} disabled={more.loadingMore === true}>{more.loadingMore === true ? vocab.copy.loadingMore : vocab.copy.loadMore}</Button>
         ) : null}

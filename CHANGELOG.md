@@ -1,5 +1,14 @@
 # Changelog
 
+## 5.3.3 — 2026-10-14
+
+### Changed
+- 仓库不再保存任何二进制截图（git 体积）：`templates/<pkg>/reference/` 只保留 `src/` 原型代码；step 07 的
+  `review_visual.py compose` 新增必填 `--reference-base`，从运行中的参考应用现拍参考图再与实现拼图；
+  `capture-reference --out`（如 `/tmp/ref-shots`）仅供发布前目检，产物不提交。`validate_package.py package`
+  报 P11（包内出现二进制图片），`sync_catalog.py` 恢复为只同步 meta/theme/CHANGELOG 三个文本文件。
+  workbench-shell 5.0.5。
+
 ## 5.3.2 — 2026-10-14
 
 ### Added

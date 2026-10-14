@@ -30,6 +30,12 @@ export const vocab = {
       : `共 ${loaded} 项`,
     loadMore: "加载更多",
     loadingMore: "加载中…",
+    /** Page-number paging (DataTable `{ mode: "pages" }`). */
+    previousPage: "上一页",
+    nextPage: "下一页",
+    pageOf: (page: number, pageCount: number) => `第 ${page} / 共 ${pageCount} 页`,
+    pageSize: "每页",
+    totalItems: (total: number) => `共 ${total} 项`,
     retry: "重试",
     errorTitle: "加载失败",
     emptyTitle: "暂无数据",

@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 """Reference-based visual review (step 07).
 
-  review_visual.py capture-reference --base URL [--package workbench-shell] [--out DIR]
-      screenshot the reference app (reference/README.md) into catalog/<package>/reference/
-  review_visual.py compose --base URL [--project .] PATH[=ARCHETYPE] [...]
-      screenshot each route of your app and write .ui-review/<slug>-<width>-<theme>.png:
+  review_visual.py compose --base URL --reference-base URL [--project .] PATH[=ARCHETYPE] [...]
+      screenshot each route of your app and each reference archetype, then write
+      .ui-review/<slug>-<width>-<theme>.png:
       left = your page, right = the reference archetype at the same size and theme.
       The archetype comes from `=ARCHETYPE` or from ui-decisions.yaml `pages:` (pattern -> archetype).
+      --reference-base serves the reference app (reference/README.md); usually a second port of the
+      same dev server, e.g. --base http://localhost:5173 --reference-base http://localhost:5180.
       Adds a pending section per route to ui-review.md (existing sections are kept).
+
+  review_visual.py capture-reference --base URL --out DIR [--package workbench-shell]
+      screenshot the reference app into DIR — for eyeballing while authoring a package
+      (ui-template-design / author step 5). Never commit the output; screenshots are not
+      shipped in the repo (they would bloat git history), review composes them live.
 
 Then open every composite and go through CHECKLIST. Record each difference as `- [ ] ...` under its
 route, fix it, re-run compose, and tick it `- [x] ...`. Set `status: reviewed` when a route has no open
@@ -20,7 +26,6 @@ import re
 import sys
 from pathlib import Path
 
-SKILL = Path(__file__).resolve().parents[1]
 ARCHETYPES = {
     "collection": "/jobs", "detail": "/jobs/demo", "form": "/jobs/new",
     "settings": "/settings/general", "list-detail": "/threads/t1", "empty": "/empty",
@@ -114,7 +119,10 @@ def archetype_for(path: str, pages: dict[str, str]) -> str | None:
 
 
 def cmd_capture(args) -> int:
-    out = Path(args.out) if args.out else SKILL / "catalog" / args.package / "reference"
+    if not args.out:
+        print("error: --out is required (e.g. /tmp/ref-shots) — screenshots are never committed", file=sys.stderr)
+        return 2
+    out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     pw, b = browser()
     try:
@@ -144,16 +152,10 @@ def compose(impl: Path, ref: Path, out: Path, left: str, right: str) -> None:
 
 
 def cmd_compose(args) -> int:
+    if not args.reference_base:
+        print("error: --reference-base is required — start the reference app (reference/README.md) and pass its URL", file=sys.stderr)
+        return 2
     project = Path(args.project).resolve()
-    package = args.package
-    lock = project / "ui-template.lock.json"
-    if lock.exists():
-        import json
-        package = json.loads(lock.read_text()).get("package") or package
-    refdir = SKILL / "catalog" / package / "reference"
-    if not refdir.is_dir():
-        print(f"warning: package {package} ships no reference screenshots; comparing against workbench-shell", file=sys.stderr)
-        refdir = SKILL / "catalog" / "workbench-shell" / "reference"
     pages = load_pages(project)
     out = project / ".ui-review"
     out.mkdir(exist_ok=True)
@@ -167,6 +169,7 @@ def cmd_compose(args) -> int:
             print(f"error: no archetype for {path} (add it to ui-decisions.yaml pages or pass {path}=ARCHETYPE)", file=sys.stderr)
             return 2
         routes.append((path, kind))
+    ref_urls = {kind: args.reference_base.rstrip("/") + path for kind, path in ARCHETYPES.items()}
     pw, b = browser()
     try:
         for width, theme, state in VIEWS:
@@ -175,7 +178,8 @@ def cmd_compose(args) -> int:
                 view = view_name(width, theme, state)
                 shot = out / f"{slug(path)}-{view}.impl.png"
                 shoot(page, args.base.rstrip("/") + path, width, theme, shot, state)
-                ref = refdir / f"{kind}-{view}.png"
+                ref = out / f"reference-{kind}-{view}.png"
+                shoot(page, ref_urls[kind], width, theme, ref, state)
                 composite = out / f"{slug(path)}-{view}.png"
                 compose(shot, ref, composite, f"{path} @{view}", f"{kind} @{view}")
                 print(composite)
@@ -195,12 +199,12 @@ def main() -> int:
     sub = parser.add_subparsers(dest="cmd", required=True)
     cap = sub.add_parser("capture-reference")
     cap.add_argument("--base", required=True)
-    cap.add_argument("--package", default="workbench-shell")
-    cap.add_argument("--out", help="write here instead of catalog/<package>/reference (e.g. templates/<pkg>/reference)")
+    cap.add_argument("--out", required=True, help="output dir, e.g. /tmp/ref-shots (screenshots are never committed)")
     com = sub.add_parser("compose")
     com.add_argument("--base", required=True)
+    com.add_argument("--reference-base", required=True,
+                     help="URL of the running reference app (reference/README.md), e.g. http://localhost:5180")
     com.add_argument("--project", default=".")
-    com.add_argument("--package", default="workbench-shell")
     com.add_argument("routes", nargs="+")
     args = parser.parse_args()
     return cmd_capture(args) if args.cmd == "capture-reference" else cmd_compose(args)
