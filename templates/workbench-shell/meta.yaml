@@ -1,168 +1,34 @@
-schema: design-system-meta/v1
+schema: ui-template/v4
 name: workbench-shell
-version: 3.4.1
-description: Neutral dual-theme workbench app shell with an inset canvas, dense 14px interface, crisp separation and restrained blue accents.
+version: 5.0.1
+summary: Neutral gray workbench with a restrained blue accent; sidebar shell, dense lists, quiet chrome.
+fits:
+  - internal tools, admin consoles, operator / agent workbenches
+  - list → detail → form flows, logs, conversations
+not_for:
+  - marketing sites, content-first reading products, consumer brand experiences
+base:
+  registry: shadcn
+  cli: shadcn@4.21.4
+  base: radix
+  style: nova
+density: compact          # body 13px (text-sm), controls h-8 (32px), table rows 36px
+theme: theme.css
+defaults:                 # decisions a pattern would otherwise ask; projects may override in ui-decisions.yaml
+  shell.sidebar: inset            # shadcn Sidebar variant="inset"; collapsible="icon"
+  shell.canvas: app-shell         # outer gray, page sits on bg-background
+  collection.frame: bordered      # framed table (border, radius, header band); flush inside a Card
+  collection.row_height: 36
+  collection.paging: load_more
+  detail.layout: header-tabs
+  form.layout: single-column
+  confirm.irreversible: type_to_confirm
+  feedback.channel: toast
 sources:
-- id: source-001
-  type: repo
-  ref: https://github.com/multica-ai/multica
-  revision: 200dcb44cc1527ef24a1c892e9c3e5508377b386
-  captured_at: '2026-09-15T00:00:00Z'
-- id: source-002
-  type: repo
-  ref: session-local capture graph commit in a multica worktree based on 200dcb44 (not published upstream)
-  revision: 92e96f0d6779eaa733c61230ea7c4fe1cbc95bca
-  captured_at: '2026-09-15T00:00:00Z'
-- id: source-003
-  type: repo
-  ref: multica-src session snapshot (apps/web, packages/ui; .git excluded, local snapshot commit of the session source)
-  revision: 66c9b72064aca1da8b740077a78e650c679172ed
-  captured_at: '2026-10-12T10:50:00Z'
-captured_at: '2026-10-12'
-platforms:
-- web
-tags:
-- workbench
-- shell
-- dashboard
-- admin
-confidence:
-  overall: medium
-  layout: high
-  visual: medium
-  components: medium
-coverage:
-  platforms:
-    declared:
-    - web
-    observed:
-    - web
-    defaulted: []
-    unsupported: []
-  viewports:
-    declared:
-    - desktop
-    - compact
-    observed:
-    - desktop
-    - compact
-    defaulted: []
-    unsupported: []
-  themes:
-    declared:
-    - light
-    - dark
-    observed:
-    - light
-    defaulted: []
-    unsupported:
-    - dark
-  page_modes:
-    declared:
-    - shell
-    - board
-    - master-detail
-    - settings
-    - dialog
-    observed:
-    - shell
-    - board
-    - master-detail
-    - settings
-    - dialog
-    defaulted: []
-    unsupported: []
-  components:
-    declared:
-    - app-sidebar
-    - page-header
-    - chat-fab
-    - data-table
-    - dialog
-    - command-palette
-    - settings-nav
-    - input
-    - button
-    - page-toolbar
-    - nav-item
-    - detail-pane
-    observed:
-    - app-sidebar
-    - page-header
-    - chat-fab
-    - data-table
-    - dialog
-    - command-palette
-    - settings-nav
-    - input
-    - button
-    - page-toolbar
-    - nav-item
-    - detail-pane
-    defaulted: []
-    unsupported: []
-  states:
-    declared:
-    - default
-    - hover
-    - active
-    - selected
-    - focus-visible
-    - open
-    - closed
-    - disabled
-    - invalid
-    observed:
-    - hover
-    - active
-    - selected
-    - focus-visible
-    - open
-    defaulted:
-    - default
-    - closed
-    - disabled
-    unsupported:
-    - invalid
-visual_role_tokens:
-  canvas:
-  - color.app-shell
-  - color.page-canvas
-  surface:
-  - color.surface
-  surface-hover:
-  - color.surface-hover
-  surface-selected:
-  - color.surface-selected
-  border:
-  - color.surface-border
-  divider:
-  - color.divider
-  text-primary:
-  - color.text-primary
-  text-secondary:
-  - color.text-secondary
-  text-muted:
-  - color.text-muted
-  text-disabled:
-  - color.text-disabled
-  text-on-primary:
-  - color.text-on-primary
-  link:
-  - color.link
-  brand-primary:
-  - color.primary
-  brand-hover:
-  - color.primary-hover
-  status-success:
-  - color.status-success
-  status-warning:
-  - color.status-warning
-  status-danger:
-  - color.status-danger
-  typography.heading:
-  - typography.heading
-  typography.body:
-  - typography.body
-  typography.secondary:
-  - typography.secondary
+  - kind: oss-repo
+    ref: multica (packages/ui/styles/tokens.css)   # neutral palette, chart ramp, shell/canvas split
+    license: Apache-2.0
+  - kind: registry
+    ref: shadcn/ui radix-nova 4.21.4
+    license: MIT
+changelog: CHANGELOG.md

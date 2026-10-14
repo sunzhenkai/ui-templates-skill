@@ -1,40 +1,23 @@
 PYTHON ?= python3
-GOVERNANCE_VENV ?= /tmp/ui-template-governance-venv
-GOVERNANCE_PYTHON ?= $(GOVERNANCE_VENV)/bin/python
-REPORT_DIR ?= governance-reports
-DIST_DIR ?= dist
-PROMOTE_NAME ?= workbench-shell
 
-.PHONY: bootstrap validate test eval bundle promote check-names
+.PHONY: check test names registry catalog sync
 
-bootstrap:
-	$(PYTHON) -m venv "$(GOVERNANCE_VENV)"
-	"$(GOVERNANCE_PYTHON)" -m pip install -r governance/requirements-governance.txt
-
-validate:
-	@mkdir -p "$(REPORT_DIR)"
-	"$(GOVERNANCE_PYTHON)" scripts/run_governance_validation.py --report-dir "$(REPORT_DIR)"
+# Everything CI runs. No network, no browser required (browser/lint tests skip when unavailable).
+check: names registry catalog test
 
 test:
-	"$(GOVERNANCE_PYTHON)" -m unittest discover -s tests -v
+	$(PYTHON) -m unittest discover -s tests -v
 
-eval:
-	@mkdir -p "$(REPORT_DIR)"
-	"$(GOVERNANCE_PYTHON)" scripts/run_contract_evals.py \
-		--json-out "$(REPORT_DIR)/eval.json" \
-		--junit-out "$(REPORT_DIR)/eval.xml"
-	"$(GOVERNANCE_PYTHON)" scripts/run_design_system_evals.py \
-		--json-out "$(REPORT_DIR)/design-system-eval.json"
+names:
+	$(PYTHON) scripts/check_no_project_names.py
 
-# 具体项目名泄漏门禁（skills/**）；bundle 前置。
-check-names:
-	"$(GOVERNANCE_PYTHON)" scripts/check_no_project_names.py
+registry:
+	$(PYTHON) scripts/build_registry.py --check
 
-bundle: check-names
-	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py build --output-dir "$(DIST_DIR)"
+catalog:
+	$(PYTHON) scripts/sync_catalog.py --check
 
-# candidate → templates → author catalog 晋级链；catalog --write 自带认证门禁。
-promote:
-	"$(GOVERNANCE_PYTHON)" scripts/promote_candidate.py --name "$(PROMOTE_NAME)"
-	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py catalog --write
-	"$(GOVERNANCE_PYTHON)" scripts/manage_skill_distribution.py catalog --check
+# Regenerate derived files after editing library/ or templates/.
+sync:
+	$(PYTHON) scripts/build_registry.py
+	$(PYTHON) scripts/sync_catalog.py
