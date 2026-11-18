@@ -1,6 +1,6 @@
 ---
 name: ui-template-manager
-description: 本仓库内的薄路由。实现/修页面 → skills/ui-template-apply；按品牌做新风格 → skills/ui-template-design；从来源提炼或发布风格包 → skills/ui-template-author；验证 skill 改动 → .agents/skills/ui-template-cleanroom。仅用于本仓库，不发布。
+description: 本仓库内的 ui-template 薄路由，仅在需要在 apply、design、author、cleanroom 之间选择工作流时使用。目标 skill 已明确时直接进入对应 skill；仓库外任务不触发。仅用于本仓库，不发布。
 metadata:
   internal: true
 ---
