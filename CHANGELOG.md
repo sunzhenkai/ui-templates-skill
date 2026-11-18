@@ -1,5 +1,30 @@
 # Changelog
 
+## 5.4.0 — 2026-11-18
+
+### Added
+- Token contract moved out of `validate_package.py` into `skills/ui-template-apply/contract/tokens.json` (color roles,
+  required / optional scale tokens, contrast and tint pairs, customizable whitelist). It versions with the library that
+  consumes the variables. New check T06: required scale tokens (fonts, text-xs…xl, radius, surface / floating shadow).
+- New package `quiet-inset` 0.1.0: pure-gray three-surface workbench with a single indigo accent (draft values from
+  reference screenshots; dark values provisional).
+- `starter/` project skeleton (Vite 8, React 19, TS 5.9, Tailwind 4, Storybook 10, Playwright, TanStack Query, Zod;
+  package-lock included) and `install_registry.py --init`, which copies it without overwriting and then installs.
+- Template-owned, lock-tracked files beyond components: `src/index.css` (`app/index-css`), Storybook main/preview,
+  `playwright.fidelity.config.ts`, `tests/ui-kit/fidelity.spec.ts`, page template `settings-page`, stories
+  `primitives` and `settings-page` (tag `fidelity`). Registry items may now carry `devDependencies`.
+- `scripts/verify_fidelity.py`: renders the pristine kit with the project's theme as baseline, then compares the
+  project's `ui-kit/*` stories pixel for pixel (light and dark, zero tolerance).
+- Style packages ship `fonts.css` (installed to `src/styles/fonts.css`); `sync_catalog.py` copies it.
+- J12: outside the `customizable` whitelist the project theme must equal the locked package theme
+  (`ui-decisions.yaml → theme_deviations` accepts named exceptions). theme.css / fonts.css no longer raise J03.
+
+### Changed
+- `--upgrade` merges `theme.css` three-way instead of reporting a conflict: customized whitelisted tokens are kept,
+  untouched tokens take the new value, other project changes are dropped and listed. The lock records the installed
+  token values in `theme_base`.
+- Geist is no longer a base dependency; it comes from workbench-shell's `fonts.css`.
+
 ## 5.3.3 — 2026-10-14
 
 ### Changed

@@ -1,0 +1,37 @@
+schema: ui-template/v4
+name: quiet-inset
+version: 0.1.0
+summary: Pure-gray three-surface workbench (shell → inset panel → white cards) with a single indigo accent; quiet chrome, compact density.
+fits:
+  - issue trackers, project and agent workbenches, internal tools
+  - settings-heavy products with grouped forms
+  - list → detail flows where content should outrank chrome
+not_for:
+  - marketing sites and brand storytelling
+  - content-first reading products
+  - data-dense dashboards that need many simultaneous colors
+base:
+  registry: shadcn
+  cli: shadcn@4.21.4
+  base: radix
+  style: nova
+density: compact          # body 13px (text-sm), controls 28px, sidebar rows 28px
+theme: theme.css
+defaults:
+  shell.sidebar: inset            # sidebar sits on the shell, content is an inset panel
+  shell.canvas: app-shell
+  collection.frame: flush         # list rows run edge to edge inside the panel
+  collection.row_height: 36
+  collection.paging: load_more
+  detail.layout: aside            # main column + right property rail
+  form.layout: single-column
+  confirm.irreversible: confirm
+  feedback.channel: toast
+sources:
+  - kind: product
+    ref: issue-tracker desktop app, light theme (6 screenshots; values sampled from downscaled JPEG, to be replaced by computed-style export)
+    license: observation-only (values and visual decisions; no code, icons, fonts or copy)
+  - kind: registry
+    ref: shadcn/ui radix-nova 4.21.4
+    license: MIT
+changelog: CHANGELOG.md

@@ -20,28 +20,16 @@ from pathlib import Path
 import yaml
 
 SKILL = Path(__file__).resolve().parents[1]
-CORE = [
-    "background", "foreground", "card", "card-foreground", "popover", "popover-foreground", "primary", "primary-foreground",
-    "secondary", "secondary-foreground", "muted", "muted-foreground", "accent", "accent-foreground", "destructive",
-    "border", "input", "ring", "chart-1", "chart-2", "chart-3", "chart-4", "chart-5", "sidebar", "sidebar-foreground",
-    "sidebar-primary", "sidebar-primary-foreground", "sidebar-accent", "sidebar-accent-foreground", "sidebar-border", "sidebar-ring",
-]
-EXTENSIONS = ["success", "warning", "warning-foreground", "info", "brand", "brand-foreground", "faint-foreground", "app-shell"]
+# The token contract ships with the library that consumes it; see contract/tokens.json.
+CONTRACT = json.loads((SKILL / "contract/tokens.json").read_text(encoding="utf-8"))
+CORE = CONTRACT["colors"]["core"]
+EXTENSIONS = CONTRACT["colors"]["extensions"]
+SCALE_REQUIRED = CONTRACT["scale"]["required"]
 # (foreground, background, minimum ratio). Text pairs need 4.5; tones used as text on a 10% tint of themselves need 4.5 on background.
-CONTRAST = [
-    ("foreground", "background", 7.0), ("card-foreground", "card", 7.0), ("popover-foreground", "popover", 7.0),
-    ("primary-foreground", "primary", 4.5), ("secondary-foreground", "secondary", 4.5), ("muted-foreground", "background", 4.5),
-    ("muted-foreground", "muted", 4.0), ("accent-foreground", "accent", 4.5), ("sidebar-foreground", "sidebar", 7.0),
-    ("sidebar-accent-foreground", "sidebar-accent", 4.5), ("destructive", "background", 4.5), ("success", "background", 4.5),
-    ("info", "background", 4.5), ("warning-foreground", "background", 4.5), ("brand", "background", 4.5),
-    ("faint-foreground", "background", 3.0), ("border", "background", 1.25), ("border", "card", 1.25), ("ring", "background", 3.0),
-]
+CONTRAST = [tuple(pair) for pair in CONTRACT["contrast"]]
 # (text, tinted tone, alpha light, alpha dark): text drawn on a tone/alpha tint over background and card
 # (e.g. shadcn destructive button: bg-destructive/10 dark:bg-destructive/20 text-destructive). Must reach 4.5, like R06.
-TINTS = [
-    ("destructive", "destructive", 0.10, 0.20), ("foreground", "destructive", 0.10, 0.10),
-    ("foreground", "info", 0.10, 0.10), ("foreground", "success", 0.10, 0.10), ("foreground", "warning", 0.15, 0.15),
-]
+TINTS = [tuple(item) for item in CONTRACT["tints"]]
 META_REQUIRED = ["schema", "name", "version", "summary", "base", "density", "theme", "defaults", "sources"]
 DENSITIES = {"compact"}
 
@@ -130,6 +118,10 @@ def check_theme(css: str, report: Report, where: str) -> None:
     light, dark = blocks(css, ":root"), blocks(css, ".dark")
     if "--text-sm" not in css:
         report.error("T05", f"{where}: density must set --text-sm in @theme")
+    declared = set(re.findall(r"(--[\w-]+)\s*:", css))
+    for name in SCALE_REQUIRED:
+        if name != "--text-sm" and name not in declared:
+            report.error("T06", f"{where}: scale token {name} missing")
     for name in CORE + EXTENSIONS:
         if name not in light:
             report.error("T01", f"{where}: --{name} missing in :root")
@@ -282,6 +274,38 @@ def cmd_patterns(directory: Path) -> int:
 
 # ---------- project ----------
 FEEDBACK_LAYERS = {"theme", "block", "pattern", "page"}
+CUSTOMIZABLE_FILES = {"src/styles/theme.css", "src/styles/fonts.css"}
+CUSTOMIZABLE = {name.removeprefix("--") for name in CONTRACT["customizable"]["colors"] + CONTRACT["customizable"]["scale"]}
+THEME_BLOCKS = ("@theme inline", "@theme", ":root", ".dark")
+
+
+def theme_tokens(css: str) -> dict[tuple[str, str], str]:
+    out = {}
+    for selector in THEME_BLOCKS:
+        for m in re.finditer(re.escape(selector) + r"\s*\{([^}]*)\}", css):
+            for name, value in re.findall(r"(?<![\w-])--([\w-]+)\s*:\s*([^;]+?)\s*;", m.group(1)):
+                out[(selector, name)] = value
+    return out
+
+
+def check_theme_deviations(css: str, lock: dict, allowed: set[str], report: Report) -> None:
+    """J12: outside the customizable whitelist the project theme must equal the locked package theme."""
+    pkg = SKILL / "catalog" / str(lock.get("package"))
+    if not (pkg / "theme.css").is_file():
+        report.error("J12", f"package {lock.get('package')!r} not in catalog")
+        return
+    meta = yaml.safe_load((pkg / "meta.yaml").read_text(encoding="utf-8")) or {}
+    if str(meta.get("version")) != str(lock.get("version")):
+        report.warn("J12", f"lock is {lock.get('package')} {lock.get('version')}, catalog has {meta.get('version')}; run install_registry.py --upgrade")
+        return
+    mine, theirs = theme_tokens(css), theme_tokens((pkg / "theme.css").read_text(encoding="utf-8"))
+    for (block, name), value in sorted(theirs.items()):
+        if name in CUSTOMIZABLE or f"--{name}" in allowed:
+            continue
+        if mine.get((block, name)) != value:
+            got = mine.get((block, name), "missing")
+            report.error("J12", f"src/styles/theme.css {block} --{name}: {got} ≠ package {value} (not customizable; "
+                                "record it in ui-decisions.yaml → theme_deviations to accept)")
 
 
 def cmd_project(project: Path) -> int:
@@ -295,13 +319,10 @@ def cmd_project(project: Path) -> int:
         file = project / target
         if not file.is_file():
             report.error("J02", f"{target} missing (installed by lock)")
+        elif target in CUSTOMIZABLE_FILES:
+            continue  # governed by J12, not by hash
         elif hashlib.sha256(file.read_bytes()).hexdigest() != digest:
             report.warn("J03", f"{target} edited locally (record why in ui-decisions.yaml → local_edits)")
-    theme = project / "src/styles/theme.css"
-    if theme.is_file():
-        check_theme(theme.read_text(encoding="utf-8"), report, "src/styles/theme.css")
-    else:
-        report.error("J04", "src/styles/theme.css missing")
     decisions_path = project / "ui-decisions.yaml"
     data = None
     if decisions_path.is_file():
@@ -309,6 +330,13 @@ def cmd_project(project: Path) -> int:
             data = yaml.safe_load(decisions_path.read_text(encoding="utf-8")) or {}
         except yaml.YAMLError as error:
             report.error("J09", f"ui-decisions.yaml is not valid YAML: {str(error).splitlines()[0]}")
+    theme = project / "src/styles/theme.css"
+    if theme.is_file():
+        css = theme.read_text(encoding="utf-8")
+        check_theme(css, report, "src/styles/theme.css")
+        check_theme_deviations(css, lock, set((data or {}).get("theme_deviations") or []), report)
+    else:
+        report.error("J04", "src/styles/theme.css missing")
     if data is not None:
         known = pattern_decisions(SKILL / "patterns")
         for key in (data.get("decisions") or {}):

@@ -14,5 +14,15 @@ R13 = 分割线接缝（split 侧栏与内容等高、贴页头底线、到画�
 R15 = 单一滚动模型（每个路由：每个滚动区注入 3000px 并滚到底后，document/body/画布 scrollTop==0 且不可滚动，只有 `data-scroll-region` 滚动，画布仍完整在视口内），R17 = 滚动区内表头吸顶（不透明、贴住区域顶边、行不透出，深浅色都查），R18 = 集合计数（页脚有更多时必须有加载更多/哨兵、知道总数时显示「已加载 n / 共 m」；接口返回游标/hasMore/满 limit 页而页面没有“还有更多”页脚即报错），R16 = 可编辑控件文字 ≥4.5（含祖先 opacity）、placeholder ≥3；
 不存在 id 的路由渲染 NotFound（`data-state="not-found"`）时，接口 404 不计 R08；R09（行高）为警告。
 
+外观保真（`--init` 建的项目）：
+
+```bash
+python3 <skill>/scripts/verify_fidelity.py --project .
+```
+
+用纯净模板 + 本项目的 theme/fonts 现场生成基线（`.ui-kit/`，不提交），再把本项目的 `ui-kit/*` story
+（浅/深）逐像素对比，零容差。失败 = 模板文件被改或渲染环境被改，差异图在 `test-results/`；
+白名单内的主题定制不会让它失败。改模板文件要么撤回，要么回馈上游。
+
 修复原则：错误出现在多个页面 → 修在 block 或 pattern（更低的共享层），而不是逐页打补丁。
 几何不变量通过后进入 07 视觉验收。

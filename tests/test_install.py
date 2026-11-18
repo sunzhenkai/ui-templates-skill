@@ -97,6 +97,61 @@ class Install(unittest.TestCase):
     def test_unknown_package(self):
         self.assertNotEqual(self.install("--package", "nope").returncode, 0)
 
+    def test_init_copies_starter_and_keeps_existing_files(self):
+        (self.tmp / "package.json").write_text('{"name": "mine"}\n')
+        result = self.install("--package", "quiet-inset", "--init")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("kept        package.json", result.stdout)
+        self.assertEqual((self.tmp / "package.json").read_text(), '{"name": "mine"}\n')
+        for path in ("index.html", "vite.config.ts", "src/main.tsx", "src/index.css", ".storybook/preview.tsx",
+                     "tests/ui-kit/fidelity.spec.ts", "src/components/page-templates/settings-page.tsx"):
+            self.assertTrue((self.tmp / path).is_file(), path)
+        self.assertIn("@fontsource-variable/inter", (self.tmp / "src/styles/fonts.css").read_text())
+        self.assertIn("@fontsource-variable/inter@^5", result.stdout)
+        lock = json.loads((self.tmp / "ui-template.lock.json").read_text())
+        self.assertIn(":root --primary", lock["theme_base"])
+        self.assertNotIn("src/main.tsx", lock["files"])  # starter files belong to the project
+
+    def test_theme_upgrade_is_three_way(self):
+        self.install("--package", "quiet-inset")
+        theme = self.tmp / "src/styles/theme.css"
+        package = theme.read_text()
+        lock_path = self.tmp / "ui-template.lock.json"
+        lock = json.loads(lock_path.read_text())
+        # pretend the installed package had another muted-foreground, which the project never touched
+        old_muted = "oklch(0.3 0 0)"
+        new_muted = lock["theme_base"][":root --muted-foreground"]
+        css = package.replace(f"--muted-foreground: {new_muted};", f"--muted-foreground: {old_muted};", 1)
+        lock["theme_base"][":root --muted-foreground"] = old_muted
+        lock["files"]["src/styles/theme.css"] = "0" * 64
+        # the project customized primary (allowed) and border (not allowed)
+        css = css.replace(f"--primary: {lock['theme_base'][':root --primary']};", "--primary: oklch(0.5 0.11 175);", 1)
+        css = css.replace(f"--border: {lock['theme_base'][':root --border']};", "--border: oklch(0.877 0 0);", 1)
+        theme.write_text(css)
+        lock_path.write_text(json.dumps(lock))
+        self.assertIn("merge     src/styles/theme.css", self.install("--status").stdout)
+        upgrade = self.install("--upgrade")
+        self.assertEqual(upgrade.returncode, 0, upgrade.stdout)
+        self.assertIn("DROPPED     src/styles/theme.css :root --border", upgrade.stdout)
+        merged = theme.read_text()
+        self.assertIn("--primary: oklch(0.5 0.11 175);", merged)
+        self.assertIn(f"--muted-foreground: {new_muted};", merged)
+        self.assertNotIn("oklch(0.877 0 0)", merged)
+
+    def test_theme_outside_whitelist_is_reported(self):
+        self.install("--package", "quiet-inset")
+        validate = lambda: run(APPLY / "scripts/validate_package.py", "project", self.tmp)
+        theme = self.tmp / "src/styles/theme.css"
+        base = json.loads((self.tmp / "ui-template.lock.json").read_text())["theme_base"]
+        theme.write_text(theme.read_text().replace(f"--primary: {base[':root --primary']};", "--primary: oklch(0.5 0.11 175);", 1))
+        self.assertNotIn("J12", validate().stdout)
+        theme.write_text(theme.read_text().replace(f"--border: {base[':root --border']};", "--border: oklch(0.877 0 0);", 1))
+        result = validate()
+        self.assertIn("J12 src/styles/theme.css :root --border", result.stdout)
+        self.assertEqual(result.returncode, 1)
+        (self.tmp / "ui-decisions.yaml").write_text("theme_deviations:\n  - --border\n")
+        self.assertNotIn("J12", validate().stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
