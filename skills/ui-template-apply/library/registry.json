@@ -6,8 +6,8 @@
     "style": "nova"
   },
   "theme_target": "src/styles/theme.css",
+  "fonts_target": "src/styles/fonts.css",
   "baseDependencies": [
-    "@fontsource-variable/geist@^5",
     "tw-animate-css@^1",
     "shadcn@4.21.4",
     "cn@^0.4"
@@ -17,9 +17,24 @@
     "@tailwindcss/vite@^4",
     "eslint@^9",
     "typescript-eslint@^8",
-    "@types/node@^24"
+    "@types/node@^24",
+    "storybook@^10",
+    "@storybook/react-vite@^10",
+    "@playwright/test@^1.65"
   ],
   "items": [
+    {
+      "name": "app/index-css",
+      "files": [
+        {
+          "path": "app/index.css",
+          "target": "src/index.css",
+          "sha256": "689c2e5cb21fefb4eafe7130f386558dfd6c5c9f6efe3a6634b92a34b6e92cd1"
+        }
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
     {
       "name": "blocks/app-errors",
       "files": [
@@ -405,6 +420,68 @@
       "registryDependencies": []
     },
     {
+      "name": "fidelity/fidelity",
+      "files": [
+        {
+          "path": "fidelity/fidelity.spec.ts",
+          "target": "tests/ui-kit/fidelity.spec.ts",
+          "sha256": "167f9f778516bffe1cf7a63e61e02d6037cfea6bfa40d4d8f701686748e6f4f5"
+        }
+      ],
+      "dependencies": [],
+      "registryDependencies": [],
+      "devDependencies": [
+        "@playwright/test@^1.65"
+      ]
+    },
+    {
+      "name": "fidelity/main",
+      "files": [
+        {
+          "path": "fidelity/main.ts",
+          "target": ".storybook/main.ts",
+          "sha256": "d3f35b859bb2a587b929c75a5dd71f3dfcc03b054897c345953393d43c8ae282"
+        }
+      ],
+      "dependencies": [],
+      "registryDependencies": [],
+      "devDependencies": [
+        "@storybook/react-vite@^10"
+      ]
+    },
+    {
+      "name": "fidelity/playwright",
+      "files": [
+        {
+          "path": "fidelity/playwright.fidelity.config.ts",
+          "target": "playwright.fidelity.config.ts",
+          "sha256": "54285547293e4330590943ac41b458d24767b2b9abb391693e7b17273c406512"
+        }
+      ],
+      "dependencies": [],
+      "registryDependencies": [],
+      "devDependencies": [
+        "@playwright/test@^1.65"
+      ]
+    },
+    {
+      "name": "fidelity/preview",
+      "files": [
+        {
+          "path": "fidelity/preview.tsx",
+          "target": ".storybook/preview.tsx",
+          "sha256": "2c1eca7caeff78450c18de2fd9750952b8e89068774ea38063bf54de29e58ba1"
+        }
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "ui/tooltip"
+      ],
+      "devDependencies": [
+        "@storybook/react-vite@^10"
+      ]
+    },
+    {
       "name": "lint/ui-template",
       "files": [
         {
@@ -415,6 +492,20 @@
       ],
       "dependencies": [],
       "registryDependencies": []
+    },
+    {
+      "name": "page-templates/settings-page",
+      "files": [
+        {
+          "path": "page-templates/settings-page.tsx",
+          "target": "src/components/page-templates/settings-page.tsx",
+          "sha256": "245242a92af29f762621b928acad7a6dc1469daac1853ae7abbe54b2e4f42236"
+        }
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "blocks/surfaces"
+      ]
     },
     {
       "name": "hooks/use-mobile",
@@ -1030,6 +1121,53 @@
         "radix-ui@^1"
       ],
       "registryDependencies": []
+    },
+    {
+      "name": "stories/primitives",
+      "files": [
+        {
+          "path": "stories/primitives.stories.tsx",
+          "target": "src/stories/ui-kit/primitives.stories.tsx",
+          "sha256": "25af30acf025f41bbee18fb77c6b8355ca645ca22daecd3f5c7514069efd353e"
+        }
+      ],
+      "dependencies": [
+        "lucide-react@^1"
+      ],
+      "registryDependencies": [
+        "ui/badge",
+        "ui/button",
+        "ui/checkbox",
+        "ui/input",
+        "ui/select",
+        "ui/switch"
+      ],
+      "devDependencies": [
+        "@storybook/react-vite@^10"
+      ]
+    },
+    {
+      "name": "stories/settings-page",
+      "files": [
+        {
+          "path": "stories/settings-page.stories.tsx",
+          "target": "src/stories/ui-kit/settings-page.stories.tsx",
+          "sha256": "9d778dd31f9942069e31a8a3558a180a908bd96d8d02e70b6432f51be4fe12c6"
+        }
+      ],
+      "dependencies": [
+        "lucide-react@^1",
+        "react-router@^8"
+      ],
+      "registryDependencies": [
+        "blocks/app-shell",
+        "page-templates/settings-page",
+        "ui/select",
+        "ui/switch"
+      ],
+      "devDependencies": [
+        "@storybook/react-vite@^10"
+      ]
     }
   ]
 }

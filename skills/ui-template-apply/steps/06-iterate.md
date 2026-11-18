@@ -29,5 +29,9 @@ python3 <skill>/scripts/install_registry.py --project . --status    # new / upst
 python3 <skill>/scripts/install_registry.py --project . --upgrade   # 覆盖未改动文件，列出冲突
 ```
 
+`src/styles/theme.css` 不会成为 conflict（状态 `merge`）：取新包主题，项目改过的白名单 token 保留项目值，
+项目没改过的取新值（lock 的 `theme_base` 记录安装时的包值，三方比较）；项目改过的非白名单 token 被丢弃并逐条打印
+`DROPPED`——仍要保留就改回去并记入 `ui-decisions.yaml → theme_deviations`（否则 J12 报错）。
+
 `conflict` 文件手工合并后执行 `install_registry.py --project . --resolve <文件>`（以当前上游为基线，之后算作 local 修改），
 再记入 `local_edits`；之后重新执行 05 和 07。`validate_package.py project .` 会检查 `pages` 的 pattern 名（J07）与 `feedback` 条目（J08）。

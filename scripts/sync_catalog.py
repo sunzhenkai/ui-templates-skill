@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "templates"
 DST = ROOT / "skills/ui-template-apply/catalog"
-FILES = ("meta.yaml", "theme.css", "CHANGELOG.md")
+FILES = ("meta.yaml", "theme.css", "fonts.css", "CHANGELOG.md")
 
 
 def packages() -> list[Path]:

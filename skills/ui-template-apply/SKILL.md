@@ -12,14 +12,18 @@ description: 用 ui-template 风格包 + shadcn/ui 组件库 + 通用 blocks 和
 
 | 目录 | 内容 |
 |---|---|
-| `catalog/` | 风格包：`meta.yaml`（适用范围、密度、默认决策）+ `theme.css`（shadcn 变量 + 扩展） |
+| `catalog/` | 风格包：`meta.yaml`（适用范围、密度、默认决策）+ `theme.css`（shadcn 变量 + 扩展）+ `fonts.css` |
+| `contract/` | `tokens.json`：主题必须声明的变量、对比度对、项目可定制白名单 |
+| `starter/` | 新项目骨架（`--init` 拷入，归项目；依赖已锁） |
 | `library/shadcn/` | shadcn radix-nova 组件，原样 vendored（版本见 `library/SOURCE.md`） |
 | `library/blocks/` | 通用组合件：AppShell、PageHeader、DataTable、StateBoundary、format、confirm、notify、Markdown、LogView… |
+| `library/page-templates/` | 整页模板（页面只传数据）；`library/stories/` 是保真对比用的 story |
+| `library/app/`、`library/fidelity/` | `index.css`；Storybook 与 Playwright 保真配置（归模板、受 lock） |
 | `library/lint/` | ESLint 规则：把可机检的规范在编辑器里就报出来 |
 | `reference/` | 完成态原型页面（collection / detail / form / settings / list-detail / empty）：写页面从这里复制 |
 | `patterns/` | 每类页面的决策与原型之外的规则、自查清单（先看 `index.md`） |
 | `steps/` | 执行步骤 01–07 |
-| `scripts/` | `install_registry.py`、`validate_package.py`、`check_rendered.py`、`review_visual.py` |
+| `scripts/` | `install_registry.py`、`validate_package.py`、`verify_fidelity.py`、`check_rendered.py`、`review_visual.py` |
 
 ## 流程
 

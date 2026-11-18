@@ -1,6 +1,19 @@
 # 02 安装：库 + 主题
 
-前提：Vite（或同类）+ React 19 + TypeScript + Tailwind 4，`@/*` → `src/*` 路径别名。
+新项目走 `--init`：
+
+```bash
+python3 <skill>/scripts/install_registry.py --project app --package quiet-inset --init
+cd app && npm ci && npx playwright install chromium
+```
+
+`--init` 先拷 `starter/` 骨架（Vite + React 19 + TS + Tailwind 4 + Storybook + Playwright + TanStack Query + Zod，
+依赖已锁；已存在的文件不覆盖），再装全部库项。骨架文件（`src/main.tsx`、`src/pages/`、配置文件）归项目；
+`src/index.css`、`.storybook/`、`playwright.fidelity.config.ts`、`tests/ui-kit/`、`src/stories/ui-kit/`、
+`src/components/page-templates/` 与组件一样归模板、受 lock 管理。`src/styles/theme.css` / `fonts.css` 只改
+`contract/tokens.json` 的 `customizable` 白名单内的值（J12）。下面的手工步骤只用于接入已有项目。
+
+已有项目前提：Vite（或同类）+ React 19 + TypeScript + Tailwind 4，`@/*` → `src/*` 路径别名。
 没有就先建：`npm create vite@latest app -- --template react-ts`，再 `npm i -D tailwindcss @tailwindcss/vite` 并在 vite.config 加插件与 alias。
 
 ```bash
@@ -13,13 +26,13 @@ npm i @tanstack/react-query@^5   # 默认依赖：patterns 示例与 StateBounda
 写入内容：`src/components/ui/*`（shadcn radix-nova 原样）、`src/components/blocks/*`、`src/lib/vocab.ts`、
 `src/styles/theme.css`、`eslint/ui-template.mjs`、`ui-template.lock.json`。
 
-`src/index.css` 只有这几行：
+`src/index.css` 由库安装（`app/index-css`）；项目已有 index.css 时报 `CONFLICT`，把内容换成这几行即可：
 
 ```css
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import "./styles/fonts.css";
 @import "./styles/theme.css";
 ```
 

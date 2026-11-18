@@ -44,6 +44,20 @@ class PackageValidation(unittest.TestCase):
         self.assertFalse(any(e.startswith("C01") and "destructive" in e for e in errors), errors)
         self.assertTrue(any(e.startswith("C02") and "destructive on destructive" in e for e in errors), errors)
 
+    def test_missing_scale_token_is_reported(self):
+        errors = self._theme(lambda css: "\n".join(l for l in css.splitlines() if not l.strip().startswith("--floating-shadow:")))
+        self.assertTrue(any(e.startswith("T06") and "--floating-shadow" in e for e in errors), errors)
+
+    def test_contract_is_consistent(self):
+        colors = set(vp.CORE) | set(vp.EXTENSIONS)
+        scale = set(vp.CONTRACT["scale"]["required"]) | set(vp.CONTRACT["scale"]["optional"])
+        for fg, bg, _ in vp.CONTRAST:
+            self.assertTrue({fg, bg} <= colors, (fg, bg))
+        for text, tone, _, _ in vp.TINTS:
+            self.assertTrue({text, tone} <= colors, (text, tone))
+        self.assertTrue(set(vp.CONTRACT["customizable"]["colors"]) <= colors)
+        self.assertTrue(set(vp.CONTRACT["customizable"]["scale"]) <= scale)
+
     def test_non_oklch_is_reported(self):
         errors = self._theme(lambda css: css.replace("--brand: oklch(0.55 0.16 255);", "--brand: #2563eb;", 1))
         self.assertTrue(any(e.startswith("T04") for e in errors), errors)
