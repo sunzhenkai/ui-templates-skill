@@ -1,0 +1,12 @@
+diff --git a/skills/ui-template-design/SKILL.md b/skills/ui-template-design/SKILL.md
+index a3e74b4..955ef5b 100644
+--- a/skills/ui-template-design/SKILL.md
++++ b/skills/ui-template-design/SKILL.md
+@@ -1,6 +1,6 @@
+ ---
+ name: ui-template-design
+-description: 为项目确定视觉风格并产出 ui-template 风格包（theme.css + meta.yaml）：从品牌色、密度、气质推导完整的浅/深色主题，或在现有包上做项目级覆盖。在“定一套 UI 风格/换主题色/现有模板都不合适/做深色模式”时使用；实现页面交给 ui-template-apply。
++description: 为采用 ui-template 的项目设计视觉风格，产出 ui-template 风格包（theme.css + meta.yaml），或在已有包上做项目级变量覆盖。仅在目标明确是 ui-template 主题或风格包时触发；通用 UI 设计、普通 shadcn/Tailwind 换色不要自动触发。页面实现交给 ui-template-apply，从网站、仓库或截图提炼风格包交给 ui-template-author。
+ ---
+ 
+ # ui-template-design

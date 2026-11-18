@@ -1,0 +1,12 @@
+diff --git a/skills/ui-template-author/SKILL.md b/skills/ui-template-author/SKILL.md
+index 483a01a..8468aa5 100644
+--- a/skills/ui-template-author/SKILL.md
++++ b/skills/ui-template-author/SKILL.md
+@@ -1,6 +1,6 @@
+ ---
+ name: ui-template-author
+-description: 从参考来源（使用 shadcn/CSS 变量的仓库、网站、设计稿截图）提炼 ui-template 风格包，并维护、发布到 catalog（版本、CHANGELOG、校验）。在“照着某个产品/网站的风格做一套模板”“把现有项目的主题沉淀成可复用包”“升级/发布风格包”时使用。
++description: 从仓库、网站或截图提炼 ui-template 风格包，并维护、发布该 catalog 中的包（版本、CHANGELOG、校验）。仅在目标是 ui-template 风格包时触发；照着网站实现页面或组件、制作通用模板不触发，从零按品牌设计交给 ui-template-design，页面实现交给 ui-template-apply。
+ ---
+ 
+ # ui-template-author

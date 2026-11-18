@@ -1,0 +1,12 @@
+diff --git a/skills/ui-template-apply/SKILL.md b/skills/ui-template-apply/SKILL.md
+index 419a480..16948a8 100644
+--- a/skills/ui-template-apply/SKILL.md
++++ b/skills/ui-template-apply/SKILL.md
+@@ -1,6 +1,6 @@
+ ---
+ name: ui-template-apply
+-description: 用 ui-template 风格包 + shadcn/ui 组件库 + 通用 blocks 和 patterns 实现或重构 React 前端页面（列表、详情、表单、设置、对话、日志等）。在新建前端、整体改版、或按统一规范修页面时使用。
++description: 用 ui-template 风格包、shadcn/ui 及配套 blocks/patterns 实现或重构 React 页面。仅在用户明确指定 ui-template，或目标项目已采用 ui-template、存在其配置或安装痕迹时触发；普通 React/UI 开发、未采用该体系的新建或改版不要自动触发。视觉风格设计交给 ui-template-design，从参考来源提炼风格包交给 ui-template-author。
+ ---
+ 
+ # ui-template-apply
