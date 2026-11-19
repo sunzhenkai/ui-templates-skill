@@ -1,5 +1,11 @@
 # workbench-shell
 
+## 5.0.6
+- `blocks/router`: `useUrlState` batches concurrent updates (one microtask flush), so changing several params in
+  one handler no longer keeps only the last one.
+- `blocks/data-table`: the footer and its page controls wrap as whole rows on narrow widths instead of splitting
+  the page-size label from its select.
+
 ## 5.0.5
 - No longer ships reference screenshots: the repo keeps no binary images (git size); step 07 composes
   the reference live via `review_visual.py compose --reference-base`. `reference/` now holds only `src/`.

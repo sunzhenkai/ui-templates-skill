@@ -1,0 +1,220 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 6306c1c..404fc86 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,5 +1,14 @@
+ # Changelog
+ 
++## 5.5.0 — 2026-11-20
++
++### Fixed
++- `blocks/router` `useUrlState`: updates made in the same tick are merged in a microtask and written once. React
++  Router applies each functional `setSearchParams` against the same snapshot, so "clear filters" (six params in one
++  handler) silently kept only the last one.
++- `blocks/data-table`: footer and page controls now wrap as whole rows (`flex-wrap` with horizontal gap), and the
++  page-size label stays on one line with its select. Packages: quiet-inset 0.2.0, workbench-shell 5.0.6.
++
+ ## 5.4.0 — 2026-11-18
+ 
+ ### Added
+diff --git a/skills/ui-template-apply/catalog/quiet-inset/CHANGELOG.md b/skills/ui-template-apply/catalog/quiet-inset/CHANGELOG.md
+index 2a0bf1a..c0978b6 100644
+--- a/skills/ui-template-apply/catalog/quiet-inset/CHANGELOG.md
++++ b/skills/ui-template-apply/catalog/quiet-inset/CHANGELOG.md
+@@ -1,5 +1,12 @@
+ # quiet-inset
+ 
++## 0.2.0 — 2026-11-20
++
++### Fixed
++- 同一事件里改多个 URL 参数（「清除筛选」一次清六项）时只有最后一项生效：`blocks/router` 的 `useUrlState`
++  改为在微任务里合并并发更新，再一次性写回。
++- 窄容器下集合页脚换行：页脚与分页控件允许整行换行，「每页 20」保持一行不拆。
++
+ ## 0.1.0 — 2026-11-18
+ 
+ ### Added
+diff --git a/skills/ui-template-apply/catalog/quiet-inset/meta.yaml b/skills/ui-template-apply/catalog/quiet-inset/meta.yaml
+index 4baf17d..62ab05d 100644
+--- a/skills/ui-template-apply/catalog/quiet-inset/meta.yaml
++++ b/skills/ui-template-apply/catalog/quiet-inset/meta.yaml
+@@ -1,6 +1,6 @@
+ schema: ui-template/v4
+ name: quiet-inset
+-version: 0.1.0
++version: 0.2.0
+ summary: Pure-gray three-surface workbench (shell → inset panel → white cards) with a single indigo accent; quiet chrome, compact density.
+ fits:
+   - issue trackers, project and agent workbenches, internal tools
+diff --git a/skills/ui-template-apply/catalog/workbench-shell/CHANGELOG.md b/skills/ui-template-apply/catalog/workbench-shell/CHANGELOG.md
+index 11c89f3..3aab835 100644
+--- a/skills/ui-template-apply/catalog/workbench-shell/CHANGELOG.md
++++ b/skills/ui-template-apply/catalog/workbench-shell/CHANGELOG.md
+@@ -1,5 +1,11 @@
+ # workbench-shell
+ 
++## 5.0.6
++- `blocks/router`: `useUrlState` batches concurrent updates (one microtask flush), so changing several params in
++  one handler no longer keeps only the last one.
++- `blocks/data-table`: the footer and its page controls wrap as whole rows on narrow widths instead of splitting
++  the page-size label from its select.
++
+ ## 5.0.5
+ - No longer ships reference screenshots: the repo keeps no binary images (git size); step 07 composes
+   the reference live via `review_visual.py compose --reference-base`. `reference/` now holds only `src/`.
+diff --git a/skills/ui-template-apply/catalog/workbench-shell/meta.yaml b/skills/ui-template-apply/catalog/workbench-shell/meta.yaml
+index 7a3ea83..9a2de58 100644
+--- a/skills/ui-template-apply/catalog/workbench-shell/meta.yaml
++++ b/skills/ui-template-apply/catalog/workbench-shell/meta.yaml
+@@ -1,6 +1,6 @@
+ schema: ui-template/v4
+ name: workbench-shell
+-version: 5.0.5
++version: 5.0.6
+ summary: Neutral gray workbench with a restrained blue accent; sidebar shell, dense lists, quiet chrome.
+ fits:
+   - internal tools, admin consoles, operator / agent workbenches
+diff --git a/skills/ui-template-apply/library/blocks/data-table.tsx b/skills/ui-template-apply/library/blocks/data-table.tsx
+index 4c09046..207ea86 100644
+--- a/skills/ui-template-apply/library/blocks/data-table.tsx
++++ b/skills/ui-template-apply/library/blocks/data-table.tsx
+@@ -151,9 +151,9 @@ function LoadMoreSentinel({ onLoadMore, disabled }: { onLoadMore: () => void; di
+ /** Page-number controls for `{ mode: "pages" }`: 上一页 / 第 n / 共 P 页 / 下一页 (+ optional page-size select). */
+ function PageControls({ paging, pageCount }: { paging: PagesPaging; pageCount: number }) {
+   return (
+-    <div className="flex items-center gap-2">
++    <div className="flex flex-wrap items-center justify-end gap-x-2 gap-y-1">
+       {paging.pageSizeOptions !== undefined && paging.onPageSize !== undefined ? (
+-        <div className="flex items-center gap-1.5">
++        <div className="flex shrink-0 items-center gap-1.5 whitespace-nowrap">
+           <span>{vocab.copy.pageSize}</span>
+           <Select value={String(paging.pageSize)} onValueChange={(value) => paging.onPageSize?.(Number(value))}>
+             <SelectTrigger size="sm" aria-label={vocab.copy.pageSize} className="w-16"><SelectValue /></SelectTrigger>
+@@ -334,7 +334,7 @@ export function DataTable<T>({
+         data-paging={pages === null ? undefined : "pages"}
+         data-has-more={pages !== null ? (pages.page < pageCount ? "true" : undefined) : more?.hasMore === true ? "true" : undefined}
+         data-capped={more?.capped === true ? "true" : undefined}
+-        className={cn("flex items-center justify-between gap-3 px-3 py-2 text-xs text-muted-foreground", bordered && "border-t")}>
++        className={cn("flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-3 py-2 text-xs text-muted-foreground", bordered && "border-t")}>
+         <span role="status">{pages !== null ? vocab.copy.totalItems(pages.total) : vocab.copy.count(rows.length, { total, more: more?.hasMore === true, capped: more?.capped === true })}</span>
+         {pages !== null ? <PageControls paging={pages} pageCount={pageCount} /> : null}
+         {more !== null && more.hasMore ? (
+diff --git a/skills/ui-template-apply/library/blocks/router.tsx b/skills/ui-template-apply/library/blocks/router.tsx
+index c9332b2..ba80659 100644
+--- a/skills/ui-template-apply/library/blocks/router.tsx
++++ b/skills/ui-template-apply/library/blocks/router.tsx
+@@ -17,17 +17,29 @@ export function useAppNavigate(): (to: string, options?: { replace?: boolean })
+   return React.useCallback((to, options) => { void navigate(to, options) }, [navigate])
+ }
+ 
++// "Clear filters" sets six params in one handler. React Router applies every functional setSearchParams
++// against the same location snapshot, so concurrent calls overwrite each other and only the last one lands.
++// Updates accumulate here and flush once per microtask instead.
++let pendingSearch: URLSearchParams | null = null
++let flushScheduled = false
++
+ /** One URL search param as state (filters, sort, tab, cursor). Empty/default values are removed from the URL. */
+ export function useUrlState(key: string, fallback = ""): [string, (value: string) => void] {
+   const [params, setParams] = useSearchParams()
+   const value = params.get(key) ?? fallback
+   const set = React.useCallback((next: string) => {
+-    setParams((current) => {
+-      const copy = new URLSearchParams(current)
+-      if (next === "" || next === fallback) copy.delete(key)
+-      else copy.set(key, next)
+-      return copy
+-    }, { replace: true })
++    const copy = new URLSearchParams(pendingSearch ?? window.location.search)
++    if (next === "" || next === fallback) copy.delete(key)
++    else copy.set(key, next)
++    pendingSearch = copy
++    if (flushScheduled) return
++    flushScheduled = true
++    queueMicrotask(() => {
++      const search = pendingSearch
++      pendingSearch = null
++      flushScheduled = false
++      if (search !== null) setParams(search, { replace: true })
++    })
+   }, [key, fallback, setParams])
+   return [value, set]
+ }
+diff --git a/skills/ui-template-apply/library/registry.json b/skills/ui-template-apply/library/registry.json
+index 2e5fc9e..d7196e1 100644
+--- a/skills/ui-template-apply/library/registry.json
++++ b/skills/ui-template-apply/library/registry.json
+@@ -131,7 +131,7 @@
+         {
+           "path": "blocks/data-table.tsx",
+           "target": "src/components/blocks/data-table.tsx",
+-          "sha256": "defd108ca8c457382eb2bfc24edf2501c997c17a49e6faf3e0ecf1a1215845a5"
++          "sha256": "bdaad08d70694ea2c1729fa94e6aeaefb753a8d6e964943412dfc50a420fae0d"
+         }
+       ],
+       "dependencies": [
+@@ -272,7 +272,7 @@
+         {
+           "path": "blocks/router.tsx",
+           "target": "src/components/blocks/router.tsx",
+-          "sha256": "18a7c7f27c0e79b16b6ed2cb2d5a93ea27583e9e5fa5359ebad25d76b35bbd4d"
++          "sha256": "bbf773838b711f86ec6eed7a844f3e34b41da56959f58515febc6f55ff0da338"
+         }
+       ],
+       "dependencies": [
+diff --git a/templates/quiet-inset/CHANGELOG.md b/templates/quiet-inset/CHANGELOG.md
+index 2a0bf1a..c0978b6 100644
+--- a/templates/quiet-inset/CHANGELOG.md
++++ b/templates/quiet-inset/CHANGELOG.md
+@@ -1,5 +1,12 @@
+ # quiet-inset
+ 
++## 0.2.0 — 2026-11-20
++
++### Fixed
++- 同一事件里改多个 URL 参数（「清除筛选」一次清六项）时只有最后一项生效：`blocks/router` 的 `useUrlState`
++  改为在微任务里合并并发更新，再一次性写回。
++- 窄容器下集合页脚换行：页脚与分页控件允许整行换行，「每页 20」保持一行不拆。
++
+ ## 0.1.0 — 2026-11-18
+ 
+ ### Added
+diff --git a/templates/quiet-inset/meta.yaml b/templates/quiet-inset/meta.yaml
+index 4baf17d..62ab05d 100644
+--- a/templates/quiet-inset/meta.yaml
++++ b/templates/quiet-inset/meta.yaml
+@@ -1,6 +1,6 @@
+ schema: ui-template/v4
+ name: quiet-inset
+-version: 0.1.0
++version: 0.2.0
+ summary: Pure-gray three-surface workbench (shell → inset panel → white cards) with a single indigo accent; quiet chrome, compact density.
+ fits:
+   - issue trackers, project and agent workbenches, internal tools
+diff --git a/templates/workbench-shell/CHANGELOG.md b/templates/workbench-shell/CHANGELOG.md
+index 11c89f3..3aab835 100644
+--- a/templates/workbench-shell/CHANGELOG.md
++++ b/templates/workbench-shell/CHANGELOG.md
+@@ -1,5 +1,11 @@
+ # workbench-shell
+ 
++## 5.0.6
++- `blocks/router`: `useUrlState` batches concurrent updates (one microtask flush), so changing several params in
++  one handler no longer keeps only the last one.
++- `blocks/data-table`: the footer and its page controls wrap as whole rows on narrow widths instead of splitting
++  the page-size label from its select.
++
+ ## 5.0.5
+ - No longer ships reference screenshots: the repo keeps no binary images (git size); step 07 composes
+   the reference live via `review_visual.py compose --reference-base`. `reference/` now holds only `src/`.
+diff --git a/templates/workbench-shell/meta.yaml b/templates/workbench-shell/meta.yaml
+index 7a3ea83..9a2de58 100644
+--- a/templates/workbench-shell/meta.yaml
++++ b/templates/workbench-shell/meta.yaml
+@@ -1,6 +1,6 @@
+ schema: ui-template/v4
+ name: workbench-shell
+-version: 5.0.5
++version: 5.0.6
+ summary: Neutral gray workbench with a restrained blue accent; sidebar shell, dense lists, quiet chrome.
+ fits:
+   - internal tools, admin consoles, operator / agent workbenches
