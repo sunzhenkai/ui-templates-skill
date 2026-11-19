@@ -1,0 +1,21 @@
+diff --git a/skills/ui-template-apply/library/registry.json b/skills/ui-template-apply/library/registry.json
+index fb3e1a6..2e5fc9e 100644
+--- a/skills/ui-template-apply/library/registry.json
++++ b/skills/ui-template-apply/library/registry.json
+@@ -193,7 +193,7 @@
+         {
+           "path": "blocks/log-view.tsx",
+           "target": "src/components/blocks/log-view.tsx",
+-          "sha256": "b2667b1be521d3d070b359a81864d2e12067a4a47280ea5b475c55698958e4e0"
++          "sha256": "78798a5719a6139b47da4352134e75d7942a0ff2563a7b2836b13c53dca80961"
+         }
+       ],
+       "dependencies": [
+@@ -203,6 +203,7 @@
+       ],
+       "registryDependencies": [
+         "blocks/format",
++        "blocks/use-container-width",
+         "ui/button",
+         "ui/input"
+       ]

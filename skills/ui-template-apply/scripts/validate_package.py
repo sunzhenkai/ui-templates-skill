@@ -308,6 +308,45 @@ def check_theme_deviations(css: str, lock: dict, allowed: set[str], report: Repo
                                 "record it in ui-decisions.yaml → theme_deviations to accept)")
 
 
+# Keep in step with review_visual.DEFAULT_STATES.
+DEFAULT_STATES = {
+    "collection": ("empty", "populated"),
+    "conversation": ("no-session", "sessions"),
+    "settings": ("saved",),
+    "log-viewer": ("narrow",),
+    "canvas": ("dense", "dark"),
+}
+
+
+def page_pattern(spec: object) -> str | None:
+    if isinstance(spec, str):
+        return spec
+    if isinstance(spec, dict) and isinstance(spec.get("pattern"), str):
+        return spec["pattern"]
+    return None
+
+
+def page_states(spec: object) -> list[str]:
+    if isinstance(spec, dict) and "states" in spec and spec["states"] is not None:
+        return [str(item) for item in spec["states"]]
+    return list(DEFAULT_STATES.get(page_pattern(spec) or "", ()))
+
+
+def version_lt(left: str, right: str) -> bool:
+    def parse(value: str) -> tuple[int, ...]:
+        return tuple(int(part) for part in value.split("."))
+    return parse(left) < parse(right)
+
+
+def review_sections(text: str) -> list[tuple[str, str]]:
+    parts = re.split(r"(?m)^## (\S+)[ \t]*$", text)
+    sections: list[tuple[str, str]] = []
+    iterator = iter(parts[1:])
+    for heading, body in zip(iterator, iterator):
+        sections.append((heading, body))
+    return sections
+
+
 def cmd_project(project: Path) -> int:
     report = Report()
     lock_path = project / "ui-template.lock.json"
@@ -343,7 +382,8 @@ def cmd_project(project: Path) -> int:
             if key not in known:
                 report.error("J05", f"ui-decisions.yaml: unknown decision {key!r}")
         names = {path.stem for path in (SKILL / "patterns").glob("*.md")} - {"index"}
-        for route, pattern in (data.get("pages") or {}).items():
+        for route, spec in (data.get("pages") or {}).items():
+            pattern = page_pattern(spec)
             if pattern not in names:
                 report.error("J07", f"ui-decisions.yaml: page {route!r} uses unknown pattern {pattern!r}")
         for index, item in enumerate(data.get("feedback") or []):
@@ -355,20 +395,43 @@ def cmd_project(project: Path) -> int:
         report.warnings = [w for w in report.warnings if not (w.startswith("J03") and w.split()[1] not in edited)]
     elif not decisions_path.is_file():
         report.warn("J06", "ui-decisions.yaml missing (step 01 records decisions there)")
+    pages = (data or {}).get("pages") or {}
+    has_pages = isinstance(pages, dict) and bool(pages)
     review = project / "ui-review.md"
     if not review.is_file():
-        report.warn("J10", "ui-review.md missing (step 07: review_visual.py compose, then review every composite)")
+        message = "ui-review.md missing (step 07: review_visual.py compose, then review every composite)"
+        if has_pages:
+            report.error("J10", message)
+        else:
+            report.warn("J10", message)
     else:
         text = review.read_text(encoding="utf-8")
-        sections = re.findall(r"^## (\S+)$", text, flags=re.M)
-        for route in (data or {}).get("pages") or {}:
-            rx = "^" + re.sub(r":[^/]+", "[^/]+", re.escape(route).replace(r"\*", ".*").replace(r"\:", ":")) + "$"
-            if not any(re.match(rx, s) for s in sections):
-                report.warn("J10", f"ui-review.md: no reviewed route matches page {route!r}")
+        sections = review_sections(text)
+        if isinstance(pages, dict):
+            for route, spec in pages.items():
+                rx = "^" + re.sub(r":[^/]+", "[^/]+", re.escape(str(route)).replace(r"\*", ".*").replace(r"\:", ":")) + "$"
+                bodies = [body for heading, body in sections if re.match(rx, heading)]
+                if not bodies:
+                    report.error("J10", f"ui-review.md: no reviewed route matches page {route!r}")
+                    continue
+                for state in page_states(spec):
+                    if not any(re.search(rf"(?m)^- \[[ x]\] state {re.escape(state)}\b", body) for body in bodies):
+                        report.error("J10", f"ui-review.md: {route} missing state {state}")
         open_items = re.findall(r"^- \[ \] .*$", text, flags=re.M)
         pending = re.findall(r"^status: pending$", text, flags=re.M)
         if open_items or pending:
             report.error("J11", f"ui-review.md: {len(open_items)} open finding(s), {len(pending)} route(s) pending review")
+        locked = set(lock.get("files") or {})
+        current = str(lock.get("version") or "0.0.0")
+        for item in re.findall(r"^- \[[ x]\] .+$", text, flags=re.M):
+            hits = [path for path in locked if path in item]
+            if not hits:
+                continue
+            found = re.search(r"upstream:\s*(\d+\.\d+\.\d+)", item)
+            if found is None:
+                report.error("J13", f"review item names locked file {hits[0]} but has no upstream: X.Y.Z")
+            elif version_lt(current, found.group(1)):
+                report.error("J13", f"lock {current} is older than upstream {found.group(1)} for {hits[0]}")
     return report.finish("project")
 
 

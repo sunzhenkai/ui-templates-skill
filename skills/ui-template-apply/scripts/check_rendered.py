@@ -32,6 +32,8 @@ Codes (error unless noted):
       footer does not show the total; or an API response on the page reports more (nextCursor / hasMore, a full
       page at the requested `limit`, or `offset`/`page` + items < `total`) while the footer showing that page
       claims it is complete
+  R20 empty collection: a collection footer reports data-loaded="0" and the page has no [data-slot=empty]
+      (an empty collection is an empty state, not a footer that only says the count is zero)
 R08 ignores HTTP 404 resource errors on pages that render the not-found state ([data-state=not-found]).
 Theme is switched by toggling the `dark` class on <html> (blocks/theme contract).
 Declared [data-scroll-region] elements scroll; elements inside [role=log], [role=dialog], pre, textarea or [data-scroll-ok] may too.
@@ -246,6 +248,10 @@ PROBE = r"""
     const root = f.closest('[data-surface=panel]') || f.parentElement
     const dom = root.querySelectorAll('tbody > tr:not([data-spacer]), ul > li:not([data-spacer])').length
     if (Number(f.dataset.loaded) > 200 && dom > 200) out.push(['R19', `${dom} rows in the DOM for ${f.dataset.loaded} loaded (virtualize above 200)`])
+  }
+  // R20 a zero footer is not an empty state
+  if (document.querySelector('[data-slot=collection-footer][data-loaded="0"]') && !document.querySelector('[data-slot=empty]')) {
+    out.push(['R20', 'collection footer loaded=0 without an empty state'])
   }
   return out
 }

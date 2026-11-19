@@ -12,6 +12,7 @@ self_review:
   - 开关类设置即时保存（notify.success），文本类按分区保存
   - 危险操作分区放最后，单独标题
   - 分区导航与内容之间有分割线（宽：整高竖线；窄：横排导航下方横线），浅/深色都看得见
+  - 控件显示已保存值；未设置时 placeholder 写默认值，不用空框表示已保存
 ---
 
 # Settings
@@ -26,3 +27,4 @@ SectionLayout 的竖线由 Split 画，从页头底线到画布底边，不要�
 - 分区内容宽度 ≤ 42rem（form 宽度）；每行设置：左标签+说明，右控件（`Field orientation="horizontal"`）。
 - 分区 ≤ 8 个；超过说明信息架构需要拆分。
 - 不要用 Tabs 做设置分区——分区是路由，Tabs 是同一资源的视图。
+- 数值和文本控件的 value 来自已保存的数据。没有保存值才用 placeholder，placeholder 写出默认，不用空白表示「已经有值」。

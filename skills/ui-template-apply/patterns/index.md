@@ -17,6 +17,7 @@
 | 自动刷新、运行中状态 | realtime | collection, detail | — |
 | 对话、消息流 | conversation | realtime | list-detail |
 | 日志、事件流 | log-viewer | realtime | detail |
+| 节点连线、关系图 | canvas | — | — |
 
 决策（`decisions`）的默认值来自风格包 `meta.yaml → defaults`；项目覆盖写入 `ui-decisions.yaml`。
 没被问到的决策一律用默认值，不要向用户逐条确认。

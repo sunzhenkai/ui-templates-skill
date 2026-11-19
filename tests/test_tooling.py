@@ -91,6 +91,13 @@ class CheckRendered(unittest.TestCase):
         code, codes = self.check("rendered-good.html")
         self.assertEqual((code, codes), (0, set()))
 
+    def test_zero_footer_needs_empty_state(self):
+        code, codes = self.check("rendered-empty-footer.html")
+        self.assertEqual(code, 1)
+        self.assertIn("R20", codes)
+        _, ok = self.check("rendered-empty-ok.html")
+        self.assertNotIn("R20", ok)
+
 
 ESLINT_DIR = os.environ.get("UI_TEMPLATE_ESLINT_DIR")  # a node project with eslint + typescript-eslint installed
 
@@ -134,9 +141,13 @@ class VisualReview(unittest.TestCase):
         self.assertEqual(rv.archetype_for("/chat/x", pages), "list-detail")
         self.assertEqual(rv.archetype_for("/settings/keys", pages), "settings")
         self.assertIsNone(rv.archetype_for("/nope", pages))
+        self.assertIsNone(rv.archetype_for("/graph", {"/graph": "canvas"}))
         ordered = {"/jobs/:id": "detail", "/jobs/new": "form", "/empty": "empty"}  # param route declared first
         self.assertEqual(rv.archetype_for("/jobs/new", ordered), "form")
         self.assertEqual(rv.archetype_for("/empty", ordered), "empty")
+        self.assertEqual(rv.page_states("collection"), ["empty", "populated"])
+        self.assertEqual(rv.page_states({"pattern": "detail", "states": ["cards"]}), ["cards"])
+        self.assertEqual(rv.page_states({"pattern": "collection", "states": []}), [])
 
     def test_references_shipped(self):
         self.assertEqual(list((APPLY / "catalog/workbench-shell").rglob("*.png")), [])  # no binary images ship
@@ -147,13 +158,33 @@ class VisualReview(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             run(APPLY / "scripts/install_registry.py", "--project", tmp, "--package", "workbench-shell")
             Path(tmp, "ui-decisions.yaml").write_text("package: workbench-shell\npages:\n  /jobs: collection\n")
+            result = run(APPLY / "scripts/validate_package.py", "project", tmp)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("J10", result.stdout + result.stderr)
             Path(tmp, "ui-review.md").write_text("# UI review\n\n## /jobs\n- [ ] seams: gap\nstatus: pending\n")
             result = run(APPLY / "scripts/validate_package.py", "project", tmp)
             self.assertIn("J11", result.stdout + result.stderr)
-            Path(tmp, "ui-review.md").write_text("# UI review\n\n## /jobs\n- [x] seams: gap → fixed\nstatus: reviewed\n")
+            self.assertIn("missing state empty", result.stdout + result.stderr)
+            reviewed = (
+                "# UI review\n\n## /jobs\n- [x] seams: gap → fixed\n"
+                "- [x] state empty: empty state\n- [x] state populated: two rows\nstatus: reviewed\n"
+            )
+            Path(tmp, "ui-review.md").write_text(reviewed)
             result = run(APPLY / "scripts/validate_package.py", "project", tmp)
             self.assertNotIn("J11", result.stdout + result.stderr)
             self.assertNotIn("J10", result.stdout + result.stderr)
+            locked = "src/components/blocks/data-table.tsx"
+            Path(tmp, "ui-review.md").write_text(
+                reviewed + f"- [x] lock: {locked} footer → upstream: 99.0.0\n"
+            )
+            result = run(APPLY / "scripts/validate_package.py", "project", tmp)
+            self.assertIn("J13", result.stdout + result.stderr)
+            version = json.loads(Path(tmp, "ui-template.lock.json").read_text())["version"]
+            Path(tmp, "ui-review.md").write_text(
+                reviewed + f"- [x] lock: {locked} footer → upstream: {version}\n"
+            )
+            result = run(APPLY / "scripts/validate_package.py", "project", tmp)
+            self.assertNotIn("J13", result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

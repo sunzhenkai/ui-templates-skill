@@ -11,11 +11,17 @@ package: workbench-shell
 decisions:            # 只写覆盖项；键必须是某个 pattern 声明过的
   collection.row_height: 44
 pages:
-  /jobs: collection
-  /jobs/:id: detail
+  /jobs: collection          # 字符串 = 该 pattern 的默认状态
+  /jobs/:id:
+    pattern: detail
+    states: [cards]          # 事件/时间线才写 cards；普通详情省略
   /settings/*: settings
+  /graph:
+    pattern: canvas
 local_edits: {}       # 被修改过的已安装文件 → 原因（validate project 会核对）
 feedback: []          # 06 的分诊记录
 ```
+
+`states` 省略时用 pattern 默认：collection = `empty` + `populated`，conversation = `no-session` + `sessions`，settings = `saved`，log-viewer = `narrow`，canvas = `dense` + `dark`。detail 没有默认状态；时间线页面自己写 `cards`。显式 `states: []` 表示这个路由不追加状态截图。
 
 不要在这一步写任何组件代码。

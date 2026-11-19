@@ -15,6 +15,7 @@ self_review:
   - 768px 以下侧栏变成 sheet，内容不被挤压
   - Toaster、ConfirmProvider、ThemeProvider、TooltipProvider 各只挂一次，在根部
   - 侧栏与内容画布靠底色区分（app-shell 底 vs 内容 background），深色下差异仍可见
+  - 移动端的长目录收进一个入口，不占满第一屏
 ---
 
 # Shell
@@ -55,6 +56,7 @@ createRoot(el).render(
 规则
 - 导航只放真实的业务入口：不放演示/示例路由（如“空状态示例”）、不放创建动作（放页头主操作）、不重复同一资源。
 - 导航分组 ≤ 3 组、每组 ≤ 7 项；超过就该有二级导航（settings 的 SectionLayout），而不是更长的侧栏。
+- 页内长目录（帮助章节、分区列表）在窄容器里收成一个入口。展开后才占高度，不能在 390 宽上盖住第一屏。
 - 路由的 `errorElement` 用 `RouteError`，`*` 路由用 `NotFound`（blocks/app-errors）。
 - 主题切换用 `<ThemeMenu />`（blocks/theme-menu）放侧栏 footer：浅色 / 深色 / 跟随系统；文案用 `labels` 改，不要再手写菜单。
 - 侧栏宽度、圆角、画布颜色都来自 theme.css；不要在 shell 上写颜色或尺寸。

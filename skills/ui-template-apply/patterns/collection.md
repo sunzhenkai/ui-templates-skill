@@ -19,11 +19,11 @@ self_review:
   - 每列声明了 meta.kind；除 primary 外的列都考虑过 priority（2/3 会在窄容器隐藏）
   - 行导航用 rowHref（真实链接），没有 tr onClick / navigate()
   - 时间、数字、ID、状态全部走 Time / Num / Id / StatusBadge
-  - 列数 ≤ 7；更多信息去详情页
+  - 列数 ≤ 7；主文案可能重复时，行内能看见路径、时间或 id
   - 480px 容器宽度下是两行列表，不出现横向滚动
   - 列表没有自己的滚动容器
   - 表格是一个可辨认的区域：默认 frame=bordered（外框、圆角、表头底色、行分割线）；已在 Card/Sheet 里时用 frame="flush"，不出现双层边框
-  - 空态 / 加载态占据表格的位置（同宽、同起点），不会让页面结构跳动
+  - 空集是 EmptyState，不渲染 loaded=0 的页脚；加载态占同一位置
 ---
 
 # Collection
@@ -87,5 +87,6 @@ const jobs = useQuery({ queryKey: ["jobs", { status, page }], queryFn: () => api
     sort 进查询 key 与请求参数；传了 `sorting` 后表格不再自己重排。
 - 行内操作 ≤ 1 个图标按钮 + 溢出菜单；操作列 `kind: "actions"` 会自动浮在 RowLink 之上。
 - 主从布局（左列表右详情）用 `selectedId + onSelect`，并把选中 id 写进 URL。
-- 空集区分两种：从未有数据（EmptyState + 创建入口）与筛选无结果（`vocab.copy.noResults` + 清除筛选）。
+- 空集区分两种：从未有数据（EmptyState + 创建入口）与筛选无结果（`vocab.copy.noResults` + 清除筛选）。两种都不留 `data-loaded="0"` 的页脚。
+- primary 列不是标识。名称、标题会重复时，同一行必须再显示路径、更新时间或 id，窄容器把这列隐藏掉也不行。
 - 卡片网格只用于以图片/预览为主的资源；文字资源一律表格。

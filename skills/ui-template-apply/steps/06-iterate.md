@@ -13,6 +13,16 @@
 
 举一反三：定层后搜索同类用法（同一 block / 同一 pattern 的所有页面）一起验证。
 
+## 受锁 block 的视觉缺陷
+
+缺陷在 `ui-template.lock.json` 的 `files` 里（例如 `src/components/blocks/data-table.tsx`、`src/components/blocks/log-view.tsx`）时，不改项目副本，也不把这条审查勾成完成。在该路由下写锁定路径和将包含修改的模板版本：
+
+```markdown
+- [ ] lock: src/components/blocks/data-table.tsx 页脚样式 → upstream: 5.5.0
+```
+
+`validate_package.py project` 在锁的 `version` 还小于 `upstream` 时报 J13；行首仍是 `- [ ]` 时照常报 J11。升级到该版本、按 update 重拍这条路由之后，才改成 `- [x]`。级别色、页脚样式这类差异走这条路径，不在页面里 fork。
+
 ```yaml
 # ui-decisions.yaml
 feedback:

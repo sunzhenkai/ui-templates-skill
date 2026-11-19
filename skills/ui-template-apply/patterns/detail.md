@@ -12,6 +12,7 @@ self_review:
   - tab 状态写进 URL（useUrlState("tab")），刷新不丢
   - 404 时渲染 NotFound，而不是空白或无限 loading
   - 属性区、tab 内容、相关列表之间用分割线或 ≥24px 间距分组；同底色的卡片相邻时必须有边框
+  - 窄屏的事件或时间线是卡片行，字段不挤在同一行
 ---
 
 # Detail
@@ -23,3 +24,4 @@ self_review:
 - tab ≤ 5 个；每个 tab 自己处理加载状态（StateBoundary），切 tab 不让整页闪烁。
 - aside 布局（右侧属性栏）只在内容主体是长文/对话时使用；容器 < 64rem 时属性栏移到上方。
 - 编辑：字段少（≤3）用行内编辑或 Dialog；多则跳转编辑页（form pattern）。
+- 事件、评审、时间线在容器窄于 768 时改成一张卡片一行。这种页面在 `pages` 里写 `states: [cards]`，07 会补一张 390 的产品页截图。

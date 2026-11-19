@@ -1,0 +1,821 @@
+diff --git a/skills/ui-template-apply/library/blocks/log-view.tsx b/skills/ui-template-apply/library/blocks/log-view.tsx
+index f3ac172..e53e07b 100644
+--- a/skills/ui-template-apply/library/blocks/log-view.tsx
++++ b/skills/ui-template-apply/library/blocks/log-view.tsx
+@@ -9,6 +9,7 @@ import { cn } from "cn"
+ import { Button } from "@/components/ui/button"
+ import { Input } from "@/components/ui/input"
+ import { formatDateTime } from "@/components/blocks/format"
++import { useContainerWidth } from "@/components/blocks/use-container-width"
+ 
+ export type LogLine = { id: string; time?: string | number | undefined; level?: "debug" | "info" | "warn" | "error" | undefined; text: string; detail?: unknown | undefined }
+ 
+@@ -20,6 +21,9 @@ export function LogView({ lines, height = "28rem", follow: followDefault = true,
+   const [filter, setFilter] = React.useState("")
+   const [wrap, setWrap] = React.useState(false)
+   const [follow, setFollow] = React.useState(followDefault)
++  const [host, width] = useContainerWidth<HTMLDivElement>()
++  const narrow = width > 0 && width < 768
++  const wrapping = narrow || wrap
+   const [open, setOpen] = React.useState<Set<string>>(() => new Set())
+   const parent = React.useRef<HTMLDivElement | null>(null)
+   const visible = React.useMemo(() => {
+@@ -34,11 +38,11 @@ export function LogView({ lines, height = "28rem", follow: followDefault = true,
+   }
+   const toggle = (id: string) => setOpen((current) => { const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next })
+   return (
+-    <div data-surface="panel" className={cn("flex min-w-0 flex-col overflow-clip rounded-lg border", className)}>
++    <div ref={host} data-surface="panel" className={cn("flex min-w-0 flex-col overflow-clip rounded-lg border", className)}>
+       <div className="flex items-center gap-2 border-b p-2">
+         <Input value={filter} onChange={(event) => setFilter(event.target.value)} placeholder={filterPlaceholder} aria-label={filterPlaceholder} className="h-7 max-w-64" />
+         <span className="flex-1 text-xs text-muted-foreground tabular-nums">{visible.length} / {lines.length}</span>
+-        <Button variant={wrap ? "secondary" : "ghost"} size="icon-sm" aria-pressed={wrap} aria-label="wrap" onClick={() => setWrap(!wrap)}><WrapTextIcon /></Button>
++        <Button variant={wrapping ? "secondary" : "ghost"} size="icon-sm" aria-pressed={wrapping} aria-label="wrap" onClick={() => setWrap(!wrap)}><WrapTextIcon /></Button>
+         <Button variant={follow ? "secondary" : "ghost"} size="icon-sm" aria-pressed={follow} aria-label="follow" onClick={() => setFollow(!follow)}><ArrowDownToLineIcon /></Button>
+       </div>
+       <div ref={parent} onScroll={onScroll} role="log" aria-live={follow ? "polite" : "off"} className="overflow-auto bg-muted/20 font-mono text-xs" style={{ height }}>
+@@ -49,7 +53,7 @@ export function LogView({ lines, height = "28rem", follow: followDefault = true,
+             const expanded = open.has(line.id)
+             return (
+               <div key={line.id} ref={virtualizer.measureElement} data-index={item.index} className="absolute inset-x-0 px-3 py-0.5 hover:bg-muted/50" style={{ transform: `translateY(${item.start}px)` }}>
+-                <div className={cn("flex gap-3", wrap ? "whitespace-pre-wrap break-all" : "whitespace-pre")}>
++                <div className={cn("flex gap-3", wrapping ? "whitespace-pre-wrap break-all" : "whitespace-pre")}>
+                   {line.time !== undefined ? <span className="shrink-0 text-muted-foreground tabular-nums">{formatDateTime(line.time, { timeStyle: "medium" })}</span> : null}
+                   <span className={cn("min-w-0", levelClass[line.level ?? "info"])}>{line.text}</span>
+                   {line.detail !== undefined ? <button type="button" onClick={() => toggle(line.id)} className="shrink-0 text-muted-foreground underline-offset-2 hover:underline">{expanded ? "−" : "{…}"}</button> : null}
+diff --git a/skills/ui-template-apply/patterns/canvas.md b/skills/ui-template-apply/patterns/canvas.md
+new file mode 100644
+index 0000000..be033c5
+--- /dev/null
++++ b/skills/ui-template-apply/patterns/canvas.md
+@@ -0,0 +1,20 @@
++---
++name: canvas
++when: 节点连线图、关系图，以及其他不是表格或文档的自定义画布
++blocks: [blocks/surfaces]
++decisions: []
++self_review:
++  - 标签不压在节点上，标签之间不重叠
++  - 默认只画最重要的一批标签，而不是每个节点都出字
++  - 标签有底，深色下连线和文字仍能分开
++  - 画布在 Page 内，不给 html/body 加滚动
++---
++
++# Canvas
++
++没有参考原型。07 对 `dense` 和 `dark` 只拍产品页，不和 collection 原型左右对照。
++
++规则
++- 页面只提供数据：节点、边、要显示的标签。碰撞避让、标签底色、标签上限写在这一处画布组件里。
++- 深色连线用主题里能与背景分开的颜色，不写死灰色。
++- 画布区域声明 `data-scroll-region`；画布边框仍留在视口内。
+diff --git a/skills/ui-template-apply/patterns/collection.md b/skills/ui-template-apply/patterns/collection.md
+index b69d804..b045f1a 100644
+--- a/skills/ui-template-apply/patterns/collection.md
++++ b/skills/ui-template-apply/patterns/collection.md
+@@ -19,11 +19,11 @@ self_review:
+   - 每列声明了 meta.kind；除 primary 外的列都考虑过 priority（2/3 会在窄容器隐藏）
+   - 行导航用 rowHref（真实链接），没有 tr onClick / navigate()
+   - 时间、数字、ID、状态全部走 Time / Num / Id / StatusBadge
+-  - 列数 ≤ 7；更多信息去详情页
++  - 列数 ≤ 7；主文案可能重复时，行内能看见路径、时间或 id
+   - 480px 容器宽度下是两行列表，不出现横向滚动
+   - 列表没有自己的滚动容器
+   - 表格是一个可辨认的区域：默认 frame=bordered（外框、圆角、表头底色、行分割线）；已在 Card/Sheet 里时用 frame="flush"，不出现双层边框
+-  - 空态 / 加载态占据表格的位置（同宽、同起点），不会让页面结构跳动
++  - 空集是 EmptyState，不渲染 loaded=0 的页脚；加载态占同一位置
+ ---
+ 
+ # Collection
+@@ -87,5 +87,6 @@ const jobs = useQuery({ queryKey: ["jobs", { status, page }], queryFn: () => api
+     sort 进查询 key 与请求参数；传了 `sorting` 后表格不再自己重排。
+ - 行内操作 ≤ 1 个图标按钮 + 溢出菜单；操作列 `kind: "actions"` 会自动浮在 RowLink 之上。
+ - 主从布局（左列表右详情）用 `selectedId + onSelect`，并把选中 id 写进 URL。
+-- 空集区分两种：从未有数据（EmptyState + 创建入口）与筛选无结果（`vocab.copy.noResults` + 清除筛选）。
++- 空集区分两种：从未有数据（EmptyState + 创建入口）与筛选无结果（`vocab.copy.noResults` + 清除筛选）。两种都不留 `data-loaded="0"` 的页脚。
++- primary 列不是标识。名称、标题会重复时，同一行必须再显示路径、更新时间或 id，窄容器把这列隐藏掉也不行。
+ - 卡片网格只用于以图片/预览为主的资源；文字资源一律表格。
+diff --git a/skills/ui-template-apply/patterns/detail.md b/skills/ui-template-apply/patterns/detail.md
+index 2d4093d..47eba7d 100644
+--- a/skills/ui-template-apply/patterns/detail.md
++++ b/skills/ui-template-apply/patterns/detail.md
+@@ -12,6 +12,7 @@ self_review:
+   - tab 状态写进 URL（useUrlState("tab")），刷新不丢
+   - 404 时渲染 NotFound，而不是空白或无限 loading
+   - 属性区、tab 内容、相关列表之间用分割线或 ≥24px 间距分组；同底色的卡片相邻时必须有边框
++  - 窄屏的事件或时间线是卡片行，字段不挤在同一行
+ ---
+ 
+ # Detail
+@@ -23,3 +24,4 @@ self_review:
+ - tab ≤ 5 个；每个 tab 自己处理加载状态（StateBoundary），切 tab 不让整页闪烁。
+ - aside 布局（右侧属性栏）只在内容主体是长文/对话时使用；容器 < 64rem 时属性栏移到上方。
+ - 编辑：字段少（≤3）用行内编辑或 Dialog；多则跳转编辑页（form pattern）。
++- 事件、评审、时间线在容器窄于 768 时改成一张卡片一行。这种页面在 `pages` 里写 `states: [cards]`，07 会补一张 390 的产品页截图。
+diff --git a/skills/ui-template-apply/patterns/index.md b/skills/ui-template-apply/patterns/index.md
+index 5e5f6ac..0bf3fb3 100644
+--- a/skills/ui-template-apply/patterns/index.md
++++ b/skills/ui-template-apply/patterns/index.md
+@@ -17,6 +17,7 @@
+ | 自动刷新、运行中状态 | realtime | collection, detail | — |
+ | 对话、消息流 | conversation | realtime | list-detail |
+ | 日志、事件流 | log-viewer | realtime | detail |
++| 节点连线、关系图 | canvas | — | — |
+ 
+ 决策（`decisions`）的默认值来自风格包 `meta.yaml → defaults`；项目覆盖写入 `ui-decisions.yaml`。
+ 没被问到的决策一律用默认值，不要向用户逐条确认。
+diff --git a/skills/ui-template-apply/patterns/log-viewer.md b/skills/ui-template-apply/patterns/log-viewer.md
+index d00c516..fa28fe6 100644
+--- a/skills/ui-template-apply/patterns/log-viewer.md
++++ b/skills/ui-template-apply/patterns/log-viewer.md
+@@ -12,6 +12,8 @@ self_review:
+   - 结构化字段默认折叠
+   - LogView 有固定高度，是页面中唯一允许的内部滚动区域
+   - LogView 自带外框和工具栏下边线；不要再包一层 Card 造成双框
++  - 容器窄于 768 时行内换行；宽屏默认不换行
++  - 计数只出现在 LogView 工具栏，页头不再重复同一数字
+ ---
+ 
+ # Log viewer
+@@ -25,4 +27,6 @@ const lines: LogLine[] = events.map((e) => ({ id: e.id, time: e.ts, level: e.lev
+ - 日志是“窗口”，所以它自己滚动；同页其余内容仍由文档滚动。
+ - 等宽字体、12px、行高 20px；级别只用颜色区分 warn/error，info 不着色。
+ - 下载完整日志用独立按钮（PageHeader actions），不要试图在浏览器里渲染全部历史。
+-- 超长单行默认不换行（可横向滚动），提供换行开关。
++- 容器宽度 ≥ 768 时默认不换行（可横向滚动），工具栏提供换行开关。窄于 768 时 LogView 强制换行，避免一行被截断。
++- 行数只放在 LogView 工具栏（`可见 / 总数`）。页头、页脚不要再写同一个计数。
++- 级别色在 LogView 里。对比不够时按 06 记 `lock:` 与 `upstream:`，不在页面里改 `levelClass`。
+diff --git a/skills/ui-template-apply/patterns/settings.md b/skills/ui-template-apply/patterns/settings.md
+index 2df7867..b76b155 100644
+--- a/skills/ui-template-apply/patterns/settings.md
++++ b/skills/ui-template-apply/patterns/settings.md
+@@ -12,6 +12,7 @@ self_review:
+   - 开关类设置即时保存（notify.success），文本类按分区保存
+   - 危险操作分区放最后，单独标题
+   - 分区导航与内容之间有分割线（宽：整高竖线；窄：横排导航下方横线），浅/深色都看得见
++  - 控件显示已保存值；未设置时 placeholder 写默认值，不用空框表示已保存
+ ---
+ 
+ # Settings
+@@ -26,3 +27,4 @@ SectionLayout 的竖线由 Split 画，从页头底线到画布底边，不要
+ - 分区内容宽度 ≤ 42rem（form 宽度）；每行设置：左标签+说明，右控件（`Field orientation="horizontal"`）。
+ - 分区 ≤ 8 个；超过说明信息架构需要拆分。
+ - 不要用 Tabs 做设置分区——分区是路由，Tabs 是同一资源的视图。
++- 数值和文本控件的 value 来自已保存的数据。没有保存值才用 placeholder，placeholder 写出默认，不用空白表示「已经有值」。
+diff --git a/skills/ui-template-apply/patterns/shell.md b/skills/ui-template-apply/patterns/shell.md
+index f551cf1..afdd62c 100644
+--- a/skills/ui-template-apply/patterns/shell.md
++++ b/skills/ui-template-apply/patterns/shell.md
+@@ -15,6 +15,7 @@ self_review:
+   - 768px 以下侧栏变成 sheet，内容不被挤压
+   - Toaster、ConfirmProvider、ThemeProvider、TooltipProvider 各只挂一次，在根部
+   - 侧栏与内容画布靠底色区分（app-shell 底 vs 内容 background），深色下差异仍可见
++  - 移动端的长目录收进一个入口，不占满第一屏
+ ---
+ 
+ # Shell
+@@ -55,6 +56,7 @@ createRoot(el).render(
+ 规则
+ - 导航只放真实的业务入口：不放演示/示例路由（如“空状态示例”）、不放创建动作（放页头主操作）、不重复同一资源。
+ - 导航分组 ≤ 3 组、每组 ≤ 7 项；超过就该有二级导航（settings 的 SectionLayout），而不是更长的侧栏。
++- 页内长目录（帮助章节、分区列表）在窄容器里收成一个入口。展开后才占高度，不能在 390 宽上盖住第一屏。
+ - 路由的 `errorElement` 用 `RouteError`，`*` 路由用 `NotFound`（blocks/app-errors）。
+ - 主题切换用 `<ThemeMenu />`（blocks/theme-menu）放侧栏 footer：浅色 / 深色 / 跟随系统；文案用 `labels` 改，不要再手写菜单。
+ - 侧栏宽度、圆角、画布颜色都来自 theme.css；不要在 shell 上写颜色或尺寸。
+diff --git a/skills/ui-template-apply/scripts/check_rendered.py b/skills/ui-template-apply/scripts/check_rendered.py
+index a028f0a..e8ff518 100644
+--- a/skills/ui-template-apply/scripts/check_rendered.py
++++ b/skills/ui-template-apply/scripts/check_rendered.py
+@@ -32,6 +32,8 @@ Codes (error unless noted):
+       footer does not show the total; or an API response on the page reports more (nextCursor / hasMore, a full
+       page at the requested `limit`, or `offset`/`page` + items < `total`) while the footer showing that page
+       claims it is complete
++  R20 empty collection: a collection footer reports data-loaded="0" and the page has no [data-slot=empty]
++      (an empty collection is an empty state, not a footer that only says the count is zero)
+ R08 ignores HTTP 404 resource errors on pages that render the not-found state ([data-state=not-found]).
+ Theme is switched by toggling the `dark` class on <html> (blocks/theme contract).
+ Declared [data-scroll-region] elements scroll; elements inside [role=log], [role=dialog], pre, textarea or [data-scroll-ok] may too.
+@@ -247,6 +249,10 @@ PROBE = r"""
+     const dom = root.querySelectorAll('tbody > tr:not([data-spacer]), ul > li:not([data-spacer])').length
+     if (Number(f.dataset.loaded) > 200 && dom > 200) out.push(['R19', `${dom} rows in the DOM for ${f.dataset.loaded} loaded (virtualize above 200)`])
+   }
++  // R20 a zero footer is not an empty state
++  if (document.querySelector('[data-slot=collection-footer][data-loaded="0"]') && !document.querySelector('[data-slot=empty]')) {
++    out.push(['R20', 'collection footer loaded=0 without an empty state'])
++  }
+   return out
+ }
+ """
+diff --git a/skills/ui-template-apply/scripts/review_visual.py b/skills/ui-template-apply/scripts/review_visual.py
+index debb05b..3fedab6 100644
+--- a/skills/ui-template-apply/scripts/review_visual.py
++++ b/skills/ui-template-apply/scripts/review_visual.py
+@@ -1,23 +1,23 @@
+ #!/usr/bin/env python3
+ """Reference-based visual review (step 07).
+ 
+-  review_visual.py compose --base URL --reference-base URL [--project .] PATH[=ARCHETYPE] [...]
+-      screenshot each route of your app and each reference archetype, then write
+-      .ui-review/<slug>-<width>-<theme>.png:
+-      left = your page, right = the reference archetype at the same size and theme.
+-      The archetype comes from `=ARCHETYPE` or from ui-decisions.yaml `pages:` (pattern -> archetype).
+-      --reference-base serves the reference app (reference/README.md); usually a second port of the
+-      same dev server, e.g. --base http://localhost:5173 --reference-base http://localhost:5180.
+-      Adds a pending section per route to ui-review.md (existing sections are kept).
++  review_visual.py compose --base URL [--reference-base URL] [--project .] PATH[=ARCHETYPE][#STATE] [...]
++      screenshot each route of your app and, when the route has an archetype, the reference page.
++      .ui-review/<slug>-<width>-<theme>.png is a composite (left = implementation, right = reference).
++      States that need another fixture use PATH#STATE and write only
++      .ui-review/<slug>-state-<STATE>.impl.png (no reference composite).
++      --reference-base is required only when a route is compared with an archetype.
++      Same-url states (populated, narrow, cards, saved, dense, dark) are shot from PATH.
++      Data states (empty, no-session, sessions) are shot only via #STATE.
+ 
+   review_visual.py capture-reference --base URL --out DIR [--package workbench-shell]
+       screenshot the reference app into DIR — for eyeballing while authoring a package
+       (ui-template-design / author step 5). Never commit the output; screenshots are not
+       shipped in the repo (they would bloat git history), review composes them live.
+ 
+-Then open every composite and go through CHECKLIST. Record each difference as `- [ ] ...` under its
+-route, fix it, re-run compose, and tick it `- [x] ...`. Set `status: reviewed` when a route has no open
+-findings. validate_package.py project fails (J11) while any `- [ ]` or `status: pending` remains.
++Then open every picture and go through CHECKLIST. Tick `- [x] state <name>:`.
++validate_package.py project fails (J11) while any `- [ ]` or `status: pending` remains,
++and fails (J10) when a declared state line is missing.
+ """
+ from __future__ import annotations
+ 
+@@ -26,6 +26,8 @@ import re
+ import sys
+ from pathlib import Path
+ 
++import yaml
++
+ ARCHETYPES = {
+     "collection": "/jobs", "detail": "/jobs/demo", "form": "/jobs/new",
+     "settings": "/settings/general", "list-detail": "/threads/t1", "empty": "/empty",
+@@ -50,7 +52,43 @@ CHECKLIST = [
+     "scroll (-end shot): header and dock stay put, only the declared region moved, last item fully visible, canvas border/radius/margin intact on all four sides, table header stuck to the region top",
+     "collection footer: the count is the server total or 'loaded n / total m', never the loaded count posing as the total",
+     "controls: typed text is foreground colour, placeholder readable, only disabled controls are dimmed",
++    "identity: two rows with the same primary text still show a path, time, or id",
++    "count: the same number is not repeated in the header and a footer or toolbar",
++    "canvas: labels do not cover nodes, dark edges stay visible, and labels are capped",
++    "copy: database names, file paths, and ports match the running system",
+ ]
++# Keep in step with validate_package.DEFAULT_STATES.
++DEFAULT_STATES = {
++    "collection": ("empty", "populated"),
++    "conversation": ("no-session", "sessions"),
++    "settings": ("saved",),
++    "log-viewer": ("narrow",),
++    "canvas": ("dense", "dark"),
++}
++PRODUCT_ONLY = {"canvas"}
++SAME_URL_STATES = {"populated", "narrow", "cards", "saved", "dense", "dark"}
++STATE_VIEWS = {
++    "empty": (1280, "light"),
++    "populated": (390, "light"),
++    "no-session": (390, "light"),
++    "sessions": (390, "light"),
++    "saved": (1280, "light"),
++    "narrow": (390, "light"),
++    "cards": (390, "light"),
++    "dense": (1280, "light"),
++    "dark": (1280, "dark"),
++}
++STATE_HINT = {
++    "empty": "空集是 EmptyState，页面上没有「共 0 项」页脚",
++    "populated": "390 下至少两行；主文案相同的两行能看见路径、时间或 id",
++    "no-session": "390 无会话时列表入口可见",
++    "sessions": "390 有会话；同名两条能看见更新时间",
++    "saved": "输入框显示已保存值；未设置才用 placeholder",
++    "narrow": "390 下行内换行，计数只出现一处",
++    "cards": "390 下事件是卡片，字段不被挤成一行",
++    "dense": "标签不压节点，标签有上限",
++    "dark": "深色连线可辨",
++}
+ 
+ 
+ def shoot(page, url: str, width: int, theme: str, out: Path, state: str = "top") -> None:
+@@ -85,23 +123,8 @@ def slug(path: str) -> str:
+     return re.sub(r"[^a-zA-Z0-9]+", "_", path).strip("_") or "root"
+ 
+ 
+-def load_pages(project: Path) -> dict[str, str]:
+-    pages: dict[str, str] = {}
+-    f = project / "ui-decisions.yaml"
+-    if not f.exists():
+-        return pages
+-    inside = False
+-    for line in f.read_text().splitlines():
+-        if re.match(r"^pages:\s*$", line):
+-            inside = True
+-            continue
+-        if inside:
+-            m = re.match(r"^\s+(\S+):\s*([\w-]+)", line)
+-            if m:
+-                pages[m.group(1)] = m.group(2)
+-            elif line.strip() and not line.startswith((" ", "\t")):
+-                inside = False
+-    return pages
++def route_rx(pattern: str) -> str:
++    return "^" + re.sub(r":[^/]+", "[^/]+", re.escape(pattern).replace(r"\*", ".*").replace(r"\:", ":")) + "$"
+ 
+ 
+ def specificity(pattern: str) -> tuple[int, int, int]:
+@@ -110,14 +133,85 @@ def specificity(pattern: str) -> tuple[int, int, int]:
+     return (sum(s == "*" for s in segs), sum(s.startswith(":") for s in segs), -len(segs))
+ 
+ 
+-def archetype_for(path: str, pages: dict[str, str]) -> str | None:
++def load_raw_pages(project: Path) -> dict:
++    f = project / "ui-decisions.yaml"
++    if not f.exists():
++        return {}
++    data = yaml.safe_load(f.read_text()) or {}
++    raw = data.get("pages") if isinstance(data, dict) else None
++    return raw if isinstance(raw, dict) else {}
++
++
++def page_pattern(spec: object) -> str | None:
++    if isinstance(spec, str):
++        return spec
++    if isinstance(spec, dict) and isinstance(spec.get("pattern"), str):
++        return spec["pattern"]
++    return None
++
++
++def page_states(spec: object) -> list[str]:
++    if isinstance(spec, dict) and "states" in spec and spec["states"] is not None:
++        return [str(item) for item in spec["states"]]
++    pattern = page_pattern(spec)
++    return list(DEFAULT_STATES.get(pattern or "", ()))
++
++
++def load_pages(project: Path) -> dict[str, str]:
++    pages: dict[str, str] = {}
++    for route, spec in load_raw_pages(project).items():
++        pattern = page_pattern(spec)
++        if isinstance(pattern, str):
++            pages[str(route)] = pattern
++    return pages
++
++
++def pattern_for(path: str, pages: dict[str, str]) -> str | None:
+     for pattern, kind in sorted(pages.items(), key=lambda item: specificity(item[0])):
+-        rx = "^" + re.sub(r":[^/]+", "[^/]+", re.escape(pattern).replace(r"\*", ".*").replace(r"\:", ":")) + "$"
+-        if re.match(rx, path):
+-            return PATTERN_TO_ARCHETYPE.get(kind, "collection")
++        if re.match(route_rx(pattern), path):
++            return kind
+     return None
+ 
+ 
++def archetype_for(path: str, pages: dict[str, str]) -> str | None:
++    kind = pattern_for(path, pages)
++    if kind is None or kind in PRODUCT_ONLY:
++        return None
++    return PATTERN_TO_ARCHETYPE.get(kind, "collection")
++
++
++def states_for(path: str, raw: dict) -> list[str]:
++    for route, spec in sorted(raw.items(), key=lambda item: specificity(str(item[0]))):
++        if re.match(route_rx(str(route)), path):
++            return page_states(spec)
++    return []
++
++
++def upsert_section(text: str, path: str, archetype: str | None, states: list[str]) -> str:
++    """Ensure the route section lists every required state. New open lines flip status back to pending."""
++    def line_for(name: str) -> str:
++        return f"- [ ] state {name}: {STATE_HINT.get(name, name)}"
++
++    marker = f"## {path}\n"
++    if marker not in text:
++        arch = archetype or "none"
++        block = f"\n## {path}\narchetype: {arch}\nshots: .ui-review/{slug(path)}-*.png\nstatus: pending\n"
++        body = "\n".join(line_for(name) for name in states)
++        return text + block + (body + "\n" if body else "")
++    start = text.index(marker) + len(marker)
++    nxt = text.find("\n## ", start)
++    body = text[start:] if nxt < 0 else text[start:nxt]
++    missing = [line_for(name) for name in states if not re.search(rf"(?m)^- \[[ x]\] state {re.escape(name)}\b", body)]
++    if not missing:
++        return text
++    if "status: reviewed" in body:
++        body = body.replace("status: reviewed", "status: pending", 1)
++    addition = "\n".join(missing) + "\n"
++    if nxt < 0:
++        return text[:start] + body + addition
++    return text[:start] + body + addition + text[nxt:]
++
++
+ def cmd_capture(args) -> int:
+     if not args.out:
+         print("error: --out is required (e.g. /tmp/ref-shots) — screenshots are never committed", file=sys.stderr)
+@@ -151,30 +245,50 @@ def compose(impl: Path, ref: Path, out: Path, left: str, right: str) -> None:
+     img.save(out)
+ 
+ 
++def shoot_state(browser_handle, base: str, path: str, name: str, out: Path) -> None:
++    width, theme = STATE_VIEWS.get(name, (1280, "light"))
++    page = new_page(browser_handle, theme)
++    shot = out / f"{slug(path)}-state-{name}.impl.png"
++    shoot(page, base.rstrip("/") + path, width, theme, shot, "top")
++    page.context.close()
++    print(shot)
++
++
+ def cmd_compose(args) -> int:
+-    if not args.reference_base:
+-        print("error: --reference-base is required — start the reference app (reference/README.md) and pass its URL", file=sys.stderr)
+-        return 2
+     project = Path(args.project).resolve()
++    raw = load_raw_pages(project)
+     pages = load_pages(project)
+     out = project / ".ui-review"
+     out.mkdir(exist_ok=True)
+     review = project / "ui-review.md"
+     text = review.read_text() if review.exists() else "# UI review\n\nChecklist (per composite):\n" + "".join(f"{i + 1}. {c}\n" for i, c in enumerate(CHECKLIST))
+-    routes = []
++    parsed = []
+     for spec in args.routes:
+-        path, _, kind = spec.partition("=")
+-        kind = kind or archetype_for(path, pages)
+-        if kind not in ARCHETYPES:
+-            print(f"error: no archetype for {path} (add it to ui-decisions.yaml pages or pass {path}=ARCHETYPE)", file=sys.stderr)
++        raw_spec, hash_sep, state = spec.partition("#")
++        path, eq, kind = raw_spec.partition("=")
++        explicit = state if hash_sep else None
++        pattern = pattern_for(path, pages)
++        arch = kind if eq else (None if explicit else archetype_for(path, pages))
++        if explicit is None and arch is None and pattern not in PRODUCT_ONLY:
++            print(f"error: no archetype for {path} (add it to ui-decisions.yaml pages, pass {path}=ARCHETYPE, or pass {path}#STATE)", file=sys.stderr)
+             return 2
+-        routes.append((path, kind))
+-    ref_urls = {kind: args.reference_base.rstrip("/") + path for kind, path in ARCHETYPES.items()}
++        if arch is not None and arch not in ARCHETYPES:
++            print(f"error: unknown archetype {arch!r} for {path}", file=sys.stderr)
++            return 2
++        parsed.append((path, arch, explicit))
++    if any(arch is not None for _, arch, _ in parsed) and not args.reference_base:
++        print("error: --reference-base is required when a route is compared with an archetype", file=sys.stderr)
++        return 2
++    ref_urls = {kind: args.reference_base.rstrip("/") + ref for kind, ref in ARCHETYPES.items()} if args.reference_base else {}
+     pw, b = browser()
++    composites = 0
+     try:
++        compared = [(path, arch) for path, arch, explicit in parsed if explicit is None and arch is not None]
+         for width, theme, state in VIEWS:
++            if not compared:
++                break
+             page = new_page(b, theme)
+-            for path, kind in routes:
++            for path, kind in compared:
+                 view = view_name(width, theme, state)
+                 shot = out / f"{slug(path)}-{view}.impl.png"
+                 shoot(page, args.base.rstrip("/") + path, width, theme, shot, state)
+@@ -183,14 +297,23 @@ def cmd_compose(args) -> int:
+                 composite = out / f"{slug(path)}-{view}.png"
+                 compose(shot, ref, composite, f"{path} @{view}", f"{kind} @{view}")
+                 print(composite)
++                composites += 1
+             page.context.close()
++        for path, arch, explicit in parsed:
++            wanted = [explicit] if explicit else [name for name in states_for(path, raw) if name in SAME_URL_STATES]
++            for name in wanted:
++                if name:
++                    shoot_state(b, args.base, path, name, out)
+     finally:
+         b.close(); pw.stop()
+-    for path, kind in routes:
+-        if f"\n## {path}\n" not in text:
+-            text += f"\n## {path}\narchetype: {kind}\ncomposites: .ui-review/{slug(path)}-*.png\nstatus: pending\n"
++    for path, arch, explicit in parsed:
++        states = states_for(path, raw)
++        if explicit and explicit not in states:
++            states.append(explicit)
++        label = arch or pattern_for(path, pages)
++        text = upsert_section(text, path, label, states)
+     review.write_text(text)
+-    print(f"compose: {len(routes) * len(VIEWS)} composites in {out}; record findings in {review}")
++    print(f"compose: {composites} composites in {out}; record findings in {review}")
+     return 0
+ 
+ 
+@@ -202,8 +325,8 @@ def main() -> int:
+     cap.add_argument("--out", required=True, help="output dir, e.g. /tmp/ref-shots (screenshots are never committed)")
+     com = sub.add_parser("compose")
+     com.add_argument("--base", required=True)
+-    com.add_argument("--reference-base", required=True,
+-                     help="URL of the running reference app (reference/README.md), e.g. http://localhost:5180")
++    com.add_argument("--reference-base",
++                     help="URL of the running reference app (reference/README.md). Required only for archetype composites.")
+     com.add_argument("--project", default=".")
+     com.add_argument("routes", nargs="+")
+     args = parser.parse_args()
+diff --git a/skills/ui-template-apply/scripts/validate_package.py b/skills/ui-template-apply/scripts/validate_package.py
+index 033b9a0..d4ae130 100644
+--- a/skills/ui-template-apply/scripts/validate_package.py
++++ b/skills/ui-template-apply/scripts/validate_package.py
+@@ -308,6 +308,45 @@ def check_theme_deviations(css: str, lock: dict, allowed: set[str], report: Repo
+                                 "record it in ui-decisions.yaml → theme_deviations to accept)")
+ 
+ 
++# Keep in step with review_visual.DEFAULT_STATES.
++DEFAULT_STATES = {
++    "collection": ("empty", "populated"),
++    "conversation": ("no-session", "sessions"),
++    "settings": ("saved",),
++    "log-viewer": ("narrow",),
++    "canvas": ("dense", "dark"),
++}
++
++
++def page_pattern(spec: object) -> str | None:
++    if isinstance(spec, str):
++        return spec
++    if isinstance(spec, dict) and isinstance(spec.get("pattern"), str):
++        return spec["pattern"]
++    return None
++
++
++def page_states(spec: object) -> list[str]:
++    if isinstance(spec, dict) and "states" in spec and spec["states"] is not None:
++        return [str(item) for item in spec["states"]]
++    return list(DEFAULT_STATES.get(page_pattern(spec) or "", ()))
++
++
++def version_lt(left: str, right: str) -> bool:
++    def parse(value: str) -> tuple[int, ...]:
++        return tuple(int(part) for part in value.split("."))
++    return parse(left) < parse(right)
++
++
++def review_sections(text: str) -> list[tuple[str, str]]:
++    parts = re.split(r"(?m)^## (\S+)[ \t]*$", text)
++    sections: list[tuple[str, str]] = []
++    iterator = iter(parts[1:])
++    for heading, body in zip(iterator, iterator):
++        sections.append((heading, body))
++    return sections
++
++
+ def cmd_project(project: Path) -> int:
+     report = Report()
+     lock_path = project / "ui-template.lock.json"
+@@ -343,7 +382,8 @@ def cmd_project(project: Path) -> int:
+             if key not in known:
+                 report.error("J05", f"ui-decisions.yaml: unknown decision {key!r}")
+         names = {path.stem for path in (SKILL / "patterns").glob("*.md")} - {"index"}
+-        for route, pattern in (data.get("pages") or {}).items():
++        for route, spec in (data.get("pages") or {}).items():
++            pattern = page_pattern(spec)
+             if pattern not in names:
+                 report.error("J07", f"ui-decisions.yaml: page {route!r} uses unknown pattern {pattern!r}")
+         for index, item in enumerate(data.get("feedback") or []):
+@@ -355,20 +395,43 @@ def cmd_project(project: Path) -> int:
+         report.warnings = [w for w in report.warnings if not (w.startswith("J03") and w.split()[1] not in edited)]
+     elif not decisions_path.is_file():
+         report.warn("J06", "ui-decisions.yaml missing (step 01 records decisions there)")
++    pages = (data or {}).get("pages") or {}
++    has_pages = isinstance(pages, dict) and bool(pages)
+     review = project / "ui-review.md"
+     if not review.is_file():
+-        report.warn("J10", "ui-review.md missing (step 07: review_visual.py compose, then review every composite)")
++        message = "ui-review.md missing (step 07: review_visual.py compose, then review every composite)"
++        if has_pages:
++            report.error("J10", message)
++        else:
++            report.warn("J10", message)
+     else:
+         text = review.read_text(encoding="utf-8")
+-        sections = re.findall(r"^## (\S+)$", text, flags=re.M)
+-        for route in (data or {}).get("pages") or {}:
+-            rx = "^" + re.sub(r":[^/]+", "[^/]+", re.escape(route).replace(r"\*", ".*").replace(r"\:", ":")) + "$"
+-            if not any(re.match(rx, s) for s in sections):
+-                report.warn("J10", f"ui-review.md: no reviewed route matches page {route!r}")
++        sections = review_sections(text)
++        if isinstance(pages, dict):
++            for route, spec in pages.items():
++                rx = "^" + re.sub(r":[^/]+", "[^/]+", re.escape(str(route)).replace(r"\*", ".*").replace(r"\:", ":")) + "$"
++                bodies = [body for heading, body in sections if re.match(rx, heading)]
++                if not bodies:
++                    report.error("J10", f"ui-review.md: no reviewed route matches page {route!r}")
++                    continue
++                for state in page_states(spec):
++                    if not any(re.search(rf"(?m)^- \[[ x]\] state {re.escape(state)}\b", body) for body in bodies):
++                        report.error("J10", f"ui-review.md: {route} missing state {state}")
+         open_items = re.findall(r"^- \[ \] .*$", text, flags=re.M)
+         pending = re.findall(r"^status: pending$", text, flags=re.M)
+         if open_items or pending:
+             report.error("J11", f"ui-review.md: {len(open_items)} open finding(s), {len(pending)} route(s) pending review")
++        locked = set(lock.get("files") or {})
++        current = str(lock.get("version") or "0.0.0")
++        for item in re.findall(r"^- \[[ x]\] .+$", text, flags=re.M):
++            hits = [path for path in locked if path in item]
++            if not hits:
++                continue
++            found = re.search(r"upstream:\s*(\d+\.\d+\.\d+)", item)
++            if found is None:
++                report.error("J13", f"review item names locked file {hits[0]} but has no upstream: X.Y.Z")
++            elif version_lt(current, found.group(1)):
++                report.error("J13", f"lock {current} is older than upstream {found.group(1)} for {hits[0]}")
+     return report.finish("project")
+ 
+ 
+diff --git a/skills/ui-template-apply/steps/01-decide.md b/skills/ui-template-apply/steps/01-decide.md
+index 6c581f8..f950e50 100644
+--- a/skills/ui-template-apply/steps/01-decide.md
++++ b/skills/ui-template-apply/steps/01-decide.md
+@@ -11,11 +11,17 @@ package: workbench-shell
+ decisions:            # 只写覆盖项；键必须是某个 pattern 声明过的
+   collection.row_height: 44
+ pages:
+-  /jobs: collection
+-  /jobs/:id: detail
++  /jobs: collection          # 字符串 = 该 pattern 的默认状态
++  /jobs/:id:
++    pattern: detail
++    states: [cards]          # 事件/时间线才写 cards；普通详情省略
+   /settings/*: settings
++  /graph:
++    pattern: canvas
+ local_edits: {}       # 被修改过的已安装文件 → 原因（validate project 会核对）
+ feedback: []          # 06 的分诊记录
+ ```
+ 
++`states` 省略时用 pattern 默认：collection = `empty` + `populated`，conversation = `no-session` + `sessions`，settings = `saved`，log-viewer = `narrow`，canvas = `dense` + `dark`。detail 没有默认状态；时间线页面自己写 `cards`。显式 `states: []` 表示这个路由不追加状态截图。
++
+ 不要在这一步写任何组件代码。
+diff --git a/skills/ui-template-apply/steps/05-verify.md b/skills/ui-template-apply/steps/05-verify.md
+index 521d5aa..79c4bfb 100644
+--- a/skills/ui-template-apply/steps/05-verify.md
++++ b/skills/ui-template-apply/steps/05-verify.md
+@@ -11,7 +11,7 @@ python3 <skill>/scripts/check_rendered.py http://localhost:5173/jobs http://loca
+ `check_rendered` 覆盖 1280/768/390 × 浅/深。每个 `pages:` 中的路由至少检查一次：动态路由（`/jobs/:id`）用一个真实 id 和一个不存在的 id（验证 404）各测一次，列表再加一个无结果的筛选 URL 测空态。
+ 错误码含义见脚本头部；R10 = dev server 错误浮层，R11（警告）= 相邻区域同底色无分割，R12 = 圆角层级（panel 只有一种半径且小于画布），
+ R13 = 分割线接缝（split 侧栏与内容等高、贴页头底线、到画布底边），R14 = 上下相邻 panel 左右边对齐，
+-R15 = 单一滚动模型（每个路由：每个滚动区注入 3000px 并滚到底后，document/body/画布 scrollTop==0 且不可滚动，只有 `data-scroll-region` 滚动，画布仍完整在视口内），R17 = 滚动区内表头吸顶（不透明、贴住区域顶边、行不透出，深浅色都查），R18 = 集合计数（页脚有更多时必须有加载更多/哨兵、知道总数时显示「已加载 n / 共 m」；接口返回游标/hasMore/满 limit 页而页面没有“还有更多”页脚即报错），R16 = 可编辑控件文字 ≥4.5（含祖先 opacity）、placeholder ≥3；
++R15 = 单一滚动模型（每个路由：每个滚动区注入 3000px 并滚到底后，document/body/画布 scrollTop==0 且不可滚动，只有 `data-scroll-region` 滚动，画布仍完整在视口内），R17 = 滚动区内表头吸顶（不透明、贴住区域顶边、行不透出，深浅色都查），R18 = 集合计数（页脚有更多时必须有加载更多/哨兵、知道总数时显示「已加载 n / 共 m」；接口返回游标/hasMore/满 limit 页而页面没有“还有更多”页脚即报错），R16 = 可编辑控件文字 ≥4.5（含祖先 opacity）、placeholder ≥3；R20 = 集合页脚 `data-loaded="0"` 且页面没有 `[data-slot=empty]`（空集必须是空态，不能只剩「共 0 项」）；
+ 不存在 id 的路由渲染 NotFound（`data-state="not-found"`）时，接口 404 不计 R08；R09（行高）为警告。
+ 
+ 外观保真（`--init` 建的项目）：
+diff --git a/skills/ui-template-apply/steps/06-iterate.md b/skills/ui-template-apply/steps/06-iterate.md
+index d397d20..d183163 100644
+--- a/skills/ui-template-apply/steps/06-iterate.md
++++ b/skills/ui-template-apply/steps/06-iterate.md
+@@ -13,6 +13,16 @@
+ 
+ 举一反三：定层后搜索同类用法（同一 block / 同一 pattern 的所有页面）一起验证。
+ 
++## 受锁 block 的视觉缺陷
++
++缺陷在 `ui-template.lock.json` 的 `files` 里（例如 `src/components/blocks/data-table.tsx`、`src/components/blocks/log-view.tsx`）时，不改项目副本，也不把这条审查勾成完成。在该路由下写锁定路径和将包含修改的模板版本：
++
++```markdown
++- [ ] lock: src/components/blocks/data-table.tsx 页脚样式 → upstream: 5.5.0
++```
++
++`validate_package.py project` 在锁的 `version` 还小于 `upstream` 时报 J13；行首仍是 `- [ ]` 时照常报 J11。升级到该版本、按 update 重拍这条路由之后，才改成 `- [x]`。级别色、页脚样式这类差异走这条路径，不在页面里 fork。
++
+ ```yaml
+ # ui-decisions.yaml
+ feedback:
+diff --git a/skills/ui-template-apply/steps/07-review.md b/skills/ui-template-apply/steps/07-review.md
+index 427265a..5ce57d7 100644
+--- a/skills/ui-template-apply/steps/07-review.md
++++ b/skills/ui-template-apply/steps/07-review.md
+@@ -1,22 +1,30 @@
+ # 07 视觉验收（交付前最后一步）
+ 
+-和参考原型逐页对比（参考图现拍，仓库不存截图），零未结问题才交付。
++和参考原型逐页对比（参考图现拍，仓库不存截图），并且每个 pattern 的必拍状态都看过产品页。零未结问题才交付。
+ 
+ ```bash
+ # 参考应用：scratch Vite 应用装上包、拷入 reference/src（reference/README.md），另开一个端口跑
+-python3 <skill>/scripts/review_visual.py compose --base http://localhost:5173 --reference-base http://localhost:5180 --project . /jobs /jobs/<真实id> /jobs/new /settings/general …
++python3 <skill>/scripts/review_visual.py compose --base http://localhost:5173 --reference-base http://localhost:5180 --project . /jobs /settings/general …
++
++# 需要另一套数据的状态（空集、无会话、有同名会话）：先把应用调到该状态再拍。只拍产品页，不跟原型拼图。
++python3 <skill>/scripts/review_visual.py compose --base http://localhost:5173 --project . /jobs#empty /chat#no-session /chat#sessions
+ ```
+ 
+-- 参考图不随包发布，compose 从 `--reference-base` 现拍（同一主题同一原型页）；`--reference-base` 缺省报错。
+-- 每个 `pages:` 路由至少一个 URL；原型从 `ui-decisions.yaml → pages` 的 pattern 推出，或写 `路径=原型`。
+-- 每个路由 4 张：1280 浅/深、768 浅，以及 `1280-light-end`（所有滚动区滚到底：PageHeader/输入框不动、只有声明区域在滚、最后一条完整，**画布四周边框、圆角、外边距仍完整可见**）。
+-- 产物：`.ui-review/<路由>-<视图>.png`（左：实现，右：参考），`.impl.png` 为实现原图；`ui-review.md` 每个路由一节。
+-  `.ui-review/` 加入 .gitignore，`ui-review.md` 提交。
++- 参考图不随包发布。和原型同构的那一帧仍从 `--reference-base` 现拍。`--reference-base` 只在有原型对照时必填；`#state` 和 canvas 可以不传。
++- 每个 `pages:` 路由至少一个 URL。原型从 `ui-decisions.yaml → pages` 的 pattern 推出，或写 `路径=原型`。
++- 同构帧每个路由 4 张：1280 浅/深、768 浅，以及 `1280-light-end`（所有滚动区滚到底：PageHeader/输入框不动、只有声明区域在滚、最后一条完整，**画布四周边框、圆角、外边距仍完整可见**）。
++- 同一 URL 就能表达的状态，compose 会额外拍产品页：`populated` / `cards` / `narrow` 在 390，`saved` / `dense` 在 1280 浅色，`dark` 在 1280 深色。空集、无会话、有会话列表必须用 `#state`，因为它们要另一套数据。
++- canvas 没有原型，只拍 `dense` 和 `dark`。
++- 产物：`.ui-review/<路由>-<视图>.png`（左：实现，右：参考）和 `.ui-review/<路由>-state-<name>.impl.png`（只有产品页）。`ui-review.md` 每个路由一节，并带 `- [ ] state <name>:`。`.ui-review/` 加入 .gitignore，`ui-review.md` 提交。
+ 
+ 逐张打开（合成图看整体，`.impl.png` 看细节），按 `ui-review.md` 顶部的固定清单逐项对比：
+-圆角、接缝/分割线、对齐、间距节奏、层级、密度、颜色/边框对比、截断、滚动（-end）、控件文字颜色。
++圆角、接缝/分割线、对齐、间距节奏、层级、密度、颜色/边框对比、截断、滚动（-end）、控件文字颜色、
++主文案相同的两行是否能看见路径/时间/id、同一数字是否只出现一处、图谱标签是否压节点、
++用户可见的库名/文件路径/端口是否和正在运行的系统一致。
+ 静态截图看不到的行为（hover、焦点、流式增长）由 check_rendered 的不变量覆盖；对话类页面验收时用真实或 mock 的长对话。
+ 
+-每个差异记一行 `- [ ] <清单项>: <现象>`，写在该路由下。修复（同类问题修在 surface/block/theme）→ 重跑 compose →
+-重新打开图片确认 → 改为 `- [x] … → <修法>`。路由无未结项后把 `status: pending` 改为 `status: reviewed`。
+-`validate_package.py project` 在仍有 `- [ ]` 或 `pending` 时报 J11，缺路由报 J10。
++每个差异记一行 `- [ ] <清单项>: <现象>`，写在该路由下。状态行改成 `- [x] state <name>: <看到的结果>`。
++修复（同类问题修在 surface/block/theme）→ 重跑 compose → 重新打开图片确认。
++受锁文件上的差异用 `- [ ] lock: <锁内路径> <现象> → upstream: <版本>`，规则见 06，不要勾掉。
++路由无未结项、每个声明过的状态都有勾选行之后，把 `status: pending` 改为 `status: reviewed`。
++`validate_package.py project` 在仍有 `- [ ]` 或 `pending` 时报 J11；已登记页面却缺路由或缺状态行时报 J10（错误）。
+diff --git a/tests/fixtures/rendered-empty-footer.html b/tests/fixtures/rendered-empty-footer.html
+new file mode 100644
+index 0000000..b849c8f
+--- /dev/null
++++ b/tests/fixtures/rendered-empty-footer.html
+@@ -0,0 +1,5 @@
++<!doctype html>
++<html><head><meta charset="utf-8"><style>html,body{height:100%;overflow:hidden}body{margin:0;font:13px sans-serif;background:#fff;color:#111}</style></head>
++<body><div data-surface="frame" style="height:100%;display:flex;flex-direction:column;overflow:hidden"><h1>任务</h1><div data-scroll-region="main" style="flex:1;min-height:0;overflow-y:auto">
++<div data-slot="collection-footer" data-loaded="0" data-total="0">共 0 项</div>
++</div></div></body></html>
+diff --git a/tests/fixtures/rendered-empty-ok.html b/tests/fixtures/rendered-empty-ok.html
+new file mode 100644
+index 0000000..ffa195a
+--- /dev/null
++++ b/tests/fixtures/rendered-empty-ok.html
+@@ -0,0 +1,6 @@
++<!doctype html>
++<html><head><meta charset="utf-8"><style>html,body{height:100%;overflow:hidden}body{margin:0;font:13px sans-serif;background:#fff;color:#111}</style></head>
++<body><div data-surface="frame" style="height:100%;display:flex;flex-direction:column;overflow:hidden"><h1>任务</h1><div data-scroll-region="main" style="flex:1;min-height:0;overflow-y:auto">
++<div data-slot="empty">还没有任务</div>
++<div data-slot="collection-footer" data-loaded="0" data-total="0">共 0 项</div>
++</div></div></body></html>
+diff --git a/tests/test_tooling.py b/tests/test_tooling.py
+index 9991eb5..d7f1129 100644
+--- a/tests/test_tooling.py
++++ b/tests/test_tooling.py
+@@ -91,6 +91,13 @@ class CheckRendered(unittest.TestCase):
+         code, codes = self.check("rendered-good.html")
+         self.assertEqual((code, codes), (0, set()))
+ 
++    def test_zero_footer_needs_empty_state(self):
++        code, codes = self.check("rendered-empty-footer.html")
++        self.assertEqual(code, 1)
++        self.assertIn("R20", codes)
++        _, ok = self.check("rendered-empty-ok.html")
++        self.assertNotIn("R20", ok)
++
+ 
+ ESLINT_DIR = os.environ.get("UI_TEMPLATE_ESLINT_DIR")  # a node project with eslint + typescript-eslint installed
+ 
+@@ -134,9 +141,13 @@ class VisualReview(unittest.TestCase):
+         self.assertEqual(rv.archetype_for("/chat/x", pages), "list-detail")
+         self.assertEqual(rv.archetype_for("/settings/keys", pages), "settings")
+         self.assertIsNone(rv.archetype_for("/nope", pages))
++        self.assertIsNone(rv.archetype_for("/graph", {"/graph": "canvas"}))
+         ordered = {"/jobs/:id": "detail", "/jobs/new": "form", "/empty": "empty"}  # param route declared first
+         self.assertEqual(rv.archetype_for("/jobs/new", ordered), "form")
+         self.assertEqual(rv.archetype_for("/empty", ordered), "empty")
++        self.assertEqual(rv.page_states("collection"), ["empty", "populated"])
++        self.assertEqual(rv.page_states({"pattern": "detail", "states": ["cards"]}), ["cards"])
++        self.assertEqual(rv.page_states({"pattern": "collection", "states": []}), [])
+ 
+     def test_references_shipped(self):
+         self.assertEqual(list((APPLY / "catalog/workbench-shell").rglob("*.png")), [])  # no binary images ship
+@@ -147,13 +158,33 @@ class VisualReview(unittest.TestCase):
+         with tempfile.TemporaryDirectory() as tmp:
+             run(APPLY / "scripts/install_registry.py", "--project", tmp, "--package", "workbench-shell")
+             Path(tmp, "ui-decisions.yaml").write_text("package: workbench-shell\npages:\n  /jobs: collection\n")
++            result = run(APPLY / "scripts/validate_package.py", "project", tmp)
++            self.assertNotEqual(result.returncode, 0)
++            self.assertIn("J10", result.stdout + result.stderr)
+             Path(tmp, "ui-review.md").write_text("# UI review\n\n## /jobs\n- [ ] seams: gap\nstatus: pending\n")
+             result = run(APPLY / "scripts/validate_package.py", "project", tmp)
+             self.assertIn("J11", result.stdout + result.stderr)
+-            Path(tmp, "ui-review.md").write_text("# UI review\n\n## /jobs\n- [x] seams: gap → fixed\nstatus: reviewed\n")
++            self.assertIn("missing state empty", result.stdout + result.stderr)
++            reviewed = (
++                "# UI review\n\n## /jobs\n- [x] seams: gap → fixed\n"
++                "- [x] state empty: empty state\n- [x] state populated: two rows\nstatus: reviewed\n"
++            )
++            Path(tmp, "ui-review.md").write_text(reviewed)
+             result = run(APPLY / "scripts/validate_package.py", "project", tmp)
+             self.assertNotIn("J11", result.stdout + result.stderr)
+             self.assertNotIn("J10", result.stdout + result.stderr)
++            locked = "src/components/blocks/data-table.tsx"
++            Path(tmp, "ui-review.md").write_text(
++                reviewed + f"- [x] lock: {locked} footer → upstream: 99.0.0\n"
++            )
++            result = run(APPLY / "scripts/validate_package.py", "project", tmp)
++            self.assertIn("J13", result.stdout + result.stderr)
++            version = json.loads(Path(tmp, "ui-template.lock.json").read_text())["version"]
++            Path(tmp, "ui-review.md").write_text(
++                reviewed + f"- [x] lock: {locked} footer → upstream: {version}\n"
++            )
++            result = run(APPLY / "scripts/validate_package.py", "project", tmp)
++            self.assertNotIn("J13", result.stdout + result.stderr)
+ 
+ 
+ if __name__ == "__main__":
