@@ -28,7 +28,7 @@ description: 用 ui-template 风格包、shadcn/ui 及配套 blocks/patterns 实
 ## 流程
 
 1. `steps/01-decide.md` — 选包、列页面→pattern、写 `ui-decisions.yaml`
-2. `steps/02-install.md` — 安装库与主题（离线、确定性、带 lock）
+2. `steps/02-install.md` — 安装库与主题（离线、确定性、带 lock 与 `.ui-template.md` 摘要）
 3. `steps/03-shell.md` — 应用骨架
 4. `steps/04-pages.md` — 逐页从 reference 原型复制，按 pattern 补齐
 5. `steps/05-verify.md` — tsc、eslint、validate project、check_rendered
@@ -47,4 +47,4 @@ description: 用 ui-template 风格包、shadcn/ui 及配套 blocks/patterns 实
 - **默认即决定**：未被需求点名的决策用默认值，不逐条问用户。
 - **修在共享层**：同类问题出现两次，就改 block / pattern / theme，而不是第三次逐页修补。
 
-项目里不要复制本 skill 的 pattern 文档；`ui-decisions.yaml` + lock 就是全部项目侧状态。
+项目里不要复制本 skill 的 pattern 文档；`ui-decisions.yaml` + lock 是项目侧状态，`.ui-template.md` 是安装脚本生成的可读摘要。

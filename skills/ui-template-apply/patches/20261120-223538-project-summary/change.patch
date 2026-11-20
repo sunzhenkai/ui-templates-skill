@@ -1,0 +1,75 @@
+diff --git a/skills/ui-template-apply/SKILL.md b/skills/ui-template-apply/SKILL.md
+index 16948a8..4de2a16 100644
+--- a/skills/ui-template-apply/SKILL.md
++++ b/skills/ui-template-apply/SKILL.md
+@@ -28,7 +28,7 @@ description: 用 ui-template 风格包、shadcn/ui 及配套 blocks/patterns 实
+ ## 流程
+ 
+ 1. `steps/01-decide.md` — 选包、列页面→pattern、写 `ui-decisions.yaml`
+-2. `steps/02-install.md` — 安装库与主题（离线、确定性、带 lock）
++2. `steps/02-install.md` — 安装库与主题（离线、确定性、带 lock 与 `.ui-template.md` 摘要）
+ 3. `steps/03-shell.md` — 应用骨架
+ 4. `steps/04-pages.md` — 逐页从 reference 原型复制，按 pattern 补齐
+ 5. `steps/05-verify.md` — tsc、eslint、validate project、check_rendered
+@@ -47,4 +47,4 @@ description: 用 ui-template 风格包、shadcn/ui 及配套 blocks/patterns 实
+ - **默认即决定**：未被需求点名的决策用默认值，不逐条问用户。
+ - **修在共享层**：同类问题出现两次，就改 block / pattern / theme，而不是第三次逐页修补。
+ 
+-项目里不要复制本 skill 的 pattern 文档；`ui-decisions.yaml` + lock 就是全部项目侧状态。
++项目里不要复制本 skill 的 pattern 文档；`ui-decisions.yaml` + lock 是项目侧状态，`.ui-template.md` 是安装脚本生成的可读摘要。
+diff --git a/skills/ui-template-apply/scripts/install_registry.py b/skills/ui-template-apply/scripts/install_registry.py
+index 37c19a5..0f4cf10 100644
+--- a/skills/ui-template-apply/scripts/install_registry.py
++++ b/skills/ui-template-apply/scripts/install_registry.py
+@@ -28,6 +28,7 @@ LIB = SKILL / "library"
+ CATALOG = SKILL / "catalog"
+ STARTER = SKILL / "starter"
+ LOCK = "ui-template.lock.json"
++SUMMARY = ".ui-template.md"
+ THEME_BLOCKS = ("@theme inline", "@theme", ":root", ".dark")
+ FONT_IMPORT = re.compile(r'''@import\s+["']([^"']+)["']''')
+ 
+@@ -132,11 +133,27 @@ def read_lock(project: Path) -> dict:
+     return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+ 
+ 
++def write_summary(project: Path, package: str, version: str, items: list[str]) -> None:
++    installed = "\n".join(f"- `{item}`" for item in sorted(items))
++    summary = (
++        "# UI Template\n\n"
++        f"- 风格包：`{package}`\n"
++        f"- 版本：`{version}`\n\n"
++        "## 已安装项\n\n"
++        f"{installed}\n\n"
++        "## 项目状态\n\n"
++        "- 页面、pattern 与决策覆盖：`ui-decisions.yaml`\n"
++        "- 安装文件及哈希：`ui-template.lock.json`\n"
++    )
++    (project / SUMMARY).write_text(summary, encoding="utf-8")
++
++
+ def write_lock(project: Path, package: str, version: str, items: list[str], files: dict[str, str], theme_base: dict[str, str]) -> None:
+     lock = {"package": package, "version": version, "items": sorted(items), "files": dict(sorted(files.items()))}
+     if theme_base:
+         lock["theme_base"] = theme_base  # package token values as installed; lets upgrades tell project edits from upstream ones
+     (project / LOCK).write_text(json.dumps(lock, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
++    write_summary(project, package, version, items)
+ 
+ 
+ def package_version(package: str) -> str:
+diff --git a/skills/ui-template-apply/steps/02-install.md b/skills/ui-template-apply/steps/02-install.md
+index 26a3e73..44bf49d 100644
+--- a/skills/ui-template-apply/steps/02-install.md
++++ b/skills/ui-template-apply/steps/02-install.md
+@@ -24,7 +24,10 @@ npm i @tanstack/react-query@^5   # 默认依赖：patterns 示例与 StateBounda
+ ```
+ 
+ 写入内容：`src/components/ui/*`（shadcn radix-nova 原样）、`src/components/blocks/*`、`src/lib/vocab.ts`、
+-`src/styles/theme.css`、`eslint/ui-template.mjs`、`ui-template.lock.json`。
++`src/styles/theme.css`、`eslint/ui-template.mjs`、`ui-template.lock.json` 与 `.ui-template.md`。
++
++`.ui-template.md` 是脚本生成的项目摘要，记录风格包、版本和已安装项；每次写 lock 时同步重写，
++`--dry-run` / `--status` 不写。它以 lock 同一份数据生成，不手工维护；项目决策仍只写 `ui-decisions.yaml`。
+ 
+ `src/index.css` 由库安装（`app/index-css`）；项目已有 index.css 时报 `CONFLICT`，把内容换成这几行即可：
+ 

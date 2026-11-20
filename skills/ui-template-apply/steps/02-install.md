@@ -24,7 +24,10 @@ npm i @tanstack/react-query@^5   # 默认依赖：patterns 示例与 StateBounda
 ```
 
 写入内容：`src/components/ui/*`（shadcn radix-nova 原样）、`src/components/blocks/*`、`src/lib/vocab.ts`、
-`src/styles/theme.css`、`eslint/ui-template.mjs`、`ui-template.lock.json`。
+`src/styles/theme.css`、`eslint/ui-template.mjs`、`ui-template.lock.json` 与 `.ui-template.md`。
+
+`.ui-template.md` 是脚本生成的项目摘要，记录风格包、版本和已安装项；每次写 lock 时同步重写，
+`--dry-run` / `--status` 不写。它以 lock 同一份数据生成，不手工维护；项目决策仍只写 `ui-decisions.yaml`。
 
 `src/index.css` 由库安装（`app/index-css`）；项目已有 index.css 时报 `CONFLICT`，把内容换成这几行即可：
 

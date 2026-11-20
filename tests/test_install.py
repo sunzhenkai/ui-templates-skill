@@ -24,6 +24,12 @@ class Install(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         lock = json.loads((self.tmp / "ui-template.lock.json").read_text())
         self.assertEqual(lock["package"], "workbench-shell")
+        summary = (self.tmp / ".ui-template.md").read_text()
+        self.assertIn("- 风格包：`workbench-shell`", summary)
+        self.assertIn(f"- 版本：`{lock['version']}`", summary)
+        self.assertIn("- `blocks/data-table`", summary)
+        self.assertIn("`ui-decisions.yaml`", summary)
+        self.assertIn("`ui-template.lock.json`", summary)
         for target in ("src/components/blocks/data-table.tsx", "src/lib/vocab.ts", "src/styles/theme.css", "src/components/ui/button.tsx", "eslint/ui-template.mjs"):
             self.assertIn(target, lock["files"])
             self.assertTrue((self.tmp / target).is_file(), target)
@@ -38,10 +44,20 @@ class Install(unittest.TestCase):
 
     def test_adding_items_keeps_earlier_items_tracked(self):
         self.install("--package", "workbench-shell", "--items", "blocks/data-table")
+        self.assertNotIn("- `blocks/theme-menu`", (self.tmp / ".ui-template.md").read_text())
         self.install("--items", "blocks/theme-menu")
         items = json.loads((self.tmp / "ui-template.lock.json").read_text())["items"]
         self.assertIn("blocks/data-table", items)
         self.assertIn("blocks/theme-menu", items)
+        summary = (self.tmp / ".ui-template.md").read_text()
+        self.assertIn("- `blocks/data-table`", summary)
+        self.assertIn("- `blocks/theme-menu`", summary)
+
+    def test_dry_run_does_not_write_project_state(self):
+        result = self.install("--package", "workbench-shell", "--dry-run")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse((self.tmp / "ui-template.lock.json").exists())
+        self.assertFalse((self.tmp / ".ui-template.md").exists())
 
     def test_status_and_upgrade_preserve_local_edits(self):
         self.install("--package", "workbench-shell")
