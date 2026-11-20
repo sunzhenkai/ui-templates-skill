@@ -1,5 +1,9 @@
 # workbench-shell
 
+## 5.0.11
+- 共享库基线跟随（quiet-inset 0.5.1 同一 patch）：`ui/sidebar` MenuButton 普通项字重 token 化
+  为 `--sidebar-item-weight`（默认 400 = multica 普通项实测值，渲染不变）。本包不定义新值。
+
 ## 5.0.10
 - 共享库基线跟随（quiet-inset 0.5.0 同一 patch）：`ui/sidebar` MenuButton 行高 token 化为
   `--sidebar-row-height`（默认 2rem，实测行高 32px 不变）、普通项文字色 token 化为

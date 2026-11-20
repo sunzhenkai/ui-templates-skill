@@ -1,5 +1,12 @@
 # quiet-inset
 
+## 0.5.1 — 2026-11-20
+
+### Changed
+- 补 0.5.0 遗漏：普通项字重 token 化。0.5.0 的 `--sidebar-active-weight` 只覆盖选中态，
+  普通项仍继承 body 400；参照复测普通项（Inbox 等）内部文字同为 13px/500。共享库新增
+  `--sidebar-item-weight`（默认 400，跟随 workbench-shell 参照的 multica 普通项实测），本包置 500。
+
 ## 0.5.0 — 2026-11-20
 
 ### Changed
