@@ -28,6 +28,7 @@ LIB = SKILL / "library"
 CATALOG = SKILL / "catalog"
 STARTER = SKILL / "starter"
 LOCK = "ui-template.lock.json"
+SUMMARY = ".ui-template.md"
 THEME_BLOCKS = ("@theme inline", "@theme", ":root", ".dark")
 FONT_IMPORT = re.compile(r'''@import\s+["']([^"']+)["']''')
 
@@ -132,11 +133,27 @@ def read_lock(project: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
 
 
+def write_summary(project: Path, package: str, version: str, items: list[str]) -> None:
+    installed = "\n".join(f"- `{item}`" for item in sorted(items))
+    summary = (
+        "# UI Template\n\n"
+        f"- 风格包：`{package}`\n"
+        f"- 版本：`{version}`\n\n"
+        "## 已安装项\n\n"
+        f"{installed}\n\n"
+        "## 项目状态\n\n"
+        "- 页面、pattern 与决策覆盖：`ui-decisions.yaml`\n"
+        "- 安装文件及哈希：`ui-template.lock.json`\n"
+    )
+    (project / SUMMARY).write_text(summary, encoding="utf-8")
+
+
 def write_lock(project: Path, package: str, version: str, items: list[str], files: dict[str, str], theme_base: dict[str, str]) -> None:
     lock = {"package": package, "version": version, "items": sorted(items), "files": dict(sorted(files.items()))}
     if theme_base:
         lock["theme_base"] = theme_base  # package token values as installed; lets upgrades tell project edits from upstream ones
     (project / LOCK).write_text(json.dumps(lock, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    write_summary(project, package, version, items)
 
 
 def package_version(package: str) -> str:
