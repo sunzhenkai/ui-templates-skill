@@ -141,6 +141,10 @@
   --sidebar-accent-foreground: oklch(0.222 0 285.4);
   --sidebar-border: oklch(0.902 0 285.4);
   --sidebar-ring: oklch(0.608 0.14 276.3);
+  /* F-2: measured sidebar weight 400 (normal, active and group labels; lighter than the
+   * 450 body normal). ui/sidebar reads these vars; its built-in default is 500. */
+  --sidebar-active-weight: 400;
+  --sidebar-group-weight: 400;
   /* Measured panel shadow: 1px ring (the reference's hairline separation) + soft drop. */
   --surface-shadow: rgb(0 0 0 / 0.029) 0px 0px 0px 1px, rgb(0 0 0 / 0.02) 0px 3px 6px -2px,
     rgb(0 0 0 / 0.04) 0px 1px 1px 0px;

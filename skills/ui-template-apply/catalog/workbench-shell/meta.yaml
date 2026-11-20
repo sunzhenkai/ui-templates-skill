@@ -1,6 +1,6 @@
 schema: ui-template/v4
 name: workbench-shell
-version: 5.0.8
+version: 5.0.9
 summary: Neutral gray workbench with a restrained blue accent; sidebar shell, dense lists, quiet chrome.
 fits:
   - internal tools, admin consoles, operator / agent workbenches
@@ -12,7 +12,7 @@ base:
   cli: shadcn@4.21.4
   base: radix
   style: nova
-density: compact          # body 13px (text-sm), controls h-8 (32px), table rows 36px
+density: compact          # body 14px (text-base), controls h-7/h-8 (28/32px), sidebar rows 32px
 theme: theme.css
 defaults:                 # decisions a pattern would otherwise ask; projects may override in ui-decisions.yaml
   shell.sidebar: inset            # shadcn Sidebar variant="inset"; collapsible="icon"
@@ -28,6 +28,9 @@ sources:
   - kind: oss-repo
     ref: multica (packages/ui/styles/tokens.css)   # neutral palette, chart ramp, shell/canvas split
     license: Apache-2.0
+  - kind: product
+    ref: "multica deployment (computed-style calibration 2026-11-20, my-issues + settings pages; fixed accent, sidebar-primary, radius base, font stack, text ladder; deviations recorded in theme.css)"
+    license: observation-only (values and visual decisions; no code, icons, fonts or copy)
   - kind: registry
     ref: shadcn/ui radix-nova 4.21.4
     license: MIT

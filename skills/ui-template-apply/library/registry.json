@@ -984,7 +984,7 @@
         {
           "path": "shadcn/ui/sidebar.tsx",
           "target": "src/components/ui/sidebar.tsx",
-          "sha256": "f0e47e50c0e61a9375d4d5dad3e1157e56b4fcc508680d916cc0c629b4fa7886"
+          "sha256": "ececd609e98009760f7930731a2046604346dc2614b0ab97d7d6d9cee8b4c119"
         }
       ],
       "dependencies": [

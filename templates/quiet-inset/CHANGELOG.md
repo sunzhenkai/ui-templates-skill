@@ -1,5 +1,12 @@
 # quiet-inset
 
+## 0.4.1 — 2026-11-20
+
+### Changed
+- `ui/sidebar` 侧栏字重 token 化（共享库改动，详见 workbench-shell 5.0.9）：主题新增
+  `--sidebar-active-weight: 400` / `--sidebar-group-weight: 400`，承接 0.4.0 的 F-2 实测
+  （此前靠删共享文件里的 `font-medium`，会误伤 multica 语义——multica 实测 active 为 500）。
+
 ## 0.4.0 — 2026-11-20
 
 ### Changed

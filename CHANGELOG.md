@@ -1,5 +1,20 @@
 # Changelog
 
+## 5.8.0 — 2026-11-20
+
+### Changed
+- `workbench-shell` 5.0.9: light tokens calibrated against a deployed multica instance via
+  computed-style export (my-issues + settings). The 5.0.x values came from the OSS tokens.css and
+  drifted: accent lightened to the measured tone, `--sidebar-primary` switched from blue to the
+  measured near-black, radius base 8→10px (md stays 8px), font stack Geist→Inter (+Geist Mono for
+  code), text ladder re-anchored to the measured caption/label/body/body-lg/title steps.
+  destructive adopted from the reference (passes ≥4.5); border/ring/success deviations recorded
+  with real numbers in the theme.css header (contract kept).
+- `ui/sidebar` sidebar weights are now token-driven (`--sidebar-active-weight` /
+  `--sidebar-group-weight`, default 500 = multica). `quiet-inset` 0.4.1 sets both to 400 for its
+  Linear-measured reference; 5.0.8's hard removal of `font-medium` conflicted with multica
+  semantics and is corrected here.
+
 ## 5.7.0 — 2026-11-20
 
 ### Changed

@@ -1,5 +1,21 @@
 # workbench-shell
 
+## 5.0.9
+- 亮色 token 用部署实例的计算样式实测校准（my-issues + settings 两页；原 5.0.x 值取自 OSS
+  tokens.css，渲染有漂移）：`--accent` 0.955 → 0.967（实测与 muted/secondary 同调）；`--destructive`
+  取实测 chroma/hue、L 压至 0.515（实测 0.577 过不了 C02 tint 对 ≈3.9 < 4.5）；`--sidebar-primary`
+  蓝 → 实测近黑（与 --primary 一致）；`--radius` 0.5rem → 0.625rem（实测基准 10px，md ×0.8 = 8px、
+  lg 10px、xl 14px 与实测频次吻合）。
+- 字体栈修正：`--font-sans` Geist → 实测 Inter 栈；`--font-mono` 实测 Geist Mono 优先。
+- 文本阶梯对齐实测语义档（caption 12/16、label 13/18、body 14/20、body-lg 15/22、title 18/28）：
+  `--text-sm` 行高 20→18、`--text-base` 行高 22→20、`--text-lg` 16/24 → 15/22、`--text-xl` 18/26 → 18/28。
+- `ui/sidebar` 侧栏字重 token 化：新增 `--sidebar-active-weight` / `--sidebar-group-weight`
+  （默认 500 = multica 实测；quiet-inset 0.4.1 置 400）。5.0.8 直接删共享文件 `font-medium` 的做法
+  与 multica 语义冲突，本版纠正。
+- 已知偏差（保持契约，实测数字记 theme.css 头注释）：border 实测 1.136/1.175（契约 1.25，保持
+  0.905 = 1.283/1.328）；ring 实测灰 2.541（契约 3.0，保持蓝 3.524）；success 实测 4.386（契约
+  4.5，保持 0.53 = 4.788）。阴影未采到样本，维持估计；dark 保持草值。
+
 ## 5.0.8
 - `ui/sidebar`：侧栏菜单项选中态不再加 `font-medium`，分组标题去掉 `font-medium`（实测侧栏字重 400；
   quiet-inset 0.4.0 的 F-2 修复，共享库文件）。版本号跳过 5.0.7——该号保留给未合入的 p2 段一分支。

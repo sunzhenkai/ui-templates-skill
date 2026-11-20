@@ -40,7 +40,7 @@ class PackageValidation(unittest.TestCase):
 
     def test_text_on_own_tint_is_reported(self):
         # 0.577 passes against plain background (C01) but fails as text on its own 10% tint (destructive button).
-        errors = self._theme(lambda css: css.replace("--destructive: oklch(0.52 0.21 27.3)", "--destructive: oklch(0.577 0.245 27.3)", 1))
+        errors = self._theme(lambda css: css.replace("--destructive: oklch(0.515 0.245 27.325)", "--destructive: oklch(0.577 0.245 27.325)", 1))
         self.assertFalse(any(e.startswith("C01") and "destructive" in e for e in errors), errors)
         self.assertTrue(any(e.startswith("C02") and "destructive on destructive" in e for e in errors), errors)
 
