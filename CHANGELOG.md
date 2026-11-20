@@ -1,5 +1,14 @@
 # Changelog
 
+## 5.5.0 — 2026-11-20
+
+### Fixed
+- `blocks/router` `useUrlState`: updates made in the same tick are merged in a microtask and written once. React
+  Router applies each functional `setSearchParams` against the same snapshot, so "clear filters" (six params in one
+  handler) silently kept only the last one.
+- `blocks/data-table`: footer and page controls now wrap as whole rows (`flex-wrap` with horizontal gap), and the
+  page-size label stays on one line with its select. Packages: quiet-inset 0.2.0, workbench-shell 5.0.6.
+
 ## 5.4.0 — 2026-11-18
 
 ### Added

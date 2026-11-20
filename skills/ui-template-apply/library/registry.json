@@ -131,7 +131,7 @@
         {
           "path": "blocks/data-table.tsx",
           "target": "src/components/blocks/data-table.tsx",
-          "sha256": "defd108ca8c457382eb2bfc24edf2501c997c17a49e6faf3e0ecf1a1215845a5"
+          "sha256": "bdaad08d70694ea2c1729fa94e6aeaefb753a8d6e964943412dfc50a420fae0d"
         }
       ],
       "dependencies": [
@@ -272,7 +272,7 @@
         {
           "path": "blocks/router.tsx",
           "target": "src/components/blocks/router.tsx",
-          "sha256": "18a7c7f27c0e79b16b6ed2cb2d5a93ea27583e9e5fa5359ebad25d76b35bbd4d"
+          "sha256": "bbf773838b711f86ec6eed7a844f3e34b41da56959f58515febc6f55ff0da338"
         }
       ],
       "dependencies": [
