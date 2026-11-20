@@ -1,5 +1,12 @@
 # workbench-shell
 
+## 5.0.10
+- 共享库基线跟随（quiet-inset 0.5.0 同一 patch）：`ui/sidebar` MenuButton 行高 token 化为
+  `--sidebar-row-height`（默认 2rem，实测行高 32px 不变）、普通项文字色 token 化为
+  `--sidebar-item-foreground`（默认回退 `--sidebar-foreground`，渲染不变）。本包不定义这两个
+  token 的新值；multica 普通项实测灰 oklch(0.505)，置值留待下次校准窗口。
+- 字重：本包已显式 500（5.0.9），quiet-inset 0.5.0 推翻其 0.4.0 的 400 误测后两包口径一致。
+
 ## 5.0.9
 - 亮色 token 用部署实例的计算样式实测校准（my-issues + settings 两页；原 5.0.x 值取自 OSS
   tokens.css，渲染有漂移）：`--accent` 0.955 → 0.967（实测与 muted/secondary 同调）；`--destructive`

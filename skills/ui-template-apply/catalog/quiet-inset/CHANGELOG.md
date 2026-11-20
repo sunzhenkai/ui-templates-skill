@@ -1,5 +1,26 @@
 # quiet-inset
 
+## 0.5.0 — 2026-11-20
+
+### Changed
+- **F-2 推翻重定案**：0.4.0 的「实测侧栏项与分组标题均 400」来自容器级 picks（`<a>`/`<button>`
+  继承 body 的 16px/400），漏读内部文字 span。2026-11-20 对参照产品复测（内部文字直读）：
+  侧栏项普通与选中态均为 13px/**500**、分组标题 12px/**500**。`--sidebar-active-weight` 与
+  `--sidebar-group-weight` 400 → 500；密度注释「group titles 15px」同步纠正为 12px。
+- 侧栏行高落地：meta.yaml 一直声明「sidebar rows 28px」，但共享库 MenuButton 默认 `h-8`(32px)
+  从未兑现。共享文件 token 化为 `--sidebar-row-height`（默认 2rem，跟随 workbench-shell 参照
+  的 32px 行高），本包显式置 28px。
+- 侧栏普通项文字色 token 化：参照实测普通项为次级灰 lch(37.776 1.25 282)、选中态近黑（共享库
+  两个参照均如此——multica 普通项 oklch(0.505)）。共享库 MenuButton 基础色改读
+  `--sidebar-item-foreground`（默认回退 `--sidebar-foreground`），本包 light 置
+  `oklch(0.378 0.013 284)`、dark 置 `oklch(0.7 0.004 284)`（dark 无参照，跟随 dark muted 档）。
+
+### 已知偏差
+- 分组标题色保持共享库的 `sidebar-foreground/70` alpha 机制，有效灰度(~0.53)比参照实测
+  (0.378)浅一档；需动共享文件才能改，留待下次共享库窗口。
+- `--sidebar-item-foreground` 的 chroma 保留实测 0.013，高于包惯例 0.001–0.003（Inter 抗锯齿
+  采样所致），视觉上是可感知的「次级灰」而非纯中性。
+
 ## 0.4.1 — 2026-11-20
 
 ### Changed
