@@ -7,6 +7,9 @@ brand-foreground / faint-foreground / app-shell），浅深两套，oklch，满�
 
 **library**：随 apply 分发的代码：shadcn 组件（vendored）、blocks（通用组合件）、lint 规则。安装后归项目所有，lock 记录哈希。
 
+**共享 item（shared registry item）**：被多个风格包安装的同一 library 文件（如 `ui/sidebar`）。包间会漂移的
+视觉语义（字重、焦点环、密度）必须写成 `var(--xxx, fallback)`，由各包 theme.css 自声明——不硬编码在组件里。
+
 **block**：跨项目通用、带默认行为的组合组件（DataTable、PageHeader、StateBoundary…）。页面规范优先落在 block 的默认行为里。
 
 **pattern**：一类页面的实现规范：适用场景、使用的 blocks、决策（≤6，有默认值）、示例、自查（≤8）。

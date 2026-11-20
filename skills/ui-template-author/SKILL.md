@@ -35,3 +35,8 @@ description: 从仓库、网站或截图提炼 ui-template 风格包，并维护
 - `sources[]` 每项写 `ref` 与 `license`；许可证不明时只可内部使用，不发布到共享 catalog。
 - 包名描述风格（`workbench-shell`、`soft-console`），不用来源或客户的产品名。
 - 一个包只支持当前契约中的变量；需要新角色 → 先改 skill 库（blocks + validate_package），再升 major。
+- **共享 registry item 的视觉语义不得硬编码在组件里**：被多个包安装的组件文件（如 `ui/sidebar`），
+  包间会漂移的量（字重、焦点环样式、密度）必须写成 `var(--xxx, fallback)` 由各包 theme.css 自声明
+  （判例：5.0.8 删共享文件的 `font-medium` 误伤另一包，5.0.9 改 `--sidebar-active-weight` 纠正）。
+- **版本号避让**：未合入分支已占用的版本号，主干跳号不复用（合流会撞 CHANGELOG 与 lock）；
+  跳号在 CHANGELOG 里写一句「保留给未合入分支」。

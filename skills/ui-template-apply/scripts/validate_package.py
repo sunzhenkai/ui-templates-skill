@@ -6,6 +6,12 @@
   validate_package.py project DIR       lock hashes, theme contract, ui-decisions.yaml (decisions, pages, feedback)
 
 Exit 1 on any error. Codes are stable (P* package, T* theme, C* contrast, N* patterns, J* project).
+
+Color math caliber: theme colors must be oklch() (T04). C01 contrast is computed on LINEAR sRGB
+triplets (luminance-weighted directly, no WCAG gamma-encoding round-trip) — offline checks must use
+the same caliber or they will disagree (ui-template-author/scripts/map-tokens.mjs matches exactly).
+C02 tint pairs composite alpha in GAMMA-encoded sRGB, as browsers do, and are checked over both
+background and card (alpha_light for light mode, alpha_dark for dark).
 """
 from __future__ import annotations
 

@@ -18,13 +18,18 @@
 | brand / ring | 链接色、焦点环 |
 | accent | 列表行 hover / 选中背景 |
 
-网站可用脚本批量取（computed style）：
+网站优先走 **computed-style 导出**（比取色准：边框/字重/行高/圆角/阴影/缓动这些截图量不出来）：
 
-```js
-// DevTools console
-[["body","backgroundColor"],["body","color"],["a","color"],["button","backgroundColor"],["input","borderColor"]]
-  .map(([s,p]) => [s, p, getComputedStyle(document.querySelector(s))[p]])
-```
+1. DevTools Console 粘贴 `scripts/export-computed-styles.js` 整段 → Alt+点击 打标元素（角色见上表，另加
+   侧栏项/选中项/分组标题、卡片边框、行分隔线、输入框、主/次按钮、浮层）。
+2. `__uikit.dump()` 导出 JSON（schema `uikit-export/1`：`vars.resolved` 全量 CSS 变量终值、`freq` 全页
+   属性频次榜、`picks` 打标元素完整样式 + 背景链）。
+3. 实测色换算与契约预验用 `scripts/map-tokens.mjs`（lch/hex → oklch，`contrast`/`tint` 子命令与
+   validate_package.py 逐位同口径）；文本阶梯/圆角/内边距档位直接读 `freq` 榜。
+4. **实测值挂契约时**（常见：参照边框/焦点环比 1.25/3.0 淡）：保持契约值，把实测数字记进 theme.css 头注释
+   与 CHANGELOG（已知偏差，见 workbench-shell 5.0.9 / quiet-inset 0.4.x 模例）。
+
+agent 代跑（ZCode in-app browser）：脚本头注释有完整要点（隔离 world、goto 清注入、3s 分批）。
 
 ## 生成
 
