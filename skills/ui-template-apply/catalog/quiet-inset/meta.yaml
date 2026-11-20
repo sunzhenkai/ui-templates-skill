@@ -1,7 +1,7 @@
 schema: ui-template/v4
 name: quiet-inset
-version: 0.2.0
-summary: Pure-gray three-surface workbench (shell → inset panel → white cards) with a single indigo accent; quiet chrome, compact density.
+version: 0.4.0
+summary: Near-neutral three-surface workbench (shell → inset panel → white cards) with a single indigo accent; quiet chrome, compact density.
 fits:
   - issue trackers, project and agent workbenches, internal tools
   - settings-heavy products with grouped forms
@@ -29,7 +29,7 @@ defaults:
   feedback.channel: toast
 sources:
   - kind: product
-    ref: issue-tracker desktop app, light theme (6 screenshots; values sampled from downscaled JPEG, to be replaced by computed-style export)
+    ref: "issue-tracker desktop web app, light theme (computed-style export 2026-11-20, resolved CSS variables + per-property frequency + tagged picks on issues and settings pages; replaced the 0.1.0 downscaled-JPEG draft values)"
     license: observation-only (values and visual decisions; no code, icons, fonts or copy)
   - kind: registry
     ref: shadcn/ui radix-nova 4.21.4

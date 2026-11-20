@@ -1,5 +1,9 @@
 # workbench-shell
 
+## 5.0.8
+- `ui/sidebar`：侧栏菜单项选中态不再加 `font-medium`，分组标题去掉 `font-medium`（实测侧栏字重 400；
+  quiet-inset 0.4.0 的 F-2 修复，共享库文件）。版本号跳过 5.0.7——该号保留给未合入的 p2 段一分支。
+
 ## 5.0.6
 - `blocks/router`: `useUrlState` batches concurrent updates (one microtask flush), so changing several params in
   one handler no longer keeps only the last one.

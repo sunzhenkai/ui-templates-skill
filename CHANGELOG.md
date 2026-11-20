@@ -1,5 +1,18 @@
 # Changelog
 
+## 5.7.0 — 2026-11-20
+
+### Changed
+- `quiet-inset` 0.4.0: light-theme tokens replaced with computed-style measurements from the reference product
+  (browser console export: resolved variables, per-property frequency, tagged picks on issues + settings).
+  Neutrals gain the reference's faint lavender cast; `--text-base` 14→15px; radius re-anchored to 4/8/10/12px;
+  `--surface-shadow` is now the measured 1px-ring panel shadow. F-1 recorded as a known deviation (reference
+  border `#e2e2e2` is 1.23:1 vs panel, below the ≥1.25 contract; token keeps `#dedede`) — full numbers in the
+  theme.css header.
+- `ui/sidebar` (F-2): sidebar menu buttons no longer gain `font-medium` when active, group labels drop
+  `font-medium` — measured sidebar weight is 400. `workbench-shell` 5.0.8 (installs the shared file; version
+  skips 5.0.7, reserved by the unmerged p2-segment-1 branch, as does quiet-inset 0.4.0 over 0.3.0).
+
 ## 5.5.0 — 2026-11-20
 
 ### Fixed
