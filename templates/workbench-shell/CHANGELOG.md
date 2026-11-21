@@ -1,5 +1,10 @@
 # workbench-shell
 
+## 5.0.15
+- 共享组件跟随（quiet-inset 0.6.3 同一 patch）：`ui/sidebar` MenuButton hover 改读
+  `--sidebar-hover`（默认回退 `--sidebar-accent`，本包不定义新值，渲染不变）；侧栏/导航列表行间隔 2px。
+- `ui/button`、`ui/badge` 的 link variant 与 `blocks/markdown` 链接去掉 hover 下划线（hover 变淡）。
+
 ## 5.0.14
 - 共享 blocks 跟随（quiet-inset 0.6.2 同一 patch）：`page-header` 新增 `HeaderAction.iconOnly`（默认行为
   不变）；`surfaces` 新增 `NavList` / `NavItem` 紧凑导航组件。

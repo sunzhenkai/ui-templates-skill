@@ -193,7 +193,7 @@
         {
           "path": "blocks/log-view.tsx",
           "target": "src/components/blocks/log-view.tsx",
-          "sha256": "78798a5719a6139b47da4352134e75d7942a0ff2563a7b2836b13c53dca80961"
+          "sha256": "afb23e0c1cacd5a764833bee2835a49e27e81db8043cc9f510b1e0490ae4e6de"
         }
       ],
       "dependencies": [
@@ -214,7 +214,7 @@
         {
           "path": "blocks/markdown.tsx",
           "target": "src/components/blocks/markdown.tsx",
-          "sha256": "3305ad8cdf879ec06cb4219a271edf73576c44935e9ce08a6421682cfb13744a"
+          "sha256": "d96307107ce70e8e25abdea98813516c9dbc6e4e41026834820839d1bd55e336"
         }
       ],
       "dependencies": [
@@ -354,7 +354,7 @@
         {
           "path": "blocks/surfaces.tsx",
           "target": "src/components/blocks/surfaces.tsx",
-          "sha256": "bc64e12a4d04ecd57983076ec2106ce15fc92ada501ad91be0c20a2886a7c78e"
+          "sha256": "9e2c1953a84efb14a0077bd6f0d6cbb7c1bf01aa7d5ff5fc7318846ecfa48320"
         }
       ],
       "dependencies": [
@@ -587,7 +587,7 @@
         {
           "path": "shadcn/ui/badge.tsx",
           "target": "src/components/ui/badge.tsx",
-          "sha256": "59953420d01d23d172b4e32583426db153ff09226e2d460d53526b9f25282801"
+          "sha256": "73b60fd3b0ab462b877be449bdfe7e05984d344339b5b0b95859c3e4bc430e9c"
         }
       ],
       "dependencies": [
@@ -619,7 +619,7 @@
         {
           "path": "shadcn/ui/button.tsx",
           "target": "src/components/ui/button.tsx",
-          "sha256": "3955649f89beae0e84c910497b1a7feda1109baae6e26d7e0d77643b935e44e5"
+          "sha256": "55b937ef2d63a5017c1aa553af7a0839f2e58bc4f59b8552475ecff758d88939"
         }
       ],
       "dependencies": [
@@ -984,7 +984,7 @@
         {
           "path": "shadcn/ui/sidebar.tsx",
           "target": "src/components/ui/sidebar.tsx",
-          "sha256": "77b557c82d48385f1628b335b0da291105f25a88e7ad438901e28d23982e2132"
+          "sha256": "b61af7390cf93d25fcc20fb0709ef164337c3b9eba2b0c997110069c4952a1eb"
         }
       ],
       "dependencies": [

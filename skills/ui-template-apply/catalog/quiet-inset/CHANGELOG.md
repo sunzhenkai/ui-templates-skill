@@ -1,5 +1,17 @@
 # quiet-inset
 
+## 0.6.3 — 2026-11-21
+
+### Fixed
+- **列表项 hover / 选中浓度差与行间隔（机制）**：`ui/sidebar` MenuButton 的 hover 与选中态原共用
+  `--sidebar-accent`，同色无从区分；`SidebarMenu` 行间 `gap-0` 使相邻高亮块粘连。新增 `--sidebar-hover`
+  token（light 0.935 / dark 0.21，hover 比选中浅一档，参照实测 hover #e4e4e5 vs 选中 #e1e1e2），
+  MenuButton hover 改读该 token（默认回退 `--sidebar-accent`）；`SidebarMenu` 与 `NavList` 行间隔
+  改 2px。
+- **链接下划线机制**：`blocks/markdown` 正文链接从常驻 `underline` 改为默认 primary + hover 变淡；
+  `ui/button` / `ui/badge` 的 link variant、`blocks/log-view` 的展开按钮同步去掉 hover 下划线。
+  设计原则：不用下划线表达可点击，hover 用颜色/面变化（ui-kit language.md §7）。
+
 ## 0.6.2 — 2026-11-21
 
 ### Added

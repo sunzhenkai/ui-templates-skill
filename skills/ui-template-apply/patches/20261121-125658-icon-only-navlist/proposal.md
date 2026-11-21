@@ -2,7 +2,7 @@
 
 ## Intent
 
-llmwiki（quiet-inset 消费端）逐页细节审查发现两类系统性问题，需要在模板层提供能力：
+消费项目逐页细节审查发现两类系统性问题，需要在模板层提供能力：
 
 1. **动作按钮图标 / 文字混用**：chat/jobs/graph 的页头动作（归档/刷新）是裸文字无图标；logs 的
    刷新/导出是图标+文字。用户定案原则：图标语义明确时只显示图标（`aria-label`/`title` 取动作名），
@@ -16,7 +16,7 @@ llmwiki（quiet-inset 消费端）逐页细节审查发现两类系统性问题�
   `icon-sm` 图标按钮（`aria-label`/`title`）；溢出菜单仍 icon + label。
 - `blocks/surfaces`：新增 `NavList`（`ul`, gap-px, p-1）与 `NavItem`（32px 行、rounded-md、
   hover:bg-muted、`active` → bg-accent + medium；`onSelect` 省略时为展示型）。
-- ui-kit `references/language.md` §7 固化原则（明确图标清单、混用禁令、纯文字仅限表单/对话框确认）。
+- ui-kit ui-kit 的 language.md §7 固化原则（明确图标清单、混用禁令、纯文字仅限表单/对话框确认）。
 
 ## Conflict check
 
