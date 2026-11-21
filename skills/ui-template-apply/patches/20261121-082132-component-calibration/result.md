@@ -26,3 +26,9 @@ button/input/select/switch/command 全部 token 化、workbench-shell 默认值�
 - documents：filter pill 28px/全圆/12px/500，主按钮 pill `lch(53 52.26 286.91)` + surface-shadow
 - agent：ask 卡 10px radius + surface-shadow；示例卡 0.5px 边框/8px radius；描述 12px/450
 - 未采到：dropdown 面板（两次交互均未打开，记录待补）、tooltip、tabs 选中态、checkbox/radio
+
+## 追加（0.6.1）
+
+线上复核发现浮层阴影接线缺口：dropdown-menu / select / popover / command 用 tailwind
+`shadow-md` 而非 `--floating-shadow`（`shadow-lg`），实测主题菜单仍是默认深灰投影。
+4 个组件改 `shadow-lg`；quiet-inset 0.6.1 / workbench-shell 5.0.13。验证门复跑全绿。

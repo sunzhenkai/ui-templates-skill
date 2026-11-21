@@ -1,5 +1,13 @@
 # quiet-inset
 
+## 0.6.1 — 2026-11-21
+
+### Fixed
+- 浮层阴影接线缺口：dropdown-menu / select / popover / command 面板此前用 tailwind `shadow-md`
+  （默认深灰投影），未接 theme 的 `--floating-shadow`（`--shadow-lg` 映射）。全部改 `shadow-lg`，
+  0.6.0 的实测浮层阴影至此真正作用到消费端（wiki.lan 线上复核发现主题菜单仍为 shadow-md）。
+- workbench-shell 5.0.13 基线跟随（浮层阴影统一加深，为共享语义）。
+
 ## 0.6.0 — 2026-11-21
 
 ### Changed
