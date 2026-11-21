@@ -1,5 +1,24 @@
 # quiet-inset
 
+## 0.6.0 — 2026-11-21
+
+### Changed
+- **全组件校准**（参照产品四页 computed-style 采样：documents/activity、settings、agent、command palette）：
+  - `--floating-shadow` 换实测值（`0.08 0 9px 48px, 0.1 0 6px 24px`）——0.4.0 的估计值明显偏轻，浮层（command 面板）
+    阴影加深。
+  - 控件档位修正：参照控件高 28px（search 28 / combobox 30 / 主按钮 28）、圆角 8px（输入类）、按钮 pill 形。
+    共享库新增 `--control-height`（默认 2rem）、`--button-radius`（默认 `var(--radius-lg)`）；
+    input/select 基础圆角改 `min(--radius-md,12px)`（=8px，两包一致）。
+  - switch 尺寸 token 化：`--switch-width` / `--switch-height`（默认 32px / 18.4px），本包置 30px / 20px。
+  - command 菜单项 token 化：`--command-item-height` / `--command-item-font-size`（默认 2.125rem / 0.875rem），
+    本包置 46px / 15px，水平内边距 px-2 → px-3。
+- meta.yaml 声明的「controls 28px」至此落地（与 0.5.0 的 sidebar rows 28px 同类修正）。
+
+### Notes
+- 保留：0.5px hairline（契约对比度，见 F-1）、正文 450 字重档（token 阶梯无此档）、卡片 12px 圆角
+  （参照示例卡 8px 属内容卡，静待内容卡专项）。
+- 按钮 pill 化是本包按钮语义的一部分（参照主/次/自定义按钮均 pill）。
+
 ## 0.5.1 — 2026-11-20
 
 ### Changed

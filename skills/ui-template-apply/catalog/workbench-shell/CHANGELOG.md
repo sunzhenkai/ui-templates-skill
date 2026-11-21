@@ -1,5 +1,11 @@
 # workbench-shell
 
+## 5.0.12
+- 共享库基线跟随（quiet-inset 0.6.0 同一 patch）：button/input/select/switch/command 控件尺寸与圆角
+  token 化（`--control-height` / `--button-radius` / `--switch-width|height` / `--command-item-height|font-size`），
+  默认值保持现值，渲染不变；input/select 基础圆角改 `min(--radius-md,12px)`（本包 radius-md 亦为 8px，渲染不变）。
+- `--floating-shadow` 换参照实测值（共享 token，浮层阴影加深，为两包共识语义）。
+
 ## 5.0.11
 - 共享库基线跟随（quiet-inset 0.5.1 同一 patch）：`ui/sidebar` MenuButton 普通项字重 token 化
   为 `--sidebar-item-weight`（默认 400 = multica 普通项实测值，渲染不变）。本包不定义新值。

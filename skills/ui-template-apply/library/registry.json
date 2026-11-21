@@ -619,7 +619,7 @@
         {
           "path": "shadcn/ui/button.tsx",
           "target": "src/components/ui/button.tsx",
-          "sha256": "08e5f87833c5db8436e89337ebde0f776bcdbf649d3de69fb89be6441ca2e366"
+          "sha256": "3955649f89beae0e84c910497b1a7feda1109baae6e26d7e0d77643b935e44e5"
         }
       ],
       "dependencies": [
@@ -679,7 +679,7 @@
         {
           "path": "shadcn/ui/command.tsx",
           "target": "src/components/ui/command.tsx",
-          "sha256": "ebab598d42025fcc0eca7f75af29a43d1fcfd0250c3a40f2534a12af4768af70"
+          "sha256": "6f5a8a976bb208b07caf338377ac18a448aa3156b67c78e18806bc365a545299"
         }
       ],
       "dependencies": [
@@ -815,7 +815,7 @@
         {
           "path": "shadcn/ui/input.tsx",
           "target": "src/components/ui/input.tsx",
-          "sha256": "75418e030b2a54dd017ac0f4588db4bbdbabca7525e88bbc9d84cb3e18bcb905"
+          "sha256": "9531f8adfc7980810298693c991b8a5e963b4a4bc1e7d56e9a41e50368cd01a8"
         }
       ],
       "dependencies": [
@@ -935,7 +935,7 @@
         {
           "path": "shadcn/ui/select.tsx",
           "target": "src/components/ui/select.tsx",
-          "sha256": "d0ea3b62332be501636ac37920eb457afa5201e57a9f090eb1fc8effe14d7fc3"
+          "sha256": "fe1b8576a8e6deed1faa91bc1aa2b1979eb16507e1456e4910edc0e05703361b"
         }
       ],
       "dependencies": [
@@ -1055,7 +1055,7 @@
         {
           "path": "shadcn/ui/switch.tsx",
           "target": "src/components/ui/switch.tsx",
-          "sha256": "afd5b6e6b9c2bcd42ee164a39ca18c342b2d7a2dfedd29da3065dc37021090e8"
+          "sha256": "f68e1aff26308e9b9738370f54a0b720c6ccb9cf319c3ed34322f6f48afbe570"
         }
       ],
       "dependencies": [
