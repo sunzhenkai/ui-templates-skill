@@ -456,7 +456,7 @@
         {
           "path": "fidelity/playwright.fidelity.config.ts",
           "target": "playwright.fidelity.config.ts",
-          "sha256": "54285547293e4330590943ac41b458d24767b2b9abb391693e7b17273c406512"
+          "sha256": "d0c1f97d781d74acded3afc5720c46fc4e7e202a0099daf343f5059d9721d711"
         }
       ],
       "dependencies": [],
@@ -619,7 +619,7 @@
         {
           "path": "shadcn/ui/button.tsx",
           "target": "src/components/ui/button.tsx",
-          "sha256": "08e5f87833c5db8436e89337ebde0f776bcdbf649d3de69fb89be6441ca2e366"
+          "sha256": "3955649f89beae0e84c910497b1a7feda1109baae6e26d7e0d77643b935e44e5"
         }
       ],
       "dependencies": [
@@ -679,7 +679,7 @@
         {
           "path": "shadcn/ui/command.tsx",
           "target": "src/components/ui/command.tsx",
-          "sha256": "ebab598d42025fcc0eca7f75af29a43d1fcfd0250c3a40f2534a12af4768af70"
+          "sha256": "044165d4129e3ac3fab8bc86e18063f636f861981ace5a51ccecc089726652aa"
         }
       ],
       "dependencies": [
@@ -732,7 +732,7 @@
         {
           "path": "shadcn/ui/dropdown-menu.tsx",
           "target": "src/components/ui/dropdown-menu.tsx",
-          "sha256": "87408de0dcf226dd5dac9ca9535ed2f1ebd4bc5418f8f6fcdcb2884610a6307e"
+          "sha256": "c6c3b5ed22f6b20b4576d28cf67443fbfec11caab68529ddc7733669f2f64bc9"
         }
       ],
       "dependencies": [
@@ -815,7 +815,7 @@
         {
           "path": "shadcn/ui/input.tsx",
           "target": "src/components/ui/input.tsx",
-          "sha256": "75418e030b2a54dd017ac0f4588db4bbdbabca7525e88bbc9d84cb3e18bcb905"
+          "sha256": "9531f8adfc7980810298693c991b8a5e963b4a4bc1e7d56e9a41e50368cd01a8"
         }
       ],
       "dependencies": [
@@ -875,7 +875,7 @@
         {
           "path": "shadcn/ui/popover.tsx",
           "target": "src/components/ui/popover.tsx",
-          "sha256": "adfe7bd916596c7e73388ad5e184db5f6f7a47288abe3c04e2f4a6b2090be981"
+          "sha256": "c71277aa61201a384e130ae01e7cd7590bb210a8f551538f7e3edaa89c1c3c0c"
         }
       ],
       "dependencies": [
@@ -935,7 +935,7 @@
         {
           "path": "shadcn/ui/select.tsx",
           "target": "src/components/ui/select.tsx",
-          "sha256": "d0ea3b62332be501636ac37920eb457afa5201e57a9f090eb1fc8effe14d7fc3"
+          "sha256": "839a4672b385c992532cae545ecf3e394da7374b2679e9eafd23840b184a9381"
         }
       ],
       "dependencies": [
@@ -984,7 +984,7 @@
         {
           "path": "shadcn/ui/sidebar.tsx",
           "target": "src/components/ui/sidebar.tsx",
-          "sha256": "ececd609e98009760f7930731a2046604346dc2614b0ab97d7d6d9cee8b4c119"
+          "sha256": "77b557c82d48385f1628b335b0da291105f25a88e7ad438901e28d23982e2132"
         }
       ],
       "dependencies": [
@@ -1055,7 +1055,7 @@
         {
           "path": "shadcn/ui/switch.tsx",
           "target": "src/components/ui/switch.tsx",
-          "sha256": "afd5b6e6b9c2bcd42ee164a39ca18c342b2d7a2dfedd29da3065dc37021090e8"
+          "sha256": "f68e1aff26308e9b9738370f54a0b720c6ccb9cf319c3ed34322f6f48afbe570"
         }
       ],
       "dependencies": [

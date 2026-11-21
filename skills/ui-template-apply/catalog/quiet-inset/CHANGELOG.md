@@ -1,5 +1,60 @@
 # quiet-inset
 
+## 0.6.1 — 2026-11-21
+
+### Fixed
+- 浮层阴影接线缺口：dropdown-menu / select / popover / command 面板此前用 tailwind `shadow-md`
+  （默认深灰投影），未接 theme 的 `--floating-shadow`（`--shadow-lg` 映射）。全部改 `shadow-lg`，
+  0.6.0 的实测浮层阴影至此真正作用到消费端（wiki.lan 线上复核发现主题菜单仍为 shadow-md）。
+- workbench-shell 5.0.13 基线跟随（浮层阴影统一加深，为共享语义）。
+
+## 0.6.0 — 2026-11-21
+
+### Changed
+- **全组件校准**（参照产品四页 computed-style 采样：documents/activity、settings、agent、command palette）：
+  - `--floating-shadow` 换实测值（`0.08 0 9px 48px, 0.1 0 6px 24px`）——0.4.0 的估计值明显偏轻，浮层（command 面板）
+    阴影加深。
+  - 控件档位修正：参照控件高 28px（search 28 / combobox 30 / 主按钮 28）、圆角 8px（输入类）、按钮 pill 形。
+    共享库新增 `--control-height`（默认 2rem）、`--button-radius`（默认 `var(--radius-lg)`）；
+    input/select 基础圆角改 `min(--radius-md,12px)`（=8px，两包一致）。
+  - switch 尺寸 token 化：`--switch-width` / `--switch-height`（默认 32px / 18.4px），本包置 30px / 20px。
+  - command 菜单项 token 化：`--command-item-height` / `--command-item-font-size`（默认 2.125rem / 0.875rem），
+    本包置 46px / 15px，水平内边距 px-2 → px-3。
+- meta.yaml 声明的「controls 28px」至此落地（与 0.5.0 的 sidebar rows 28px 同类修正）。
+
+### Notes
+- 保留：0.5px hairline（契约对比度，见 F-1）、正文 450 字重档（token 阶梯无此档）、卡片 12px 圆角
+  （参照示例卡 8px 属内容卡，静待内容卡专项）。
+- 按钮 pill 化是本包按钮语义的一部分（参照主/次/自定义按钮均 pill）。
+
+## 0.5.1 — 2026-11-20
+
+### Changed
+- 补 0.5.0 遗漏：普通项字重 token 化。0.5.0 的 `--sidebar-active-weight` 只覆盖选中态，
+  普通项仍继承 body 400；参照复测普通项（Inbox 等）内部文字同为 13px/500。共享库新增
+  `--sidebar-item-weight`（默认 400，跟随 workbench-shell 参照的 multica 普通项实测），本包置 500。
+
+## 0.5.0 — 2026-11-20
+
+### Changed
+- **F-2 推翻重定案**：0.4.0 的「实测侧栏项与分组标题均 400」来自容器级 picks（`<a>`/`<button>`
+  继承 body 的 16px/400），漏读内部文字 span。2026-11-20 对参照产品复测（内部文字直读）：
+  侧栏项普通与选中态均为 13px/**500**、分组标题 12px/**500**。`--sidebar-active-weight` 与
+  `--sidebar-group-weight` 400 → 500；密度注释「group titles 15px」同步纠正为 12px。
+- 侧栏行高落地：meta.yaml 一直声明「sidebar rows 28px」，但共享库 MenuButton 默认 `h-8`(32px)
+  从未兑现。共享文件 token 化为 `--sidebar-row-height`（默认 2rem，跟随 workbench-shell 参照
+  的 32px 行高），本包显式置 28px。
+- 侧栏普通项文字色 token 化：参照实测普通项为次级灰 lch(37.776 1.25 282)、选中态近黑（共享库
+  两个参照均如此——multica 普通项 oklch(0.505)）。共享库 MenuButton 基础色改读
+  `--sidebar-item-foreground`（默认回退 `--sidebar-foreground`），本包 light 置
+  `oklch(0.378 0.013 284)`、dark 置 `oklch(0.7 0.004 284)`（dark 无参照，跟随 dark muted 档）。
+
+### 已知偏差
+- 分组标题色保持共享库的 `sidebar-foreground/70` alpha 机制，有效灰度(~0.53)比参照实测
+  (0.378)浅一档；需动共享文件才能改，留待下次共享库窗口。
+- `--sidebar-item-foreground` 的 chroma 保留实测 0.013，高于包惯例 0.001–0.003（Inter 抗锯齿
+  采样所致），视觉上是可感知的「次级灰」而非纯中性。
+
 ## 0.4.1 — 2026-11-20
 
 ### Changed

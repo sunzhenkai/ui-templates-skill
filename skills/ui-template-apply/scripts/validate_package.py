@@ -203,11 +203,77 @@ def cmd_package(path: Path) -> int:
     if not theme.is_file():
         report.error("P10", f"{theme.name} missing")
     else:
-        check_theme(theme.read_text(encoding="utf-8"), report, theme.name)
+        theme_css = theme.read_text(encoding="utf-8")
+        check_theme(theme_css, report, theme.name)
+        check_density_claims(meta_path, theme_css, report)
+    check_floating_layers(report)
     blobs = [p for p in sorted(path.rglob("*")) if p.is_file() and p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp", ".gif"}]
     if blobs:
         report.error("P11", f"{path.name}: binary images are not shipped ({len(blobs)}, e.g. {blobs[0].relative_to(path)}); reference/ keeps only src/ — render screenshots on demand")
     return report.finish(f"package {path.name}")
+
+
+# ---------- density / floating-layer gates ----------
+# 2026-11 lesson: meta.yaml density comments declared "controls 28px" and "sidebar rows 28px" while
+# library components hard-coded h-8(32px) — the claims were never honored until audited by hand.
+# These checks turn the two calibration lessons into standing gates.
+DENSITY_CLAIMS = {
+    # meta.yaml comment label -> (token the library must read, library fallback expression)
+    "controls": ("--control-height", "2rem"),
+    "sidebar rows": ("--sidebar-row-height", "2rem"),
+}
+FLOATING_COMPONENTS = ["dropdown-menu.tsx", "select.tsx", "popover.tsx", "command.tsx"]
+
+
+def css_var_value(css: str, name: str) -> str | None:
+    match = re.search(rf"{re.escape(name)}\s*:\s*([^;]+);", css)
+    return match.group(1).strip() if match else None
+
+
+def to_px(value: str) -> float | None:
+    match = re.fullmatch(r"([\d.]+)px", value)
+    if match:
+        return float(match.group(1))
+    match = re.fullmatch(r"([\d.]+)rem", value)
+    if match:
+        return float(match.group(1)) * 16
+    return None
+
+
+def check_density_claims(meta_path: Path, theme_css: str, report: Report) -> None:
+    text = meta_path.read_text(encoding="utf-8")
+    checked: set[str] = set()
+    for label, (token, fallback) in DENSITY_CLAIMS.items():
+        match = re.search(rf"{label}\s+(\d+)px", text)
+        if not match:
+            continue
+        declared = int(match.group(1))
+        actual = css_var_value(theme_css, token)
+        source = "theme"
+        if actual is None:
+            actual, source = fallback, "library default"
+        px = to_px(actual or "")
+        if px is not None and int(px) != declared:
+            report.warn("P12", f"{meta_path.name}: declares {label} {declared}px but {token} resolves to {int(px)}px ({source}) — claim not honored")
+        elif px is None:
+            report.warn("P12", f"{meta_path.name}: declares {label} {declared}px; {token} is {actual!r} ({source}) — replace with a px/rem value so the claim can be checked")
+        checked.add(token)
+    for token in sorted(checked):
+        readers = [p for p in (SKILL / "library").rglob("*.tsx") if token in p.read_text(encoding="utf-8")]
+        if not readers:
+            report.warn("P12", f"no library component reads {token}; a declared density value needs a token reader")
+
+
+def check_floating_layers(report: Report) -> None:
+    for name in FLOATING_COMPONENTS:
+        path = SKILL / "library/shadcn/ui" / name
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        if "shadow-md" in text:
+            report.warn("P13", f"ui/{name} uses shadow-md; floating layers must use shadow-lg so --floating-shadow applies")
+        elif "shadow-lg" not in text:
+            report.warn("P13", f"ui/{name} has no shadow-lg; floating layers must read --floating-shadow")
 
 
 # ---------- patterns ----------

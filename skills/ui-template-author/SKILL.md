@@ -16,7 +16,8 @@ description: 从仓库、网站或截图提炼 ui-template 风格包，并维护
 1. **定来源类型**，读对应参考：
    - 仓库或页面使用 CSS 自定义属性（shadcn、Radix Themes、自研 tokens）→ `references/extract-shadcn.md`
    - 只有渲染结果（网站、截图、设计稿）→ `references/extract-other.md`
-2. **提炼**：
+2. **提炼**（采集纪律见 `references/calibration.md`：文字规格取叶子节点、结论带测量层级、
+   交互态失败不猜值）：
    ```bash
    python3 scripts/extract_theme.py --css <tokens.css> --name <pkg> --out <dir> --source-ref "<来源 + 路径>" --license <SPDX>
    ```
