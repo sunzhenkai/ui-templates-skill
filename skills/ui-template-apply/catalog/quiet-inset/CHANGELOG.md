@@ -1,5 +1,14 @@
 # quiet-inset
 
+## 0.6.6 — 2026-11-21
+
+### Fixed
+- **弹层 padding 契约不一致**：`DialogContent` 有 `p-4` 而 `SheetContent` 没有，Sheet 内部靠
+  `SheetHeader`/`SheetFooter` 自带的 p-4 撑场面——页面把带边框 Panel 放进 Sheet 内容区时直接贴抽屉边缘
+  （详情抽屉的「内容与边框紧贴」bug）。`SheetContent` 补 `p-4`（与 Dialog 对齐），
+  `SheetHeader`/`SheetFooter` 去掉各自 `p-4` 避免双 padding；特殊用法（pane sheet）用 `p-0` 覆盖不受影响。
+- 文件头补弹层 padding 契约注释（容器负责内边距，内容块不写）。
+
 ## 0.6.5 — 2026-11-21
 
 ### Fixed

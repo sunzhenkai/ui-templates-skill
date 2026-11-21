@@ -1,5 +1,9 @@
 # workbench-shell
 
+## 5.0.18
+- 共享组件跟随（quiet-inset 0.6.6 同一 patch）：`SheetContent` 补 `p-4`、`SheetHeader`/`SheetFooter`
+  去掉自带 `p-4`——弹层内边距统一由容器提供（与 Dialog 一致）。
+
 ## 5.0.17
 - 共享组件跟随（quiet-inset 0.6.5 同一 patch）：`ui/select` SelectContent 补 `p-1`。
 

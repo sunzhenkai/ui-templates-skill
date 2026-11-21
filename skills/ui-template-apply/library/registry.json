@@ -966,7 +966,7 @@
         {
           "path": "shadcn/ui/sheet.tsx",
           "target": "src/components/ui/sheet.tsx",
-          "sha256": "549678370096804f5acd0895fcbd58084b45ac80f28197887377038d8266ddd3"
+          "sha256": "8c6a4637cabc17a8f67605cae21cd4ab8fe50d622d6ab994e78a42cd3530792b"
         }
       ],
       "dependencies": [
