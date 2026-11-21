@@ -1,5 +1,14 @@
 # quiet-inset
 
+## 0.6.7 — 2026-11-21
+
+### Added
+- `contract/components.json` + validate P14：组件实现契约登记（button/input/select/switch/command/
+  浮层/Sheet/sidebar/导航/markdown 各自必须保留的 token 与类）。今后任何「h-8 写死、shadow-md 回退、
+  容器 padding 丢失」在 package 校验即报错，而不是等生产观感暴露。
+- ESLint 新规则 `no-raw-scroll-containers`：页面原生元素（div/section/…）禁用 overflow 滚动类——
+  滚动区域必须用 ScrollRegion/Body/Split/Sheet 容器，从源头杜绝「自建滚动容器无 padding」类缺陷。
+
 ## 0.6.6 — 2026-11-21
 
 ### Fixed

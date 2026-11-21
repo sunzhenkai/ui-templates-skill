@@ -488,7 +488,7 @@
         {
           "path": "lint/ui-template.mjs",
           "target": "eslint/ui-template.mjs",
-          "sha256": "63db50c1f84f86857599aeeb0c6b3af9279f455f870a1dba7d6490fba9cb7997"
+          "sha256": "4ba82af4d622f549318f5a93d23c9c82290e99cebd937038b9a41323c0a686cd"
         }
       ],
       "dependencies": [],

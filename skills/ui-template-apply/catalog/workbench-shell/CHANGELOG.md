@@ -1,5 +1,9 @@
 # workbench-shell
 
+## 5.0.19
+- 共享工具跟随（quiet-inset 0.6.7 同一 patch）：ESLint 新增 `no-raw-scroll-containers`；
+  `contract/components.json` 与 validate P14 组件契约闸门。
+
 ## 5.0.18
 - 共享组件跟随（quiet-inset 0.6.6 同一 patch）：`SheetContent` 补 `p-4`、`SheetHeader`/`SheetFooter`
   去掉自带 `p-4`——弹层内边距统一由容器提供（与 Dialog 一致）。

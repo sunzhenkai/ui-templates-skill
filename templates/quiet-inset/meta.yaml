@@ -1,6 +1,6 @@
 schema: ui-template/v4
 name: quiet-inset
-version: 0.6.6
+version: 0.6.7
 summary: Near-neutral three-surface workbench (shell → inset panel → white cards) with a single indigo accent; quiet chrome, compact density.
 fits:
   - issue trackers, project and agent workbenches, internal tools

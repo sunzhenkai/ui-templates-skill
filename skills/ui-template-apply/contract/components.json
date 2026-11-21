@@ -1,0 +1,56 @@
+{
+  "$comment": "Component implementation contract (P14). Each library file lists the tokens/classes its implementation MUST keep, so a regression to hardcoded values (h-8, shadow-md, missing padding) fails validate_package instead of surfacing in production. Add an entry whenever a calibration lesson changes a component's mechanism.",
+  "library/shadcn/ui/button.tsx": {
+    "must_contain": ["h-[var(--control-height", "rounded-[var(--button-radius"],
+    "why": "control height and pill radius are theme tokens (quiet-inset 0.6.x calibration); hardcoded h-8 / rounded-lg regresses the reference"
+  },
+  "library/shadcn/ui/input.tsx": {
+    "must_contain": ["h-[var(--control-height", "rounded-[min(var(--radius-md),12px)]"],
+    "why": "28px control height and 8px control radius"
+  },
+  "library/shadcn/ui/select.tsx": {
+    "must_contain": ["data-[size=default]:h-[var(--control-height", "rounded-[min(var(--radius-md),12px)]", "bg-popover p-1"],
+    "must_not_contain": ["shadow-md"],
+    "why": "control height, control radius, menu inset (p-1) so the selected row never touches the menu edge, floating shadow via shadow-lg"
+  },
+  "library/shadcn/ui/switch.tsx": {
+    "must_contain": ["--switch-width", "--switch-height"],
+    "why": "30x20 switch size is a theme token"
+  },
+  "library/shadcn/ui/command.tsx": {
+    "must_contain": ["--command-item-height", "shadow-lg"],
+    "must_not_contain": ["shadow-md"],
+    "why": "46px/15px command items; floating layers read --floating-shadow"
+  },
+  "library/shadcn/ui/dropdown-menu.tsx": {
+    "must_contain": ["shadow-lg", "p-1"],
+    "must_not_contain": ["shadow-md"],
+    "why": "floating shadow token + menu inset"
+  },
+  "library/shadcn/ui/popover.tsx": {
+    "must_contain": ["shadow-lg"],
+    "must_not_contain": ["shadow-md"],
+    "why": "floating shadow token"
+  },
+  "library/shadcn/ui/sheet.tsx": {
+    "must_contain": ["bg-clip-padding p-4"],
+    "why": "the sheet container owns the inset (same contract as Dialog); content blocks carry no padding, so dropping the p-4 puts bordered panels against the drawer edge"
+  },
+  "library/shadcn/ui/sidebar.tsx": {
+    "must_contain": ["--sidebar-row-height", "--sidebar-item-foreground", "--sidebar-item-weight", "--sidebar-hover", "gap-0.5"],
+    "why": "28px rows, secondary item gray, 500 weight, hover/selected step, 2px row gap — all calibration tokens"
+  },
+  "library/blocks/page-header.tsx": {
+    "must_contain": ["iconOnly"],
+    "why": "icon-only actions (refresh/archive…) per the action-icon principle"
+  },
+  "library/blocks/surfaces.tsx": {
+    "must_contain": ["NavList", "NavItem", "gap-0.5"],
+    "why": "in-page navigation must use NavList/NavItem (icon + text, 28px rows), not data rows"
+  },
+  "library/blocks/markdown.tsx": {
+    "must_contain": ["hover:text-primary/75"],
+    "must_not_contain": ["underline underline-offset"],
+    "why": "links use hover color, not underlines"
+  }
+}

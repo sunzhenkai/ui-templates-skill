@@ -28,6 +28,8 @@ import yaml
 SKILL = Path(__file__).resolve().parents[1]
 # The token contract ships with the library that consumes it; see contract/tokens.json.
 CONTRACT = json.loads((SKILL / "contract/tokens.json").read_text(encoding="utf-8"))
+# Component implementation contract; see contract/components.json (P14).
+COMPONENT_CONTRACT = json.loads((SKILL / "contract/components.json").read_text(encoding="utf-8"))
 CORE = CONTRACT["colors"]["core"]
 EXTENSIONS = CONTRACT["colors"]["extensions"]
 SCALE_REQUIRED = CONTRACT["scale"]["required"]
@@ -207,6 +209,7 @@ def cmd_package(path: Path) -> int:
         check_theme(theme_css, report, theme.name)
         check_density_claims(meta_path, theme_css, report)
     check_floating_layers(report)
+    check_component_contract(report)
     blobs = [p for p in sorted(path.rglob("*")) if p.is_file() and p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp", ".gif"}]
     if blobs:
         report.error("P11", f"{path.name}: binary images are not shipped ({len(blobs)}, e.g. {blobs[0].relative_to(path)}); reference/ keeps only src/ — render screenshots on demand")
@@ -262,6 +265,28 @@ def check_density_claims(meta_path: Path, theme_css: str, report: Report) -> Non
         readers = [p for p in (SKILL / "library").rglob("*.tsx") if token in p.read_text(encoding="utf-8")]
         if not readers:
             report.warn("P12", f"no library component reads {token}; a declared density value needs a token reader")
+
+
+def check_component_contract(report: Report) -> None:
+    """P14 — every registered library file must keep the token/class mechanism the calibration fixed.
+
+    A component that regresses to hardcoded geometry (h-8, shadow-md, missing container inset) silently
+    reintroduces defects that no page-level check can see; this gate fails the package instead.
+    """
+    for rel, spec in COMPONENT_CONTRACT.items():
+        if rel.startswith("$"):
+            continue
+        path = SKILL / rel
+        if not path.is_file():
+            report.error("P14", f"{rel}: registered component is missing")
+            continue
+        text = path.read_text(encoding="utf-8")
+        for needle in spec.get("must_contain", []):
+            if needle not in text:
+                report.error("P14", f"{rel}: missing `{needle}` — {spec.get('why', 'component contract')}")
+        for needle in spec.get("must_not_contain", []):
+            if needle in text:
+                report.error("P14", f"{rel}: must not contain `{needle}` — {spec.get('why', 'component contract')}")
 
 
 def check_floating_layers(report: Report) -> None:
