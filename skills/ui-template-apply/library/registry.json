@@ -249,7 +249,7 @@
         {
           "path": "blocks/page-header.tsx",
           "target": "src/components/blocks/page-header.tsx",
-          "sha256": "869b0ce684b67a908c3744dc6314b1ed4b8012ce22e68f8587de39b8d3af9945"
+          "sha256": "5e10ad2657d05bfecb249930a7da13e4a741a716b38f35cb2373bef887cf69e2"
         }
       ],
       "dependencies": [
@@ -354,7 +354,7 @@
         {
           "path": "blocks/surfaces.tsx",
           "target": "src/components/blocks/surfaces.tsx",
-          "sha256": "880d5068532570f3e2dadab40f193088fc82b7dc09c13973c06b66fd268ea29b"
+          "sha256": "bc64e12a4d04ecd57983076ec2106ce15fc92ada501ad91be0c20a2886a7c78e"
         }
       ],
       "dependencies": [

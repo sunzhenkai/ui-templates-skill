@@ -1,5 +1,13 @@
 # quiet-inset
 
+## 0.6.2 — 2026-11-21
+
+### Added
+- `blocks/page-header`：`HeaderAction.iconOnly` —— 图标语义明确（刷新/归档/导出/更多）时图标按钮渲染，
+  `aria-label`/`title` 取动作名；不明确的自定义动作保持 icon + 文字（设计原则见 ui-kit language.md §7）。
+- `blocks/surfaces`：`NavList` / `NavItem` —— 页面内二级导航（帮助目录、文档大纲、设置分组）用紧凑菜单
+  节奏（32px 行、hover/active 面、无分隔线），不再用表格行 `Rows` 冒充导航。
+
 ## 0.6.1 — 2026-11-21
 
 ### Fixed

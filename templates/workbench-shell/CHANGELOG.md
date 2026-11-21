@@ -1,5 +1,9 @@
 # workbench-shell
 
+## 5.0.14
+- 共享 blocks 跟随（quiet-inset 0.6.2 同一 patch）：`page-header` 新增 `HeaderAction.iconOnly`（默认行为
+  不变）；`surfaces` 新增 `NavList` / `NavItem` 紧凑导航组件。
+
 ## 5.0.13
 - 浮层阴影接线跟随（quiet-inset 0.6.1 同一 patch）：dropdown-menu / select / popover / command
   改读 `--floating-shadow`（`shadow-lg`），与 0.6.0 实测值联动。
