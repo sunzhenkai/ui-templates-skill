@@ -354,7 +354,7 @@
         {
           "path": "blocks/surfaces.tsx",
           "target": "src/components/blocks/surfaces.tsx",
-          "sha256": "9e2c1953a84efb14a0077bd6f0d6cbb7c1bf01aa7d5ff5fc7318846ecfa48320"
+          "sha256": "1b7faf01e07ee252aced6cabd5acdb55014b497895437e835b949a5e24058ef5"
         }
       ],
       "dependencies": [

@@ -1,5 +1,12 @@
 # quiet-inset
 
+## 0.6.4 — 2026-11-21
+
+### Changed
+- `blocks/surfaces` NavList/NavItem 对齐一级导航：行高 28px（sidebar 同）、支持 `icon`
+  （16px 前导图标）与 `indent`（大纲层级缩进）；NavList 去掉自带 padding（容器负责边距，
+  页面内二级导航不再需要 Panel 卡片包裹）。设计原则：一个层级一种导航外观（icon + 文字）。
+
 ## 0.6.3 — 2026-11-21
 
 ### Fixed

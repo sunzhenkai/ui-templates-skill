@@ -1,5 +1,9 @@
 # workbench-shell
 
+## 5.0.16
+- 共享组件跟随（quiet-inset 0.6.4 同一 patch）：`NavList`/`NavItem` 行高 28px、支持 icon 与 indent，
+  NavList 去掉自带 padding（本包无消费差异，渲染影响仅限使用二级导航的页面）。
+
 ## 5.0.15
 - 共享组件跟随（quiet-inset 0.6.3 同一 patch）：`ui/sidebar` MenuButton hover 改读
   `--sidebar-hover`（默认回退 `--sidebar-accent`，本包不定义新值，渲染不变）；侧栏/导航列表行间隔 2px。
