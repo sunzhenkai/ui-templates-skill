@@ -1,5 +1,13 @@
 # quiet-inset
 
+## 0.6.5 — 2026-11-21
+
+### Fixed
+- `ui/select`：SelectContent 补 `p-1`（与 DropdownMenuContent 一致）——此前选项容器无内边距，
+  选中/聚焦背景块左右贴菜单边框。
+- `blocks/surfaces`：Split 注释补「内边距契约」——main 列无 padding，内容必须自带（Body 或全幅
+  surface）；带边框 Panel 直接塞进 main 会与分隔线/header 线相邻形成双线。
+
 ## 0.6.4 — 2026-11-21
 
 ### Changed
