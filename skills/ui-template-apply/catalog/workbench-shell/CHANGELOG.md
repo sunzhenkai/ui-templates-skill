@@ -1,5 +1,9 @@
 # workbench-shell
 
+## 5.0.13
+- 浮层阴影接线跟随（quiet-inset 0.6.1 同一 patch）：dropdown-menu / select / popover / command
+  改读 `--floating-shadow`（`shadow-lg`），与 0.6.0 实测值联动。
+
 ## 5.0.12
 - 共享库基线跟随（quiet-inset 0.6.0 同一 patch）：button/input/select/switch/command 控件尺寸与圆角
   token 化（`--control-height` / `--button-radius` / `--switch-width|height` / `--command-item-height|font-size`），

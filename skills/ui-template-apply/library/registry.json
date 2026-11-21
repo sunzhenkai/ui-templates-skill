@@ -456,7 +456,7 @@
         {
           "path": "fidelity/playwright.fidelity.config.ts",
           "target": "playwright.fidelity.config.ts",
-          "sha256": "54285547293e4330590943ac41b458d24767b2b9abb391693e7b17273c406512"
+          "sha256": "d0c1f97d781d74acded3afc5720c46fc4e7e202a0099daf343f5059d9721d711"
         }
       ],
       "dependencies": [],
