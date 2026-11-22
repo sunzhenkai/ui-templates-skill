@@ -1,5 +1,8 @@
 # workbench-shell
 
+## 5.0.21
+- 共享组件跟随（quiet-inset 0.6.9 同一 patch）：`SectionNavItem` 支持可选 16px 图标（设置分区导航）。
+
 ## 5.0.20
 - 共享组件跟随（quiet-inset 0.6.8 同一 patch）：侧栏 active 匹配改为最长前缀胜出（`blocks/router`
   新增 `pickActive`，`blocks/app-shell` 整组导航求唯一最佳匹配）——父/子路径（如 `/wiki` 与

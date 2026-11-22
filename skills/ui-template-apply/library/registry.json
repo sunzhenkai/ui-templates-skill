@@ -300,7 +300,7 @@
         {
           "path": "blocks/section-nav.tsx",
           "target": "src/components/blocks/section-nav.tsx",
-          "sha256": "89068547f63524d3fec46668db3e0802774331f4ddc58f043a663f7b9d30ee3e"
+          "sha256": "a9a3d0243f21ef2f9817eefc8cf24b6f50d04fcce3e22dae050d3433bf873091"
         }
       ],
       "dependencies": [

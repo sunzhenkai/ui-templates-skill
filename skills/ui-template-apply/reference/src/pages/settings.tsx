@@ -1,4 +1,5 @@
 import { Outlet } from "react-router"
+import { BellIcon, SettingsIcon, TriangleAlertIcon } from "lucide-react"
 import { useConfirm } from "@/components/blocks/confirm"
 import { notify } from "@/components/blocks/notify"
 import { SectionLayout } from "@/components/blocks/section-nav"
@@ -8,7 +9,11 @@ import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel } from "@
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 
-const SECTIONS = [{ label: "通用", to: "/settings/general" }, { label: "通知", to: "/settings/notifications" }, { label: "危险操作", to: "/settings/danger" }]
+const SECTIONS = [
+  { label: "通用", to: "/settings/general", icon: <SettingsIcon /> },
+  { label: "通知", to: "/settings/notifications", icon: <BellIcon /> },
+  { label: "危险操作", to: "/settings/danger", icon: <TriangleAlertIcon /> },
+]
 
 export function SettingsLayout() {
   return <Page title="设置" layout="fill"><SectionLayout items={SECTIONS} label="设置分区"><Outlet /></SectionLayout></Page>

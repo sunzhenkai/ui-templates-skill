@@ -1,5 +1,12 @@
 # quiet-inset
 
+## 0.6.9 — 2026-11-22
+
+### Added
+- `blocks/section-nav`：`SectionNavItem` 新增可选 `icon`（16px，与侧栏 NavItem 同一视觉语言；无图标仍为
+  纯文字），参考原型 settings 的分区导航带图标。多分区页面（设置等）用 SectionLayout 做二级导航时，
+  导航项可与侧栏保持同一套 icon+文字表达。
+
 ## 0.6.8 — 2026-11-22
 
 ### Fixed
