@@ -402,7 +402,7 @@
         {
           "path": "blocks/use-container-width.ts",
           "target": "src/components/blocks/use-container-width.ts",
-          "sha256": "3b57b6be28fe9c36a1bba0d509222c74a851fc215dea7f13433261d993926820"
+          "sha256": "505198e51f4f049ed6ecf2d7777feffd8bef3355454c6cc8f4ce348db9d8137b"
         }
       ],
       "dependencies": [],

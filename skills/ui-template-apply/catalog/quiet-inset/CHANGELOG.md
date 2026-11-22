@@ -1,5 +1,12 @@
 # quiet-inset
 
+## 0.6.12 — 2026-11-22
+
+### Fixed
+- `blocks/use-container-width`：`ResizeObserver` 的 layout effect 由空依赖改为跟随 `node`——观察目标在
+  加载态之后才挂载（`ref` 第一次为 null）时，旧实现只观察一次 null、宽度永远为 0，依赖它的布局决策
+  （容器折叠、右栏显隐）全部失效。挂载后再渲染即可测得宽度。
+
 ## 0.6.11 — 2026-11-22
 
 ### Fixed

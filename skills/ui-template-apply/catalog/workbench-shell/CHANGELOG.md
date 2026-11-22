@@ -1,5 +1,8 @@
 # workbench-shell
 
+## 5.0.24
+- 共享 hook 跟随（quiet-inset 0.6.12 同一 patch）：`useContainerWidth` 在节点晚挂载时也能测到宽度。
+
 ## 5.0.23
 - 共享组件跟随（quiet-inset 0.6.11 同一 patch）：`PaneHeader` sticky；`Split` 支持 `sidePosition="end"`
   （右侧目录栏）；`PageHeader` 支持 `inlineMax`（iconOnly 动作内联预算）。
