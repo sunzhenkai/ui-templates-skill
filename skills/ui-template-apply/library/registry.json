@@ -300,7 +300,7 @@
         {
           "path": "blocks/section-nav.tsx",
           "target": "src/components/blocks/section-nav.tsx",
-          "sha256": "a9a3d0243f21ef2f9817eefc8cf24b6f50d04fcce3e22dae050d3433bf873091"
+          "sha256": "febfca2349143cdff9c9e6cdb99d529a5849fb371ec3aa21e5ab9240477430fa"
         }
       ],
       "dependencies": [
@@ -354,7 +354,7 @@
         {
           "path": "blocks/surfaces.tsx",
           "target": "src/components/blocks/surfaces.tsx",
-          "sha256": "4fa017ef377fbedae87e8964be3e7e6b449d7e8a7f5f6d6344e3b634ff9f8189"
+          "sha256": "4975f237699714d335b401bcf515aed664b3d1a0bfd1ec0e09d176ab5058b354"
         }
       ],
       "dependencies": [

@@ -16,7 +16,7 @@ const SECTIONS = [
 ]
 
 export function SettingsLayout() {
-  return <Page title="设置" layout="fill"><SectionLayout items={SECTIONS} label="设置分区"><Outlet /></SectionLayout></Page>
+  return <Page title="设置" layout="fill"><SectionLayout items={SECTIONS} label="设置分区" width="narrow" align="center"><Outlet /></SectionLayout></Page>
 }
 
 export function SettingsGeneral() {

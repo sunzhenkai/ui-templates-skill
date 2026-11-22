@@ -1,5 +1,13 @@
 # quiet-inset
 
+## 0.6.10 — 2026-11-22
+
+### Added
+- `blocks/surfaces`：`Body` 新增 `width="narrow"`（max-w-2xl，42rem）——设置类居中窄列的标准宽度。
+- `blocks/section-nav`：`SectionLayout` 新增 `align`（默认 `start`，向后兼容）；设置页用
+  `width="narrow" align="center"` 得到「导航 + 居中窄列」形态。参考原型 settings 已切换为该形态，
+  pattern 规则同步（分区内容 ≤ 42rem 且居中）。
+
 ## 0.6.9 — 2026-11-22
 
 ### Added

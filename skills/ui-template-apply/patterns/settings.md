@@ -24,7 +24,7 @@ SectionLayout 的竖线由 Split 画，从页头底线到画布底边，不要�
 
 规则
 - `/settings` 重定向到第一个分区：`{ index: true, element: <Navigate to="general" replace /> }`（URL 要变，分区导航才能高亮）。
-- 分区内容宽度 ≤ 42rem（form 宽度）；每行设置：左标签+说明，右控件（`Field orientation="horizontal"`）。
+- 分区内容宽度 ≤ 42rem 且居中：`<SectionLayout width="narrow" align="center">`（`narrow` = max-w-2xl；不要用默认 `form` 的 56rem，正文会拉得太宽）；每行设置：左标签+说明，右控件（`Field orientation="horizontal"`）。
 - 分区 ≤ 8 个；超过说明信息架构需要拆分。
 - 分区导航项可带 16px 图标（`SectionNavItem.icon`，与侧栏 NavItem 同一视觉语言）；图标只做辅助，标签必须保留。
 - 不要用 Tabs 做设置分区——分区是路由，Tabs 是同一资源的视图。
