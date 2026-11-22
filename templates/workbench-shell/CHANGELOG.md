@@ -1,5 +1,8 @@
 # workbench-shell
 
+## 5.0.26
+- 共享组件跟随（quiet-inset 0.6.14 同一 patch）：`NavItem` 新增 `depth` 树形缩进。
+
 ## 5.0.25
 - 共享组件跟随（quiet-inset 0.6.13 同一 patch）：`NavItem` 支持 `to` 链接与 `trailing` 尾随元素。
 

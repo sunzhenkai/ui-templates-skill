@@ -1,5 +1,11 @@
 # quiet-inset
 
+## 0.6.14 — 2026-11-22
+
+### Added
+- `blocks/surfaces`：`NavItem` 新增 `depth`（0–3，树形缩进，0 根级；超过 3 夹紧）。文件树/目录树的行
+  缩进不再需要页面自造 padding 类，`indent` 保留为单级快捷方式。
+
 ## 0.6.13 — 2026-11-22
 
 ### Added
