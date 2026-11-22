@@ -1,5 +1,8 @@
 # workbench-shell
 
+## 5.0.28
+- 共享组件跟随（quiet-inset 0.6.16 同一 patch）：Tabs 非选中态文字提到 foreground/70，修复浅色对比度。
+
 ## 5.0.27
 - 共享文档跟随（quiet-inset 0.6.15 同一 patch）：reader / tree-nav pattern，settings/canvas 规则，
   P14 契约补 blocks 与 hook，可发布门禁 `make preflight`。

@@ -1085,7 +1085,7 @@
         {
           "path": "shadcn/ui/tabs.tsx",
           "target": "src/components/ui/tabs.tsx",
-          "sha256": "4441d00edc402539d2183845bac2f56ca60d3794113febbef1d58cc60e3aed66"
+          "sha256": "8ac30c6f4a5b8260218a1fb6ba6516518bf65b65c741ea17e6a494b46d01e30b"
         }
       ],
       "dependencies": [
