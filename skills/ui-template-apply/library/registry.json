@@ -354,7 +354,7 @@
         {
           "path": "blocks/surfaces.tsx",
           "target": "src/components/blocks/surfaces.tsx",
-          "sha256": "bad75f92e4aaeb1afe80a008f403c7823e40317c3a19eda55d8125fc10e6957d"
+          "sha256": "19b9fa20ad9962f8ac2727f21a6a34ef6d41360f4e73d2b778db421725a99043"
         }
       ],
       "dependencies": [
@@ -363,6 +363,7 @@
       ],
       "registryDependencies": [
         "blocks/page-header",
+        "blocks/router",
         "blocks/use-container-width"
       ]
     },

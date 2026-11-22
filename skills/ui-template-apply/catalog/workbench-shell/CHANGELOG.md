@@ -1,5 +1,8 @@
 # workbench-shell
 
+## 5.0.25
+- 共享组件跟随（quiet-inset 0.6.13 同一 patch）：`NavItem` 支持 `to` 链接与 `trailing` 尾随元素。
+
 ## 5.0.24
 - 共享 hook 跟随（quiet-inset 0.6.12 同一 patch）：`useContainerWidth` 在节点晚挂载时也能测到宽度。
 
