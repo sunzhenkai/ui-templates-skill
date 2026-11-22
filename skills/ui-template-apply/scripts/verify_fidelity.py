@@ -3,8 +3,9 @@
 
   verify_fidelity.py --project DIR [--reuse-baseline]
 
-1. Baseline app in DIR/.ui-kit/baseline-app: starter/ + the project's package.json and package-lock.json
-   + pristine kit files for the locked package and items + the project's theme.css and fonts.css.
+1. Baseline app in DIR/.ui-kit/baseline-app: starter/ + the project's package.json and lockfile
+   (package-lock.json or pnpm-lock.yaml) + pristine kit files for the locked package and items
+   + the project's theme.css and fonts.css.
 2. Baseline app: build Storybook, render every ui-kit story tagged "fidelity" (light and dark) into DIR/.ui-kit/baseline.
 3. Project: build Storybook, render the same stories, compare with zero pixel tolerance.
 
@@ -24,7 +25,24 @@ from pathlib import Path
 SKILL = Path(__file__).resolve().parents[1]
 STARTER = SKILL / "starter"
 INSTALL = SKILL / "scripts/install_registry.py"
-CARRIED = ("package.json", "package-lock.json", "src/styles/theme.css", "src/styles/fonts.css")
+CARRIED = ("package.json", "src/styles/theme.css", "src/styles/fonts.css")
+
+
+def package_manager(project: Path) -> str:
+    """pnpm projects are first-class: pick the layout from the lockfile that exists."""
+    if (project / "pnpm-lock.yaml").is_file():
+        return "pnpm"
+    if (project / "package-lock.json").is_file():
+        return "npm"
+    raise SystemExit("no lockfile (package-lock.json or pnpm-lock.yaml); install dependencies in the project first")
+
+
+def package_run(manager: str, script: str) -> list[str]:
+    return ["pnpm", "run", script] if manager == "pnpm" else ["npm", "run", script]
+
+
+def package_exec(manager: str, binary: str) -> list[str]:
+    return ["pnpm", "exec", binary] if manager == "pnpm" else ["npx", binary]
 
 
 def run(cmd: list[str], cwd: Path, env: dict[str, str]) -> None:
@@ -42,14 +60,20 @@ def prepare_baseline_app(project: Path, lock: dict, env: dict[str, str]) -> Path
             shutil.rmtree(child) if child.is_dir() else child.unlink()
     shutil.copytree(STARTER, app, dirs_exist_ok=True)
     run([sys.executable, str(INSTALL), "--project", str(app), "--package", lock["package"], "--items", ",".join(lock["items"])], app, env)
-    for name in CARRIED:
+    manager = package_manager(project)
+    carried = CARRIED + (("pnpm-lock.yaml",) if manager == "pnpm" else ("package-lock.json",))
+    for name in carried:
         if (project / name).is_file():
             (app / name).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(project / name, app / name)
     stamp = app / "node_modules/.ui-kit-lock"
-    digest = hashlib.sha256((app / "package-lock.json").read_bytes()).hexdigest()
+    lockfile = app / ("pnpm-lock.yaml" if manager == "pnpm" else "package-lock.json")
+    digest = hashlib.sha256(lockfile.read_bytes()).hexdigest()
     if not stamp.is_file() or stamp.read_text() != digest:
-        run(["npm", "ci", "--no-audit", "--no-fund"], app, env)
+        if manager == "pnpm":
+            run(["pnpm", "install", "--frozen-lockfile", "--config.minimumReleaseAge=0"], app, env)
+        else:
+            run(["npm", "ci", "--no-audit", "--no-fund"], app, env)
         stamp.write_text(digest)
     return app
 
@@ -63,8 +87,7 @@ def main(argv: list[str] | None = None) -> int:
     lock_path = project / "ui-template.lock.json"
     if not lock_path.is_file():
         parser.error("ui-template.lock.json missing; install the kit first")
-    if not (project / "package-lock.json").is_file():
-        parser.error("package-lock.json missing; run npm install in the project first")
+    manager = package_manager(project)
     lock = json.loads(lock_path.read_text(encoding="utf-8"))
     meta = (SKILL / "catalog" / lock["package"] / "meta.yaml").read_text(encoding="utf-8")
     if f"version: {lock['version']}" not in meta.splitlines():
@@ -74,10 +97,10 @@ def main(argv: list[str] | None = None) -> int:
     if not args.reuse_baseline:
         app = prepare_baseline_app(project, lock, env)
         shutil.rmtree(baseline, ignore_errors=True)
-        run(["npm", "run", "build-storybook"], app, env)
-        run(["npx", "playwright", "test", "-c", "playwright.fidelity.config.ts", "--update-snapshots"], app, env)
-    run(["npm", "run", "build-storybook"], project, env)
-    result = subprocess.run(["npx", "playwright", "test", "-c", "playwright.fidelity.config.ts"], cwd=project, env=env)
+        run(package_run(manager, "build-storybook"), app, env)
+        run([*package_exec(manager, "playwright"), "test", "-c", "playwright.fidelity.config.ts", "--update-snapshots"], app, env)
+    run(package_run(manager, "build-storybook"), project, env)
+    result = subprocess.run([*package_exec(manager, "playwright"), "test", "-c", "playwright.fidelity.config.ts"], cwd=project, env=env)
     print("fidelity: " + ("pass" if result.returncode == 0 else "FAIL (diff images under test-results/)"))
     return 0 if result.returncode == 0 else 1
 

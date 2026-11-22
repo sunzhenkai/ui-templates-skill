@@ -1,5 +1,12 @@
 # quiet-inset
 
+## 0.6.17 — 2026-11-22
+
+### Fixed
+- `verify_fidelity.py`：支持 pnpm 工程（有 `pnpm-lock.yaml` 时用 `pnpm install --frozen-lockfile`
+  建基线、`pnpm run/exec` 跑 storybook 与 Playwright）。此前脚本硬性要求 `package-lock.json`，
+  pnpm 消费端无法建立保真基线。
+
 ## 0.6.16 — 2026-11-22
 
 ### Fixed

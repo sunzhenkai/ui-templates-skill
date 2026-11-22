@@ -1,5 +1,8 @@
 # workbench-shell
 
+## 5.0.29
+- 工具跟随（quiet-inset 0.6.17 同一 patch）：保真脚本支持 pnpm 工程。
+
 ## 5.0.28
 - 共享组件跟随（quiet-inset 0.6.16 同一 patch）：Tabs 非选中态文字提到 foreground/70，修复浅色对比度。
 
