@@ -1,5 +1,9 @@
 # workbench-shell
 
+## 5.0.23
+- 共享组件跟随（quiet-inset 0.6.11 同一 patch）：`PaneHeader` sticky；`Split` 支持 `sidePosition="end"`
+  （右侧目录栏）；`PageHeader` 支持 `inlineMax`（iconOnly 动作内联预算）。
+
 ## 5.0.22
 - 共享组件跟随（quiet-inset 0.6.10 同一 patch）：`Body` 新增 `narrow`（42rem）宽度；
   `SectionLayout` 新增 `align`，设置页用 `narrow + center` 居中窄列。

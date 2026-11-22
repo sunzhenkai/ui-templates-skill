@@ -1,5 +1,17 @@
 # quiet-inset
 
+## 0.6.11 — 2026-11-22
+
+### Fixed
+- `blocks/list-detail`：`PaneHeader` 改 sticky（`sticky top-0 z-10 bg-background`）——主从布局里 pane 本身是
+  滚动容器，列表一长标题行会被滚走（会话列表、Wiki 页面列表）。
+
+### Added
+- `blocks/surfaces`：`Split` 新增 `sidePosition`（默认 `start`）——`end` 把侧栏放到主列之后（文档右侧目录栏），
+  分割线改画在侧栏左缘；窄屏堆叠时侧栏仍在前，向后兼容。
+- `blocks/page-header`：新增 `inlineMax`（默认 2）——内联预算可提高，但仅用于 iconOnly 且语义明确的动作
+  （文档阅读页的信息/反链/历史图标）；destructive 仍恒进溢出菜单。
+
 ## 0.6.10 — 2026-11-22
 
 ### Added

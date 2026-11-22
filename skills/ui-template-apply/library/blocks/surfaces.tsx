@@ -91,19 +91,24 @@ export function ScrollRegion({ name = "main", label, follow = false, children }:
  * must own its padding (a `Body`, or a full-bleed surface such as a canvas) — a bordered `Panel` dropped
  * straight into `main` puts its border against the divider and the header rule, reading as a double line.
  */
-export function Split({ side, sideLabel, sideWidth = "md", collapseBelow = 720, children }: {
+export function Split({ side, sideLabel, sideWidth = "md", sidePosition = "start", collapseBelow = 720, children }: {
   side: React.ReactNode; sideLabel: string; sideWidth?: "sm" | "md" | "lg" | undefined
+  /** "end" puts the side column after the main column (e.g. a document outline rail); stacked mode keeps side first. */
+  sidePosition?: "start" | "end" | undefined
   collapseBelow?: number | undefined; children: React.ReactNode
 }) {
   const [ref, width] = useContainerWidth<HTMLDivElement>()
   const stacked = width > 0 && width < collapseBelow
-  const cols = { sm: "grid-cols-[12rem_minmax(0,1fr)]", md: "grid-cols-[14rem_minmax(0,1fr)]", lg: "grid-cols-[18rem_minmax(0,1fr)]" }[sideWidth]
+  const end = sidePosition === "end" && !stacked
+  const colsStart = { sm: "grid-cols-[12rem_minmax(0,1fr)]", md: "grid-cols-[14rem_minmax(0,1fr)]", lg: "grid-cols-[18rem_minmax(0,1fr)]" }[sideWidth]
+  const colsEnd = { sm: "grid-cols-[minmax(0,1fr)_12rem]", md: "grid-cols-[minmax(0,1fr)_14rem]", lg: "grid-cols-[minmax(0,1fr)_18rem]" }[sideWidth]
   return (
-    <div ref={ref} data-surface="split" className={cn("flex min-h-0 min-w-0 flex-1", stacked ? "flex-col divide-y" : cn("grid divide-x", cols))}>
-      <div data-surface="split-side" data-scroll-region="side" aria-label={sideLabel} role="region" className={cn("min-w-0 relative overflow-y-auto", stacked ? "max-h-[40%] shrink-0" : "min-h-0")}>
+    <div ref={ref} data-surface="split" className={cn("flex min-h-0 min-w-0 flex-1", stacked ? "flex-col divide-y" : cn("grid", end ? colsEnd : cn(colsStart, "divide-x")))}>
+      <div data-surface="split-side" data-scroll-region="side" aria-label={sideLabel} role="region"
+        className={cn("min-w-0 relative overflow-y-auto", stacked ? "max-h-[40%] shrink-0" : "min-h-0", end && "order-2 border-l")}>
         <div className="p-3">{side}</div>
       </div>
-      <div data-surface="split-main" data-scroll-region="main" className="flex min-h-0 min-w-0 flex-1 flex-col relative overflow-y-auto">{children}</div>
+      <div data-surface="split-main" data-scroll-region="main" className={cn("flex min-h-0 min-w-0 flex-1 flex-col relative overflow-y-auto", end && "order-1")}>{children}</div>
     </div>
   )
 }

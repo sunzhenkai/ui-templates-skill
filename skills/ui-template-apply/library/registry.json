@@ -172,7 +172,7 @@
         {
           "path": "blocks/list-detail.tsx",
           "target": "src/components/blocks/list-detail.tsx",
-          "sha256": "bf185113d3049d94488018b815d37bd6b645b4d42e337ad5c366c5f62483de7b"
+          "sha256": "3395c077caaf30a9c3c7d9436a3d535f87719f951439959ebbc144f13139cf08"
         }
       ],
       "dependencies": [
@@ -249,7 +249,7 @@
         {
           "path": "blocks/page-header.tsx",
           "target": "src/components/blocks/page-header.tsx",
-          "sha256": "5e10ad2657d05bfecb249930a7da13e4a741a716b38f35cb2373bef887cf69e2"
+          "sha256": "949d3cf60500af4f867a1820bafdbc324aa0d897287590211554a57b97b4edf7"
         }
       ],
       "dependencies": [
@@ -354,7 +354,7 @@
         {
           "path": "blocks/surfaces.tsx",
           "target": "src/components/blocks/surfaces.tsx",
-          "sha256": "4975f237699714d335b401bcf515aed664b3d1a0bfd1ec0e09d176ab5058b354"
+          "sha256": "36e17cbd7ee09cf2725dd9a902eb3aa261bedffdd63226f03e912d99cd96e9f7"
         }
       ],
       "dependencies": [
