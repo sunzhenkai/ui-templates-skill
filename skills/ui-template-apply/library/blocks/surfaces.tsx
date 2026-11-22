@@ -34,11 +34,13 @@ export function Body({ width = "full", gap = "lg", align = "center", children }:
  * full-bleed surface that declares its own regions (Split, SectionLayout, ListDetailLayout) or a conversation
  * (ScrollRegion + ComposerDock).
  */
-export function Page({ title, breadcrumbs, primary, actions, leading, width = "full", gap = "lg", layout = "padded", children }: {
+export function Page({ title, breadcrumbs, primary, actions, inlineMax, leading, width = "full", gap = "lg", layout = "padded", children }: {
   title: string
   breadcrumbs?: { label: string; to: string }[] | undefined
   primary?: React.ReactNode | undefined
   actions?: HeaderAction[] | undefined
+  /** Inline budget for header actions; see PageHeader (default 2, raise only for iconOnly actions). */
+  inlineMax?: number | undefined
   leading?: React.ReactNode | undefined
   width?: Width | undefined
   gap?: Gap | undefined
@@ -47,7 +49,7 @@ export function Page({ title, breadcrumbs, primary, actions, leading, width = "f
 }) {
   return (
     <div data-surface="page" className="flex min-h-0 min-w-0 flex-1 flex-col">
-      <PageHeader title={title} breadcrumbs={breadcrumbs} primary={primary} actions={actions} leading={leading} />
+      <PageHeader title={title} breadcrumbs={breadcrumbs} primary={primary} actions={actions} inlineMax={inlineMax} leading={leading} />
       {layout === "padded"
         ? <ScrollRegion><Body width={width} gap={gap}>{children}</Body></ScrollRegion>
         : <div className="flex min-h-0 min-w-0 flex-1 flex-col">{children}</div>}
