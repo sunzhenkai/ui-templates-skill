@@ -63,7 +63,7 @@
         {
           "path": "blocks/app-shell.tsx",
           "target": "src/components/blocks/app-shell.tsx",
-          "sha256": "efb1a007d697bb87c9bfa53e64762c68bc80e89198143e237d60a375339d51b4"
+          "sha256": "f019302114f46ec20bc3546c5f81adfc51bd964cce6ffe04398eb4c942558408"
         }
       ],
       "dependencies": [
@@ -272,7 +272,7 @@
         {
           "path": "blocks/router.tsx",
           "target": "src/components/blocks/router.tsx",
-          "sha256": "bbf773838b711f86ec6eed7a844f3e34b41da56959f58515febc6f55ff0da338"
+          "sha256": "704bc62dca220b7e7692a670e03041f087df088f078dd66a51546d08b92a2fd3"
         }
       ],
       "dependencies": [
