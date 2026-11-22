@@ -14,6 +14,8 @@
 | 加载 / 空 / 错误 / 未配置 | state | — | empty |
 | 整页空集（首次使用） | empty | state | empty |
 | 设置页（多分区） | settings | form | settings |
+| 文档阅读、知识库正文 | reader | tree-nav, state | — |
+| 目录树/文件树二级菜单 | tree-nav | filter-search, state | — |
 | 自动刷新、运行中状态 | realtime | collection, detail | — |
 | 对话、消息流 | conversation | realtime | list-detail |
 | 日志、事件流 | log-viewer | realtime | detail |

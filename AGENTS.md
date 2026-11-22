@@ -18,7 +18,8 @@
 | 主题契约（变量清单、对比度对） | `skills/ui-template-apply/scripts/validate_package.py` | design `instance-format.md` 的文字说明 |
 | pattern 决策键 | `skills/ui-template-apply/patterns/*.md` front matter | 包的 `defaults`、项目 `ui-decisions.yaml` |
 
-改了源就跑 `make sync`，再 `make check`。
+改了源就跑 `make sync`，再 `make check`；发布前跑 `make preflight`（sync → check → validate ×2）。
+**不要**把门禁命令接管道（`make check | tail` 之类会吞掉退出码，失败会被当成通过）——失败即硬停。
 
 ## 修改规则
 
@@ -32,6 +33,11 @@
 ## 命令
 
 ```bash
-make check     # 门禁 + 测试
-make sync      # 重新生成 registry 与 catalog
+make sync       # 重新生成 registry 与 catalog
+make check      # 门禁 + 测试
+make validate   # 各风格包 validate（0 error 才算过）
+make preflight  # 发布前完整门禁：sync → check → validate
 ```
+
+提交前还要在 `patches/<timestamp>-<slug>/` 记录 proposal / result（一个内聚问题一个目录），
+版本按「同类改动攒批」发布：quiet-inset 与 workbench-shell 同步升版，CHANGELOG 写清影响面。

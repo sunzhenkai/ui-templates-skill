@@ -1,5 +1,22 @@
 # quiet-inset
 
+## 0.6.15 — 2026-11-22
+
+### Added
+- `patterns/reader.md`：文档阅读页规则（单 header、正文无卡片、右目录追踪、目录显隐持久化、
+  切换连续性 `keepPreviousData`、低频信息进 header 弹窗）。
+- `patterns/tree-nav.md`：目录树二级菜单规则（一级分组固定、其余并入「其他」、默认折叠+当前祖先展开、
+  定位/展折单按钮、目录名随语言、树内不重复类型徽标；`TreeNav` block 列为候选）。
+- `AGENTS.md` / `Makefile`：`make preflight`（sync → check → validate ×2）；门禁禁止接管道，
+  失败即硬停。
+
+### Changed
+- `contract/components.json`：P14 新增 `blocks/surfaces`（NavItem 行高/层级缩进/尾随、Split end 序、
+  NavList 节奏）、`blocks/page-header`（inlineMax + destructive 过滤）、`blocks/use-container-width`
+  （观察必须跟随 node，禁止空依赖）。
+- `patterns/settings.md`：分区目标 5–6 个（同类合并），一个分区可含 1–2 个 Section 子分组。
+- `patterns/canvas.md`：节点 hover 浮层、详情进 header 弹窗、显式选中、画布不套卡片。
+
 ## 0.6.14 — 2026-11-22
 
 ### Added

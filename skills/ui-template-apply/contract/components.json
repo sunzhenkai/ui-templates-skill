@@ -1,56 +1,117 @@
 {
   "$comment": "Component implementation contract (P14). Each library file lists the tokens/classes its implementation MUST keep, so a regression to hardcoded values (h-8, shadow-md, missing padding) fails validate_package instead of surfacing in production. Add an entry whenever a calibration lesson changes a component's mechanism.",
   "library/shadcn/ui/button.tsx": {
-    "must_contain": ["h-[var(--control-height", "rounded-[var(--button-radius"],
+    "must_contain": [
+      "h-[var(--control-height",
+      "rounded-[var(--button-radius"
+    ],
     "why": "control height and pill radius are theme tokens (quiet-inset 0.6.x calibration); hardcoded h-8 / rounded-lg regresses the reference"
   },
   "library/shadcn/ui/input.tsx": {
-    "must_contain": ["h-[var(--control-height", "rounded-[min(var(--radius-md),12px)]"],
+    "must_contain": [
+      "h-[var(--control-height",
+      "rounded-[min(var(--radius-md),12px)]"
+    ],
     "why": "28px control height and 8px control radius"
   },
   "library/shadcn/ui/select.tsx": {
-    "must_contain": ["data-[size=default]:h-[var(--control-height", "rounded-[min(var(--radius-md),12px)]", "bg-popover p-1"],
-    "must_not_contain": ["shadow-md"],
+    "must_contain": [
+      "data-[size=default]:h-[var(--control-height",
+      "rounded-[min(var(--radius-md),12px)]",
+      "bg-popover p-1"
+    ],
+    "must_not_contain": [
+      "shadow-md"
+    ],
     "why": "control height, control radius, menu inset (p-1) so the selected row never touches the menu edge, floating shadow via shadow-lg"
   },
   "library/shadcn/ui/switch.tsx": {
-    "must_contain": ["--switch-width", "--switch-height"],
+    "must_contain": [
+      "--switch-width",
+      "--switch-height"
+    ],
     "why": "30x20 switch size is a theme token"
   },
   "library/shadcn/ui/command.tsx": {
-    "must_contain": ["--command-item-height", "shadow-lg"],
-    "must_not_contain": ["shadow-md"],
+    "must_contain": [
+      "--command-item-height",
+      "shadow-lg"
+    ],
+    "must_not_contain": [
+      "shadow-md"
+    ],
     "why": "46px/15px command items; floating layers read --floating-shadow"
   },
   "library/shadcn/ui/dropdown-menu.tsx": {
-    "must_contain": ["shadow-lg", "p-1"],
-    "must_not_contain": ["shadow-md"],
+    "must_contain": [
+      "shadow-lg",
+      "p-1"
+    ],
+    "must_not_contain": [
+      "shadow-md"
+    ],
     "why": "floating shadow token + menu inset"
   },
   "library/shadcn/ui/popover.tsx": {
-    "must_contain": ["shadow-lg"],
-    "must_not_contain": ["shadow-md"],
+    "must_contain": [
+      "shadow-lg"
+    ],
+    "must_not_contain": [
+      "shadow-md"
+    ],
     "why": "floating shadow token"
   },
   "library/shadcn/ui/sheet.tsx": {
-    "must_contain": ["bg-clip-padding p-4"],
+    "must_contain": [
+      "bg-clip-padding p-4"
+    ],
     "why": "the sheet container owns the inset (same contract as Dialog); content blocks carry no padding, so dropping the p-4 puts bordered panels against the drawer edge"
   },
   "library/shadcn/ui/sidebar.tsx": {
-    "must_contain": ["--sidebar-row-height", "--sidebar-item-foreground", "--sidebar-item-weight", "--sidebar-hover", "gap-0.5"],
+    "must_contain": [
+      "--sidebar-row-height",
+      "--sidebar-item-foreground",
+      "--sidebar-item-weight",
+      "--sidebar-hover",
+      "gap-0.5"
+    ],
     "why": "28px rows, secondary item gray, 500 weight, hover/selected step, 2px row gap — all calibration tokens"
   },
   "library/blocks/page-header.tsx": {
-    "must_contain": ["iconOnly"],
-    "why": "icon-only actions (refresh/archive…) per the action-icon principle"
+    "must_contain": [
+      "iconOnly",
+      "inlineMax",
+      "destructive"
+    ],
+    "why": "icon-only actions per the icon principle; inline budget (default 2) and the destructive-never-inline filter are the header contract"
   },
   "library/blocks/surfaces.tsx": {
-    "must_contain": ["NavList", "NavItem", "gap-0.5"],
-    "why": "in-page navigation must use NavList/NavItem (icon + text, 28px rows), not data rows"
+    "must_contain": [
+      "h-7",
+      "pl-11",
+      "ml-auto",
+      "order-2",
+      "border-l",
+      "gap-0.5"
+    ],
+    "why": "NavItem keeps the 28px menu row, depth indentation and trailing slot; Split keeps sidePosition=end ordering; NavList keeps 2px rhythm — hardcoding these in pages is what the surface exists to prevent"
   },
   "library/blocks/markdown.tsx": {
-    "must_contain": ["hover:text-primary/75"],
-    "must_not_contain": ["underline underline-offset"],
+    "must_contain": [
+      "hover:text-primary/75"
+    ],
+    "must_not_contain": [
+      "underline underline-offset"
+    ],
     "why": "links use hover color, not underlines"
+  },
+  "library/blocks/use-container-width.ts": {
+    "must_contain": [
+      "[node]"
+    ],
+    "must_not_contain": [
+      "}, [])"
+    ],
+    "why": "the observer must re-attach when the node mounts late (behind a loading branch); an empty-deps effect observes null once and the width stays 0"
   }
 }
