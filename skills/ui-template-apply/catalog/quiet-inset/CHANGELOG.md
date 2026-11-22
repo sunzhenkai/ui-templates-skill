@@ -1,5 +1,13 @@
 # quiet-inset
 
+## 0.6.8 — 2026-11-22
+
+### Fixed
+- **侧栏父/子路径重复选中**：`useIsActive` 前缀匹配下，路径 `/wiki/graph` 同时命中导航项 `/wiki`（前缀）
+  与 `/wiki/graph`（相等），两项同时高亮。`blocks/router` 拆出 `isActivePath`（纯判定）并新增 `pickActive`
+  （候选中最长匹配胜出）；`blocks/app-shell` 改为整组导航先求唯一最佳匹配，再按 `to` 分发 `active`——
+  父项与子项不再同时选中，深层子路由仍只点亮所属父项。
+
 ## 0.6.7 — 2026-11-21
 
 ### Added
