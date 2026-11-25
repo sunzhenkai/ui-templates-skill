@@ -1,5 +1,8 @@
 # workbench-shell
 
+## 5.0.30
+- 共享组件跟随（quiet-inset 0.6.18 同一 patch）：`ScrollRegion` 改用 0px 覆盖式滚动条；`Split` 新增 `sideHeader`；`PaneHeader` 移出滚动容器。
+
 ## 5.0.29
 - 工具跟随（quiet-inset 0.6.17 同一 patch）：保真脚本支持 pnpm 工程。
 
