@@ -92,9 +92,24 @@
       "ml-auto",
       "order-2",
       "border-l",
-      "gap-0.5"
+      "gap-0.5",
+      "no-scrollbar",
+      "sideHeader",
+      "split-side-header",
+      "scroll-rail"
     ],
-    "why": "NavItem keeps the 28px menu row, depth indentation and trailing slot; Split keeps sidePosition=end ordering; NavList keeps 2px rhythm — hardcoding these in pages is what the surface exists to prevent"
+    "why": "NavItem keeps the 28px menu row, depth indentation and trailing slot; Split keeps sidePosition=end ordering and fixed sideHeader above the overlay scroll region; NavList keeps 2px rhythm; ScrollRegion keeps 0px overlay scrollbar"
+  },
+  "library/blocks/list-detail.tsx": {
+    "must_contain": [
+      "ScrollRegion",
+      "pane-header",
+      "overflow-hidden"
+    ],
+    "must_not_contain": [
+      "sticky top-0"
+    ],
+    "why": "PaneHeader sits outside the pane ScrollRegion so its rule spans flush to the divider and the scrollbar starts below it"
   },
   "library/blocks/markdown.tsx": {
     "must_contain": [

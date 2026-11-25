@@ -172,7 +172,7 @@
         {
           "path": "blocks/list-detail.tsx",
           "target": "src/components/blocks/list-detail.tsx",
-          "sha256": "3395c077caaf30a9c3c7d9436a3d535f87719f951439959ebbc144f13139cf08"
+          "sha256": "7eb704db018326b608919e59c992fb46a1d506115087010702ed09ff49ac4ba3"
         }
       ],
       "dependencies": [
@@ -182,6 +182,7 @@
       ],
       "registryDependencies": [
         "blocks/router",
+        "blocks/surfaces",
         "blocks/use-container-width",
         "ui/button",
         "ui/sheet"
@@ -354,7 +355,7 @@
         {
           "path": "blocks/surfaces.tsx",
           "target": "src/components/blocks/surfaces.tsx",
-          "sha256": "a96920a7733a577cf17292680774442821da301113a0bc2cafb1c8bbed9d520b"
+          "sha256": "22cd3c3418c7493acc522107a02516f0039d8587302e6072dbbd751b99882fe7"
         }
       ],
       "dependencies": [

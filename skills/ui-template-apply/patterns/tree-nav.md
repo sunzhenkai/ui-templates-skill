@@ -32,7 +32,7 @@ self_review:
 - 不要在 effect 里 setState 同步折叠状态（`react-hooks/set-state-in-effect` 会拦，也易产生
   与用户操作竞争的状态）。
 - 工具条：搜索框（可带尾随清空）→ 框外「定位当前项」→「展开/折叠」单按钮（全部已开时折叠，
-  否则展开）；aria-label 随状态变化。
+  否则展开）；aria-label 随状态变化。顶部搜索与筛选控制区通过 `Split` 的 `sideHeader` 固定在滚动区上方，不用 `sticky` 塞进滚动列表。
 
 搜索结果
 - 搜索态退回扁平列表（保留类型徽标）；清空搜索恢复树。

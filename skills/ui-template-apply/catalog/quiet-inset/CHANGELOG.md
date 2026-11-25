@@ -1,5 +1,11 @@
 # quiet-inset
 
+## 0.6.18 — 2026-11-26
+
+### Fixed
+- `blocks/surfaces`：`ScrollRegion` 改用 0px 占位的覆盖式滚动条（原生槽位隐藏 + 悬浮滑块在滚动/悬停时淡入），消除占位滚动条截断贴边横线的问题；`Split` 新增 `sideHeader` 插槽，将侧栏固定头移出滚动容器，使底线贴满分隔线且滚动条起于头部下沿。
+- `blocks/list-detail`：`PaneHeader` 移出滚动容器（去掉 `sticky top-0`），由 `PaneSection grow` 承载独立 `ScrollRegion`。
+
 ## 0.6.17 — 2026-11-22
 
 ### Fixed
