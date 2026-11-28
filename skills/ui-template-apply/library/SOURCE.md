@@ -29,3 +29,7 @@ listed in `registry.json`. `router.tsx` is the single router adapter.
 
 - `ui/table.tsx` (local patch, 5.4): `Table` takes `containerClassName`. DataTable passes `overflow-x-clip` so the
   container is not a scroll container (an `overflow-x: auto` box also scrolls vertically and breaks the sticky header).
+- `ui/dialog.tsx` (local patch): `DialogContent` adds `min-w-0 [&>*]:min-w-0` so long secrets/fields shrink inside the grid;
+  `DialogHeader` adds `pr-8` so titles stay clear of the top-right close button.
+- `ui/sidebar.tsx` (local patch): `sidebarMenuButtonVariants` reads `--menu-hover`, `--menu-active`, `--menu-active-foreground`,
+  `--menu-active-border`, `--menu-active-icon`, and `--sidebar-active-indicator*` with full fallbacks to `--sidebar-*`.

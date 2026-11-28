@@ -1,3 +1,4 @@
+/* Composed from base theme.css + extensions: 01-workbench-polish (do not edit catalog copy directly). */
 /*
  * ui-template package theme: quiet-inset 0.6.1
  * Near-neutral three-surface workbench: sidebar sits on the shell, content is an inset panel, cards and inputs are white.
@@ -79,6 +80,10 @@
 
   --shadow-xs: var(--surface-shadow);
   --shadow-lg: var(--floating-shadow);
+  /* extension: 01-workbench-polish */
+  --color-menu-active: var(--menu-active);
+  --color-menu-active-foreground: var(--menu-active-foreground);
+  --color-menu-hover: var(--menu-hover);
 }
 
 /* Density: compact. Body and navigation 13px; descriptions 12px; group titles 12px; page titles 24px.
@@ -148,13 +153,13 @@
    * states, group labels 12px/500 (inner text spans, direct read). The 0.4.0 "measured 400" came
    * from container-level picks (<a>/<button> inheriting the 16px/400 body value) and is revoked.
    * ui/sidebar reads these vars; its built-in default is 500. */
-  --sidebar-active-weight: 500;
+  --sidebar-active-weight: 600;
   --sidebar-group-weight: 500;
   /* Sidebar row height: reference sidebar rows measure 28px (meta.yaml "sidebar rows 28px");
    * the library default (--sidebar-row-height, 2rem = 32px) follows the workbench-shell reference.
    * Sidebar items read as secondary gray (lch(37.776 1.25 282)); selected items flip to
    * --sidebar-accent-foreground via data-active. */
-  --sidebar-row-height: 28px;
+  --sidebar-row-height: 30px;
   --sidebar-item-foreground: oklch(0.378 0.013 284);
   /* Normal items are 500 too (only selected-state weight lives in --sidebar-active-weight). */
   --sidebar-item-weight: 500;
@@ -174,8 +179,32 @@
   --button-radius: 9999px;
   --switch-width: 30px;
   --switch-height: 20px;
-  --command-item-height: 46px;
-  --command-item-font-size: 15px;
+  /* extension: 01-workbench-polish */
+  --menu-active: color-mix(in oklch, var(--primary) 10%, var(--card));
+  --menu-active-foreground: color-mix(in oklch, var(--primary) 78%, var(--foreground));
+  --menu-hover: color-mix(in oklch, var(--primary) 5%, var(--card));
+  --menu-active-border: oklch(1 0 0);
+  --menu-active-icon: var(--primary);
+  --sidebar-active-indicator: var(--primary);
+  --sidebar-active-indicator-width: 3px;
+  --tone-indigo: oklch(0.54 0.21 268);
+  --tone-indigo-soft: oklch(0.54 0.21 268 / 0.13);
+  --tone-violet: oklch(0.55 0.22 296);
+  --tone-violet-soft: oklch(0.55 0.22 296 / 0.13);
+  --tone-sky: oklch(0.56 0.18 232);
+  --tone-sky-soft: oklch(0.56 0.18 232 / 0.13);
+  --tone-cyan: oklch(0.55 0.16 202);
+  --tone-cyan-soft: oklch(0.55 0.16 202 / 0.13);
+  --tone-emerald: oklch(0.55 0.18 154);
+  --tone-emerald-soft: oklch(0.55 0.18 154 / 0.13);
+  --tone-amber: oklch(0.62 0.18 68);
+  --tone-amber-soft: oklch(0.62 0.18 68 / 0.15);
+  --tone-rose: oklch(0.57 0.21 12);
+  --tone-rose-soft: oklch(0.57 0.21 12 / 0.13);
+  --tone-orange: oklch(0.61 0.20 42);
+  --tone-orange-soft: oklch(0.61 0.20 42 / 0.14);
+  --tone-slate: oklch(0.50 0.05 260);
+  --tone-slate-soft: oklch(0.50 0.05 260 / 0.12);
 }
 
 .dark {
@@ -225,6 +254,31 @@
   --sidebar-hover: oklch(0.21 0 0);
   --surface-shadow: 0 1px 1px rgb(0 0 0 / 0.2);
   --floating-shadow: 0 12px 32px rgb(0 0 0 / 0.45), 0 2px 8px rgb(0 0 0 / 0.3);
+  /* extension: 01-workbench-polish */
+  --menu-active: color-mix(in oklch, var(--primary) 22%, transparent);
+  --menu-active-foreground: color-mix(in oklch, var(--primary) 70%, var(--foreground));
+  --menu-hover: color-mix(in oklch, var(--primary) 10%, transparent);
+  --menu-active-border: oklch(1 0 0);
+  --menu-active-icon: var(--primary);
+  --sidebar-active-indicator: var(--primary);
+  --tone-indigo: oklch(0.76 0.17 268);
+  --tone-indigo-soft: oklch(0.76 0.17 268 / 0.20);
+  --tone-violet: oklch(0.76 0.18 296);
+  --tone-violet-soft: oklch(0.76 0.18 296 / 0.20);
+  --tone-sky: oklch(0.76 0.16 232);
+  --tone-sky-soft: oklch(0.76 0.16 232 / 0.20);
+  --tone-cyan: oklch(0.76 0.15 202);
+  --tone-cyan-soft: oklch(0.76 0.15 202 / 0.20);
+  --tone-emerald: oklch(0.76 0.16 154);
+  --tone-emerald-soft: oklch(0.76 0.16 154 / 0.20);
+  --tone-amber: oklch(0.80 0.16 74);
+  --tone-amber-soft: oklch(0.80 0.16 74 / 0.22);
+  --tone-rose: oklch(0.74 0.18 14);
+  --tone-rose-soft: oklch(0.74 0.18 14 / 0.20);
+  --tone-orange: oklch(0.77 0.17 46);
+  --tone-orange-soft: oklch(0.77 0.17 46 / 0.20);
+  --tone-slate: oklch(0.72 0.04 260);
+  --tone-slate-soft: oklch(0.72 0.04 260 / 0.20);
 }
 
 @layer base {
@@ -232,4 +286,11 @@
   html { @apply font-sans; }
   body { @apply bg-background text-foreground text-sm antialiased; font-feature-settings: "cv11"; }
   :where(h1, h2, h3) { text-wrap: balance; }
+}
+
+/* === extension: 01-workbench-polish === */
+/* Inset content frame: drop stacked shadow ring so the edge stays a single hairline. */
+[data-surface="frame"] {
+  box-shadow: none;
+  border-color: color-mix(in oklch, var(--border) 65%, transparent);
 }

@@ -26,6 +26,8 @@ from pathlib import Path
 import yaml
 
 SKILL = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import compose_package  # noqa: E402
 # The token contract ships with the library that consumes it; see contract/tokens.json.
 CONTRACT = json.loads((SKILL / "contract/tokens.json").read_text(encoding="utf-8"))
 # Component implementation contract; see contract/components.json (P14).
@@ -198,16 +200,36 @@ def cmd_package(path: Path) -> int:
         if not isinstance(source, dict) or not source.get("ref") or not source.get("license"):
             report.error("P08", f"meta.yaml: every source needs ref + license: {source!r}")
     known = pattern_decisions(SKILL / "patterns")
-    for key in (meta.get("defaults") or {}):
-        if known and key not in known:
-            report.error("P09", f"meta.yaml: default {key!r} is not a decision declared by any pattern")
     theme = path / str(meta.get("theme", "theme.css"))
+    has_ext = (path / "extensions").is_dir() or bool(meta.get("extensions"))
+    if has_ext:
+        for code, message in compose_package.check_extensions(path, meta):
+            report.error(code, message)
     if not theme.is_file():
         report.error("P10", f"{theme.name} missing")
     else:
-        theme_css = theme.read_text(encoding="utf-8")
-        check_theme(theme_css, report, theme.name)
-        check_density_claims(meta_path, theme_css, report)
+        base_css = theme.read_text(encoding="utf-8")
+        if has_ext:
+            check_theme(base_css, report, f"{theme.name} (base)")
+            ext_errors = [e for e in report.errors if e.startswith(("P15", "P16", "P17"))]
+            if not ext_errors:
+                composed = compose_package.compose_package(path)
+                composed_meta = yaml.safe_load(composed.meta_text) or {}
+                for key in (composed_meta.get("defaults") or {}):
+                    if known and key not in known:
+                        report.error("P09", f"meta.yaml (composed): default {key!r} is not a decision declared by any pattern")
+                check_theme(composed.theme_css, report, f"{theme.name} (composed)")
+                check_density_claims(composed.meta_text, "meta.yaml (composed)", composed.theme_css, report)
+        else:
+            for key in (meta.get("defaults") or {}):
+                if known and key not in known:
+                    report.error("P09", f"meta.yaml: default {key!r} is not a decision declared by any pattern")
+            check_theme(base_css, report, theme.name)
+            check_density_claims(meta_path.read_text(encoding="utf-8"), meta_path.name, base_css, report)
+    if not theme.is_file():
+        for key in (meta.get("defaults") or {}):
+            if known and key not in known:
+                report.error("P09", f"meta.yaml: default {key!r} is not a decision declared by any pattern")
     check_floating_layers(report)
     check_component_contract(report)
     blobs = [p for p in sorted(path.rglob("*")) if p.is_file() and p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp", ".gif"}]
@@ -243,8 +265,7 @@ def to_px(value: str) -> float | None:
     return None
 
 
-def check_density_claims(meta_path: Path, theme_css: str, report: Report) -> None:
-    text = meta_path.read_text(encoding="utf-8")
+def check_density_claims(text: str, meta_label: str, theme_css: str, report: Report) -> None:
     checked: set[str] = set()
     for label, (token, fallback) in DENSITY_CLAIMS.items():
         match = re.search(rf"{label}\s+(\d+)px", text)
@@ -257,9 +278,9 @@ def check_density_claims(meta_path: Path, theme_css: str, report: Report) -> Non
             actual, source = fallback, "library default"
         px = to_px(actual or "")
         if px is not None and int(px) != declared:
-            report.warn("P12", f"{meta_path.name}: declares {label} {declared}px but {token} resolves to {int(px)}px ({source}) — claim not honored")
+            report.warn("P12", f"{meta_label}: declares {label} {declared}px but {token} resolves to {int(px)}px ({source}) — claim not honored")
         elif px is None:
-            report.warn("P12", f"{meta_path.name}: declares {label} {declared}px; {token} is {actual!r} ({source}) — replace with a px/rem value so the claim can be checked")
+            report.warn("P12", f"{meta_label}: declares {label} {declared}px; {token} is {actual!r} ({source}) — replace with a px/rem value so the claim can be checked")
         checked.add(token)
     for token in sorted(checked):
         readers = [p for p in (SKILL / "library").rglob("*.tsx") if token in p.read_text(encoding="utf-8")]

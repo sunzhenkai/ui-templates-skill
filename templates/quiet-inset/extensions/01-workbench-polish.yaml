@@ -1,0 +1,6 @@
+id: 01-workbench-polish
+summary: 工作台实战视觉精修：主色联动菜单选中/悬停与一级左侧指示条、30px/600 侧栏节奏、单细线 inset 画布、紧凑命令项与 9 色通用语义色板。
+defaults:
+  shell.sidebar_rail: false
+density_claims:
+  sidebar rows: 30px

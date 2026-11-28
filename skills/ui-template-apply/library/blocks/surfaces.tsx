@@ -217,9 +217,9 @@ export function Split({ side, sideHeader, sideLabel, sideWidth = "md", sidePosit
   const colsStart = { sm: "grid-cols-[12rem_minmax(0,1fr)]", md: "grid-cols-[14rem_minmax(0,1fr)]", lg: "grid-cols-[18rem_minmax(0,1fr)]" }[sideWidth]
   const colsEnd = { sm: "grid-cols-[minmax(0,1fr)_12rem]", md: "grid-cols-[minmax(0,1fr)_14rem]", lg: "grid-cols-[minmax(0,1fr)_18rem]" }[sideWidth]
   return (
-    <div ref={ref} data-surface="split" className={cn("flex min-h-0 min-w-0 flex-1", stacked ? "flex-col divide-y" : cn("grid", end ? colsEnd : cn(colsStart, "divide-x")))}>
+    <div ref={ref} data-surface="split" className={cn("min-h-0 min-w-0 flex-1", stacked ? "flex flex-col divide-y" : cn("grid grid-rows-[minmax(0,1fr)]", end ? colsEnd : cn(colsStart, "divide-x")))}>
       <div data-surface="split-side" aria-label={sideLabel} role="region"
-        className={cn("flex min-w-0 flex-col overflow-hidden", stacked ? "max-h-[40%] shrink-0" : "min-h-0", end && "order-2 border-l")}>
+        className={cn("flex min-w-0 flex-col overflow-hidden", stacked ? "max-h-[40%] shrink-0" : "h-full min-h-0", end && "order-2 border-l")}>
         {sideHeader !== undefined ? (
           <div data-surface="split-side-header" className="shrink-0 border-b p-3">{sideHeader}</div>
         ) : null}
@@ -227,7 +227,7 @@ export function Split({ side, sideHeader, sideLabel, sideWidth = "md", sidePosit
           <div className="p-3">{side}</div>
         </ScrollRegion>
       </div>
-      <div data-surface="split-main" className={cn("flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden", end && "order-1")}>
+      <div data-surface="split-main" className={cn("flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden", !stacked && "h-full", end && "order-1")}>
         <ScrollRegion name="main">{children}</ScrollRegion>
       </div>
     </div>
@@ -367,10 +367,10 @@ export function NavItem({ to, active = false, onSelect, icon, indent = false, de
     ? (indent ? "pl-7" : undefined)
     : ["", "pl-7", "pl-11", "pl-14"][Math.max(0, Math.min(3, depth))]
   const classes = cn(
-    "flex h-7 w-full min-w-0 items-center gap-2 rounded-md px-2 text-left text-sm text-muted-foreground transition-colors [&_svg]:size-4 [&_svg]:shrink-0",
+    "flex h-[var(--sidebar-row-height,1.75rem)] w-full min-w-0 items-center gap-2 rounded-md px-2 text-left text-sm text-muted-foreground transition-colors [&_svg]:size-4 [&_svg]:shrink-0",
     depthClass,
-    active && "bg-accent font-medium text-accent-foreground",
-    interactive && "hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
+    interactive && "hover:bg-[color:var(--menu-hover,var(--muted))] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
+    active && "bg-[color:var(--menu-active,var(--accent))] [font-weight:var(--sidebar-active-weight,500)] text-[color:var(--menu-active-foreground,var(--accent-foreground))] shadow-[inset_0_0_0_1px_var(--menu-active-border,transparent)] hover:bg-[color:var(--menu-active,var(--accent))] hover:text-[color:var(--menu-active-foreground,var(--accent-foreground))] [&_svg]:text-[color:var(--menu-active-icon,currentColor)]",
   )
   const body = (
     <>

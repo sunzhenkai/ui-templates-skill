@@ -67,15 +67,24 @@
     ],
     "why": "the sheet container owns the inset (same contract as Dialog); content blocks carry no padding, so dropping the p-4 puts bordered panels against the drawer edge"
   },
+  "library/shadcn/ui/dialog.tsx": {
+    "must_contain": [
+      "pr-8",
+      "min-w-0"
+    ],
+    "why": "dialog header clears the close button (pr-8) and content grid children shrink cleanly (min-w-0)"
+  },
   "library/shadcn/ui/sidebar.tsx": {
     "must_contain": [
       "--sidebar-row-height",
       "--sidebar-item-foreground",
       "--sidebar-item-weight",
       "--sidebar-hover",
+      "--menu-active",
+      "var(--sidebar-active-indicator-width",
       "gap-0.5"
     ],
-    "why": "28px rows, secondary item gray, 500 weight, hover/selected step, 2px row gap — all calibration tokens"
+    "why": "28/30px rows, secondary item gray, 500 weight, hover/selected step, menu-active tokens and optional indicator bar"
   },
   "library/blocks/page-header.tsx": {
     "must_contain": [
@@ -87,7 +96,7 @@
   },
   "library/blocks/surfaces.tsx": {
     "must_contain": [
-      "h-7",
+      "--sidebar-row-height",
       "pl-11",
       "ml-auto",
       "order-2",
@@ -96,9 +105,11 @@
       "no-scrollbar",
       "sideHeader",
       "split-side-header",
-      "scroll-rail"
+      "scroll-rail",
+      "grid-rows-[minmax(0,1fr)]",
+      "var(--menu-active"
     ],
-    "why": "NavItem keeps the 28px menu row, depth indentation and trailing slot; Split keeps sidePosition=end ordering and fixed sideHeader above the overlay scroll region; NavList keeps 2px rhythm; ScrollRegion keeps 0px overlay scrollbar"
+    "why": "NavItem keeps the sidebar row height token, depth indentation, menu-active tokens and trailing slot; Split keeps full-height grid rows, sidePosition=end ordering and fixed sideHeader above the overlay scroll region; NavList keeps 2px rhythm; ScrollRegion keeps 0px overlay scrollbar"
   },
   "library/blocks/list-detail.tsx": {
     "must_contain": [

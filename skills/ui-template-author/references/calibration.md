@@ -70,3 +70,8 @@
 1. 用 `map-tokens.mjs` 或自验脚本复算对比度等派生量（同口径）。
 2. 反向验证：改动值后故意构造一次违规（如把 token 改错），确认校验器/闸门能报出来。
 3. 组件 TOKEN 化时默认值等于现状，参照包显式置值——避免误伤其他参照包。
+
+## 6. 基线与扩展分层纪律
+
+- `templates/<pkg>/theme.css` 只承载参照源提取/校准值；再次对齐源时使用 `extract_theme.py --update-base` 仅刷新基线与 `sources`，绝不覆盖 `extensions/`。
+- 从真实消费项目总结出的设计演进（非参照源本身的值），一律写入 `templates/<pkg>/extensions/<id>.{yaml,css}`，不在基线 `theme.css` 中混写。

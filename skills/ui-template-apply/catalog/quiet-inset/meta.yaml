@@ -1,37 +1,44 @@
 schema: ui-template/v4
 name: quiet-inset
-version: 0.6.18
-summary: Near-neutral three-surface workbench (shell → inset panel → white cards) with a single indigo accent; quiet chrome, compact density.
+version: 0.7.0
+summary: Near-neutral three-surface workbench (shell → inset panel → white cards)
+  with a single indigo accent; quiet chrome, compact density.
 fits:
-  - issue trackers, project and agent workbenches, internal tools
-  - settings-heavy products with grouped forms
-  - list → detail flows where content should outrank chrome
+- issue trackers, project and agent workbenches, internal tools
+- settings-heavy products with grouped forms
+- list → detail flows where content should outrank chrome
 not_for:
-  - marketing sites and brand storytelling
-  - content-first reading products
-  - data-dense dashboards that need many simultaneous colors
+- marketing sites and brand storytelling
+- content-first reading products
+- data-dense dashboards that need many simultaneous colors
 base:
   registry: shadcn
   cli: shadcn@4.21.4
   base: radix
   style: nova
-density: compact          # body 13px (text-sm), controls 28px, sidebar rows 28px
+density: compact  # body 13px (text-sm), controls 28px, sidebar rows 30px
 theme: theme.css
 defaults:
-  shell.sidebar: inset            # sidebar sits on the shell, content is an inset panel
+  shell.sidebar: inset
   shell.canvas: app-shell
-  collection.frame: flush         # list rows run edge to edge inside the panel
+  collection.frame: flush
   collection.row_height: 36
   collection.paging: load_more
-  detail.layout: aside            # main column + right property rail
+  detail.layout: aside
   form.layout: single-column
   confirm.irreversible: confirm
   feedback.channel: toast
+  shell.sidebar_rail: false
 sources:
-  - kind: product
-    ref: "issue-tracker desktop web app, light theme (computed-style export 2026-11-20, resolved CSS variables + per-property frequency + tagged picks on issues and settings pages; replaced the 0.1.0 downscaled-JPEG draft values)"
-    license: observation-only (values and visual decisions; no code, icons, fonts or copy)
-  - kind: registry
-    ref: shadcn/ui radix-nova 4.21.4
-    license: MIT
+- kind: product
+  ref: issue-tracker desktop web app, light theme (computed-style export 2026-11-20,
+    resolved CSS variables + per-property frequency + tagged picks on issues and settings
+    pages; replaced the 0.1.0 downscaled-JPEG draft values)
+  license: observation-only (values and visual decisions; no code, icons, fonts or
+    copy)
+- kind: registry
+  ref: shadcn/ui radix-nova 4.21.4
+  license: MIT
 changelog: CHANGELOG.md
+applied_extensions:
+- 01-workbench-polish

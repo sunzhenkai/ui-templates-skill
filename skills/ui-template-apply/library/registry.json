@@ -63,7 +63,7 @@
         {
           "path": "blocks/app-shell.tsx",
           "target": "src/components/blocks/app-shell.tsx",
-          "sha256": "f019302114f46ec20bc3546c5f81adfc51bd964cce6ffe04398eb4c942558408"
+          "sha256": "84e3f09a6602034413b45f0ce1274f4b7463b506f673fb5abc7620ad22578164"
         }
       ],
       "dependencies": [
@@ -273,7 +273,7 @@
         {
           "path": "blocks/router.tsx",
           "target": "src/components/blocks/router.tsx",
-          "sha256": "704bc62dca220b7e7692a670e03041f087df088f078dd66a51546d08b92a2fd3"
+          "sha256": "7d5f729edb071efb2e8a0088e07080e6d0cd91f1fdaea5e32ff0433c6cdd2c1f"
         }
       ],
       "dependencies": [
@@ -301,7 +301,7 @@
         {
           "path": "blocks/section-nav.tsx",
           "target": "src/components/blocks/section-nav.tsx",
-          "sha256": "febfca2349143cdff9c9e6cdb99d529a5849fb371ec3aa21e5ab9240477430fa"
+          "sha256": "47fd78481b0187cb5bb0c5c268973c273efd362c63e3daae389b783cbc6e4dee"
         }
       ],
       "dependencies": [
@@ -355,7 +355,7 @@
         {
           "path": "blocks/surfaces.tsx",
           "target": "src/components/blocks/surfaces.tsx",
-          "sha256": "22cd3c3418c7493acc522107a02516f0039d8587302e6072dbbd751b99882fe7"
+          "sha256": "38db5d34d4ae67317a5b388aa1ecab7dfbaa03bf7e2756def0d148d235f1c4fc"
         }
       ],
       "dependencies": [
@@ -404,7 +404,7 @@
         {
           "path": "blocks/use-container-width.ts",
           "target": "src/components/blocks/use-container-width.ts",
-          "sha256": "505198e51f4f049ed6ecf2d7777feffd8bef3355454c6cc8f4ce348db9d8137b"
+          "sha256": "1c28c8362ddef957cbbdaf29f8d087456211cea17f2c63d6896ce30943cff3d3"
         }
       ],
       "dependencies": [],
@@ -716,7 +716,7 @@
         {
           "path": "shadcn/ui/dialog.tsx",
           "target": "src/components/ui/dialog.tsx",
-          "sha256": "7dbb00eeb1b68a7403c6a326904aa5d1e0d40edbea6f34c8460aadc48c8b56b1"
+          "sha256": "1407dd2dc0451a6efbff19ebd0731d1b99b525ffdf16da46710f02f598498efa"
         }
       ],
       "dependencies": [
@@ -986,7 +986,7 @@
         {
           "path": "shadcn/ui/sidebar.tsx",
           "target": "src/components/ui/sidebar.tsx",
-          "sha256": "b61af7390cf93d25fcc20fb0709ef164337c3b9eba2b0c997110069c4952a1eb"
+          "sha256": "fb8ab8b99773d0736f1939d90ec8251192a7ddba42e808cfe7a0b70a8d0489b5"
         }
       ],
       "dependencies": [

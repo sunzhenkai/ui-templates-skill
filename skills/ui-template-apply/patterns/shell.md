@@ -9,6 +9,9 @@ decisions:
   - key: shell.canvas
     options: [app-shell, background]
     default: app-shell
+  - key: shell.sidebar_rail
+    options: [true, false]
+    default: true
 self_review:
   - 文档（document）是唯一滚动容器；页面里没有 h-screen / 100vh / overflow-auto 包裹整页
   - 当前导航项 aria-current="page"，折叠为图标时仍有 tooltip
@@ -62,4 +65,4 @@ createRoot(el).render(
 - 侧栏宽度、圆角、画布颜色都来自 theme.css；不要在 shell 上写颜色或尺寸。
 - 命令面板（可选）：`<CommandDialog open onOpenChange><Command><CommandInput/><CommandList>…</CommandList></Command></CommandDialog>`。
   `CommandDialog` 只是外壳，少了内层 `<Command>` 打开即崩溃；⌘K 切换、输入框聚焦时不响应单键快捷键。
-- 品牌区用 `ShellBrand`，侧栏状态行用 `ShellNote`；原型见 `reference/src/root.tsx`。
+- 品牌区用 `ShellBrand`（带图标时传 `logo` 插槽与两行文字等高对齐），侧栏状态行用 `ShellNote`；`shell.sidebar_rail` 为 `false` 时传 `<AppShell rail={false}>`；原型见 `reference/src/root.tsx`。

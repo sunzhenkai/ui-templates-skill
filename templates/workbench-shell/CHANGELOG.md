@@ -1,5 +1,8 @@
 # workbench-shell
 
+## 5.0.31
+- 随批同步共享库（quiet-inset 0.7.0 同批）：`ui/sidebar`、`blocks/surfaces`、`blocks/section-nav` 菜单状态 token 化（全部带原值 fallback，本包视觉零变化）；`ui/dialog` 防标题撞关闭键与内容溢出；`Split` 满高修复；`useContainerWidth` 回调 ref；`AppShell` 新增 `rail` 与 `ShellBrand.logo`；`SectionLayout` 新增 `keepSearch`。
+
 ## 5.0.30
 - 共享组件跟随（quiet-inset 0.6.18 同一 patch）：`ScrollRegion` 改用 0px 覆盖式滚动条；`Split` 新增 `sideHeader`；`PaneHeader` 移出滚动容器。
 

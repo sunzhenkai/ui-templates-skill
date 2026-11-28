@@ -13,7 +13,7 @@
 
 | 内容 | 唯一源 | 派生物 |
 |---|---|---|
-| 风格包 | `templates/<pkg>/` | `skills/ui-template-apply/catalog/`（`scripts/sync_catalog.py`） |
+| 风格包 | `templates/<pkg>/`（基线 + `extensions/`） | `skills/ui-template-apply/catalog/`（`scripts/sync_catalog.py` 合成） |
 | 组件与 blocks | `skills/ui-template-apply/library/**` | `library/registry.json`（`scripts/build_registry.py`） |
 | 主题契约（变量清单、对比度对） | `skills/ui-template-apply/scripts/validate_package.py` | design `instance-format.md` 的文字说明 |
 | pattern 决策键 | `skills/ui-template-apply/patterns/*.md` front matter | 包的 `defaults`、项目 `ui-decisions.yaml` |

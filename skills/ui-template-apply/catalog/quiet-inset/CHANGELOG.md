@@ -1,5 +1,25 @@
 # quiet-inset
 
+## 0.7.0 — 2026-11-28
+
+### Added
+- **模板扩展层机制**：`templates/<pkg>/extensions/<id>.{yaml,css}` 与 `meta.yaml → extensions` 正式启用。基线 `theme.css` 保持纯参照源提取/校准态，`extract_theme.py --update-base` 重提源时不覆盖扩展层；`sync_catalog.py` 在构建期做 token 级合成进入 `catalog/`（`--inspect` 可查看覆写明细）。
+- **首个扩展 `01-workbench-polish`**：
+  - 菜单体系联动：新增 `--menu-active` / `--menu-active-foreground` / `--menu-hover` / `--menu-active-border` / `--menu-active-icon` 与一级侧栏左侧指示条 `--sidebar-active-indicator*`（用 `color-mix` 随 `--primary` 自动推导，消费项目改主色即可全套联动）。
+  - 侧栏节奏调优：`--sidebar-row-height: 30px`、`--sidebar-active-weight: 600`（一级侧栏、二级导航 `NavItem`、分区导航 `SectionLayout` 统一）。
+  - Inset 画布单细线：`[data-surface="frame"]` 去掉叠影保持单细线。
+  - 9 色通用语义色板：`--tone-{indigo,violet,sky,cyan,emerald,amber,rose,orange,slate}` 与 `-soft`（浅/深双套校准）。
+  - 默认决策：`shell.sidebar_rail: false`。
+- **共享库配套演进**（`workbench-shell 5.0.31` 同步，视觉零变化）：
+  - `ui/dialog`：`DialogHeader` 补 `pr-8` 避让关闭按钮，`DialogContent` 补 `min-w-0` 防长字段撑破。
+  - `blocks/surfaces`：`Split` 补 `grid-rows-[minmax(0,1fr)]` 与 `h-full` 修分隔线半截；`NavItem` 接入统一菜单 token。
+  - `blocks/use-container-width`：改回调 ref 根治数据晚挂载首帧 `width=0`。
+  - `blocks/app-shell`：`AppShell` 新增 `rail` prop，`ShellBrand` 新增 `logo` 插槽。
+  - `blocks/router` & `blocks/section-nav`：新增 `useAppSearch()` 与 `SectionLayout.keepSearch`。
+
+### Changed
+- `01-workbench-polish` 通过 `@unset` 移除全局 `--command-item-height: 46px` / `--command-item-font-size: 15px`，使表单对话框内的 Combobox 回归紧凑控件尺寸。
+
 ## 0.6.18 — 2026-11-26
 
 ### Fixed

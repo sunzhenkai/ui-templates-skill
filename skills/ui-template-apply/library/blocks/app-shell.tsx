@@ -27,12 +27,14 @@ function NavEntry({ item, active }: { item: NavItem; active: boolean }) {
   )
 }
 
-export function AppShell({ brand, nav, footer, children }: {
+export function AppShell({ brand, nav, footer, rail = true, children }: {
   /** Product mark + name, shown in the sidebar header. Keep it one line. */
   brand: React.ReactNode
   nav: NavGroup[]
   /** Account / settings / theme toggle. */
   footer?: React.ReactNode | undefined
+  /** Render the thin edge toggle rail (`shell.sidebar_rail`). */
+  rail?: boolean | undefined
   children: React.ReactNode
 }) {
   // One best match across all groups: a parent item ("/wiki") and a child ("/wiki/graph") both prefix-match
@@ -53,15 +55,26 @@ export function AppShell({ brand, nav, footer, children }: {
           ))}
         </SidebarContent>
         {footer !== undefined ? <SidebarFooter>{footer}</SidebarFooter> : null}
-        <SidebarRail />
+        {rail ? <SidebarRail /> : null}
       </Sidebar>
       <SidebarInset data-surface="frame" className="min-h-0 min-w-0 overflow-hidden md:border">{children}</SidebarInset>
     </SidebarProvider>
   )
 }
 
-/** Brand block for the sidebar header: product name and an optional secondary line. */
-export function ShellBrand({ title, subtitle }: { title: string; subtitle?: string | undefined }) {
+/** Brand block for the sidebar header: product mark (optional) + name + optional secondary line. */
+export function ShellBrand({ title, subtitle, logo }: { title: string; subtitle?: string | undefined; logo?: React.ReactNode | undefined }) {
+  if (logo !== undefined) {
+    return (
+      <div className="flex min-w-0 items-center gap-2 px-2 py-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+        {logo}
+        <div className="flex min-w-0 flex-col group-data-[collapsible=icon]:hidden">
+          <span className="truncate text-sm font-semibold">{title}</span>
+          {subtitle !== undefined ? <span className="truncate text-xs text-muted-foreground">{subtitle}</span> : null}
+        </div>
+      </div>
+    )
+  }
   return (
     <div className="flex min-w-0 flex-col px-2 py-1 group-data-[collapsible=icon]:hidden">
       <span className="truncate text-sm font-semibold">{title}</span>
