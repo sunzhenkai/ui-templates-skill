@@ -11,6 +11,7 @@ self_review:
   - 骨架屏形状接近真实内容（列表用 RowsSkeleton），不是整页 spinner
   - 错误态有重试；未配置态说明缺什么并给出去配置的链接
   - 后台刷新（isFetching 但有数据）不替换内容，不闪烁
+  - 交互控件的默认/hover/focus-visible/disabled/invalid 态在 `States` story 里覆盖
 ---
 
 # State
@@ -35,3 +36,8 @@ React Query 的 `useQuery` / `useInfiniteQuery` 结果直接传（infinite 用 `
 - 空态文案：标题说现状（「还没有任务」），描述说价值或下一步，最多一个主按钮。
 - 区块级错误只影响该区块，页面其余部分照常显示。
 - 首次加载 < 300ms 时允许不显示骨架（React Query 的 placeholderData 保留旧数据）。
+
+控件交互态（story：`ui-kit/Primitives` → `States`）
+- 每个交互控件都必须覆盖：默认、hover、focus-visible、disabled、invalid；按钮额外有 busy。
+- `focus-visible` 用 `autoFocus` 渲染，invalid 用 `aria-invalid`，busy 用 `disabled` + 静态图标；`Spinner` 有 `animate-spin`，会打乱像素基线，不进保真 story。
+- hover 需要指针，静态基线拍不到，在步骤 07 的浏览器检查里核；按钮键盘 `:focus-visible` 采用 `2px` outline + `2px` 间隙，由 `fidelity.spec.ts` 行为断言验证。

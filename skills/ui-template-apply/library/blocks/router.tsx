@@ -23,25 +23,52 @@ export function useAppNavigate(): (to: string, options?: { replace?: boolean }) 
 let pendingSearch: URLSearchParams | null = null
 let flushScheduled = false
 
+type SearchSetter = (next: URLSearchParams, options?: { replace?: boolean }) => void
+
+function flushSearch(setParams: SearchSetter, mutate: (copy: URLSearchParams) => void) {
+  const copy = new URLSearchParams(pendingSearch ?? window.location.search)
+  mutate(copy)
+  pendingSearch = copy
+  if (flushScheduled) return
+  flushScheduled = true
+  queueMicrotask(() => {
+    const search = pendingSearch
+    pendingSearch = null
+    flushScheduled = false
+    if (search !== null) setParams(search, { replace: true })
+  })
+}
+
 /** One URL search param as state (filters, sort, tab, cursor). Empty/default values are removed from the URL. */
 export function useUrlState(key: string, fallback = ""): [string, (value: string) => void] {
   const [params, setParams] = useSearchParams()
   const value = params.get(key) ?? fallback
   const set = React.useCallback((next: string) => {
-    const copy = new URLSearchParams(pendingSearch ?? window.location.search)
-    if (next === "" || next === fallback) copy.delete(key)
-    else copy.set(key, next)
-    pendingSearch = copy
-    if (flushScheduled) return
-    flushScheduled = true
-    queueMicrotask(() => {
-      const search = pendingSearch
-      pendingSearch = null
-      flushScheduled = false
-      if (search !== null) setParams(search, { replace: true })
+    flushSearch(setParams, (copy) => {
+      if (next === "" || next === fallback) copy.delete(key)
+      else copy.set(key, next)
     })
   }, [key, fallback, setParams])
   return [value, set]
+}
+
+/** Read every search param at once — for scopes that own several keys (collection filters, paging). */
+export function useUrlParams(): URLSearchParams {
+  const [params] = useSearchParams()
+  return params
+}
+
+/** Write several params in one navigation; an empty value removes the key. Batched like useUrlState. */
+export function useSearchWriter(): (patch: Record<string, string>) => void {
+  const [, setParams] = useSearchParams()
+  return React.useCallback((patch: Record<string, string>) => {
+    flushSearch(setParams, (copy) => {
+      for (const [key, value] of Object.entries(patch)) {
+        if (value === "") copy.delete(key)
+        else copy.set(key, value)
+      }
+    })
+  }, [setParams])
 }
 
 /** Current pathname, for active-nav matching. */

@@ -3,9 +3,10 @@
   "library/shadcn/ui/button.tsx": {
     "must_contain": [
       "h-[var(--control-height",
-      "rounded-[var(--button-radius"
+      "rounded-[var(--button-radius",
+      "focus-visible:[outline:2px_solid_var(--color-ring)]"
     ],
-    "why": "control height and pill radius are theme tokens (quiet-inset 0.6.x calibration); hardcoded h-8 / rounded-lg regresses the reference"
+    "why": "control height and pill radius are theme tokens (quiet-inset 0.6.x calibration); hardcoded h-8 / rounded-lg regresses the reference; focus-visible uses 2px outline so keyboard focus stays visible on primary/destructive fills"
   },
   "library/shadcn/ui/input.tsx": {
     "must_contain": [

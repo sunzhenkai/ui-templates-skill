@@ -25,3 +25,22 @@ for (const theme of ["light", "dark"] as const) {
     })
   }
 }
+
+// Hover and :focus-visible need a pointer and are invisible to a static baseline, so they get a behavioural check.
+for (const theme of ["light", "dark"] as const) {
+  test(`keyboard focus ring · ${theme}`, async ({ page }) => {
+    await page.goto(`/iframe.html?id=ui-kit-primitives--states&viewMode=story&globals=theme:${theme}`)
+    await page.locator("#storybook-root > *").first().waitFor()
+    const button = page.getByRole("button", { name: "Save" })
+    await button.focus()
+    await page.keyboard.press("Shift+Tab")
+    await page.keyboard.press("Tab")
+    const ring = await button.evaluate((el) => {
+      const style = getComputedStyle(el)
+      return { visible: el.matches(":focus-visible"), width: Number.parseFloat(style.outlineWidth), style: style.outlineStyle }
+    })
+    expect(ring.visible).toBe(true)
+    expect(ring.style).not.toBe("none")
+    expect(ring.width).toBeGreaterThanOrEqual(2)
+  })
+}

@@ -37,7 +37,11 @@ feedback:
 ```bash
 python3 <skill>/scripts/install_registry.py --project . --status    # new / upstream / local / conflict
 python3 <skill>/scripts/install_registry.py --project . --upgrade   # 覆盖未改动文件，列出冲突
+python3 <skill>/scripts/install_registry.py --project . --package <name>   # 新版本新增的文件只在这条里落地
 ```
+
+`--upgrade` 只作用在锁里已有的文件上；新包版本新增的条目（新的 block / 页面模板 / story）要用不带 `--upgrade` 的
+普通安装，装完再跑一次 `--upgrade` 把改过的文件一起对齐。
 
 `src/styles/theme.css` 不会成为 conflict（状态 `merge`）：取新包主题，项目改过的白名单 token 保留项目值，
 项目没改过的取新值（lock 的 `theme_base` 记录安装时的包值，三方比较）；项目改过的非白名单 token 被丢弃并逐条打印

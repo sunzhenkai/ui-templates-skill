@@ -273,7 +273,7 @@
         {
           "path": "blocks/router.tsx",
           "target": "src/components/blocks/router.tsx",
-          "sha256": "7d5f729edb071efb2e8a0088e07080e6d0cd91f1fdaea5e32ff0433c6cdd2c1f"
+          "sha256": "5f11f4c1177408fb8052beae125ecfc73c7f3c25e82c9994df242c8b54f425bd"
         }
       ],
       "dependencies": [
@@ -428,7 +428,7 @@
         {
           "path": "fidelity/fidelity.spec.ts",
           "target": "tests/ui-kit/fidelity.spec.ts",
-          "sha256": "167f9f778516bffe1cf7a63e61e02d6037cfea6bfa40d4d8f701686748e6f4f5"
+          "sha256": "6770022c3d3b2cd31ce03be1ad5063a5c935deab79535152f948d0f267c3521b"
         }
       ],
       "dependencies": [],
@@ -495,6 +495,30 @@
       ],
       "dependencies": [],
       "registryDependencies": []
+    },
+    {
+      "name": "page-templates/collection-page",
+      "files": [
+        {
+          "path": "page-templates/collection-page.tsx",
+          "target": "src/components/page-templates/collection-page.tsx",
+          "sha256": "f1577a2846fb6e6b0043047a117a9528f1ff116a770dbfaa48649a8e20c9b1e1"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-table@^8",
+        "lucide-react@^1"
+      ],
+      "registryDependencies": [
+        "blocks/data-table",
+        "blocks/router",
+        "blocks/state-boundary",
+        "blocks/surfaces",
+        "ui/button",
+        "ui/input-group",
+        "ui/select",
+        "vocab"
+      ]
     },
     {
       "name": "page-templates/settings-page",
@@ -621,7 +645,7 @@
         {
           "path": "shadcn/ui/button.tsx",
           "target": "src/components/ui/button.tsx",
-          "sha256": "55b937ef2d63a5017c1aa553af7a0839f2e58bc4f59b8552475ecff758d88939"
+          "sha256": "aedbb204e581bd7e5e3773c16bb22031e1be12bbd2f0d93c67c17eb38971492c"
         }
       ],
       "dependencies": [
@@ -1126,12 +1150,38 @@
       "registryDependencies": []
     },
     {
+      "name": "stories/collection-page",
+      "files": [
+        {
+          "path": "stories/collection-page.stories.tsx",
+          "target": "src/stories/ui-kit/collection-page.stories.tsx",
+          "sha256": "e75904fed49da933f7c0a8764fd905cfa230c7242bb3248871acfe03d0766520"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-table@^8",
+        "lucide-react@^1",
+        "react-router@^8"
+      ],
+      "registryDependencies": [
+        "blocks/app-shell",
+        "blocks/format",
+        "blocks/router",
+        "blocks/status-badge",
+        "page-templates/collection-page",
+        "ui/button"
+      ],
+      "devDependencies": [
+        "@storybook/react-vite@^10"
+      ]
+    },
+    {
       "name": "stories/primitives",
       "files": [
         {
           "path": "stories/primitives.stories.tsx",
           "target": "src/stories/ui-kit/primitives.stories.tsx",
-          "sha256": "25af30acf025f41bbee18fb77c6b8355ca645ca22daecd3f5c7514069efd353e"
+          "sha256": "25cbe401bae0f3a60f946f6516febcc5a04055aa6d1c8a58acdce21939290171"
         }
       ],
       "dependencies": [
@@ -1142,8 +1192,10 @@
         "ui/button",
         "ui/checkbox",
         "ui/input",
+        "ui/radio-group",
         "ui/select",
-        "ui/switch"
+        "ui/switch",
+        "ui/textarea"
       ],
       "devDependencies": [
         "@storybook/react-vite@^10"

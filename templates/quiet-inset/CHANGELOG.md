@@ -1,5 +1,15 @@
 # quiet-inset
 
+## 0.7.1 — 2026-11-28
+
+### Added
+- `page-templates/collection-page` 与 `stories/collection-page`：集合页通用骨架（页头、搜索/筛选/清除工具栏、URL 查询状态 `useCollectionQuery`、空态与分页），`blocks/router` 新增批量读写器 `useUrlParams` / `useSearchWriter`。
+- `stories/primitives` 新增 `States` story 与 `patterns/state` 交互态说明，覆盖控件五态及按钮 busy 态。
+- `steps/06-iterate` 补充新增条目需先执行 `--package <name>` 安装的说明；`patterns/collection` 指向 `page-templates/collection-page`。
+
+### Fixed
+- `ui/button`：`focus-visible` 改为 `2px solid var(--color-ring)` + `2px` 偏移（`focus-visible:[outline:2px_solid_var(--color-ring)] focus-visible:[outline-offset:2px]`），解决 primary / destructive 实底上焦点环不可见问题；`fidelity.spec.ts` 增加键盘焦点环行为检查（`workbench-shell 5.0.32` 同步）。
+
 ## 0.7.0 — 2026-11-28
 
 ### Added

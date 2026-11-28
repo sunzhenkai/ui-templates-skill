@@ -33,3 +33,4 @@ listed in `registry.json`. `router.tsx` is the single router adapter.
   `DialogHeader` adds `pr-8` so titles stay clear of the top-right close button.
 - `ui/sidebar.tsx` (local patch): `sidebarMenuButtonVariants` reads `--menu-hover`, `--menu-active`, `--menu-active-foreground`,
   `--menu-active-border`, `--menu-active-icon`, and `--sidebar-active-indicator*` with full fallbacks to `--sidebar-*`.
+- `ui/button.tsx` (local patch): `focus-visible` uses a 2px outline with 2px offset (`focus-visible:[outline:2px_solid_var(--color-ring)] focus-visible:[outline-offset:2px]`) so the keyboard focus ring stays visible on primary/destructive fills.

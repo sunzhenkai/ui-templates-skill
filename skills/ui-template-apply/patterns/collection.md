@@ -1,7 +1,7 @@
 ---
 name: collection
 when: 资源列表、表格、主从选择
-blocks: [blocks/data-table, blocks/row-link, blocks/status-badge, blocks/format, blocks/state-boundary]
+blocks: [page-templates/collection-page, blocks/data-table, blocks/row-link, blocks/status-badge, blocks/format, blocks/state-boundary]
 decisions:
   - key: collection.frame
     options: [bordered, flush]

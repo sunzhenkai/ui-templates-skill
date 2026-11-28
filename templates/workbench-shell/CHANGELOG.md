@@ -1,5 +1,8 @@
 # workbench-shell
 
+## 5.0.32
+- 随批同步共享库（quiet-inset 0.7.1 同批）：新增 `page-templates/collection-page`、`stories/collection-page`、`stories/primitives` 的 `States` story；`blocks/router` 新增 `useUrlParams` / `useSearchWriter`；`ui/button` 改用 2px 外扩焦点环并补充 `fidelity.spec.ts` 键盘焦点检查。
+
 ## 5.0.31
 - 随批同步共享库（quiet-inset 0.7.0 同批）：`ui/sidebar`、`blocks/surfaces`、`blocks/section-nav` 菜单状态 token 化（全部带原值 fallback，本包视觉零变化）；`ui/dialog` 防标题撞关闭键与内容溢出；`Split` 满高修复；`useContainerWidth` 回调 ref；`AppShell` 新增 `rail` 与 `ShellBrand.logo`；`SectionLayout` 新增 `keepSearch`。
 
